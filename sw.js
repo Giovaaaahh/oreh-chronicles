@@ -1,6 +1,6 @@
 // Oreh Chronicles: the pictures come from the cache once seen; the page itself is always asked fresh, and the cache only stands in
 // when there is no connection. The cache is named after this build's art, and older caches are dropped.
-const CACHE = "oreh-ai-871a300125";
+const CACHE = "oreh-ai-e3007beeff";
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (e) => e.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())));
 self.addEventListener("fetch", (e) => {
