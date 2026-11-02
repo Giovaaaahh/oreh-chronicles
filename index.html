@@ -2817,7 +2817,7 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 .bt-reo-ghost.is-luce b { color: #ffcf3f; } .bt-reo-ghost.is-buio b { color: #cfb2ff; }
 .bt-reo-txt small { font-size: 11px; line-height: 1.35; color: #e3e7ea; text-shadow: 0 1px 6px #000; }
 .bt-state--clock { --c: #ffcf3f; }
-@media (prefers-reduced-motion: reduce) { .it.r-LR, .it.r-LR .it-stat, .rc-eclipse, .bt-seal, .bt-reo-ghost { animation: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .it.r-LR, .it.r-LR .it-stat, .rc-eclipse, .bt-seal, .bt-reo-ghost { animation: none; } }
 
 /* ══════════ round 24 · the Team page's Items tab, and items in the loot ══════════ */
 .ti-row .tb3-who { display: grid; gap: 6px; min-width: 0; }
@@ -2886,7 +2886,7 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 .card-gem.is-sym svg, .sc-gem.is-sym svg { position: static; display: block; width: 100%; height: 100%; overflow: visible; }
 .card-gem.is-twin { width: 2.15em; height: 2.15em; top: 0.36em; right: 0.42em; }
 .sc-gem.is-sym { background: none; clip-path: none; width: 2em; height: 2em; filter: drop-shadow(0 0 0.2em rgb(0 0 0 / 0.6)); }
-@media (prefers-reduced-motion: reduce) { .cx-eclipse { animation: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .cx-eclipse { animation: none; } }
 
 /* ══════════ round 26 · Reo's Elemental Fury (G2 · Aura ascendente) ══════════ */
 .bt-furygl { position: absolute; z-index: 13; display: block; pointer-events: none; }
@@ -2933,7 +2933,7 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 /* ══════════ round 26 · Reset account ══════════ */
 .gm-btn.pf-danger { background: rgb(255 81 71 / 0.12); color: #ff8a80; box-shadow: inset 0 0 0 1px var(--attr-fire); }
 .pf-confirm .gm-btn.pf-danger { background: var(--attr-fire); color: #fff; }
-@media (prefers-reduced-motion: reduce) { .bt-mem.is-elfury, .bt-ftrk span.is-on { animation: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .bt-mem.is-elfury, .bt-ftrk span.is-on { animation: none; } }
 /* the new Goblin King stands with his head near the top of his picture: the round face shows it whole, crown and all */
 .gm-boss-face { object-position: 55% 0%; }
 
@@ -3239,7 +3239,7 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 .sh9-acts .sh8-buy { width: 100%; font-size: 14px !important; }
 .sh9-acts > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .sh9-hint { position: absolute; left: 0; right: 0; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); margin: 0; text-align: center; font-size: 12.5px; letter-spacing: 0.04em; color: var(--foreground-on-dark-muted); }
-@media (prefers-reduced-motion: reduce) { .sh9-item { filter: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .sh9-item { filter: none; } }
 .sh9-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 48px; padding: 0 12px; border: 0; font: 600 15px var(--font-display); letter-spacing: 0.03em; text-transform: uppercase; color: #fff; background: rgb(255 255 255 / 0.04); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.2); font-variant-numeric: tabular-nums; cursor: pointer; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); }
 .sh9-btn .gm-ic { width: 16px; height: 16px; }
 .sh9-btn.is-again { color: var(--rarity-ssr-light); box-shadow: inset 0 0 0 1.5px var(--rarity-ssr); background: rgb(242 182 50 / 0.08); }
@@ -3835,7 +3835,7 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 .card--front.rar-Z { filter: drop-shadow(0 0 0.28em rgb(242 201 76 / 0.85)) drop-shadow(0 0 1.1em rgb(242 201 76 / 0.35)); }
 .card.rar-Z .card-sparks { display: block; }
 .card.rar-Z .card-sparks i { background: #ffe9a8; }
-@media (prefers-reduced-motion: reduce) { .card.rar-Z .card-face--front { animation: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .card.rar-Z .card-face--front { animation: none; } }
 
 /* ══════════ Round 43 · the Z (Z1 frame, J2 emblem), the new states ══════════ */
 /* Z1 · the eclipse corona: the frame round42.css draws, its halo breathing */
@@ -3853,7 +3853,7 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 @keyframes zj-shine { 0%, 55% { background-position: 130% 0; } 100% { background-position: -30% 0; } }
 /* the Z in the lists: the same face */
 .tier-6 .tier-text, .rar-text.rar-Z { font-family: "Reggae One", var(--font-display); font-weight: 400; }
-@media (prefers-reduced-motion: reduce) { .card--front.rar-Z, .zj-J2 .zj-z::after { animation: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .card--front.rar-Z, .zj-J2 .zj-z::after { animation: none; } }
 
 /* Petrified (Elian), on an enemy */
 .bt-state--stone { --c: #c9bfa8; }
@@ -3881,7 +3881,7 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 .bt.is-stage:not(.is-pc) .bt-next { height: 13px; padding: 0 3px 0 2px; font-size: 8.5px; gap: 2px; }
 .bt.is-stage:not(.is-pc) .bt-next i { width: 6px; height: 8px; }
 .bt.is-stage.is-pc .bt-next { height: max(16px, calc(19px * var(--u))); font-size: max(10px, calc(12px * var(--u))); }
-@media (prefers-reduced-motion: reduce) { .bt-next.is-ult { animation: none; background: rgb(255 61 90 / 0.28); } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .bt-next.is-ult { animation: none; background: rgb(255 61 90 / 0.28); } }
 
 /* the team between fights, under the map and in the sheets */
 .w44-team { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; margin: 4px 0 8px; }
@@ -4823,7 +4823,7 @@ html.gest-on, html.gest-on body { overflow: hidden !important; }
   background: linear-gradient(90deg, rgb(255 255 255 / 0.06), rgb(220 232 238 / 0.32) 30%, rgb(255 255 255 / 0.08) 55%, rgb(220 232 238 / 0.26) 78%, rgb(255 255 255 / 0.06)) 0 0 / 33.3334% 100% repeat-x;
   animation: bt62-fogbar 4s linear infinite; }
 @keyframes bt62-fogbar { to { transform: translateX(-33.3333%); } }
-@media (prefers-reduced-motion: reduce) { .bt.is-fog62 .bt-foe .bt-hp2::before { animation: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .bt.is-fog62 .bt-foe .bt-hp2::before { animation: none; } }
 /* every rule said once the enemies stand */
 .bt-ann62 { position: absolute; inset: 0; z-index: 80; display: grid; align-content: center; cursor: pointer; }
 .bt-ann62-band { display: grid; justify-items: center; gap: 10px; padding: 26px 16px 24px; text-align: center; background: linear-gradient(90deg, transparent, rgb(4 6 8 / 0.9) 22%, rgb(4 6 8 / 0.9) 78%, transparent); }
@@ -5838,7 +5838,8 @@ html.gest-on, html.gest-on body { overflow: hidden !important; }
 .s66-flash { position: absolute; inset: 0; z-index: 9; }
 .s66-stamp { position: absolute; inset: 0; z-index: 8; display: grid; place-items: center; align-content: center; gap: 18px; }
 .s66-stamp b { display: block; padding: 8px 40px 14px; border: 11px solid #d42c2c; color: #d42c2c; font: 400 clamp(64px, 11vw, 168px)/1 "Dela Gothic One", var(--font-display); letter-spacing: 0.03em; rotate: -14deg; background: rgb(255 246 230 / 0.06); }
-.s66-stamp small { font: 700 18px/1.3 var(--font-sans); color: #ffd7c8; text-shadow: 0 1px 3px #000; }
+/* its line sits on a dark plate: the stamp can land on the cream paper of Form 3-A as well as on a dark scene */
+.s66-stamp small { padding: 8px 16px; background: rgb(6 7 11 / 0.84); font: 700 18px/1.3 var(--font-sans); color: #ffd7c8; }
 .s66-title { position: absolute; inset: 0; z-index: 7; display: grid; place-content: center; text-align: center; background: rgb(6 7 11 / 0.55); }
 .s66-title small { font: 700 15px/1 var(--font-sans); letter-spacing: 0.22em; text-transform: uppercase; color: #9fe9f0; }
 .s66-title b { margin-top: 12px; font: 700 clamp(46px, 7vw, 96px)/0.95 var(--font-display); text-transform: uppercase; color: #fff; text-wrap: balance; }
@@ -5980,11 +5981,13 @@ html.gest-on, html.gest-on body { overflow: hidden !important; }
   .s66-manga.is-B .s66-mg-in { width: 100%; }
   .s66-bl { font-size: 13px; padding: 9px 12px; max-width: 64%; }
   .s66-gag-t { font-size: 17px; max-width: 80%; }
+  /* a stamp's word fits the width of a phone, slant included (APPROVED and GRANTED ran off the right edge) */
+  .s66-stamp b { font-size: 10.5vw; border-width: 7px; padding: 4px 18px 9px; }
   .s66-place b { font-size: 20px; }
   .s66-look, .s66-leave, .s66-skip { padding: 10px 12px; font-size: 13px; }
   .s66-log { display: none; }
 }
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) {
   .s66 *, .s66 *::before, .s66 *::after { animation: none !important; transition: none !important; }
 }
 /* phones: the speaker stands above the line, the answers sit just above it, gags stack top to bottom */
@@ -6029,17 +6032,19 @@ html.gest-on, html.gest-on body { overflow: hidden !important; }
 @media (max-width: 760px) and (min-height: 560px) {
   .s66[data-size="D"] .s66-choices { bottom: calc(2% + 118px + 32cqh); }
 }
+/*   D on a phone: the one listening also steps out to their own side, so what the one speaking holds out (Saffi's sword,
+     the Clerk's pen) never crosses the listener's face (round 71: 17–28% of your face was under it) */
+@media (max-width: 760px) {
+  .s66[data-size="D"] .s66-fig.is-dim[data-side="l"] { transform: translate3d(-12vw, 3.5cqh, 0); }
+  .s66[data-size="D"] .s66-fig.is-dim[data-side="r"] { transform: translate3d(12vw, 3.5cqh, 0); }
+}
 
-/* ══ Lab 66 · the story's own pieces: the contract, the truck's glare, Form 3-A, the team, the fight card, the four falls ══ */
-/* the contract on the desk, in a panel */
-.s66-paper { position: absolute; left: 50%; top: 52%; translate: -50% -50%; rotate: -4deg; z-index: 1; width: 62%; aspect-ratio: 3 / 3.6; box-sizing: border-box; padding: 6% 7%; background: #f7f2e2; border: 2px solid #111318; box-shadow: 0 10px 0 rgb(0 0 0 / 0.25); display: flex; flex-direction: column; gap: 6%; }
-.s66-paper b { font: 400 clamp(13px, 1.5vw, 22px)/1 "Dela Gothic One", var(--font-display); color: #111318; text-transform: uppercase; }
-.s66-paper small { font: 600 clamp(10px, 0.9vw, 13px)/1.2 var(--font-sans); color: #5b5446; }
-.s66-paper i { display: block; height: 3px; background: #b9b09a; }
-.s66-paper i.is-short { width: 46%; margin-top: auto; height: 2px; background: #111318; }
-/* Truck-kun in his panel, and the light in your eyes */
-.s66-truck { position: absolute; left: 50%; bottom: -8%; height: 120%; width: auto; translate: -50% 0; z-index: 1; }
-.s66-glare { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(14% 22% at 42% 64%, rgb(255 255 245 / 0.95), rgb(255 255 230 / 0.35) 55%, transparent 70%), radial-gradient(14% 22% at 61% 63%, rgb(255 255 245 / 0.95), rgb(255 255 230 / 0.35) 55%, transparent 70%); mix-blend-mode: screen; }
+/* ══ Lab 66 · the story's own pieces: Truck-kun's lights, Form 3-A, the team, the fight card, the four falls ══ */
+/* round 71 · Truck-kun: two lights where the night street meets the sky (--ox, --oy), coming fast, parting, then the glare */
+.s66-rush { position: absolute; inset: 0; z-index: 6; overflow: hidden; pointer-events: none; }
+.s66-rush .r-lamp { position: absolute; left: calc(var(--ox) - 30vmax); top: calc(var(--oy) - 30vmax); width: 60vmax; height: 60vmax; border-radius: 50%; background: radial-gradient(closest-side, #fffef8 0, rgb(255 250 228 / 0.92) 16%, rgb(255 238 196 / 0.38) 44%, transparent 72%); mix-blend-mode: screen; opacity: 0; will-change: transform, opacity; }
+.s66-rush .r-white { position: absolute; inset: 0; background: #fffdf4; opacity: 0; }
+.s66-rush .s66-gag-sfx { left: 6%; top: 12%; opacity: 0; color: #ffd23c; }
 
 /* Form 3-A: the free companion, on paper, with the game's own cards */
 .s66-form, .s66-team { position: absolute; inset: 6% 5% 5%; z-index: 5; display: flex; flex-direction: column; gap: 22px; padding: 28px 34px 30px; box-sizing: border-box; background: #f4efe0; color: #15171c; border: 3px solid #111318; box-shadow: 0 30px 90px rgb(0 0 0 / 0.6); }
@@ -6047,8 +6052,11 @@ html.gest-on, html.gest-on body { overflow: hidden !important; }
 .s66-form header small, .s66-team header small { font: 700 14px/1 var(--font-sans); color: #8a2a2a; letter-spacing: 0.04em; }
 .s66-form header b, .s66-team header b { font: 700 clamp(32px, 4vw, 54px)/0.95 var(--font-display); text-transform: uppercase; }
 .s66-form header p, .s66-team header p { margin: 0; font: 500 17px/1.4 var(--font-sans); color: #3c3f46; }
+.s66-form header p strong { font-weight: 700; color: #8a2a2a; }
+/* the form waits for the player's own choice: Skip has nothing to skip there */
+.s66.is-form .s66-skip { display: none; }
 .s66-form-picks { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
-.s66-form-pick { position: relative; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 12px; text-align: left; background: #fffdf6; border: 2px dashed #8f8774; transition: transform 0.16s var(--ease), border-color 0.16s ease, background-color 0.16s ease, opacity 0.18s ease; }
+.s66-form-pick { position: relative; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 12px; text-align: left; background: #fffdf6; border: 2px dashed #8f8774; touch-action: manipulation; transition: transform 0.16s var(--ease), border-color 0.16s ease, background-color 0.16s ease, opacity 0.18s ease; }
 .s66-form-pick.is-picked { border: 3px solid #d42c2c; background: #fff3ea; }
 /* the box to tick, in the corner of each choice; the others step back once one is ticked (they can still be picked) */
 .s66-form-tick { position: absolute; left: 10px; top: 10px; z-index: 2; display: grid; place-items: center; width: 34px; height: 34px; background: #fffdf6; border: 2px solid #111318; }
@@ -27683,7 +27691,10 @@ const S66 = (() => {
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-  const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // the game keeps every motion at full, whatever the system asks (the user, 2026-10-13: "Non ridurle, tienile sempre al
+  // massimo"; the game's REDUCED is false): with this read from the system, a Windows with animations off lost the whole
+  // story's motion and Rin's light (round 71)
+  const RM = false;
   const EASE = "cubic-bezier(0.23, 1, 0.32, 1)", INOUT = "cubic-bezier(0.77, 0, 0.175, 1)";
   // an entrance holds its first frame while it waits and hands back to the page's own style after; a fade-out holds its end
   const anim = (el, kf, o) => {
@@ -28043,10 +28054,12 @@ const S66 = (() => {
   /* ── the whole screen: shake, flash, a stamp, a title card, a banner, an item ── */
   const shakeOnce = (px = 12) => { const kf = [0, 1, 2, 3, 4, 5].map((i) => ({ transform: i === 5 ? "none" : `translate3d(${(i % 2 ? -1 : 1) * px * (1 - i / 5)}px, ${(i % 3 ? 1 : -1) * px * 0.5 * (1 - i / 5)}px, 0)` })); anim(cast, kf, { duration: 320, easing: "linear" }); return anim(world, kf, { duration: 320, easing: "linear" }); };
   const flash = (col = "#fff", ms = 420) => { fx.insertAdjacentHTML("beforeend", `<i class="s66-flash" style="background:${col}"></i>`); const f = fx.lastElementChild; return anim(f, [{ opacity: 1 }, { opacity: 0 }], { duration: ms }).then(() => f.remove()); };
+  // a stamp, a banner and a thing found sit above the dialogue and any form, under the HUD: a stamp drawn under Form 3-A's
+  // paper was never seen, and the game waited for a tap the player could not know about (2026-11-02, "Confirm doesn't work")
+  const onTop = (html) => { hud.insertAdjacentHTML("beforebegin", html); return hud.previousElementSibling; };
   const stamp = async (my, text, sub = "") => {
     live(my);
-    fx.insertAdjacentHTML("beforeend", `<div class="s66-stamp"><b>${esc(text)}</b>${sub ? `<small>${esc(sub)}</small>` : ""}</div>`);
-    const el = fx.lastElementChild;
+    const el = onTop(`<div class="s66-stamp"><b>${esc(text)}</b>${sub ? `<small>${esc(sub)}</small>` : ""}</div>`);
     if (!skipping) { await anim(el.firstElementChild, [{ opacity: 0, transform: "rotate(-14deg) scale(2.4)" }, { opacity: 1, transform: "rotate(-14deg) scale(1)" }], { duration: 170, easing: "cubic-bezier(0.32, 0.72, 0, 1)" }); shakeOnce(14); await tap(my); }
     live(my);
     await anim(el, [{ opacity: 1 }, { opacity: 0 }], { duration: 200 });
@@ -28064,8 +28077,7 @@ const S66 = (() => {
   };
   const banner = async (my, kicker, text, { icon = "" } = {}) => {
     live(my);
-    fx.insertAdjacentHTML("beforeend", `<div class="s66-banner">${icon}<p><small>${esc(kicker)}</small><b>${esc(text)}</b></p></div>`);
-    const el = fx.lastElementChild;
+    const el = onTop(`<div class="s66-banner">${icon}<p><small>${esc(kicker)}</small><b>${esc(text)}</b></p></div>`);
     if (!skipping) { await anim(el, [{ opacity: 0, transform: "translate3d(0, -16px, 0)" }, { opacity: 1, transform: "none" }], { duration: 280 }); await tap(my); }
     live(my);
     await anim(el, [{ opacity: 1 }, { opacity: 0 }], { duration: 180 });
@@ -28073,8 +28085,7 @@ const S66 = (() => {
   };
   const got = async (my, img, name, sub) => {
     live(my);
-    fx.insertAdjacentHTML("beforeend", `<div class="s66-got"><span class="s66-got-pic">${img}</span><p><small>${esc(sub)}</small><b>${esc(name)}</b></p></div>`);
-    const el = fx.lastElementChild;
+    const el = onTop(`<div class="s66-got"><span class="s66-got-pic">${img}</span><p><small>${esc(sub)}</small><b>${esc(name)}</b></p></div>`);
     if (!skipping) { await anim(el, [{ opacity: 0, transform: "translate3d(0, 18px, 0) scale(0.96)" }, { opacity: 1, transform: "none" }], { duration: 260 }); await tap(my); }
     live(my);
     await anim(el, [{ opacity: 1 }, { opacity: 0 }], { duration: 160 });
@@ -28357,7 +28368,7 @@ const S66 = (() => {
     fx, ui, root, frame, live: () => live(my), get skipping() { return skipping; }, anim, sleep, EASE, INOUT, sized, maskCss, who,
   });
   // what a stopped play leaves behind: gags, stamps, banners, a fall half done
-  const wipe = () => { root.querySelectorAll(":scope > .s66-gag").forEach((x) => x.remove()); fx.querySelectorAll(":scope > :not(.s66-bar)").forEach((x) => x.remove()); ui.innerHTML = ""; root.classList.remove("is-over", "is-sight", "is-peek"); };
+  const wipe = () => { root.querySelectorAll(":scope > .s66-gag, :scope > .s66-stamp, :scope > .s66-banner, :scope > .s66-got").forEach((x) => x.remove()); fx.querySelectorAll(":scope > :not(.s66-bar)").forEach((x) => x.remove()); ui.innerHTML = ""; root.classList.remove("is-over", "is-sight", "is-peek", "is-form"); };
   const play = async (fn, { keepScene = false } = {}) => {
     stopAll();
     wipe();
@@ -28390,7 +28401,9 @@ window.S66 = S66;
  *  goblin (a real fight), 300 gold for Gerald the pumpkin. BRACKENFORD66 and BUSTI66 are written in by round69.cjs.
  *  Round 70: the user's own pictures (Desktop/PG/Storia, strumenti/arte70.cjs): you at ease, in a fight and struck silly,
  *  the Clerk in four moods, the places; and the user's rule for the square (2026-11-01): on arriving you see only Saffi and
- *  Mother Seraphine, and the one who walks past, for a heart set on women, is Rin, "like a legendary apparition". ══ */
+ *  Mother Seraphine, and the one who walks past, for a heart set on women, is Rin, "like a legendary apparition".
+ *  Round 71 (the user, 2026-11-02): the two manga pages (Truck-kun, Form 47-B) cut their words, so they are talks on the
+ *  plate like the rest; Form 3-A takes a double click (a double tap) as well as Confirm, and says so. ══ */
 const STORY66 = (() => {
   const ST = { sex: "m", el: "fire", love: "f", name: "Newcomer", starter: null, quests: 0, bag: 0, seen: {} };
   const EL = { fire: "Fire", water: "Water", grass: "Grass" };
@@ -28435,29 +28448,55 @@ const STORY66 = (() => {
     lilith: { name: "Lilith", art: "art/lilith.webp", col: "#d2b8ff", face: [0.61, 0.28] },
   };
   S66.setCast(CAST, tok);
-  Object.assign(S66.BG, { street: "art/story/street.webp", truck: "art/story/truck.webp", lake: "art/story/lake.webp", aerial: "art/story/aerial.webp", clouds: "art/story/clouds.webp", brackenford: "art/story/brackenford.webp" });
-  const F = (who, fx, fy, h, o = {}) => ({ who, fx, fy, h, ...o });
+  Object.assign(S66.BG, { street: "art/story/street.webp", lake: "art/story/lake.webp", aerial: "art/story/aerial.webp", clouds: "art/story/clouds.webp", brackenford: "art/story/brackenford.webp" });
   const icon = (n) => gameIcon(n);
   const potion = () => `<img src="art/items/potion-s.webp" alt="">`;
 
-  /* ═══════════ 1 · Tuesday, 11:48 p.m. (manga) ═══════════ */
-  const truckPage = {
-    grid: '"a a b" 1fr "c d d" 1.1fr "e e f" 1fr / 1fr 1fr 1fr',
-    panels: [
-      { area: "a", bg: "street", pos: "50% 62%", say: [{ kind: "caption", t: "Tuesday, 11:48 p.m. Nothing ever happens on a Tuesday.", x: 3, y: 5 }] },
-      { area: "b", bg: "street", pos: "20% 40%", zoom: 1.6, tone: true, fig: F("me", 46, 34, 170), say: [{ kind: "thought", t: "{c:Is that girl across the street waving at me?|Is that guy across the street waving at me?}", x: 50, y: 66, w: 88 }] },
-      { area: "c", bg: "street", pos: "80% 40%", zoom: 1.4, fig: F("me", 52, 30, 190, { flip: true }), say: [{ t: "{c:She's|He's} waving at me. Hello, destiny.", x: 50, y: 70, w: 86, tail: "b" }], sfx: [{ t: "step", x: 8, y: 8, s: 34, c: "ink" }] },
-      { area: "d", bg: "street", pos: "13% 24%", zoom: 1.8, say: [{ kind: "caption", t: "The light was red.", x: 50, y: 6 }], sfx: [{ t: "BEEP BEEP BEEP", x: 48, y: 64, s: 40, c: "yel", rot: -4 }] },
-      { area: "e", bg: "street", pos: "50% 80%", lines: "burst", slam: true, html: '<img class="s66-truck" src="art/story/truck.webp" alt=""><i class="s66-glare"></i>', sfx: [{ t: "HOOOONK!!", x: 4, y: 8, s: 78, c: "red", rot: -6 }], say: [{ kind: "caption", t: "TRUCK-KUN LOGISTICS. We deliver. Everyone.", x: 62, y: 80 }] },
-      { area: "f", dark: true, fig: F("me", 50, 36, 120, { gray: true }), say: [{ t: "…oh.", x: 50, y: 70, tail: "b" }, { kind: "caption", t: "{c:She|He} was waving at the bus.", x: 4, y: 5 }] },
-    ],
+  /* ═══════════ 1 · Tuesday, 11:48 p.m. (round 71: a talk on the plate like every other; the manga page cut its words) ═══════════ */
+  // Truck-kun is two lights at the far end of the night street, coming fast: they grow and part, the horn, the shake, the
+  // glare. Drawn from where the street meets the sky in the user's picture, wherever the picture sits on this screen.
+  const VANISH = [0.555, 0.6];
+  const truck = async (S) => {
+    S.clear();
+    const fr = S.frame.getBoundingClientRect(), rr = S.root.getBoundingClientRect(), horn = "HOOOONK!!";
+    const ox = fr.left - rr.left + VANISH[0] * fr.width, oy = fr.top - rr.top + VANISH[1] * fr.height;
+    S.fx.insertAdjacentHTML("beforeend", `<div class="s66-rush" style="--ox:${ox.toFixed(1)}px;--oy:${oy.toFixed(1)}px"><i class="r-lamp"></i><i class="r-lamp"></i><i class="r-white"></i><b class="s66-gag-sfx" style="font-size:min(120px, ${(88 / horn.length).toFixed(1)}vw)">${horn}</b></div>`);
+    const R = S.fx.lastElementChild, lamps = [...R.querySelectorAll(".r-lamp")], white = R.querySelector(".r-white"), sfx = R.querySelector(".s66-gag-sfx");
+    // where it all ends (a skip lands there at once): the lights in your face, the street white behind them; each piece takes
+    // its end state as its animation starts, so nothing blinks when one finishes
+    const near = (i) => `translate3d(${i ? 24 : -24}vw, 9vh, 0) scale(1.5)`;
+    const end = (el, css) => Object.assign(el.style, css);
+    lamps.forEach((l, i) => end(l, { transform: near(i), opacity: 1 }));
+    if (!S.skipping) {
+      const rush = Promise.all(lamps.map((l, i) => S.anim(l, [{ transform: `translate3d(${i ? 0.8 : -0.8}vmax, 0, 0) scale(0.05)`, opacity: 0.5 }, { transform: near(i), opacity: 1 }], { duration: 1500, easing: "cubic-bezier(0.55, 0, 1, 0.45)" })));
+      await S.wait(620);
+      end(sfx, { opacity: 1 });
+      S.anim(sfx, [{ opacity: 0, transform: "rotate(-10deg) scale(1.8)" }, { opacity: 1, transform: "rotate(-10deg) scale(1)" }], { duration: 220, easing: "cubic-bezier(0.32, 0.72, 0, 1)" });
+      S.shake(8);
+      await rush;
+      S.live();
+      S.shake(26);
+      end(white, { opacity: 0.62 });
+      await S.anim(white, [{ opacity: 0 }, { opacity: 0.94, offset: 0.22 }, { opacity: 0.62 }], { duration: 900 });
+    }
+    end(sfx, { opacity: 1 });
+    end(white, { opacity: 0.62 });
+    return R;
   };
   const ch1 = async (S) => {
-    S.mode("manga");
+    S.mode("box");
     await S.bg("street", { how: "cut" });
     await S.title("Prologue", "Tuesday, 11:48 p.m.");
-    await S.manga(truckPage);
+    await S.narr("Tuesday, 11:48 p.m. Nothing ever happens on a Tuesday.");
+    await S.say("me", "{c:…Is that girl across the street waving at me?|…Is that guy across the street waving at me?}");
+    await S.gag({ who: "me", chibi: true, sfx: "ba-dump", mark: "heart", t: "{c:She's|He's} waving at me. Hello, destiny.", col: "#ff9fc4" });
+    await S.narr("{name} stepped off the kerb. The light was red.");
+    const R = await truck(S);
+    await S.narr("TRUCK-KUN LOGISTICS. We deliver. Everyone.");
+    await S.say("me", "…oh.");
+    await S.narr("{c:She|He} was waving at the bus.");
     await S.flash("#fff", 700);
+    R.remove();
     S.clear();
     await S.bg("lake", { how: "cut" });
   };
@@ -28494,26 +28533,21 @@ const STORY66 = (() => {
     await S.say("me", "Where do I sign?");
   };
 
-  /* ═══════════ 3 · Form 47-B (manga), the stamp, the survey ═══════════ */
-  const paper = '<div class="s66-paper"><b>Contract of Rebirth</b><small>Form 47-B · page 1 of 112</small><i></i><i></i><i></i><i></i><i></i><i class="is-short"></i></div>';
-  const formPage = {
-    grid: '"a a b" 1fr "c d e" 1fr "f f g" 1fr / 1fr 1fr 1fr',
-    panels: [
-      { area: "a", bg: "lake", pos: "60% 60%", zoom: 1.3, slam: true, html: paper, sfx: [{ t: "SLAM!", x: 70, y: 10, s: 70, rot: 8 }] },
-      { area: "b", bg: "lake", pos: "70% 30%", fig: F("clerk", 50, 30, 190, { mood: "smug" }), say: [{ t: "Clause one. Somewhere down there is {item}. My seal. It fell. Long story. Find it.", x: 50, y: 60, w: 92, tail: "b" }] },
-      { area: "c", bg: "lake", pos: "40% 40%", tone: true, fig: F("clerk", 40, 34, 170), say: [{ t: "Clause two. You have one year. Then the fiscal year closes, and so does my patience.", x: 52, y: 58, w: 92, tail: "b" }], sfx: [{ t: "tap tap", x: 70, y: 8, s: 30, c: "ink" }] },
-      { area: "d", bg: "lake", pos: "20% 60%", fig: F("me", 50, 32, 180), say: [{ t: "And if I don't make it?", x: 50, y: 66, w: 80, tail: "b" }], sfx: [{ t: "gulp", x: 8, y: 8, s: 30, c: "ink" }] },
-      { area: "e", dark: true, tone: true, fig: F("clerk", 50, 36, 200, { gray: true, mood: "smug" }), say: [{ t: "Clause three. You go back to your old world. Reborn in {p:a woman's body|a man's body}. With your mind. Every last thought.", x: 50, y: 58, w: 94 }], sfx: [{ t: "DOOM", x: 6, y: 6, s: 48, rot: -4 }] },
-      { area: "f", bg: "lake", pos: "50% 50%", figs: [F("me", 24, 34, 170), F("clerk", 76, 30, 170, { mood: "fed" })], say: [{ t: "…That's oddly specific.", x: 30, y: 66, w: 46, tail: "b" }, { t: "We had a complaint.", x: 66, y: 66, w: 40, tail: "b" }] },
-      { area: "g", bg: "lake", pos: "60% 70%", zoom: 1.5, html: paper, say: [{ t: "Sign here. Initial here. And here. And here.", x: 50, y: 66, w: 90, tail: "b" }], sfx: [{ t: "scribble scribble", x: 4, y: 6, s: 30, c: "ink", rot: -3 }] },
-    ],
-  };
+  /* ═══════════ 3 · Form 47-B at the desk, the stamp (round 71: a talk on the plate like every other, no more manga page) ═══════════ */
   const ch3 = async (S) => {
-    S.mode("manga");
-    await S.bg("lake", { how: "cut" });
-    await S.manga(formPage);
-    S.clear();
     S.mode("box");
+    await S.bg("lake", { how: "cut" });
+    S.shake(14);
+    await S.narr("SLAM! A stack of paper lands on the desk. CONTRACT OF REBIRTH. Form 47-B, page 1 of 112.");
+    await S.say("clerk", "Clause one. Somewhere down there is {item}. My seal. It fell. Long story. Find it.", { mood: "smug" });
+    await S.say("clerk", "Clause two. You have one year. Then the fiscal year closes, and so does my patience.", { mood: null });
+    await S.say("me", "And if I don't make it?");
+    await S.say("clerk", "Clause three. You go back to your old world. Reborn in {p:a woman's body|a man's body}. With your mind. Every last thought.", { mood: "smug" });
+    await S.say("me", "…That's oddly specific.");
+    await S.say("clerk", "We had a complaint.", { mood: "fed" });
+    await S.say("clerk", "Sign here. Initial here. And here. And here.", { mood: null });
+    await S.narr("Scribble. Scribble. Scribble. Scribble.");
+    S.clear();
     await S.stamp("APPROVED", "Form 47-B · stamp of approval (temporary)");
     await S.say("me", "Hang on. You lost the Seal. So what's that?");
     await S.say("clerk", "Gift shop.", { mood: "smug" });
@@ -28631,14 +28665,18 @@ const STORY66 = (() => {
     S.clear();
     // a skip stops here: the first hero is the player's own choice, never made for them
     S.stopSkip();
-    // Form 3-A: tick a box (it can change), then Confirm; nothing happens until Confirm
+    // Form 3-A: tick a box (it can change), then Confirm; or a double click (a double tap) on a hero chooses at once
+    // (the user, 2026-11-02); nothing happens until then. Skip has nothing to skip here: it steps aside.
+    const tapWord = document.querySelector(".gm")?.dataset.device === "phone" ? "tap" : "click";
+    S.root.classList.add("is-form");
     const pick = await new Promise((res) => {
-      S.ui.innerHTML = `<div class="s66-form" role="dialog" aria-labelledby="s66-form-h"><header><small>Form 3-A · complimentary companion</small><b id="s66-form-h">Choose your first hero</b><p>Tick one box, then press Confirm. Your hero fights beside you from the very first battle.</p></header>
+      S.ui.innerHTML = `<div class="s66-form" role="dialog" aria-labelledby="s66-form-h"><header><small>Form 3-A · complimentary companion</small><b id="s66-form-h">Choose your first hero</b><p><strong>Double-${tapWord}</strong> a hero to choose them, or ${tapWord} once to tick the box and press Confirm. Your hero fights beside you from the very first battle.</p></header>
         <div class="s66-form-picks" role="radiogroup" aria-labelledby="s66-form-h">${STARTERS66.map((id, i) => { const h = heroineById(id); return `<button type="button" class="s66-form-pick" role="radio" aria-checked="false" tabindex="${i ? -1 : 0}" data-pick="${id}"><span class="s66-form-tick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 13l5 5.5L20.5 5.5"/></svg></span><span class="s66-form-card">${makeCard(h, { label: false }).outerHTML}</span><span class="s66-form-name"><b>${esc66(h.name)}</b><small>${h.rarity} · ${attrName(h)} · ${h.role}</small><em>${ROLE66[h.role] ?? ""}</em></span></button>`; }).join("")}</div>
         <footer class="s66-form-foot"><p class="s66-form-sel" aria-live="polite">No box ticked yet.</p><button type="button" class="s66-go" data-confirm disabled>Confirm</button></footer></div>`;
       const box = S.ui.firstElementChild, go = box.querySelector("[data-confirm]"), sel = box.querySelector(".s66-form-sel"), picks = [...box.querySelectorAll(".s66-form-pick")];
       picks.forEach((b, i) => S.anim(b, [{ opacity: 0, transform: "translate3d(0, 18px, 0)" }, { opacity: 1, transform: "none" }], { duration: 260, delay: 80 + i * 70 }));
-      let chosen = null;
+      let chosen = null, sent = false, last = { id: null, t: 0 };
+      const confirm = () => { if (!chosen || sent) return; sent = true; res(chosen); };
       const tick = (id) => {
         if (chosen === id) return;
         chosen = id;
@@ -28652,8 +28690,16 @@ const STORY66 = (() => {
       };
       box.addEventListener("click", (ev) => {
         const b = ev.target.closest("[data-pick]");
-        if (b) { ev.stopPropagation(); tick(b.dataset.pick); return; }
-        if (ev.target.closest("[data-confirm]")) { ev.stopPropagation(); if (chosen) res(chosen); }
+        if (b) {
+          ev.stopPropagation();
+          // the second click on the same hero within half a second is a double click: chosen and confirmed
+          const now = performance.now(), again = last.id === b.dataset.pick && now - last.t < 500;
+          last = { id: b.dataset.pick, t: now };
+          tick(b.dataset.pick);
+          if (again) confirm();
+          return;
+        }
+        if (ev.target.closest("[data-confirm]")) { ev.stopPropagation(); confirm(); }
       });
       // the arrows move between the boxes, as in any set of radio buttons
       box.addEventListener("keydown", (ev) => {
@@ -28671,7 +28717,9 @@ const STORY66 = (() => {
     // the account starts here, with this hero (a replay from the profile changes nothing)
     if (!DRY) { HOOK69.start?.(pick); const s = save(); s.ch = 6; s.starter = pick; keep(); }
     S.live();
+    // the stamp lands on the form itself, above it; a tap anywhere goes on
     await S.stamp("GRANTED", `${heroineById(pick).name} joins you`);
+    S.root.classList.remove("is-form");
     S.ui.innerHTML = "";
     // the team: you and your first hero; she talks to you once you set out together
     await new Promise((res) => {
@@ -28943,7 +28991,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-01-2112";
+const BUILD = "2026-11-02-1234";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
