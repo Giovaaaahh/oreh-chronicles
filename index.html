@@ -2693,6 +2693,12 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
    what scrolls goes soft under the HUD, and on a PC the bench sits right there, so it showed through the Pull page and every
    other screen. It fades with the screen coming in, and comes back at once with the home */
 .gm:not([data-where="home"]) .duo-bench { visibility: hidden; opacity: 0; transition: opacity 200ms ease-out, visibility 0s linear 200ms; }
+/* and so the rest of the home (3 Nov 2026, the user: «sì, toglila»): its light, frozen at its last frame, and the tops of its
+   two heroes showed at the top of every other screen. Off the home they fade once the screen coming in has covered them (its
+   pictures may take 450 ms, its fade 360 ms), then the home is hidden; from one screen to the next it stays hidden, and it
+   comes back at once with the home */
+.gm:not([data-where="home"]) .gm-home { visibility: hidden; transition: visibility 0s linear 850ms; }
+.gm:not([data-where="home"]) .duo-gl, .gm:not([data-where="home"]) .duo-side { opacity: 0; transition: opacity 250ms ease 600ms; }
 .duo-face { position: relative; display: block; width: 44px; height: 57px; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); background: var(--ac); }
 .duo-face > span { position: absolute; inset: 3px 0 0; overflow: hidden; background: #101216; }
 .duo-face img { position: absolute; max-width: none; height: auto; }
@@ -30305,7 +30311,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-02-2347";
+const BUILD = "2026-11-03-0753";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
