@@ -5699,7 +5699,7 @@ html.gest-on, html.gest-on body { overflow: hidden !important; }
 .s66-fig[data-side="r"] { right: 1%; }
 .s66-fig[data-side="c"] { left: 50%; translate: -50% 0; }
 .s66-fig.is-dim { filter: brightness(0.5) saturate(0.75); }
-/* round 80: the Herald: only his shape, black, with the red glow; fainter while he listens */
+/* round 80: the Herald: only her shape, black, with the red glow; fainter while she listens */
 .s66 .s66-fig.is-dark80 { filter: brightness(0) drop-shadow(0 0 2px #ff3d6e) drop-shadow(0 0 22px rgb(255 61 110 / 0.5)); }
 .s66 .s66-fig.is-dark80.is-dim { filter: brightness(0) drop-shadow(0 0 2px rgb(255 61 110 / 0.6)) drop-shadow(0 0 14px rgb(255 61 110 / 0.25)); }
 /*   (the glow follows the shape, so under the cut it would draw a red line where the plate does not reach) */
@@ -15556,7 +15556,7 @@ const STORY62 = (() => {
   // the element that breaks a ward: the one that beats the boss's own
   const BREAK = { grass: "fire", water: "grass", fire: "water", light: "dark", dark: "light" };
   /* who speaks: "me" is you, the character you made (the user: "devi mettermi il player che parla"); a hero's id; "foe:<kind>" for an
-   * enemy; "herald" for the Herald (a black shape with a red glow: his face stays hidden); "" for the story itself. pre plays before the
+   * enemy; "herald" for the Herald (a black shape with a red glow: her face stays hidden; the one who ran the afterlife's office and quit eight hundred years ago, the user's pick; if the player beats her she goes back to the desk for ever); "" for the story itself. pre plays before the
    * fight, post after its first win; join is the hero who comes with you.
    * A hero you do not have does not speak ("se io non ho un personaggio, lui non parla"), except the one who joins you in that scene.
    * A line's third part says what then: or is the line said in its place (what the story needs you to know), need is the hero the line
@@ -15586,7 +15586,9 @@ const STORY62 = (() => {
       ["herald", "Little lights, walking into the dark. How sweet."],
       ["me", "Show yourself!"],
       ["herald", "At the Throne. If you ever reach it."],
-      ["", "Grey ash falls where he stood. Then nothing.", { leaves: "herald" }],
+      ["herald", "Nice stamp on your form, by the way. Gift shop?"],
+      ["me", "...How do you know about that?"],
+      ["", "Grey ash falls where she stood. Then nothing.", { leaves: "herald" }],
     ] },
     10: { pre: [
       ["dalila", "The pass is the only way through the Hollow. The Horde will hold it with everything it has.", { or: ["", "The pass is the only way through the Hollow. The Horde will hold it with everything it has."] }],
@@ -15601,7 +15603,7 @@ const STORY62 = (() => {
       ["me", "Then we end it here."],
     ] },
     19: { pre: [
-      ["dalila", "Ash on the leaves. He was here, and not long ago.", { or: ["me", "Ash on the leaves. He was here, and not long ago."] }],
+      ["dalila", "Ash on the leaves. She was here, and not long ago.", { or: ["me", "Ash on the leaves. She was here, and not long ago."] }],
     ], post: [
       ["herald", "The Horde was always weak. That's why I gave it a king."],
       ["me", "The Goblin King has been dead for a hundred years."],
@@ -15614,12 +15616,12 @@ const STORY62 = (() => {
     ] },
     24: { pre: [
       ["foe:king", "WHO DARES?! The Herald promised me the whole Hollow!"],
-      ["me", "He promises a lot. Let's see if he keeps any of it."],
+      ["me", "She promises a lot. Let's see if she keeps any of it."],
     ], post: [
       ["foe:king", "The Herald... said I would be king again..."],
       ["me", "You were a king. That was the problem."],
       ["nana", "Took you long enough! I've been punching these bars for three days."],
-      ["nana", "Nana, Ember Fist. The Herald locked me up because I hit him. Twice."],
+      ["nana", "Nana, Ember Fist. The Herald locked me up because I hit her. Twice."],
       ["me", "Then you're coming with us."],
       ["nana", "Try and stop me."],
     ], join: "nana" },
@@ -15639,11 +15641,11 @@ const STORY62 = (() => {
       ["elian", "Elian. I study the Reach. The ash here is writing something, and I want to read it."],
     ] },
     34: { pre: [
-      ["elian", "The Wraith is made of the same ash as the Herald. It's his work, I'm sure of it.", { or: ["", "The Wraith is made of grey ash, the same the Herald leaves behind."] }],
+      ["elian", "The Wraith is made of the same ash as the Herald. It's her work, I'm sure of it.", { or: ["", "The Wraith is made of grey ash, the same the Herald leaves behind."] }],
     ], post: [
       ["herald", "A clever scholar. Too clever.", { need: "elian", or: ["herald", "Still walking, little light? Good. Keep going."] }],
-      ["elian", "He's here? Where?"],
-      ["me", "Gone again. He likes an audience, but never stays for the applause.", { leaves: "herald" }],
+      ["elian", "She's here? Where?"],
+      ["me", "Gone again. She likes an audience, but never stays for the applause.", { leaves: "herald" }],
     ] },
     39: { pre: [
       ["kayla", "Something big is moving under the ford.", { or: ["", "Something big is moving under the ford."] }],
@@ -15659,11 +15661,14 @@ const STORY62 = (() => {
       ["elian", "Not yet. I need the rest of it, and the rest is further in."],
     ] },
     49: { pre: [
-      ["foe:ashfang", "The Herald gave me his fire. Now I give it to you."],
+      ["foe:ashfang", "The Herald gave me her fire. Now I give it to you."],
       ["kayla", "Keep it. Mine is better.", { or: ["me", "Keep it. I've had worse."] }],
     ], post: [
       ["foe:ashfang", "Blue... fire...", { need: "kayla", or: ["foe:ashfang", "Not... like this..."] }],
       ["herald", "Two tribes down. You're making this fun."],
+      ["herald", "Did he tell you what the small job really is, little light?"],
+      ["me", "It's a badge. I'm looking for a badge."],
+      ["herald", "Of course you are."],
       ["elian", "Elian, scholar of the Reach. I'm coming with you. The ash drifts towards the sea, and I mean to read the rest of that name."],
     ], join: "elian" },
     50: { pre: [
@@ -15697,13 +15702,14 @@ const STORY62 = (() => {
       ["foe:nerelle", "Stay. Stay under the water with me. It is quiet here."],
       ["dalila", "Quiet is overrated.", { or: ["me", "Quiet is overrated."] }],
     ], post: [
-      ["foe:nerelle", "He promised me the sea would never end..."],
+      ["foe:nerelle", "She promised me the sea would never end..."],
       ["herald", "Promises are cheap, my queen. That's why I give so many."],
+      ["herald", "Eight hundred years stamping other people's. Now I get to make my own."],
       ["robin", "Robin, keeper of the lighthouse. It's lit again, and I'm coming with you. Someone has to light the way to the Throne."],
     ], join: "robin" },
     75: { pre: [
       ["", "The Gilded Steppe. Here the sun never sets, and the Gilded Host never sleeps."],
-      ["alfael", "I was born under this sun. I won't let him gild it in chains."],
+      ["alfael", "I was born under this sun. I won't let the Herald gild it in chains."],
       ["me", "Glad to have you with us, Alfael.", { need: "alfael" }],
     ] },
     79: { pre: [
@@ -15727,7 +15733,16 @@ const STORY62 = (() => {
     ], post: [
       ["foe:altea", "The Herald showed me the King's face. I was afraid."],
       ["julie", "Julie of the Gilded Host. I'm going with them, my queen. Someone of the Host has to see how this ends."],
-      ["herald", "Four tribes, four crowns in the dust, and still the Throne grows warmer. See you in the frost, little lights."],
+      ["herald", "Four tribes, four crowns in the dust, and still the Throne grows warmer."],
+      ["me", "You know the desk. You know the form. Who are you?"],
+      ["herald", "The one who handed in her notice. Eight hundred years ago."],
+      ["herald", "From my window you all looked the same: little lights, in a very long queue."],
+      ["me", "You worked for the Clerk?"],
+      ["herald", "He works for me, little light. And he sent you to bring me back. Page 113 of your form."],
+      ["me", "The form has 112 pages."],
+      ["herald", "He's very good at his job. I taught him."],
+      ["me", "And if I beat you?"],
+      ["herald", "Then I go back to that desk. For ever. So you won't. See you in the frost, little lights."],
     ], join: "julie" },
   };
   /* what the Archive learns of a region once it is free */
@@ -17807,11 +17822,12 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     return { move, ult, ctx, dim, out, land };
   })();
   /* ══════════ Round 83 · Sagoma (the user's pick of lab 82, "ma togli il 360 gradi inutile che fa all'inizio"): her whole figure, cut out with a white edge,
-   * stands on the field with its shadow; no turn when she comes, she is simply there; a light on the beat; she turns away as the blow leaves. The ultimate
-   * is not touched (SHOW64.ult). ══════════ */
+   * on the field with its shadow, with no turn when she comes. Round 84 · Dalla sua figura (the user's pick of lab 83, "Scelgo 6"): she comes out of her own
+   * place in the row, growing as she comes; a light on the beat; she goes back into it as the blow leaves, and the blow leaves from there. The ultimate is
+   * not touched (SHOW64.ult). ══════════ */
   const SAGOMA83 = (() => {
     const { ctx, dim: dim0, out: out0, land } = SHOW64;
-    const EO = "cubic-bezier(0.23, 1, 0.32, 1)", UP = "cubic-bezier(0.5, 0, 0.9, 0.3)";
+    const EO = "cubic-bezier(0.23, 1, 0.32, 1)";
     /** The field dims, and comes back from however dim it was (never a black flash). */
     const dim = (S, to, ms) => { const d = dim0(S, to, ms); d.dataset.to83 = to; return d; };
     const out = (S, els, ms = 170, delay = 0) => { const dims = els.filter((n) => n?.dataset?.to83), rest = els.filter((n) => n && !n.dataset?.to83); out0(S, rest, ms, delay); dims.forEach((n) => S.a(n, [{ opacity: +n.dataset.to83 }, { opacity: 0 }], ms, { delay, fill: "forwards", easing: "ease-out" })); };
@@ -17834,21 +17850,27 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
       return n;
     };
     const sagoma = async (S, X) => {
-      const { W, H, phone, E } = S, d = dim(S, 0.5, 110), cx = phone ? W * 0.5 : W * 0.34, foot = X.e.b > 0.04 ? H : H * 0.96;
+      const { W, H, phone, E } = S, d = dim(S, 0.5, 120), cx = phone ? W * 0.5 : W * 0.34, foot = X.e.b > 0.04 ? H : H * 0.96;
       const f = fig(S, X, { hh: H * (phone ? 0.64 : 0.82), cx, foot });
       const shadow = S.mk("sg83-shadow", `left:${f.cx}px;top:${Math.min(H * 0.965, foot)}px;width:${f.w * 0.9}px`, "", true);
       S.a(shadow, [{ opacity: 0, transform: "translate(-50%, -50%) scaleX(0.6)" }, { opacity: 1, transform: "translate(-50%, -50%) scaleX(1)" }], 170, { easing: EO });
-      S.a(f.el, [{ opacity: 0, transform: "translate3d(0, 2.6%, 0) scale(0.985)" }, { opacity: 1, transform: "none" }], 170, { easing: EO });
-      const n = nameTag(S, X, phone ? W * 0.05 : f.cx + f.w * 0.52, phone ? H * 0.06 : g.line + g.strip * 0.2);
-      await S.wait(180);
-      flash(S, E.l, 90, 0.18);
-      await S.wait(500);
-      S.a(f.el, [{ transform: "perspective(1100px) rotateY(0deg)", opacity: 1 }, { transform: "perspective(1100px) rotateY(82deg)", opacity: 1, offset: 0.9 }, { transform: "perspective(1100px) rotateY(90deg)", opacity: 0 }], 180, { easing: UP, fill: "forwards" });
-      S.a(shadow, [{ opacity: 1 }, { opacity: 0 }], 150, { fill: "forwards" });
-      out(S, [n], 100);
-      out(S, [d], 130);
-      await S.wait(150);
-      await land(S, X, { x: f.cx, y: H * 0.42 });
+      // her own place in the row: the foot of the figure on the foot of her place, as big as she stands there; the place itself goes dim while she is out of it
+      const C = cardBox(X.m), k = C.h / f.h, tx = C.x - f.cx, ty = C.y + C.h / 2 - foot, atHome = `translate3d(${tx}px, ${ty}px, 0) scale(${k})`, own = $(".bt-cardbox", memEl(F.team.indexOf(X.m)));
+      if (own) own.style.opacity = "0.15";
+      try {
+        S.a(f.el, [{ transform: atHome, opacity: 0.4 }, { transform: `translate3d(${tx * 0.1}px, ${ty * 0.1}px, 0) scale(${k + (1 - k) * 0.94})`, opacity: 1, offset: 0.7 }, { transform: "none", opacity: 1 }], 300, { easing: EO });
+        const n = nameTag(S, X, phone ? W * 0.05 : f.cx + f.w * 0.52, phone ? H * 0.06 : g.line + g.strip * 0.2);
+        await S.wait(300);
+        flash(S, E.l, 90, 0.18);
+        await S.wait(380);
+        S.a(f.el, [{ transform: "none", opacity: 1 }, { transform: atHome, opacity: 0.5 }], 190, { easing: "cubic-bezier(0.77, 0, 0.175, 1)", fill: "forwards" });
+        S.a(shadow, [{ opacity: 1 }, { opacity: 0 }], 130, { fill: "forwards" });
+        out(S, [n], 100);
+        out(S, [d], 150);
+        await S.wait(180);
+        out(S, [f.el], 40);
+      } finally { if (own) own.style.opacity = ""; }
+      await land(S, X, { x: C.x, y: C.y - C.h * 0.2 });
     };
     /** A move: her skill picture (the talent's or True form's when they are on). A tap speeds it up. */
     const move = async (m, c, target) => {
@@ -34017,7 +34039,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-06-2021";
+const BUILD = "2026-11-06-2116";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
