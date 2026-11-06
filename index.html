@@ -16192,16 +16192,16 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   /** How wide a figure is for each unit of its height (a fighter with no picture is a card). */
   const ratio83 = (src) => { if (!src) return 10 / 14; const b = box83(src); return (b.r - b.l) / ART_ASPECT / (b.b - b.t); };
   const measure = () => {
-    // a phone held sideways has a PC's shape (round83.css gives the fight the whole screen there): it gets a PC's layout, with smaller plates and plan
+    // a phone held sideways has a PC's shape (round83.css gives the fight the whole screen there): it gets a PC's layout, with smaller plates and plan; so do a tablet and a narrow window
     const W = host.clientWidth, H = host.clientHeight, inset = insets(), pc = device() === "pc" || W > H * 1.15, floor = H - inset.bottom;
     if (pc) {
-      const free = floor - inset.top, u = Math.min(W / 1920, free / 1080), short = free < 560, line = inset.top + (free * 440) / 1080, strip = 232 * u;
+      const free = floor - inset.top, u = Math.min(W / 1920, free / 1080), short = free < 560 || W < 1180, line = inset.top + (free * 440) / 1080, strip = 232 * u;
       const ctrlW = short ? 336 : Math.max(560 * u, 456), gap = 10 * u, handLeft = 28 * u;
       const fs = Math.min((strip - 20 * u) / 14, (W - handLeft - ctrlW - 36 * u - 6 * gap) / 70), cw = 10 * fs;
       return { pc, hz: true, short, sigMax: short ? 2 : undefined, W, H, u, top: inset.top + 62, oy: inset.top, floor, line, line2: line + strip, strip, reflect: false,
         plateH: Math.max(86 * u, 66), plateW: short ? Math.min(132, W * 0.16) : Math.max(256 * u, 196), plateGap: 12 * u, plateFoe: 14 * u, plateMem: 26 * u, tal: short ? 44 : Math.max(56 * u, 46), cellGap: 30 * u,
         handY: line + strip / 2, cw, fs, gap, handLeft, ctrlLeft: W - 20 * u - ctrlW, ctrlTop: line, ctrlW,
-        benchX: 24 * u, benchY: short ? floor - 74 : floor - 186 * u, benchFs: 10 * u, vs: { x: W / 2, y: line + strip / 2 } };
+        benchX: 24 * u, benchY: floor - Math.max(short ? 74 : 0, 186 * u), benchFs: 10 * u, vs: { x: W / 2, y: line + strip / 2 } };
     }
     const tall = H >= 760, top = inset.top + 58, cw = Math.min(58, (W - 28 - 30) / 7), cardH = cw * 1.4, ctrlH = 74, strip = ctrlH + cardH + 14, plateH = 50, chips = tall ? 50 : 26, bench = 30, pgap = 3;
     const free = Math.max(120, floor - top - bench - strip - 2 * plateH - chips - 2 * pgap), hF = free * 0.46, hB = free * 0.54;
@@ -34017,7 +34017,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-06-1954";
+const BUILD = "2026-11-06-2021";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
