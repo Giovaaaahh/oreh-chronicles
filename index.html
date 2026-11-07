@@ -14791,7 +14791,7 @@ const drops76Clean = (a) => (Array.isArray(a) ? a : []).slice(0, 8).map((d) => {
   return x;
 }).filter(Boolean);
 /** What a drop is called on the map's sheets and in the win's list. */
-const drop76Name = (d) => d.t === "item" ? `${ITEM_BY_ID[d.id]?.name ?? "a piece"}${d.n > 1 ? ` ×${d.n}` : ""}` : d.t === "pot" ? `${POTIONS[d.p]?.name ?? "Potion"} ×${d.n}` : `${fmt(d.n)} ${{ gold: "gold", gems: d.n === 1 ? "gem" : "gems", dust: "star dust", ore: "Ember Ore", shard: d.n === 1 ? "Dragon Heart shard" : "Dragon Heart shards" }[d.t]}`;
+const drop76Name = (d) => d.t === "item" ? `${ITEM_BY_ID[d.id]?.name ?? "a piece"}${d.n > 1 ? ` ×${d.n}` : ""}` : d.t === "pot" ? `${POTIONS[d.p]?.name ?? "Potion"} ×${d.n}` : `${Math.round(+d.n || 0).toLocaleString("en-US")} ${{ gold: "gold", gems: d.n === 1 ? "gem" : "gems", dust: "star dust", ore: "Ember Ore", shard: d.n === 1 ? "Dragon Heart shard" : "Dragon Heart shards" }[d.t]}`;
 const drops76Sheet = (list) => (list?.length ? `<p class="sm25-note r76-drops"><b>Special drops</b>${list.map((d) => `${drop76Name(d)} (${d.every ? "every win" : "first win"})`).join(", ")}</p>` : "");
 /** The first half of a pack: heroes, enemies, stages and webs, before the webs are read. */
 /* ══════════ Round 85 · the words on the page, the order of the heroes, the items a lazy player leaves to the game ══════════ */
@@ -15494,8 +15494,14 @@ const nodeDone = (r, n) => {
   if (nd.t === "skirm") return webStore().skirms?.[nodeKey(r, n)] != null;
   return false;
 };
-/** A region opens when the last one's boss can be reached: you may walk on without beating it (the cap stays until you do). */
-const regionOpen = (r) => r < STORY_OPEN && (r === 0 || isAdmin() || nodeOpen(r - 1, STORY_WEB[r - 1].boss) || nodeDone(r - 1, STORY_WEB[r - 1].boss));
+/** A region opens when the last one's boss is beaten. (Until round 88 it opened as soon as the boss could be reached, so a player who
+ *  lost to the boss found the next map open: the user, 7 Nov: «se io premo su un boss di mappa 2 e perdo, mi porta comunque in mappa 3».) */
+const regionOpen = (r) => r < STORY_OPEN && (r === 0 || isAdmin() || nodeDone(r - 1, STORY_WEB[r - 1].boss));
+/** What a closed place says: in a region still shut, the boss to beat (round 88); else the place beside it. */
+const lock88 = (r) => {
+  if (r > 0 && r < STORY_OPEN && !regionOpen(r)) { const w = STORY_WEB[r - 1], b = STORY.stages[w.nodes[w.boss]?.s]; return `<p class="sm25-lock">Beat ${b?.name ?? "the boss"}, the boss of ${STORY_REGIONS[r - 1].name}, to open ${STORY_REGIONS[r].name}.</p>`; }
+  return '<p class="sm25-lock">Reach it from a cleared place beside it.</p>';
+};
 /** A place opens when a place beside it is done; a region's entrance when the region opens. */
 const nodeOpen = (r, n) => {
   if (isAdmin()) return r < STORY_OPEN;
@@ -29846,7 +29852,7 @@ const initGame = () => {
       ${STORY62.sheet(i)}
       ${s.soon || !s.elites ? "" : `<p class="sm25-power"><b>Elites</b>${[...new Set(s.elites.kinds)].map((t) => FOE_KINDS[t.split(":")[0]].name).join(", ")} are rare: now and then one takes a place in a wave. They are stronger, and each one leaves a chest.</p>`}
       ${s.soon ? "" : `<p class="sm25-note">Each enemy has a 40% chance to leave a chest: gold, or an item up to one rarity below its own.</p>`}
-      ${s.soon ? `<p class="sm25-lock">Coming soon: the enemies of ${R.name} are on their way.</p>` : open ? `<button class="gm-btn sm25-go" type="button" data-gm-route="battle/${s.id}">${stars != null ? "fight again" : "fight"} · 8 stamina</button>` : '<p class="sm25-lock">Reach it from a cleared place beside it.</p>'}</div>`;
+      ${s.soon ? `<p class="sm25-lock">Coming soon: the enemies of ${R.name} are on their way.</p>` : open ? `<button class="gm-btn sm25-go" type="button" data-gm-route="battle/${s.id}">${stars != null ? "fight again" : "fight"} · 8 stamina</button>` : lock88(s.reg)}</div>`;
     $("[data-gm-sub='story']", stage).append(box);
     if (!REDUCED) $(".sm25-sheet-in", box).animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration: 340, easing: "cubic-bezier(0.32, 0.72, 0, 1)" });
     box.addEventListener("click", (e) => { if (e.target === box || e.target.closest("[data-sm-close], [data-gm-route]")) box.remove(); });
@@ -29877,7 +29883,7 @@ const initGame = () => {
     if (nd.s != null) { stageSheet(nd.s); return; }
     const open = nodeOpen(r, n), done = nodeDone(r, n), soon = r >= STORY_OPEN;
     const head = (kicker, title, sub) => `<div class="sm25-sheet-head"><p><small>${kicker} · ${R.name}</small><b>${title}</b><span>${sub}</span></p><button type="button" data-sm-close aria-label="Close">×</button></div>`;
-    const far = '<p class="sm25-lock">Reach it from a cleared place beside it.</p>';
+    const far = lock88(r);
     if (nd.t === "den" && nd.den === "warcamp") {
       // round 73: the warcamp's chief, whole, and the fight
       sheetBox(`${head(nd.kicker, nd.name, nd.sub)}<div class="t72-gruk"><img src="art/m/enemies/goblin-guard.webp" alt="The war chief's guard" draggable="false"></div><p class="w44-txt">The goblins' warcamp: a war chief's guard, his raiders and brawlers, and a lot of stolen chickens. Captain Hollis wants it gone.</p><p class="t72-meta">Raiders and a brawler, then the chief's guard · level 7 · 300 gold, 5 gems, a Potion M</p><button class="gm-btn sm25-go" type="button" data-l73-warcamp>attack the warcamp</button>`, nd.name, "#ff4b4b");
@@ -35543,7 +35549,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-07-1341";
+const BUILD = "2026-11-07-2149";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
