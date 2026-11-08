@@ -15606,6 +15606,16 @@ const webStore = () => (isAdmin() ? ADMIN_WEB : (PLAYER.player.web ??= {}));
 const hpStore = () => (isAdmin() ? ADMIN_HP : (PLAYER.player.hp ??= {}));
 const saveWeb = () => { if (isAdmin()) { try { localStorage.setItem(WEB_KEY, JSON.stringify(ADMIN_WEB)); localStorage.setItem(HP_KEY, JSON.stringify(ADMIN_HP)); } catch { /* it lasts this visit */ } } else savePlayer(); };
 const hpOf = (id) => hpStore()[id] ?? 1;
+/** Round 97: your look by the story: SSR once Nerelle has fallen (stage index 74, map 3's boss), UR after map 7's boss (174). */
+const YOU97 = {"ssr":true,"ur":true};
+const youTier97 = () => {
+  const p = isAdmin() ? PLAYER.admin : PLAYER.player, won = (i) => { const id = STORY.stages[i]?.id; return !!id && ((p?.stars?.[id] ?? 0) > 0 || !!p?.cleared?.[id]); };
+  return YOU97.ur && won(174) ? "ur" : YOU97.ssr && won(74) ? "ssr" : "";
+};
+/** Your picture: at ease (the talks, the map, your profile) or in a fight (your card); an evolved look serves both. */
+const youArt97 = (sex, el, fight = false) => { const t = youTier97(), k = `${sex === "m" ? "m" : "f"}-${el}`; return t ? `art/you/${t}-${k}.webp` : fight ? `art/you/fight-${k}.webp` : `art/you/${k}.webp`; };
+/** The first time the map sees you changed, it says so (once per look and account). */
+const youSaid97 = () => { const t = youTier97(); if (!t) return; const p = isAdmin() ? PLAYER.admin : PLAYER.player; if ((p.you97 ?? "") === t) return; p.you97 = t; if (typeof savePlayer === "function") savePlayer(); setTimeout(() => window.GM_TOAST97?.(t === "ur" ? "You have ascended: your UR look, a halo of your element." : "Nerelle is gone and you have grown: your SSR look."), 700); };
 const setHp = (id, v) => { const st = hpStore(); if (v >= 0.999) delete st[id]; else st[id] = Math.max(0, Math.round(v * 1000) / 1000); };
 const healAll = () => { const st = hpStore(); for (const k of Object.keys(st)) delete st[k]; };
 /** Where each stage lies on the webs, and each web's threads. */
@@ -15774,7 +15784,7 @@ const here89Set = (at) => {
 };
 const NODE89 = { last: null };
 const token81 = (ctx, x, y, k, t, at) => {
-  const a = HOOK69.avatar?.() ?? null, sex = a ? (a.sex === "m" ? "m" : "f") : "m", el = a && ["fire", "water", "grass"].includes(a.el) ? a.el : "fire", src = `art/you/${sex}-${el}.webp`;
+  const a = HOOK69.avatar?.() ?? null, sex = a ? (a.sex === "m" ? "m" : "f") : "m", el = a && ["fire", "water", "grass"].includes(a.el) ? a.el : "fire", src = youArt97(sex, el); youSaid97();
   if (TOKEN81.src !== src) {
     TOKEN81.src = src; TOKEN81.cv = null;
     const im = new Image();
@@ -17491,7 +17501,7 @@ const TRACK64 = {
 /** Which sides of each full-size picture its figure touches (strumenti/bordi-arte.cjs, at build time). */
 /** What each picture's figure really covers (strumenti/bordi-arte.cjs, at build time): its box, as shares of the picture. */
 const ART_BOX83 = {"art/albert.webp":{"l":0,"r":1,"t":0,"b":1},"art/alfael.webp":{"l":0,"r":0.992,"t":0,"b":1},"art/ana.webp":{"l":0,"r":1,"t":0,"b":1},"art/clea.webp":{"l":0,"r":1,"t":0,"b":1},"art/crystal.webp":{"l":0,"r":1,"t":0,"b":1},"art/dalila.webp":{"l":0.102,"r":0.969,"t":0,"b":1},"art/ektor.webp":{"l":0.031,"r":0.992,"t":0,"b":1},"art/elian.webp":{"l":0,"r":1,"t":0.005,"b":1},"art/hela.webp":{"l":0,"r":1,"t":0,"b":1},"art/ignara-forge.webp":{"l":0,"r":1,"t":0,"b":1},"art/iris.webp":{"l":0,"r":1,"t":0,"b":1},"art/johta.webp":{"l":0,"r":1,"t":0,"b":1},"art/julie.webp":{"l":0.008,"r":1,"t":0,"b":1},"art/kaori.webp":{"l":0.031,"r":0.992,"t":0,"b":1},"art/kayla.webp":{"l":0.031,"r":1,"t":0.005,"b":1},"art/lilith.webp":{"l":0,"r":1,"t":0,"b":1},"art/marea.webp":{"l":0.18,"r":0.883,"t":0,"b":1},"art/nana.webp":{"l":0.047,"r":0.914,"t":0.01,"b":1},"art/oreh-null.webp":{"l":0,"r":1,"t":0,"b":1},"art/oreh.webp":{"l":0.031,"r":0.992,"t":0,"b":1},"art/paul.webp":{"l":0,"r":1,"t":0,"b":1},"art/reo-buio.webp":{"l":0,"r":1,"t":0,"b":1},"art/reo-luce.webp":{"l":0,"r":1,"t":0,"b":1},"art/reo.webp":{"l":0.203,"r":0.961,"t":0.02,"b":1},"art/rin.webp":{"l":0,"r":1,"t":0,"b":1},"art/robin.webp":{"l":0,"r":1,"t":0,"b":1},"art/sadara.webp":{"l":0,"r":1,"t":0.005,"b":1},"art/stranger.webp":{"l":0,"r":1,"t":0,"b":1},"art/tachibana-bg.webp":{"l":0,"r":1,"t":0,"b":1},"art/tachibana.webp":{"l":0.039,"r":0.984,"t":0,"b":1},"art/ymir.webp":{"l":0,"r":1,"t":0,"b":1},"art/zenith.webp":{"l":0.008,"r":0.961,"t":0,"b":1},"art/skills/albert-pizza.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/albert-ramen.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/albert-ult.webp":{"l":0.008,"r":1,"t":0,"b":1},"art/skills/alfael-lacera.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/alfael-raggio.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/alfael-ult.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/ana-arti.webp":{"l":0.016,"r":1,"t":0.015,"b":1},"art/skills/ana-bombardamento.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/ana-ult.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/clea-giudizio.webp":{"l":0,"r":1,"t":0,"b":0.995},"art/skills/clea-mano-nera.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/clea-ordine.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/clea-talent.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/crystal-ether.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/crystal-shard.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/crystal-ult.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/dalila-frusta.webp":{"l":0.008,"r":1,"t":0,"b":1},"art/skills/dalila-furia.webp":{"l":0,"r":1,"t":0,"b":0.995},"art/skills/dalila-hammer.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/ektor-lance.webp":{"l":0,"r":0.992,"t":0.02,"b":1},"art/skills/ektor-sweep.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/ektor-ult.webp":{"l":0,"r":0.969,"t":0,"b":1},"art/skills/elian-gaze.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/elian-sky.webp":{"l":0.063,"r":1,"t":0,"b":1},"art/skills/elian-ult.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/hela-fiamma.webp":{"l":0,"r":1,"t":0.005,"b":1},"art/skills/hela-taglio.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/hela-ult.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/iris-grinder.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/iris-ripper.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/iris-vengeance.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/johta-ashen-step.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/johta-ember-power.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/johta-five-suns.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/julie-flood.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/julie-halo.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/julie-ult.webp":{"l":0,"r":1,"t":0,"b":0.915},"art/skills/kaori-fang-rush.webp":{"l":0.023,"r":1,"t":0,"b":1},"art/skills/kaori-high-kick.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/kaori-ult-fail.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/kaori-ult.webp":{"l":0.047,"r":1,"t":0.01,"b":1},"art/skills/kayla-blu.webp":{"l":0,"r":1,"t":0.005,"b":1},"art/skills/kayla-fatuo.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/kayla-tetro.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/lilith-curtsy.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/lilith-serve.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/lilith-ult.webp":{"l":0.023,"r":0.977,"t":0,"b":1},"art/skills/marea-current.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/marea-riptide.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/marea-ult.webp":{"l":0,"r":1,"t":0.03,"b":1},"art/skills/nana-haze.webp":{"l":0.008,"r":0.922,"t":0.03,"b":1},"art/skills/nana-jab.webp":{"l":0,"r":1,"t":0.005,"b":1},"art/skills/nana-ult.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/oreh-gold-blaze.webp":{"l":0,"r":1,"t":0.02,"b":1},"art/skills/oreh-judgment.webp":{"l":0.008,"r":0.992,"t":0.015,"b":1},"art/skills/oreh-lightning-flare.webp":{"l":0.008,"r":0.969,"t":0.005,"b":1},"art/skills/oreh-nihil.webp":{"l":0,"r":1,"t":0.065,"b":1},"art/skills/oreh-shadow.webp":{"l":0.086,"r":0.977,"t":0,"b":1},"art/skills/oreh-singularity.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/paul-fire.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/paul-round.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/paul-ult.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/reo-buio-sfera.webp":{"l":0.023,"r":1,"t":0.025,"b":1},"art/skills/reo-buio-spada.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/reo-luce-sfera.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/reo-luce-spada.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/reo-profezione.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/reo-scissione.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/reo-spacca.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/reo-tempo.webp":{"l":0,"r":1,"t":0.03,"b":1},"art/skills/rin-crimson-sphere-1.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/rin-crimson-sphere-2.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/rin-crimson-sphere-3.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/rin-ember-cut-1.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/rin-ember-cut-2.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/rin-ember-cut-3.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/rin-talent.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/rin-ult.webp":{"l":0.023,"r":1,"t":0,"b":1},"art/skills/robin-break.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/robin-prayer.webp":{"l":0.063,"r":0.938,"t":0,"b":1},"art/skills/robin-ult.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/sadara-guitar.webp":{"l":0.008,"r":1,"t":0.005,"b":1},"art/skills/sadara-sax.webp":{"l":0,"r":1,"t":0.005,"b":1},"art/skills/sadara-ult.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/stranger-1.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/stranger-2.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/stranger-ult.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/tachibana-queens-will-true.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/tachibana-queens-will.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/tachibana-royal-guard.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/tachibana-true-form.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/tachibana-ult-wait.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/tachibana-ult.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/ymir-raggio.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/ymir-sfera.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/ymir-vipera.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/zenith-blade.webp":{"l":0.008,"r":1,"t":0,"b":1},"art/skills/zenith-ghosts.webp":{"l":0,"r":1,"t":0,"b":1},"art/skills/zenith-vita.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/crimson-ashfang.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/crimson-bee.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/crimson-golem.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/crimson-imp-1.webp":{"l":0.273,"r":0.992,"t":0.05,"b":0.955},"art/enemies/crimson-imp-2.webp":{"l":0.133,"r":0.977,"t":0.025,"b":0.99},"art/enemies/crimson-imp-3.webp":{"l":0.203,"r":0.914,"t":0.055,"b":1},"art/enemies/crimson-imp-4.webp":{"l":0.141,"r":0.938,"t":0.065,"b":0.995},"art/enemies/crimson-maw.webp":{"l":0,"r":1,"t":0.07,"b":1},"art/enemies/crimson-vixen.webp":{"l":0.023,"r":1,"t":0,"b":1},"art/enemies/crimson-wraith.webp":{"l":0.039,"r":0.875,"t":0.015,"b":1},"art/enemies/gilded-altea-skill-1.webp":{"l":0,"r":1,"t":0.025,"b":1},"art/enemies/gilded-altea-skill-2.webp":{"l":0.008,"r":0.992,"t":0.015,"b":1},"art/enemies/gilded-altea.webp":{"l":0.039,"r":1,"t":0,"b":1},"art/enemies/gilded-common-1.webp":{"l":0,"r":0.969,"t":0.005,"b":1},"art/enemies/gilded-common-2.webp":{"l":0,"r":1,"t":0,"b":0.995},"art/enemies/gilded-common-3.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/gilded-common-4.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/gilded-elite-1.webp":{"l":0.125,"r":1,"t":0,"b":1},"art/enemies/gilded-elite-2.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/gilded-elite-3.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/gilded-elite-4.webp":{"l":0,"r":0.961,"t":0,"b":1},"art/enemies/gilded-guard-x.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/gilded-guard-y.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/goblin-assassin-1.webp":{"l":0,"r":1,"t":0.02,"b":1},"art/enemies/goblin-assassin-2.webp":{"l":0,"r":1,"t":0.005,"b":1},"art/enemies/goblin-assassin-3.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/goblin-beast-1.webp":{"l":0,"r":1,"t":0,"b":0.995},"art/enemies/goblin-beast-2.webp":{"l":0,"r":1,"t":0.005,"b":1},"art/enemies/goblin-brawler-1.webp":{"l":0,"r":1,"t":0.005,"b":1},"art/enemies/goblin-brawler-2.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/goblin-flyer-1.webp":{"l":0,"r":1,"t":0.005,"b":1},"art/enemies/goblin-flyer-2.webp":{"l":0,"r":1,"t":0.025,"b":1},"art/enemies/goblin-flyer-3.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/goblin-guard.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/goblin-king-full.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/goblin-king.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/goblin-mage-1.webp":{"l":0.016,"r":1,"t":0,"b":1},"art/enemies/goblin-mage-2.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/goblin-mage-3.webp":{"l":0.047,"r":1,"t":0.07,"b":1},"art/enemies/goblin-raider-1.webp":{"l":0.086,"r":1,"t":0.025,"b":1},"art/enemies/goblin-raider-2.webp":{"l":0.039,"r":1,"t":0.005,"b":1},"art/enemies/goblin-raider-3.webp":{"l":0.211,"r":0.906,"t":0.03,"b":1},"art/enemies/goblin-raider-4.webp":{"l":0.094,"r":0.906,"t":0.03,"b":1},"art/enemies/ignara.webp":{"l":0,"r":1,"t":0.01,"b":1},"art/enemies/tidal-eel.webp":{"l":0,"r":0.992,"t":0,"b":1},"art/enemies/tidal-gulper.webp":{"l":0,"r":0.914,"t":0,"b":1},"art/enemies/tidal-hag.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/tidal-lurker.webp":{"l":0,"r":1,"t":0,"b":1},"art/enemies/tidal-maiden.webp":{"l":0,"r":1,"t":0.005,"b":1},"art/enemies/tidal-nerelle.webp":{"l":0.055,"r":0.969,"t":0,"b":1},"art/enemies/tidal-siren-abyss.webp":{"l":0,"r":1,"t":0.015,"b":1},"art/enemies/tidal-siren-pale.webp":{"l":0.141,"r":1,"t":0.005,"b":1},"art/enemies/tidal-siren-tide.webp":{"l":0,"r":1,"t":0,"b":1}};
-const ART_EDGES64 = {"art/albert.webp":{"l":0.31,"r":0.04,"t":0.44,"b":0.77},"art/alfael.webp":{"l":0.51,"r":0.77,"t":0.31,"b":0.85},"art/ana.webp":{"l":0.12,"r":0.28,"t":0.17,"b":0.25},"art/clea.webp":{"l":0.72,"r":0.51,"t":0.1,"b":0.96},"art/crystal.webp":{"l":0.39,"r":0.44,"t":0.21,"b":0.5},"art/dalila.webp":{"l":0,"r":0,"t":0.17,"b":0.27},"art/ektor.webp":{"l":0,"r":0.09,"t":0.21,"b":0.08},"art/elian.webp":{"l":0.44,"r":0.41,"t":0.1,"b":0.9},"art/hela.webp":{"l":0.31,"r":0.39,"t":0.23,"b":0.21},"art/ignara-forge.webp":{"l":0.51,"r":0.37,"t":0.29,"b":1},"art/iris.webp":{"l":0.72,"r":0.15,"t":0.31,"b":0.29},"art/johta.webp":{"l":0.41,"r":0.36,"t":0.21,"b":0.88},"art/julie.webp":{"l":0.21,"r":0.41,"t":0.06,"b":0.06},"art/kaori.webp":{"l":0,"r":0.08,"t":0.23,"b":0.25},"art/kayla.webp":{"l":0,"r":0.29,"t":0.15,"b":0.65},"art/lilith.webp":{"l":0.17,"r":0.37,"t":0.31,"b":0.38},"art/marea.webp":{"l":0,"r":0,"t":0.02,"b":0.67},"art/nana.webp":{"l":0,"r":0,"t":0.06,"b":0.48},"art/oreh-null.webp":{"l":0.88,"r":0.84,"t":0.48,"b":1},"art/oreh.webp":{"l":0,"r":0.05,"t":0.15,"b":0.71},"art/paul.webp":{"l":0.39,"r":0.95,"t":0.29,"b":0.65},"art/reo-buio.webp":{"l":0.17,"r":0.4,"t":0.77,"b":1},"art/reo-luce.webp":{"l":0.44,"r":0.21,"t":0.02,"b":1},"art/reo.webp":{"l":0,"r":0,"t":0,"b":0.65},"art/rin.webp":{"l":0.13,"r":0.88,"t":0.56,"b":0.44},"art/robin.webp":{"l":0.49,"r":0.31,"t":0.44,"b":0.27},"art/sadara.webp":{"l":0.21,"r":0.17,"t":0.1,"b":0.04},"art/stranger.webp":{"l":0.31,"r":0.64,"t":0.77,"b":0.35},"art/tachibana-bg.webp":{"l":1,"r":1,"t":1,"b":1},"art/tachibana.webp":{"l":0,"r":0.07,"t":0.19,"b":0.75},"art/ymir.webp":{"l":0.43,"r":0.87,"t":0.71,"b":0.88},"art/zenith.webp":{"l":0.09,"r":0,"t":0.23,"b":0.54},"art/skills/albert-pizza.webp":{"l":0.21,"r":0.56,"t":0.44,"b":0.73},"art/skills/albert-ramen.webp":{"l":0.37,"r":0.48,"t":0.33,"b":0.88},"art/skills/albert-ult.webp":{"l":0.17,"r":0.59,"t":0.77,"b":0.85},"art/skills/alfael-lacera.webp":{"l":0.35,"r":0.64,"t":0.06,"b":0.85},"art/skills/alfael-raggio.webp":{"l":0.96,"r":0.84,"t":0.44,"b":1},"art/skills/alfael-ult.webp":{"l":0.36,"r":0.47,"t":0.4,"b":0.92},"art/skills/ana-arti.webp":{"l":0.05,"r":0.15,"t":0.02,"b":0.58},"art/skills/ana-bombardamento.webp":{"l":0.29,"r":0.61,"t":0.54,"b":0.73},"art/skills/ana-ult.webp":{"l":0.69,"r":0.45,"t":0.4,"b":0.19},"art/skills/clea-giudizio.webp":{"l":0.72,"r":0.45,"t":0.35,"b":0.54},"art/skills/clea-mano-nera.webp":{"l":0.84,"r":0.6,"t":0.38,"b":0.79},"art/skills/clea-ordine.webp":{"l":0.79,"r":0.39,"t":0.15,"b":0.85},"art/skills/clea-talent.webp":{"l":0.63,"r":0.44,"t":0.5,"b":0.73},"art/skills/crystal-ether.webp":{"l":0.4,"r":0.55,"t":0.77,"b":0.1},"art/skills/crystal-shard.webp":{"l":0.76,"r":0.27,"t":0.83,"b":0.06},"art/skills/crystal-ult.webp":{"l":0.17,"r":0.4,"t":0.19,"b":0.15},"art/skills/dalila-frusta.webp":{"l":0.19,"r":0.21,"t":0.21,"b":0.1},"art/skills/dalila-furia.webp":{"l":0.59,"r":0.17,"t":0.21,"b":0.42},"art/skills/dalila-hammer.webp":{"l":0.29,"r":0.65,"t":0.63,"b":0.1},"art/skills/ektor-lance.webp":{"l":0.11,"r":0.13,"t":0,"b":0.1},"art/skills/ektor-sweep.webp":{"l":0.24,"r":0.49,"t":0.21,"b":0.08},"art/skills/ektor-ult.webp":{"l":0.48,"r":0,"t":0.96,"b":0.71},"art/skills/elian-gaze.webp":{"l":0.24,"r":0.57,"t":0.13,"b":0.83},"art/skills/elian-sky.webp":{"l":0,"r":0.4,"t":0.31,"b":0.92},"art/skills/elian-ult.webp":{"l":0.88,"r":0.85,"t":0.67,"b":1},"art/skills/hela-fiamma.webp":{"l":0.23,"r":0.41,"t":0.23,"b":0.1},"art/skills/hela-taglio.webp":{"l":0.25,"r":0.72,"t":0.6,"b":0.15},"art/skills/hela-ult.webp":{"l":1,"r":0.29,"t":0.75,"b":0.56},"art/skills/iris-grinder.webp":{"l":0.24,"r":0.28,"t":0.17,"b":0.38},"art/skills/iris-ripper.webp":{"l":0.59,"r":0.09,"t":0.42,"b":0.38},"art/skills/iris-vengeance.webp":{"l":0.65,"r":0.39,"t":0.48,"b":0.19},"art/skills/johta-ashen-step.webp":{"l":0.75,"r":0.57,"t":0.35,"b":0.56},"art/skills/johta-ember-power.webp":{"l":0.35,"r":0.21,"t":0.23,"b":0.92},"art/skills/johta-five-suns.webp":{"l":0.35,"r":0.6,"t":0.48,"b":0.98},"art/skills/julie-flood.webp":{"l":0.12,"r":0.68,"t":0.77,"b":0.29},"art/skills/julie-halo.webp":{"l":0.77,"r":0.29,"t":0.4,"b":0.35},"art/skills/julie-ult.webp":{"l":0.16,"r":0.55,"t":0.29,"b":0},"art/skills/kaori-fang-rush.webp":{"l":0.03,"r":0.44,"t":0.06,"b":0.15},"art/skills/kaori-high-kick.webp":{"l":0.39,"r":0.35,"t":0.23,"b":0.13},"art/skills/kaori-ult-fail.webp":{"l":0.17,"r":0.25,"t":0.19,"b":0.56},"art/skills/kaori-ult.webp":{"l":0,"r":0.19,"t":0.02,"b":0.1},"art/skills/kayla-blu.webp":{"l":0.63,"r":0.43,"t":0.52,"b":0.81},"art/skills/kayla-fatuo.webp":{"l":0.64,"r":0.25,"t":0.27,"b":0.5},"art/skills/kayla-tetro.webp":{"l":0.12,"r":0.32,"t":0.31,"b":0.42},"art/skills/lilith-curtsy.webp":{"l":0.13,"r":0.56,"t":0.17,"b":0.31},"art/skills/lilith-serve.webp":{"l":0.35,"r":0.43,"t":0.54,"b":0.35},"art/skills/lilith-ult.webp":{"l":0.04,"r":0.05,"t":0.17,"b":0.81},"art/skills/marea-current.webp":{"l":0.21,"r":0.29,"t":0.17,"b":0.9},"art/skills/marea-riptide.webp":{"l":0.39,"r":0.27,"t":0.29,"b":0.79},"art/skills/marea-ult.webp":{"l":0.59,"r":0.65,"t":0,"b":1},"art/skills/nana-haze.webp":{"l":0.07,"r":0,"t":0,"b":0.81},"art/skills/nana-jab.webp":{"l":0.2,"r":0.55,"t":0.4,"b":0.48},"art/skills/nana-ult.webp":{"l":0.24,"r":0.39,"t":0.4,"b":0.4},"art/skills/oreh-gold-blaze.webp":{"l":0.15,"r":0.36,"t":0,"b":0.98},"art/skills/oreh-judgment.webp":{"l":0.35,"r":0.24,"t":0.13,"b":0.9},"art/skills/oreh-lightning-flare.webp":{"l":0.04,"r":0,"t":0.23,"b":0.77},"art/skills/oreh-nihil.webp":{"l":0.39,"r":0.24,"t":0,"b":0.98},"art/skills/oreh-shadow.webp":{"l":0,"r":0.04,"t":0.04,"b":0.69},"art/skills/oreh-singularity.webp":{"l":0.51,"r":0.51,"t":0.27,"b":1},"art/skills/paul-fire.webp":{"l":0.37,"r":0.01,"t":0.38,"b":0.15},"art/skills/paul-round.webp":{"l":0.19,"r":0.72,"t":0.29,"b":0.81},"art/skills/paul-ult.webp":{"l":0.24,"r":0.61,"t":0.19,"b":0.4},"art/skills/reo-buio-sfera.webp":{"l":0,"r":0.43,"t":0,"b":0.85},"art/skills/reo-buio-spada.webp":{"l":0.95,"r":0.72,"t":0.71,"b":1},"art/skills/reo-luce-sfera.webp":{"l":0.63,"r":0.28,"t":0.23,"b":0.98},"art/skills/reo-luce-spada.webp":{"l":0.67,"r":0.48,"t":0.5,"b":1},"art/skills/reo-profezione.webp":{"l":0.59,"r":0.59,"t":0.02,"b":1},"art/skills/reo-scissione.webp":{"l":0.73,"r":0.96,"t":0.35,"b":0.96},"art/skills/reo-spacca.webp":{"l":0.04,"r":0.6,"t":0.44,"b":0.9},"art/skills/reo-tempo.webp":{"l":0.47,"r":0.45,"t":0.02,"b":1},"art/skills/rin-crimson-sphere-1.webp":{"l":0.52,"r":0.24,"t":0.33,"b":0.48},"art/skills/rin-crimson-sphere-2.webp":{"l":0.17,"r":0.25,"t":0.23,"b":0.21},"art/skills/rin-crimson-sphere-3.webp":{"l":0.33,"r":0.51,"t":0.38,"b":0.65},"art/skills/rin-ember-cut-1.webp":{"l":0.27,"r":0.08,"t":0.33,"b":0.35},"art/skills/rin-ember-cut-2.webp":{"l":0.52,"r":0.28,"t":0.21,"b":0.33},"art/skills/rin-ember-cut-3.webp":{"l":0.6,"r":0.32,"t":0.4,"b":0.71},"art/skills/rin-talent.webp":{"l":0.52,"r":0.35,"t":0.6,"b":0.54},"art/skills/rin-ult.webp":{"l":0,"r":0.43,"t":0.29,"b":0.17},"art/skills/robin-break.webp":{"l":0.33,"r":0.41,"t":0.42,"b":0.35},"art/skills/robin-prayer.webp":{"l":0,"r":0,"t":0.04,"b":0.79},"art/skills/robin-ult.webp":{"l":0.55,"r":0.28,"t":0.17,"b":0.63},"art/skills/sadara-guitar.webp":{"l":0.21,"r":0.44,"t":0.17,"b":0.21},"art/skills/sadara-sax.webp":{"l":0.15,"r":0.55,"t":0.19,"b":0.04},"art/skills/sadara-ult.webp":{"l":0.57,"r":0.47,"t":0.33,"b":0.08},"art/skills/stranger-1.webp":{"l":0.31,"r":0.64,"t":0.77,"b":0.35},"art/skills/stranger-2.webp":{"l":0.31,"r":0.64,"t":0.77,"b":0.35},"art/skills/stranger-ult.webp":{"l":0.31,"r":0.64,"t":0.77,"b":0.35},"art/skills/tachibana-queens-will-true.webp":{"l":0.56,"r":0.52,"t":0.13,"b":1},"art/skills/tachibana-queens-will.webp":{"l":0.8,"r":0.25,"t":0.27,"b":1},"art/skills/tachibana-royal-guard.webp":{"l":0.48,"r":0.25,"t":0.5,"b":0.92},"art/skills/tachibana-true-form.webp":{"l":0.33,"r":0.39,"t":0.1,"b":1},"art/skills/tachibana-ult-wait.webp":{"l":0.16,"r":0.56,"t":0.67,"b":0.98},"art/skills/tachibana-ult.webp":{"l":0.35,"r":0.31,"t":0.06,"b":1},"art/skills/ymir-raggio.webp":{"l":0.28,"r":0.72,"t":0.46,"b":0.17},"art/skills/ymir-sfera.webp":{"l":0.4,"r":0.64,"t":0.52,"b":0.77},"art/skills/ymir-vipera.webp":{"l":0.59,"r":0.59,"t":0.56,"b":0.9},"art/skills/zenith-blade.webp":{"l":0.03,"r":0.33,"t":0.29,"b":0.48},"art/skills/zenith-ghosts.webp":{"l":0.11,"r":0.11,"t":0.25,"b":0.42},"art/skills/zenith-vita.webp":{"l":0.19,"r":0.27,"t":0.25,"b":1},"art/enemies/crimson-ashfang.webp":{"l":0.79,"r":0.57,"t":0.33,"b":0.92},"art/enemies/crimson-bee.webp":{"l":0.4,"r":0.44,"t":0.15,"b":0.13},"art/enemies/crimson-golem.webp":{"l":0.33,"r":0.47,"t":0.23,"b":0.38},"art/enemies/crimson-imp-1.webp":{"l":0,"r":0.01,"t":0,"b":0},"art/enemies/crimson-imp-2.webp":{"l":0,"r":0,"t":0,"b":0.02},"art/enemies/crimson-imp-3.webp":{"l":0,"r":0,"t":0,"b":0.17},"art/enemies/crimson-imp-4.webp":{"l":0,"r":0,"t":0,"b":0.02},"art/enemies/crimson-maw.webp":{"l":0.19,"r":0.2,"t":0,"b":0.25},"art/enemies/crimson-vixen.webp":{"l":0,"r":0.11,"t":0.06,"b":0.58},"art/enemies/crimson-wraith.webp":{"l":0,"r":0,"t":0.02,"b":0.6},"art/enemies/gilded-altea-skill-1.webp":{"l":0.11,"r":0.21,"t":0,"b":0.81},"art/enemies/gilded-altea-skill-2.webp":{"l":0.09,"r":0.11,"t":0,"b":0.96},"art/enemies/gilded-altea.webp":{"l":0,"r":0.35,"t":0.06,"b":0.81},"art/enemies/gilded-common-1.webp":{"l":0.15,"r":0,"t":0.19,"b":0.77},"art/enemies/gilded-common-2.webp":{"l":0.47,"r":0.76,"t":0.21,"b":0.21},"art/enemies/gilded-common-3.webp":{"l":0.33,"r":0.21,"t":0.1,"b":0.69},"art/enemies/gilded-common-4.webp":{"l":0.13,"r":0.25,"t":0.38,"b":0.4},"art/enemies/gilded-elite-1.webp":{"l":0,"r":0.28,"t":0.06,"b":0.73},"art/enemies/gilded-elite-2.webp":{"l":0.25,"r":0.12,"t":0.04,"b":0.67},"art/enemies/gilded-elite-3.webp":{"l":0.13,"r":0.28,"t":0.19,"b":0.31},"art/enemies/gilded-elite-4.webp":{"l":0.33,"r":0,"t":0.19,"b":0.9},"art/enemies/gilded-guard-x.webp":{"l":0.67,"r":0.6,"t":0.02,"b":0.69},"art/enemies/gilded-guard-y.webp":{"l":0.51,"r":0.48,"t":0.1,"b":0.73},"art/enemies/goblin-assassin-1.webp":{"l":0.41,"r":0.31,"t":0.02,"b":0.79},"art/enemies/goblin-assassin-2.webp":{"l":0.24,"r":0.16,"t":0.21,"b":0.67},"art/enemies/goblin-assassin-3.webp":{"l":0.47,"r":0.76,"t":0.23,"b":0.79},"art/enemies/goblin-beast-1.webp":{"l":0.19,"r":0.31,"t":0,"b":0.02},"art/enemies/goblin-beast-2.webp":{"l":0.49,"r":0.49,"t":0.15,"b":1},"art/enemies/goblin-brawler-1.webp":{"l":0.31,"r":0.79,"t":0.17,"b":0.42},"art/enemies/goblin-brawler-2.webp":{"l":0.69,"r":0.89,"t":0.42,"b":0.88},"art/enemies/goblin-flyer-1.webp":{"l":0.11,"r":0.19,"t":0.21,"b":0.42},"art/enemies/goblin-flyer-2.webp":{"l":0.31,"r":0.27,"t":0,"b":0.69},"art/enemies/goblin-flyer-3.webp":{"l":0.45,"r":0.95,"t":0.33,"b":0.71},"art/enemies/goblin-guard.webp":{"l":0.19,"r":0.92,"t":0.58,"b":0.75},"art/enemies/goblin-king-full.webp":{"l":0.27,"r":0.61,"t":0.08,"b":1},"art/enemies/goblin-king.webp":{"l":0.27,"r":0.61,"t":0.08,"b":1},"art/enemies/goblin-mage-1.webp":{"l":0.05,"r":0.09,"t":0.23,"b":0.46},"art/enemies/goblin-mage-2.webp":{"l":0.23,"r":0.53,"t":0.5,"b":0.92},"art/enemies/goblin-mage-3.webp":{"l":0,"r":0.03,"t":0,"b":0.17},"art/enemies/goblin-raider-1.webp":{"l":0,"r":0.43,"t":0,"b":0.19},"art/enemies/goblin-raider-2.webp":{"l":0,"r":0.05,"t":0.21,"b":0.77},"art/enemies/goblin-raider-3.webp":{"l":0,"r":0,"t":0,"b":0.21},"art/enemies/goblin-raider-4.webp":{"l":0,"r":0,"t":0,"b":0.52},"art/enemies/ignara.webp":{"l":0.45,"r":0.57,"t":0.1,"b":1},"art/enemies/tidal-eel.webp":{"l":0.01,"r":0.15,"t":0.08,"b":0.56},"art/enemies/tidal-gulper.webp":{"l":0.2,"r":0,"t":0.25,"b":0.54},"art/enemies/tidal-hag.webp":{"l":0.16,"r":0.37,"t":0.31,"b":0.98},"art/enemies/tidal-lurker.webp":{"l":0.59,"r":0.61,"t":0.21,"b":1},"art/enemies/tidal-maiden.webp":{"l":0.11,"r":0.23,"t":0.19,"b":0.94},"art/enemies/tidal-nerelle.webp":{"l":0,"r":0.03,"t":0.71,"b":0.52},"art/enemies/tidal-siren-abyss.webp":{"l":0.57,"r":0.4,"t":0.13,"b":0.73},"art/enemies/tidal-siren-pale.webp":{"l":0,"r":0.2,"t":0.25,"b":0.81},"art/enemies/tidal-siren-tide.webp":{"l":0.75,"r":0.48,"t":0.23,"b":0.48},"art/npc/barkeep-chibi.webp":{"l":0,"r":0,"t":0,"b":0},"art/npc/barkeep-shock.webp":{"l":0.43,"r":0.73,"t":0,"b":1},"art/npc/barkeep-shout.webp":{"l":0.43,"r":0.43,"t":0,"b":0.9},"art/npc/barkeep-smug.webp":{"l":0.21,"r":0.44,"t":0,"b":0.88},"art/npc/barkeep.webp":{"l":0.44,"r":0.63,"t":0.17,"b":0.98},"art/npc/bram.webp":{"l":0.63,"r":0.24,"t":0.5,"b":0.13},"art/npc/cinder.webp":{"l":0.21,"r":0.45,"t":0.23,"b":0.29},"art/npc/clerk-chibi.webp":{"l":0,"r":0,"t":0,"b":0.08},"art/npc/clerk-facepalm.webp":{"l":0,"r":0,"t":0,"b":0.5},"art/npc/clerk-shock.webp":{"l":0.29,"r":0.09,"t":0.08,"b":0.48},"art/npc/clerk-smug.webp":{"l":0.04,"r":0.19,"t":0.02,"b":0.63},"art/npc/clerk.webp":{"l":0,"r":0,"t":0,"b":0.5},"art/npc/fennick-chibi.webp":{"l":0,"r":0,"t":0,"b":0.27},"art/npc/fennick-serious.webp":{"l":0.39,"r":0.45,"t":0.02,"b":1},"art/npc/fennick-shock.webp":{"l":0.36,"r":0.64,"t":0.21,"b":0.85},"art/npc/fennick-shy.webp":{"l":0.35,"r":0.57,"t":0.02,"b":0.96},"art/npc/fennick.webp":{"l":0,"r":0.57,"t":0,"b":0.81},"art/npc/goblin-chibi.webp":{"l":0,"r":0,"t":0,"b":0},"art/npc/heart-f.webp":{"l":0.08,"r":0.37,"t":0.06,"b":0.63},"art/npc/heart-m.webp":{"l":0.12,"r":0.33,"t":0.1,"b":0.63},"art/npc/herald.webp":{"l":0.85,"r":0.59,"t":0.31,"b":0.73},"art/npc/hollis-calm.webp":{"l":0.15,"r":0.72,"t":0.31,"b":1},"art/npc/hollis-chibi.webp":{"l":0,"r":0,"t":0,"b":0.17},"art/npc/jin.webp":{"l":0.35,"r":0.79,"t":0.44,"b":0.33},"art/npc/johta-calm.webp":{"l":0.63,"r":0.75,"t":0.54,"b":0.85},"art/npc/kira.webp":{"l":0,"r":0,"t":0,"b":0},"art/npc/maelis.webp":{"l":0.24,"r":0.28,"t":0.04,"b":0.98},"art/npc/pip-calm.webp":{"l":0.73,"r":0.57,"t":0.77,"b":1},"art/npc/pip-chibi.webp":{"l":0,"r":0,"t":0.13,"b":0.15},"art/npc/poppy.webp":{"l":0.2,"r":0.51,"t":0.15,"b":0.35},"art/npc/pottle-calm.webp":{"l":0.37,"r":0.52,"t":0.23,"b":0.88},"art/npc/pottle-chibi.webp":{"l":0,"r":0,"t":0.15,"b":0.08},"art/npc/rin-calm.webp":{"l":0.07,"r":0.09,"t":0.04,"b":0.92},"art/npc/sable.webp":{"l":0.68,"r":0.25,"t":0.48,"b":0.46},"art/npc/saffi-calm.webp":{"l":0.44,"r":0.57,"t":0.38,"b":0.9},"art/npc/saffi-chibi.webp":{"l":0,"r":0,"t":0.02,"b":0},"art/npc/saffi-idle.webp":{"l":0,"r":0.01,"t":0.02,"b":0.06},"art/npc/saffi.webp":{"l":0.28,"r":0.57,"t":0.27,"b":0.35},"art/npc/seraphine-calm.webp":{"l":0.19,"r":0.4,"t":0.23,"b":0.98},"art/npc/seraphine-idle.webp":{"l":0.04,"r":0.01,"t":0.06,"b":0.23},"art/npc/seraphine.webp":{"l":0.17,"r":0.24,"t":0.27,"b":0.17},"art/npc/seren.webp":{"l":0.01,"r":0.61,"t":0.23,"b":0.73},"art/npc/silas.webp":{"l":0.29,"r":0.72,"t":0.29,"b":0.73},"art/npc/thessa.webp":{"l":0.2,"r":0.4,"t":0.08,"b":0.21},"art/npc/vesper.webp":{"l":0.47,"r":0.37,"t":0.17,"b":0.88},"art/npc/wren-chibi.webp":{"l":0,"r":0,"t":0,"b":0.1},"art/npc/yuzuha.webp":{"l":0.4,"r":0.12,"t":0,"b":0.08},"art/you/chibi-f-fire.webp":{"l":0,"r":0,"t":0,"b":0.08},"art/you/chibi-f-grass.webp":{"l":0,"r":0,"t":0,"b":0.06},"art/you/chibi-f-water.webp":{"l":0,"r":0,"t":0,"b":0.13},"art/you/chibi-m-fire.webp":{"l":0,"r":0,"t":0.02,"b":0.29},"art/you/chibi-m-grass.webp":{"l":0.01,"r":0.21,"t":0.02,"b":0.15},"art/you/chibi-m-water.webp":{"l":0,"r":0.11,"t":0,"b":0.17},"art/you/f-fire.webp":{"l":0,"r":0,"t":0,"b":0.73},"art/you/f-grass.webp":{"l":0.04,"r":0.19,"t":0.13,"b":0.88},"art/you/f-water.webp":{"l":0,"r":0.15,"t":0.1,"b":0.67},"art/you/fight-f-fire.webp":{"l":0.47,"r":0.47,"t":0.25,"b":0.46},"art/you/fight-f-grass.webp":{"l":0.35,"r":0.8,"t":0,"b":0.38},"art/you/fight-f-water.webp":{"l":0.59,"r":0.73,"t":0.4,"b":0.54},"art/you/fight-m-fire.webp":{"l":0,"r":0.36,"t":0,"b":0.6},"art/you/fight-m-grass.webp":{"l":0.24,"r":0.12,"t":0.15,"b":0.88},"art/you/fight-m-water.webp":{"l":0,"r":0,"t":0,"b":0.79},"art/you/m-fire.webp":{"l":0,"r":0,"t":0.17,"b":0.65},"art/you/m-grass.webp":{"l":0,"r":0,"t":0,"b":0.75},"art/you/m-water.webp":{"l":0,"r":0,"t":0.02,"b":0.67}};
+const ART_EDGES64 = {"art/albert.webp":{"l":0.31,"r":0.04,"t":0.44,"b":0.77},"art/alfael.webp":{"l":0.51,"r":0.77,"t":0.31,"b":0.85},"art/ana.webp":{"l":0.12,"r":0.28,"t":0.17,"b":0.25},"art/clea.webp":{"l":0.72,"r":0.51,"t":0.1,"b":0.96},"art/crystal.webp":{"l":0.39,"r":0.44,"t":0.21,"b":0.5},"art/dalila.webp":{"l":0,"r":0,"t":0.17,"b":0.27},"art/ektor.webp":{"l":0,"r":0.09,"t":0.21,"b":0.08},"art/elian.webp":{"l":0.44,"r":0.41,"t":0.1,"b":0.9},"art/hela.webp":{"l":0.31,"r":0.39,"t":0.23,"b":0.21},"art/ignara-forge.webp":{"l":0.51,"r":0.37,"t":0.29,"b":1},"art/iris.webp":{"l":0.72,"r":0.15,"t":0.31,"b":0.29},"art/johta.webp":{"l":0.41,"r":0.36,"t":0.21,"b":0.88},"art/julie.webp":{"l":0.21,"r":0.41,"t":0.06,"b":0.06},"art/kaori.webp":{"l":0,"r":0.08,"t":0.23,"b":0.25},"art/kayla.webp":{"l":0,"r":0.29,"t":0.15,"b":0.65},"art/lilith.webp":{"l":0.17,"r":0.37,"t":0.31,"b":0.38},"art/marea.webp":{"l":0,"r":0,"t":0.02,"b":0.67},"art/nana.webp":{"l":0,"r":0,"t":0.06,"b":0.48},"art/oreh-null.webp":{"l":0.88,"r":0.84,"t":0.48,"b":1},"art/oreh.webp":{"l":0,"r":0.05,"t":0.15,"b":0.71},"art/paul.webp":{"l":0.39,"r":0.95,"t":0.29,"b":0.65},"art/reo-buio.webp":{"l":0.17,"r":0.4,"t":0.77,"b":1},"art/reo-luce.webp":{"l":0.44,"r":0.21,"t":0.02,"b":1},"art/reo.webp":{"l":0,"r":0,"t":0,"b":0.65},"art/rin.webp":{"l":0.13,"r":0.88,"t":0.56,"b":0.44},"art/robin.webp":{"l":0.49,"r":0.31,"t":0.44,"b":0.27},"art/sadara.webp":{"l":0.21,"r":0.17,"t":0.1,"b":0.04},"art/stranger.webp":{"l":0.31,"r":0.64,"t":0.77,"b":0.35},"art/tachibana-bg.webp":{"l":1,"r":1,"t":1,"b":1},"art/tachibana.webp":{"l":0,"r":0.07,"t":0.19,"b":0.75},"art/ymir.webp":{"l":0.43,"r":0.87,"t":0.71,"b":0.88},"art/zenith.webp":{"l":0.09,"r":0,"t":0.23,"b":0.54},"art/skills/albert-pizza.webp":{"l":0.21,"r":0.56,"t":0.44,"b":0.73},"art/skills/albert-ramen.webp":{"l":0.37,"r":0.48,"t":0.33,"b":0.88},"art/skills/albert-ult.webp":{"l":0.17,"r":0.59,"t":0.77,"b":0.85},"art/skills/alfael-lacera.webp":{"l":0.35,"r":0.64,"t":0.06,"b":0.85},"art/skills/alfael-raggio.webp":{"l":0.96,"r":0.84,"t":0.44,"b":1},"art/skills/alfael-ult.webp":{"l":0.36,"r":0.47,"t":0.4,"b":0.92},"art/skills/ana-arti.webp":{"l":0.05,"r":0.15,"t":0.02,"b":0.58},"art/skills/ana-bombardamento.webp":{"l":0.29,"r":0.61,"t":0.54,"b":0.73},"art/skills/ana-ult.webp":{"l":0.69,"r":0.45,"t":0.4,"b":0.19},"art/skills/clea-giudizio.webp":{"l":0.72,"r":0.45,"t":0.35,"b":0.54},"art/skills/clea-mano-nera.webp":{"l":0.84,"r":0.6,"t":0.38,"b":0.79},"art/skills/clea-ordine.webp":{"l":0.79,"r":0.39,"t":0.15,"b":0.85},"art/skills/clea-talent.webp":{"l":0.63,"r":0.44,"t":0.5,"b":0.73},"art/skills/crystal-ether.webp":{"l":0.4,"r":0.55,"t":0.77,"b":0.1},"art/skills/crystal-shard.webp":{"l":0.76,"r":0.27,"t":0.83,"b":0.06},"art/skills/crystal-ult.webp":{"l":0.17,"r":0.4,"t":0.19,"b":0.15},"art/skills/dalila-frusta.webp":{"l":0.19,"r":0.21,"t":0.21,"b":0.1},"art/skills/dalila-furia.webp":{"l":0.59,"r":0.17,"t":0.21,"b":0.42},"art/skills/dalila-hammer.webp":{"l":0.29,"r":0.65,"t":0.63,"b":0.1},"art/skills/ektor-lance.webp":{"l":0.11,"r":0.13,"t":0,"b":0.1},"art/skills/ektor-sweep.webp":{"l":0.24,"r":0.49,"t":0.21,"b":0.08},"art/skills/ektor-ult.webp":{"l":0.48,"r":0,"t":0.96,"b":0.71},"art/skills/elian-gaze.webp":{"l":0.24,"r":0.57,"t":0.13,"b":0.83},"art/skills/elian-sky.webp":{"l":0,"r":0.4,"t":0.31,"b":0.92},"art/skills/elian-ult.webp":{"l":0.88,"r":0.85,"t":0.67,"b":1},"art/skills/hela-fiamma.webp":{"l":0.23,"r":0.41,"t":0.23,"b":0.1},"art/skills/hela-taglio.webp":{"l":0.25,"r":0.72,"t":0.6,"b":0.15},"art/skills/hela-ult.webp":{"l":1,"r":0.29,"t":0.75,"b":0.56},"art/skills/iris-grinder.webp":{"l":0.24,"r":0.28,"t":0.17,"b":0.38},"art/skills/iris-ripper.webp":{"l":0.59,"r":0.09,"t":0.42,"b":0.38},"art/skills/iris-vengeance.webp":{"l":0.65,"r":0.39,"t":0.48,"b":0.19},"art/skills/johta-ashen-step.webp":{"l":0.75,"r":0.57,"t":0.35,"b":0.56},"art/skills/johta-ember-power.webp":{"l":0.35,"r":0.21,"t":0.23,"b":0.92},"art/skills/johta-five-suns.webp":{"l":0.35,"r":0.6,"t":0.48,"b":0.98},"art/skills/julie-flood.webp":{"l":0.12,"r":0.68,"t":0.77,"b":0.29},"art/skills/julie-halo.webp":{"l":0.77,"r":0.29,"t":0.4,"b":0.35},"art/skills/julie-ult.webp":{"l":0.16,"r":0.55,"t":0.29,"b":0},"art/skills/kaori-fang-rush.webp":{"l":0.03,"r":0.44,"t":0.06,"b":0.15},"art/skills/kaori-high-kick.webp":{"l":0.39,"r":0.35,"t":0.23,"b":0.13},"art/skills/kaori-ult-fail.webp":{"l":0.17,"r":0.25,"t":0.19,"b":0.56},"art/skills/kaori-ult.webp":{"l":0,"r":0.19,"t":0.02,"b":0.1},"art/skills/kayla-blu.webp":{"l":0.63,"r":0.43,"t":0.52,"b":0.81},"art/skills/kayla-fatuo.webp":{"l":0.64,"r":0.25,"t":0.27,"b":0.5},"art/skills/kayla-tetro.webp":{"l":0.12,"r":0.32,"t":0.31,"b":0.42},"art/skills/lilith-curtsy.webp":{"l":0.13,"r":0.56,"t":0.17,"b":0.31},"art/skills/lilith-serve.webp":{"l":0.35,"r":0.43,"t":0.54,"b":0.35},"art/skills/lilith-ult.webp":{"l":0.04,"r":0.05,"t":0.17,"b":0.81},"art/skills/marea-current.webp":{"l":0.21,"r":0.29,"t":0.17,"b":0.9},"art/skills/marea-riptide.webp":{"l":0.39,"r":0.27,"t":0.29,"b":0.79},"art/skills/marea-ult.webp":{"l":0.59,"r":0.65,"t":0,"b":1},"art/skills/nana-haze.webp":{"l":0.07,"r":0,"t":0,"b":0.81},"art/skills/nana-jab.webp":{"l":0.2,"r":0.55,"t":0.4,"b":0.48},"art/skills/nana-ult.webp":{"l":0.24,"r":0.39,"t":0.4,"b":0.4},"art/skills/oreh-gold-blaze.webp":{"l":0.15,"r":0.36,"t":0,"b":0.98},"art/skills/oreh-judgment.webp":{"l":0.35,"r":0.24,"t":0.13,"b":0.9},"art/skills/oreh-lightning-flare.webp":{"l":0.04,"r":0,"t":0.23,"b":0.77},"art/skills/oreh-nihil.webp":{"l":0.39,"r":0.24,"t":0,"b":0.98},"art/skills/oreh-shadow.webp":{"l":0,"r":0.04,"t":0.04,"b":0.69},"art/skills/oreh-singularity.webp":{"l":0.51,"r":0.51,"t":0.27,"b":1},"art/skills/paul-fire.webp":{"l":0.37,"r":0.01,"t":0.38,"b":0.15},"art/skills/paul-round.webp":{"l":0.19,"r":0.72,"t":0.29,"b":0.81},"art/skills/paul-ult.webp":{"l":0.24,"r":0.61,"t":0.19,"b":0.4},"art/skills/reo-buio-sfera.webp":{"l":0,"r":0.43,"t":0,"b":0.85},"art/skills/reo-buio-spada.webp":{"l":0.95,"r":0.72,"t":0.71,"b":1},"art/skills/reo-luce-sfera.webp":{"l":0.63,"r":0.28,"t":0.23,"b":0.98},"art/skills/reo-luce-spada.webp":{"l":0.67,"r":0.48,"t":0.5,"b":1},"art/skills/reo-profezione.webp":{"l":0.59,"r":0.59,"t":0.02,"b":1},"art/skills/reo-scissione.webp":{"l":0.73,"r":0.96,"t":0.35,"b":0.96},"art/skills/reo-spacca.webp":{"l":0.04,"r":0.6,"t":0.44,"b":0.9},"art/skills/reo-tempo.webp":{"l":0.47,"r":0.45,"t":0.02,"b":1},"art/skills/rin-crimson-sphere-1.webp":{"l":0.52,"r":0.24,"t":0.33,"b":0.48},"art/skills/rin-crimson-sphere-2.webp":{"l":0.17,"r":0.25,"t":0.23,"b":0.21},"art/skills/rin-crimson-sphere-3.webp":{"l":0.33,"r":0.51,"t":0.38,"b":0.65},"art/skills/rin-ember-cut-1.webp":{"l":0.27,"r":0.08,"t":0.33,"b":0.35},"art/skills/rin-ember-cut-2.webp":{"l":0.52,"r":0.28,"t":0.21,"b":0.33},"art/skills/rin-ember-cut-3.webp":{"l":0.6,"r":0.32,"t":0.4,"b":0.71},"art/skills/rin-talent.webp":{"l":0.52,"r":0.35,"t":0.6,"b":0.54},"art/skills/rin-ult.webp":{"l":0,"r":0.43,"t":0.29,"b":0.17},"art/skills/robin-break.webp":{"l":0.33,"r":0.41,"t":0.42,"b":0.35},"art/skills/robin-prayer.webp":{"l":0,"r":0,"t":0.04,"b":0.79},"art/skills/robin-ult.webp":{"l":0.55,"r":0.28,"t":0.17,"b":0.63},"art/skills/sadara-guitar.webp":{"l":0.21,"r":0.44,"t":0.17,"b":0.21},"art/skills/sadara-sax.webp":{"l":0.15,"r":0.55,"t":0.19,"b":0.04},"art/skills/sadara-ult.webp":{"l":0.57,"r":0.47,"t":0.33,"b":0.08},"art/skills/stranger-1.webp":{"l":0.31,"r":0.64,"t":0.77,"b":0.35},"art/skills/stranger-2.webp":{"l":0.31,"r":0.64,"t":0.77,"b":0.35},"art/skills/stranger-ult.webp":{"l":0.31,"r":0.64,"t":0.77,"b":0.35},"art/skills/tachibana-queens-will-true.webp":{"l":0.56,"r":0.52,"t":0.13,"b":1},"art/skills/tachibana-queens-will.webp":{"l":0.8,"r":0.25,"t":0.27,"b":1},"art/skills/tachibana-royal-guard.webp":{"l":0.48,"r":0.25,"t":0.5,"b":0.92},"art/skills/tachibana-true-form.webp":{"l":0.33,"r":0.39,"t":0.1,"b":1},"art/skills/tachibana-ult-wait.webp":{"l":0.16,"r":0.56,"t":0.67,"b":0.98},"art/skills/tachibana-ult.webp":{"l":0.35,"r":0.31,"t":0.06,"b":1},"art/skills/ymir-raggio.webp":{"l":0.28,"r":0.72,"t":0.46,"b":0.17},"art/skills/ymir-sfera.webp":{"l":0.4,"r":0.64,"t":0.52,"b":0.77},"art/skills/ymir-vipera.webp":{"l":0.59,"r":0.59,"t":0.56,"b":0.9},"art/skills/zenith-blade.webp":{"l":0.03,"r":0.33,"t":0.29,"b":0.48},"art/skills/zenith-ghosts.webp":{"l":0.11,"r":0.11,"t":0.25,"b":0.42},"art/skills/zenith-vita.webp":{"l":0.19,"r":0.27,"t":0.25,"b":1},"art/enemies/crimson-ashfang.webp":{"l":0.79,"r":0.57,"t":0.33,"b":0.92},"art/enemies/crimson-bee.webp":{"l":0.4,"r":0.44,"t":0.15,"b":0.13},"art/enemies/crimson-golem.webp":{"l":0.33,"r":0.47,"t":0.23,"b":0.38},"art/enemies/crimson-imp-1.webp":{"l":0,"r":0.01,"t":0,"b":0},"art/enemies/crimson-imp-2.webp":{"l":0,"r":0,"t":0,"b":0.02},"art/enemies/crimson-imp-3.webp":{"l":0,"r":0,"t":0,"b":0.17},"art/enemies/crimson-imp-4.webp":{"l":0,"r":0,"t":0,"b":0.02},"art/enemies/crimson-maw.webp":{"l":0.19,"r":0.2,"t":0,"b":0.25},"art/enemies/crimson-vixen.webp":{"l":0,"r":0.11,"t":0.06,"b":0.58},"art/enemies/crimson-wraith.webp":{"l":0,"r":0,"t":0.02,"b":0.6},"art/enemies/gilded-altea-skill-1.webp":{"l":0.11,"r":0.21,"t":0,"b":0.81},"art/enemies/gilded-altea-skill-2.webp":{"l":0.09,"r":0.11,"t":0,"b":0.96},"art/enemies/gilded-altea.webp":{"l":0,"r":0.35,"t":0.06,"b":0.81},"art/enemies/gilded-common-1.webp":{"l":0.15,"r":0,"t":0.19,"b":0.77},"art/enemies/gilded-common-2.webp":{"l":0.47,"r":0.76,"t":0.21,"b":0.21},"art/enemies/gilded-common-3.webp":{"l":0.33,"r":0.21,"t":0.1,"b":0.69},"art/enemies/gilded-common-4.webp":{"l":0.13,"r":0.25,"t":0.38,"b":0.4},"art/enemies/gilded-elite-1.webp":{"l":0,"r":0.28,"t":0.06,"b":0.73},"art/enemies/gilded-elite-2.webp":{"l":0.25,"r":0.12,"t":0.04,"b":0.67},"art/enemies/gilded-elite-3.webp":{"l":0.13,"r":0.28,"t":0.19,"b":0.31},"art/enemies/gilded-elite-4.webp":{"l":0.33,"r":0,"t":0.19,"b":0.9},"art/enemies/gilded-guard-x.webp":{"l":0.67,"r":0.6,"t":0.02,"b":0.69},"art/enemies/gilded-guard-y.webp":{"l":0.51,"r":0.48,"t":0.1,"b":0.73},"art/enemies/goblin-assassin-1.webp":{"l":0.41,"r":0.31,"t":0.02,"b":0.79},"art/enemies/goblin-assassin-2.webp":{"l":0.24,"r":0.16,"t":0.21,"b":0.67},"art/enemies/goblin-assassin-3.webp":{"l":0.47,"r":0.76,"t":0.23,"b":0.79},"art/enemies/goblin-beast-1.webp":{"l":0.19,"r":0.31,"t":0,"b":0.02},"art/enemies/goblin-beast-2.webp":{"l":0.49,"r":0.49,"t":0.15,"b":1},"art/enemies/goblin-brawler-1.webp":{"l":0.31,"r":0.79,"t":0.17,"b":0.42},"art/enemies/goblin-brawler-2.webp":{"l":0.69,"r":0.89,"t":0.42,"b":0.88},"art/enemies/goblin-flyer-1.webp":{"l":0.11,"r":0.19,"t":0.21,"b":0.42},"art/enemies/goblin-flyer-2.webp":{"l":0.31,"r":0.27,"t":0,"b":0.69},"art/enemies/goblin-flyer-3.webp":{"l":0.45,"r":0.95,"t":0.33,"b":0.71},"art/enemies/goblin-guard.webp":{"l":0.19,"r":0.92,"t":0.58,"b":0.75},"art/enemies/goblin-king-full.webp":{"l":0.27,"r":0.61,"t":0.08,"b":1},"art/enemies/goblin-king.webp":{"l":0.27,"r":0.61,"t":0.08,"b":1},"art/enemies/goblin-mage-1.webp":{"l":0.05,"r":0.09,"t":0.23,"b":0.46},"art/enemies/goblin-mage-2.webp":{"l":0.23,"r":0.53,"t":0.5,"b":0.92},"art/enemies/goblin-mage-3.webp":{"l":0,"r":0.03,"t":0,"b":0.17},"art/enemies/goblin-raider-1.webp":{"l":0,"r":0.43,"t":0,"b":0.19},"art/enemies/goblin-raider-2.webp":{"l":0,"r":0.05,"t":0.21,"b":0.77},"art/enemies/goblin-raider-3.webp":{"l":0,"r":0,"t":0,"b":0.21},"art/enemies/goblin-raider-4.webp":{"l":0,"r":0,"t":0,"b":0.52},"art/enemies/ignara.webp":{"l":0.45,"r":0.57,"t":0.1,"b":1},"art/enemies/tidal-eel.webp":{"l":0.01,"r":0.15,"t":0.08,"b":0.56},"art/enemies/tidal-gulper.webp":{"l":0.2,"r":0,"t":0.25,"b":0.54},"art/enemies/tidal-hag.webp":{"l":0.16,"r":0.37,"t":0.31,"b":0.98},"art/enemies/tidal-lurker.webp":{"l":0.59,"r":0.61,"t":0.21,"b":1},"art/enemies/tidal-maiden.webp":{"l":0.11,"r":0.23,"t":0.19,"b":0.94},"art/enemies/tidal-nerelle.webp":{"l":0,"r":0.03,"t":0.71,"b":0.52},"art/enemies/tidal-siren-abyss.webp":{"l":0.57,"r":0.4,"t":0.13,"b":0.73},"art/enemies/tidal-siren-pale.webp":{"l":0,"r":0.2,"t":0.25,"b":0.81},"art/enemies/tidal-siren-tide.webp":{"l":0.75,"r":0.48,"t":0.23,"b":0.48},"art/npc/barkeep-chibi.webp":{"l":0,"r":0,"t":0,"b":0},"art/npc/barkeep-shock.webp":{"l":0.43,"r":0.73,"t":0,"b":1},"art/npc/barkeep-shout.webp":{"l":0.43,"r":0.43,"t":0,"b":0.9},"art/npc/barkeep-smug.webp":{"l":0.21,"r":0.44,"t":0,"b":0.88},"art/npc/barkeep.webp":{"l":0.44,"r":0.63,"t":0.17,"b":0.98},"art/npc/bram.webp":{"l":0.63,"r":0.24,"t":0.5,"b":0.13},"art/npc/cinder.webp":{"l":0.21,"r":0.45,"t":0.23,"b":0.29},"art/npc/clerk-chibi.webp":{"l":0,"r":0,"t":0,"b":0.08},"art/npc/clerk-facepalm.webp":{"l":0,"r":0,"t":0,"b":0.5},"art/npc/clerk-shock.webp":{"l":0.29,"r":0.09,"t":0.08,"b":0.48},"art/npc/clerk-smug.webp":{"l":0.04,"r":0.19,"t":0.02,"b":0.63},"art/npc/clerk.webp":{"l":0,"r":0,"t":0,"b":0.5},"art/npc/fennick-chibi.webp":{"l":0,"r":0,"t":0,"b":0.27},"art/npc/fennick-serious.webp":{"l":0.39,"r":0.45,"t":0.02,"b":1},"art/npc/fennick-shock.webp":{"l":0.36,"r":0.64,"t":0.21,"b":0.85},"art/npc/fennick-shy.webp":{"l":0.35,"r":0.57,"t":0.02,"b":0.96},"art/npc/fennick.webp":{"l":0,"r":0.57,"t":0,"b":0.81},"art/npc/goblin-chibi.webp":{"l":0,"r":0,"t":0,"b":0},"art/npc/heart-f.webp":{"l":0.08,"r":0.37,"t":0.06,"b":0.63},"art/npc/heart-m.webp":{"l":0.12,"r":0.33,"t":0.1,"b":0.63},"art/npc/herald.webp":{"l":0.85,"r":0.59,"t":0.31,"b":0.73},"art/npc/hollis-calm.webp":{"l":0.15,"r":0.72,"t":0.31,"b":1},"art/npc/hollis-chibi.webp":{"l":0,"r":0,"t":0,"b":0.17},"art/npc/jin.webp":{"l":0.35,"r":0.79,"t":0.44,"b":0.33},"art/npc/johta-calm.webp":{"l":0.63,"r":0.75,"t":0.54,"b":0.85},"art/npc/kira.webp":{"l":0,"r":0,"t":0,"b":0},"art/npc/maelis.webp":{"l":0.24,"r":0.28,"t":0.04,"b":0.98},"art/npc/pip-calm.webp":{"l":0.73,"r":0.57,"t":0.77,"b":1},"art/npc/pip-chibi.webp":{"l":0,"r":0,"t":0.13,"b":0.15},"art/npc/poppy.webp":{"l":0.2,"r":0.51,"t":0.15,"b":0.35},"art/npc/pottle-calm.webp":{"l":0.37,"r":0.52,"t":0.23,"b":0.88},"art/npc/pottle-chibi.webp":{"l":0,"r":0,"t":0.15,"b":0.08},"art/npc/rin-calm.webp":{"l":0.07,"r":0.09,"t":0.04,"b":0.92},"art/npc/sable.webp":{"l":0.68,"r":0.25,"t":0.48,"b":0.46},"art/npc/saffi-calm.webp":{"l":0.44,"r":0.57,"t":0.38,"b":0.9},"art/npc/saffi-chibi.webp":{"l":0,"r":0,"t":0.02,"b":0},"art/npc/saffi-idle.webp":{"l":0,"r":0.01,"t":0.02,"b":0.06},"art/npc/saffi.webp":{"l":0.28,"r":0.57,"t":0.27,"b":0.35},"art/npc/seraphine-calm.webp":{"l":0.19,"r":0.4,"t":0.23,"b":0.98},"art/npc/seraphine-idle.webp":{"l":0.04,"r":0.01,"t":0.06,"b":0.23},"art/npc/seraphine.webp":{"l":0.17,"r":0.24,"t":0.27,"b":0.17},"art/npc/seren.webp":{"l":0.01,"r":0.61,"t":0.23,"b":0.73},"art/npc/silas.webp":{"l":0.29,"r":0.72,"t":0.29,"b":0.73},"art/npc/thessa.webp":{"l":0.2,"r":0.4,"t":0.08,"b":0.21},"art/npc/vesper.webp":{"l":0.47,"r":0.37,"t":0.17,"b":0.88},"art/npc/wren-chibi.webp":{"l":0,"r":0,"t":0,"b":0.1},"art/npc/yuzuha.webp":{"l":0.4,"r":0.12,"t":0,"b":0.08},"art/you/chibi-f-fire.webp":{"l":0,"r":0,"t":0,"b":0.08},"art/you/chibi-f-grass.webp":{"l":0,"r":0,"t":0,"b":0.06},"art/you/chibi-f-water.webp":{"l":0,"r":0,"t":0,"b":0.13},"art/you/chibi-m-fire.webp":{"l":0,"r":0,"t":0.02,"b":0.29},"art/you/chibi-m-grass.webp":{"l":0.01,"r":0.21,"t":0.02,"b":0.15},"art/you/chibi-m-water.webp":{"l":0,"r":0.11,"t":0,"b":0.17},"art/you/f-fire.webp":{"l":0,"r":0,"t":0,"b":0.73},"art/you/f-grass.webp":{"l":0.04,"r":0.19,"t":0.13,"b":0.88},"art/you/f-water.webp":{"l":0,"r":0.15,"t":0.1,"b":0.67},"art/you/fight-f-fire.webp":{"l":0.47,"r":0.47,"t":0.25,"b":0.46},"art/you/fight-f-grass.webp":{"l":0.35,"r":0.8,"t":0,"b":0.38},"art/you/fight-f-water.webp":{"l":0.59,"r":0.73,"t":0.4,"b":0.54},"art/you/fight-m-fire.webp":{"l":0,"r":0.36,"t":0,"b":0.6},"art/you/fight-m-grass.webp":{"l":0.24,"r":0.12,"t":0.15,"b":0.88},"art/you/fight-m-water.webp":{"l":0,"r":0,"t":0,"b":0.79},"art/you/m-fire.webp":{"l":0,"r":0,"t":0.17,"b":0.65},"art/you/m-grass.webp":{"l":0,"r":0,"t":0,"b":0.75},"art/you/m-water.webp":{"l":0,"r":0,"t":0.02,"b":0.67},"art/you/ssr-f-fire.webp":{"l":0.71,"r":0.45,"t":0.79,"b":0.38},"art/you/ssr-f-grass.webp":{"l":0.64,"r":0.28,"t":0.21,"b":0.4},"art/you/ssr-f-water.webp":{"l":0.51,"r":0.25,"t":0.25,"b":0.83},"art/you/ssr-m-fire.webp":{"l":0.2,"r":0.61,"t":0.38,"b":0.96},"art/you/ssr-m-grass.webp":{"l":0.63,"r":0.81,"t":0.4,"b":0.58},"art/you/ssr-m-water.webp":{"l":0.49,"r":0.56,"t":0.4,"b":0.79},"art/you/ur-f-fire.webp":{"l":0.76,"r":0.47,"t":0.75,"b":0.31},"art/you/ur-f-grass.webp":{"l":0.11,"r":0.36,"t":0.25,"b":0.42},"art/you/ur-f-water.webp":{"l":0.52,"r":0.19,"t":0.06,"b":0.31},"art/you/ur-m-fire.webp":{"l":0.96,"r":0.65,"t":0.85,"b":0.94},"art/you/ur-m-grass.webp":{"l":0.43,"r":0.6,"t":0.73,"b":0.63},"art/you/ur-m-water.webp":{"l":0.23,"r":0.43,"t":0.42,"b":0.42}};
 const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   let uid = 0, busy = false, run = runOf("raid", "shade"), live = false, countdown = 0, paused = false;
   /* the moving lines of the first pull, kept across fights: drawn only while the fight is on screen */
@@ -25975,7 +25985,7 @@ const ARCHIVE = (() => {
 const PHONE = /iPhone|iPod/.test(navigator.userAgent) || (/Android/.test(navigator.userAgent) && /Mobile/.test(navigator.userAgent)) || navigator.userAgentData?.mobile === true;
 const PHONE_KIT = (() => {
   // each picture's own width: a copy exists only below it
-  const NATIVE = {"albert.webp":1312,"alfael.webp":1312,"ana.webp":1312,"clea.webp":1312,"crystal.webp":1312,"dalila.webp":1312,"ektor.webp":1312,"elian.webp":1312,"enemies/crimson-ashfang.webp":1312,"enemies/crimson-bee.webp":1312,"enemies/crimson-golem.webp":1312,"enemies/crimson-imp-1.webp":1312,"enemies/crimson-imp-2.webp":1312,"enemies/crimson-imp-3.webp":1312,"enemies/crimson-imp-4.webp":1312,"enemies/crimson-maw.webp":1312,"enemies/crimson-vixen.webp":1312,"enemies/crimson-wraith.webp":1312,"enemies/gilded-altea-skill-1.webp":1312,"enemies/gilded-altea-skill-2.webp":1312,"enemies/gilded-altea.webp":1312,"enemies/gilded-common-1.webp":1312,"enemies/gilded-common-2.webp":1312,"enemies/gilded-common-3.webp":1312,"enemies/gilded-common-4.webp":1312,"enemies/gilded-elite-1.webp":1312,"enemies/gilded-elite-2.webp":1312,"enemies/gilded-elite-3.webp":1312,"enemies/gilded-elite-4.webp":1312,"enemies/gilded-guard-x.webp":1312,"enemies/gilded-guard-y.webp":1312,"enemies/goblin-assassin-1.webp":1312,"enemies/goblin-assassin-2.webp":1312,"enemies/goblin-assassin-3.webp":1312,"enemies/goblin-beast-1.webp":1312,"enemies/goblin-beast-2.webp":1312,"enemies/goblin-brawler-1.webp":1312,"enemies/goblin-brawler-2.webp":1312,"enemies/goblin-flyer-1.webp":1312,"enemies/goblin-flyer-2.webp":1312,"enemies/goblin-flyer-3.webp":1312,"enemies/goblin-guard.webp":1312,"enemies/goblin-king-full.webp":1312,"enemies/goblin-king.webp":1312,"enemies/goblin-mage-1.webp":1312,"enemies/goblin-mage-2.webp":1312,"enemies/goblin-mage-3.webp":1312,"enemies/goblin-raider-1.webp":1312,"enemies/goblin-raider-2.webp":1312,"enemies/goblin-raider-3.webp":1312,"enemies/goblin-raider-4.webp":1312,"enemies/ignara.webp":1312,"enemies/tidal-eel.webp":1312,"enemies/tidal-gulper.webp":1312,"enemies/tidal-hag.webp":1312,"enemies/tidal-lurker.webp":1312,"enemies/tidal-maiden.webp":1312,"enemies/tidal-nerelle.webp":1312,"enemies/tidal-siren-abyss.webp":1312,"enemies/tidal-siren-pale.webp":1312,"enemies/tidal-siren-tide.webp":1312,"hela.webp":1312,"ignara-forge.webp":1282,"iris.webp":1312,"items/ember-ore.webp":384,"items/gruk-head.webp":512,"items/mirror-shard.webp":512,"items/potion-l.webp":384,"items/potion-m.webp":384,"items/potion-s.webp":384,"johta.webp":1312,"julie.webp":1312,"kaori.webp":1312,"kayla.webp":1312,"lilith.webp":1312,"marea.webp":1312,"nana.webp":1312,"npc/barkeep-chibi.webp":1312,"npc/barkeep-shock.webp":1312,"npc/barkeep-shout.webp":1312,"npc/barkeep-smug.webp":1312,"npc/barkeep.webp":1312,"npc/bram.webp":1312,"npc/cinder.webp":1312,"npc/clerk-chibi.webp":1312,"npc/clerk-facepalm.webp":1312,"npc/clerk-shock.webp":1312,"npc/clerk-smug.webp":1312,"npc/clerk.webp":1312,"npc/fennick-chibi.webp":1312,"npc/fennick-serious.webp":1312,"npc/fennick-shock.webp":1312,"npc/fennick-shy.webp":1312,"npc/fennick.webp":1312,"npc/goblin-chibi.webp":1312,"npc/heart-f.webp":1312,"npc/heart-m.webp":1312,"npc/herald.webp":1312,"npc/hollis-calm.webp":1312,"npc/hollis-chibi.webp":1312,"npc/jin.webp":1312,"npc/johta-calm.webp":1312,"npc/kira.webp":1312,"npc/maelis.webp":1312,"npc/pip-calm.webp":1312,"npc/pip-chibi.webp":1312,"npc/poppy.webp":1312,"npc/pottle-calm.webp":1312,"npc/pottle-chibi.webp":1312,"npc/rin-calm.webp":1312,"npc/sable.webp":1312,"npc/saffi-calm.webp":1312,"npc/saffi-chibi.webp":1312,"npc/saffi-idle.webp":1312,"npc/saffi.webp":1312,"npc/seraphine-calm.webp":1312,"npc/seraphine-idle.webp":1312,"npc/seraphine.webp":1312,"npc/seren.webp":1312,"npc/silas.webp":1312,"npc/thessa.webp":1312,"npc/vesper.webp":1312,"npc/wren-chibi.webp":1312,"npc/yuzuha.webp":1312,"oreh-null.webp":1312,"oreh.webp":1312,"paul.webp":1312,"reo-buio.webp":1312,"reo-luce.webp":1312,"reo.webp":1312,"rin.webp":1281,"robin.webp":1312,"sadara.webp":1312,"skills/albert-pizza.webp":1312,"skills/albert-ramen.webp":1312,"skills/albert-ult.webp":1312,"skills/alfael-lacera.webp":1312,"skills/alfael-raggio.webp":1312,"skills/alfael-ult.webp":1312,"skills/ana-arti.webp":1312,"skills/ana-bombardamento.webp":1312,"skills/ana-ult.webp":1312,"skills/clea-giudizio.webp":1312,"skills/clea-mano-nera.webp":1312,"skills/clea-ordine.webp":1312,"skills/clea-talent.webp":1312,"skills/crystal-ether.webp":1312,"skills/crystal-shard.webp":1312,"skills/crystal-ult.webp":1312,"skills/dalila-frusta.webp":1312,"skills/dalila-furia.webp":1312,"skills/dalila-hammer.webp":1312,"skills/ektor-lance.webp":1312,"skills/ektor-sweep.webp":1312,"skills/ektor-ult.webp":1312,"skills/elian-gaze.webp":1312,"skills/elian-sky.webp":1312,"skills/elian-ult.webp":1312,"skills/hela-fiamma.webp":1312,"skills/hela-taglio.webp":1312,"skills/hela-ult.webp":1312,"skills/iris-grinder.webp":1312,"skills/iris-ripper.webp":1312,"skills/iris-vengeance.webp":1312,"skills/johta-ashen-step.webp":1312,"skills/johta-ember-power.webp":1312,"skills/johta-five-suns.webp":1312,"skills/julie-flood.webp":1312,"skills/julie-halo.webp":1312,"skills/julie-ult.webp":1312,"skills/kaori-fang-rush.webp":1312,"skills/kaori-high-kick.webp":1312,"skills/kaori-ult-fail.webp":1312,"skills/kaori-ult.webp":1312,"skills/kayla-blu.webp":1312,"skills/kayla-fatuo.webp":1312,"skills/kayla-tetro.webp":1312,"skills/lilith-curtsy.webp":1312,"skills/lilith-serve.webp":1312,"skills/lilith-ult.webp":1312,"skills/marea-current.webp":1312,"skills/marea-riptide.webp":1312,"skills/marea-ult.webp":1312,"skills/nana-haze.webp":1312,"skills/nana-jab.webp":1312,"skills/nana-ult.webp":1312,"skills/oreh-gold-blaze.webp":1312,"skills/oreh-judgment.webp":1312,"skills/oreh-lightning-flare.webp":1312,"skills/oreh-nihil.webp":1312,"skills/oreh-shadow.webp":1312,"skills/oreh-singularity.webp":1312,"skills/paul-fire.webp":1312,"skills/paul-round.webp":1312,"skills/paul-ult.webp":1312,"skills/reo-buio-sfera.webp":1312,"skills/reo-buio-spada.webp":1312,"skills/reo-luce-sfera.webp":1312,"skills/reo-luce-spada.webp":1312,"skills/reo-profezione.webp":1312,"skills/reo-scissione.webp":1312,"skills/reo-spacca.webp":1312,"skills/reo-tempo.webp":1312,"skills/rin-crimson-sphere-1.webp":656,"skills/rin-crimson-sphere-2.webp":656,"skills/rin-crimson-sphere-3.webp":656,"skills/rin-ember-cut-1.webp":656,"skills/rin-ember-cut-2.webp":656,"skills/rin-ember-cut-3.webp":656,"skills/rin-talent.webp":656,"skills/rin-ult.webp":1004,"skills/robin-break.webp":1312,"skills/robin-prayer.webp":1312,"skills/robin-ult.webp":1312,"skills/sadara-guitar.webp":1312,"skills/sadara-sax.webp":1312,"skills/sadara-ult.webp":1312,"skills/stranger-1.webp":1312,"skills/stranger-2.webp":1312,"skills/stranger-ult.webp":1312,"skills/tachibana-queens-will-true.webp":656,"skills/tachibana-queens-will.webp":656,"skills/tachibana-royal-guard.webp":656,"skills/tachibana-true-form.webp":656,"skills/tachibana-ult-wait.webp":656,"skills/tachibana-ult.webp":1312,"skills/ymir-raggio.webp":1312,"skills/ymir-sfera.webp":1312,"skills/ymir-vipera.webp":1312,"skills/zenith-blade.webp":1312,"skills/zenith-ghosts.webp":1312,"skills/zenith-vita.webp":1312,"story/aerial.webp":1672,"story/brackenford.webp":1672,"story/brimwick.webp":1672,"story/chapel.webp":2048,"story/cinderglass.webp":2048,"story/clouds.webp":2560,"story/crossing.webp":1920,"story/fernwatch.webp":2048,"story/goblin-cave-in.webp":2048,"story/goblin-cave.webp":2048,"story/hearth.webp":2048,"story/kettle-in.webp":2048,"story/kettle.webp":2048,"story/lake.webp":1672,"story/lighthouse95.webp":2048,"story/pier95.webp":2048,"story/registry95.webp":2048,"story/street.webp":1672,"story/talk-crimson-reach.webp":2048,"story/talk-gilded-steppe.webp":2048,"story/talk-goblin-hollow.webp":2048,"story/talk-tidal-shelf.webp":2048,"story/tavern.webp":2048,"story/tower-view.webp":2048,"story/truck.webp":1600,"story/vents.webp":2048,"stranger.webp":1312,"tachibana-bg.webp":1312,"tachibana.webp":1312,"ui/lr-m.webp":640,"ui/lr-s.webp":256,"ui/lr.webp":1420,"ui/ur-m.webp":640,"ui/ur-s.webp":256,"ui/ur.webp":1581,"ymir.webp":1312,"you/chibi-f-fire.webp":1312,"you/chibi-f-grass.webp":1312,"you/chibi-f-water.webp":1312,"you/chibi-m-fire.webp":1312,"you/chibi-m-grass.webp":1312,"you/chibi-m-water.webp":1312,"you/f-fire.webp":1312,"you/f-grass.webp":1312,"you/f-water.webp":1312,"you/fight-f-fire.webp":1312,"you/fight-f-grass.webp":1312,"you/fight-f-water.webp":1312,"you/fight-m-fire.webp":1312,"you/fight-m-grass.webp":1312,"you/fight-m-water.webp":1312,"you/m-fire.webp":1312,"you/m-grass.webp":1312,"you/m-water.webp":1312,"zenith.webp":1312};
+  const NATIVE = {"albert.webp":1312,"alfael.webp":1312,"ana.webp":1312,"clea.webp":1312,"crystal.webp":1312,"dalila.webp":1312,"ektor.webp":1312,"elian.webp":1312,"enemies/crimson-ashfang.webp":1312,"enemies/crimson-bee.webp":1312,"enemies/crimson-golem.webp":1312,"enemies/crimson-imp-1.webp":1312,"enemies/crimson-imp-2.webp":1312,"enemies/crimson-imp-3.webp":1312,"enemies/crimson-imp-4.webp":1312,"enemies/crimson-maw.webp":1312,"enemies/crimson-vixen.webp":1312,"enemies/crimson-wraith.webp":1312,"enemies/gilded-altea-skill-1.webp":1312,"enemies/gilded-altea-skill-2.webp":1312,"enemies/gilded-altea.webp":1312,"enemies/gilded-common-1.webp":1312,"enemies/gilded-common-2.webp":1312,"enemies/gilded-common-3.webp":1312,"enemies/gilded-common-4.webp":1312,"enemies/gilded-elite-1.webp":1312,"enemies/gilded-elite-2.webp":1312,"enemies/gilded-elite-3.webp":1312,"enemies/gilded-elite-4.webp":1312,"enemies/gilded-guard-x.webp":1312,"enemies/gilded-guard-y.webp":1312,"enemies/goblin-assassin-1.webp":1312,"enemies/goblin-assassin-2.webp":1312,"enemies/goblin-assassin-3.webp":1312,"enemies/goblin-beast-1.webp":1312,"enemies/goblin-beast-2.webp":1312,"enemies/goblin-brawler-1.webp":1312,"enemies/goblin-brawler-2.webp":1312,"enemies/goblin-flyer-1.webp":1312,"enemies/goblin-flyer-2.webp":1312,"enemies/goblin-flyer-3.webp":1312,"enemies/goblin-guard.webp":1312,"enemies/goblin-king-full.webp":1312,"enemies/goblin-king.webp":1312,"enemies/goblin-mage-1.webp":1312,"enemies/goblin-mage-2.webp":1312,"enemies/goblin-mage-3.webp":1312,"enemies/goblin-raider-1.webp":1312,"enemies/goblin-raider-2.webp":1312,"enemies/goblin-raider-3.webp":1312,"enemies/goblin-raider-4.webp":1312,"enemies/ignara.webp":1312,"enemies/tidal-eel.webp":1312,"enemies/tidal-gulper.webp":1312,"enemies/tidal-hag.webp":1312,"enemies/tidal-lurker.webp":1312,"enemies/tidal-maiden.webp":1312,"enemies/tidal-nerelle.webp":1312,"enemies/tidal-siren-abyss.webp":1312,"enemies/tidal-siren-pale.webp":1312,"enemies/tidal-siren-tide.webp":1312,"hela.webp":1312,"ignara-forge.webp":1282,"iris.webp":1312,"items/ember-ore.webp":384,"items/gruk-head.webp":512,"items/mirror-shard.webp":512,"items/potion-l.webp":384,"items/potion-m.webp":384,"items/potion-s.webp":384,"johta.webp":1312,"julie.webp":1312,"kaori.webp":1312,"kayla.webp":1312,"lilith.webp":1312,"marea.webp":1312,"nana.webp":1312,"npc/barkeep-chibi.webp":1312,"npc/barkeep-shock.webp":1312,"npc/barkeep-shout.webp":1312,"npc/barkeep-smug.webp":1312,"npc/barkeep.webp":1312,"npc/bram.webp":1312,"npc/cinder.webp":1312,"npc/clerk-chibi.webp":1312,"npc/clerk-facepalm.webp":1312,"npc/clerk-shock.webp":1312,"npc/clerk-smug.webp":1312,"npc/clerk.webp":1312,"npc/fennick-chibi.webp":1312,"npc/fennick-serious.webp":1312,"npc/fennick-shock.webp":1312,"npc/fennick-shy.webp":1312,"npc/fennick.webp":1312,"npc/goblin-chibi.webp":1312,"npc/heart-f.webp":1312,"npc/heart-m.webp":1312,"npc/herald.webp":1312,"npc/hollis-calm.webp":1312,"npc/hollis-chibi.webp":1312,"npc/jin.webp":1312,"npc/johta-calm.webp":1312,"npc/kira.webp":1312,"npc/maelis.webp":1312,"npc/pip-calm.webp":1312,"npc/pip-chibi.webp":1312,"npc/poppy.webp":1312,"npc/pottle-calm.webp":1312,"npc/pottle-chibi.webp":1312,"npc/rin-calm.webp":1312,"npc/sable.webp":1312,"npc/saffi-calm.webp":1312,"npc/saffi-chibi.webp":1312,"npc/saffi-idle.webp":1312,"npc/saffi.webp":1312,"npc/seraphine-calm.webp":1312,"npc/seraphine-idle.webp":1312,"npc/seraphine.webp":1312,"npc/seren.webp":1312,"npc/silas.webp":1312,"npc/thessa.webp":1312,"npc/vesper.webp":1312,"npc/wren-chibi.webp":1312,"npc/yuzuha.webp":1312,"oreh-null.webp":1312,"oreh.webp":1312,"paul.webp":1312,"reo-buio.webp":1312,"reo-luce.webp":1312,"reo.webp":1312,"rin.webp":1281,"robin.webp":1312,"sadara.webp":1312,"skills/albert-pizza.webp":1312,"skills/albert-ramen.webp":1312,"skills/albert-ult.webp":1312,"skills/alfael-lacera.webp":1312,"skills/alfael-raggio.webp":1312,"skills/alfael-ult.webp":1312,"skills/ana-arti.webp":1312,"skills/ana-bombardamento.webp":1312,"skills/ana-ult.webp":1312,"skills/clea-giudizio.webp":1312,"skills/clea-mano-nera.webp":1312,"skills/clea-ordine.webp":1312,"skills/clea-talent.webp":1312,"skills/crystal-ether.webp":1312,"skills/crystal-shard.webp":1312,"skills/crystal-ult.webp":1312,"skills/dalila-frusta.webp":1312,"skills/dalila-furia.webp":1312,"skills/dalila-hammer.webp":1312,"skills/ektor-lance.webp":1312,"skills/ektor-sweep.webp":1312,"skills/ektor-ult.webp":1312,"skills/elian-gaze.webp":1312,"skills/elian-sky.webp":1312,"skills/elian-ult.webp":1312,"skills/hela-fiamma.webp":1312,"skills/hela-taglio.webp":1312,"skills/hela-ult.webp":1312,"skills/iris-grinder.webp":1312,"skills/iris-ripper.webp":1312,"skills/iris-vengeance.webp":1312,"skills/johta-ashen-step.webp":1312,"skills/johta-ember-power.webp":1312,"skills/johta-five-suns.webp":1312,"skills/julie-flood.webp":1312,"skills/julie-halo.webp":1312,"skills/julie-ult.webp":1312,"skills/kaori-fang-rush.webp":1312,"skills/kaori-high-kick.webp":1312,"skills/kaori-ult-fail.webp":1312,"skills/kaori-ult.webp":1312,"skills/kayla-blu.webp":1312,"skills/kayla-fatuo.webp":1312,"skills/kayla-tetro.webp":1312,"skills/lilith-curtsy.webp":1312,"skills/lilith-serve.webp":1312,"skills/lilith-ult.webp":1312,"skills/marea-current.webp":1312,"skills/marea-riptide.webp":1312,"skills/marea-ult.webp":1312,"skills/nana-haze.webp":1312,"skills/nana-jab.webp":1312,"skills/nana-ult.webp":1312,"skills/oreh-gold-blaze.webp":1312,"skills/oreh-judgment.webp":1312,"skills/oreh-lightning-flare.webp":1312,"skills/oreh-nihil.webp":1312,"skills/oreh-shadow.webp":1312,"skills/oreh-singularity.webp":1312,"skills/paul-fire.webp":1312,"skills/paul-round.webp":1312,"skills/paul-ult.webp":1312,"skills/reo-buio-sfera.webp":1312,"skills/reo-buio-spada.webp":1312,"skills/reo-luce-sfera.webp":1312,"skills/reo-luce-spada.webp":1312,"skills/reo-profezione.webp":1312,"skills/reo-scissione.webp":1312,"skills/reo-spacca.webp":1312,"skills/reo-tempo.webp":1312,"skills/rin-crimson-sphere-1.webp":656,"skills/rin-crimson-sphere-2.webp":656,"skills/rin-crimson-sphere-3.webp":656,"skills/rin-ember-cut-1.webp":656,"skills/rin-ember-cut-2.webp":656,"skills/rin-ember-cut-3.webp":656,"skills/rin-talent.webp":656,"skills/rin-ult.webp":1004,"skills/robin-break.webp":1312,"skills/robin-prayer.webp":1312,"skills/robin-ult.webp":1312,"skills/sadara-guitar.webp":1312,"skills/sadara-sax.webp":1312,"skills/sadara-ult.webp":1312,"skills/stranger-1.webp":1312,"skills/stranger-2.webp":1312,"skills/stranger-ult.webp":1312,"skills/tachibana-queens-will-true.webp":656,"skills/tachibana-queens-will.webp":656,"skills/tachibana-royal-guard.webp":656,"skills/tachibana-true-form.webp":656,"skills/tachibana-ult-wait.webp":656,"skills/tachibana-ult.webp":1312,"skills/ymir-raggio.webp":1312,"skills/ymir-sfera.webp":1312,"skills/ymir-vipera.webp":1312,"skills/zenith-blade.webp":1312,"skills/zenith-ghosts.webp":1312,"skills/zenith-vita.webp":1312,"story/aerial.webp":1672,"story/brackenford.webp":1672,"story/brimwick.webp":1672,"story/chapel.webp":2048,"story/cinderglass.webp":2048,"story/clouds.webp":2560,"story/crossing.webp":1920,"story/fernwatch.webp":2048,"story/goblin-cave-in.webp":2048,"story/goblin-cave.webp":2048,"story/hearth.webp":2048,"story/kettle-in.webp":2048,"story/kettle.webp":2048,"story/lake.webp":1672,"story/lighthouse95.webp":2048,"story/pier95.webp":2048,"story/registry95.webp":2048,"story/street.webp":1672,"story/talk-crimson-reach.webp":2048,"story/talk-gilded-steppe.webp":2048,"story/talk-goblin-hollow.webp":2048,"story/talk-tidal-shelf.webp":2048,"story/tavern.webp":2048,"story/tower-view.webp":2048,"story/truck.webp":1600,"story/vents.webp":2048,"stranger.webp":1312,"tachibana-bg.webp":1312,"tachibana.webp":1312,"ui/lr-m.webp":640,"ui/lr-s.webp":256,"ui/lr.webp":1420,"ui/ur-m.webp":640,"ui/ur-s.webp":256,"ui/ur.webp":1581,"ymir.webp":1312,"you/chibi-f-fire.webp":1312,"you/chibi-f-grass.webp":1312,"you/chibi-f-water.webp":1312,"you/chibi-m-fire.webp":1312,"you/chibi-m-grass.webp":1312,"you/chibi-m-water.webp":1312,"you/f-fire.webp":1312,"you/f-grass.webp":1312,"you/f-water.webp":1312,"you/fight-f-fire.webp":1312,"you/fight-f-grass.webp":1312,"you/fight-f-water.webp":1312,"you/fight-m-fire.webp":1312,"you/fight-m-grass.webp":1312,"you/fight-m-water.webp":1312,"you/m-fire.webp":1312,"you/m-grass.webp":1312,"you/m-water.webp":1312,"you/ssr-f-fire.webp":1312,"you/ssr-f-grass.webp":1312,"you/ssr-f-water.webp":1312,"you/ssr-m-fire.webp":1312,"you/ssr-m-grass.webp":1312,"you/ssr-m-water.webp":1312,"you/ur-f-fire.webp":1312,"you/ur-f-grass.webp":1312,"you/ur-f-water.webp":1312,"you/ur-m-fire.webp":1312,"you/ur-m-grass.webp":1312,"you/ur-m-water.webp":1312,"zenith.webp":1312};
   const COPIES = [["s", 480], ["m", 880]];
   const ART = /^(.*?)art\/(?:[sm]\/)?((?:skills\/|enemies\/)?[a-z0-9-]+\.webp)$/;
   // the summon, the ultimate's cut-in, the move cards and the Archive's open file keep the whole picture: the cut-in sizes
@@ -26360,7 +26370,7 @@ const COVER55 = (() => {
  * hero (their shapes come from sagome67.json, measured by bordi-arte.cjs) or by a line of text. A layout that cannot keep
  * every face clear tries its next arrangement, and at worst leaves a hero out (never the main one). Manifesto is round
  * 55's cover as the user approved it, and every summon made before round 67 stays one, its name running as it did. ══ */
-const NATIVE67 = {"albert.webp":[1312,2048],"alfael.webp":[1312,2047],"ana.webp":[1312,2048],"clea.webp":[1312,2047],"crystal.webp":[1312,2047],"dalila.webp":[1312,2048],"ektor.webp":[1312,2047],"elian.webp":[1312,2047],"enemies/crimson-ashfang.webp":[1312,2048],"enemies/crimson-bee.webp":[1312,2048],"enemies/crimson-golem.webp":[1312,2048],"enemies/crimson-imp-1.webp":[1312,2048],"enemies/crimson-imp-2.webp":[1312,2048],"enemies/crimson-imp-3.webp":[1312,2048],"enemies/crimson-imp-4.webp":[1312,2048],"enemies/crimson-maw.webp":[1312,2048],"enemies/crimson-vixen.webp":[1312,2048],"enemies/crimson-wraith.webp":[1312,2048],"enemies/gilded-altea-skill-1.webp":[1312,2047],"enemies/gilded-altea-skill-2.webp":[1312,2047],"enemies/gilded-altea.webp":[1312,2047],"enemies/gilded-common-1.webp":[1312,2047],"enemies/gilded-common-2.webp":[1312,2047],"enemies/gilded-common-3.webp":[1312,2047],"enemies/gilded-common-4.webp":[1312,2047],"enemies/gilded-elite-1.webp":[1312,2047],"enemies/gilded-elite-2.webp":[1312,2047],"enemies/gilded-elite-3.webp":[1312,2047],"enemies/gilded-elite-4.webp":[1312,2047],"enemies/gilded-guard-x.webp":[1312,2047],"enemies/gilded-guard-y.webp":[1312,2047],"enemies/goblin-assassin-1.webp":[1312,2048],"enemies/goblin-assassin-2.webp":[1312,2048],"enemies/goblin-assassin-3.webp":[1312,2048],"enemies/goblin-beast-1.webp":[1312,2047],"enemies/goblin-beast-2.webp":[1312,2048],"enemies/goblin-brawler-1.webp":[1312,2048],"enemies/goblin-brawler-2.webp":[1312,2048],"enemies/goblin-flyer-1.webp":[1312,2047],"enemies/goblin-flyer-2.webp":[1312,2047],"enemies/goblin-flyer-3.webp":[1312,2047],"enemies/goblin-guard.webp":[1312,2047],"enemies/goblin-king-full.webp":[1312,2047],"enemies/goblin-king.webp":[1312,2047],"enemies/goblin-mage-1.webp":[1312,2048],"enemies/goblin-mage-2.webp":[1312,2048],"enemies/goblin-mage-3.webp":[1312,2048],"enemies/goblin-raider-1.webp":[1312,2048],"enemies/goblin-raider-2.webp":[1312,2048],"enemies/goblin-raider-3.webp":[1312,2048],"enemies/goblin-raider-4.webp":[1312,2048],"enemies/ignara.webp":[1312,2048],"enemies/tidal-eel.webp":[1312,2047],"enemies/tidal-gulper.webp":[1312,2047],"enemies/tidal-hag.webp":[1312,2047],"enemies/tidal-lurker.webp":[1312,2047],"enemies/tidal-maiden.webp":[1312,2047],"enemies/tidal-nerelle.webp":[1312,2047],"enemies/tidal-siren-abyss.webp":[1312,2047],"enemies/tidal-siren-pale.webp":[1312,2047],"enemies/tidal-siren-tide.webp":[1312,2047],"hela.webp":[1312,2048],"ignara-forge.webp":[1282,2000],"iris.webp":[1312,2048],"items/ember-ore.webp":[384,384],"items/gruk-head.webp":[512,512],"items/mirror-shard.webp":[512,512],"items/potion-l.webp":[384,384],"items/potion-m.webp":[384,384],"items/potion-s.webp":[384,384],"johta.webp":[1312,2048],"julie.webp":[1312,2047],"kaori.webp":[1312,2048],"kayla.webp":[1312,2048],"lilith.webp":[1312,2048],"marea.webp":[1312,2048],"nana.webp":[1312,2047],"npc/barkeep-chibi.webp":[1312,2048],"npc/barkeep-shock.webp":[1312,2048],"npc/barkeep-shout.webp":[1312,2048],"npc/barkeep-smug.webp":[1312,2048],"npc/barkeep.webp":[1312,2048],"npc/bram.webp":[1312,2048],"npc/cinder.webp":[1312,2048],"npc/clerk-chibi.webp":[1312,2048],"npc/clerk-facepalm.webp":[1312,2048],"npc/clerk-shock.webp":[1312,2048],"npc/clerk-smug.webp":[1312,2048],"npc/clerk.webp":[1312,2048],"npc/fennick-chibi.webp":[1312,2048],"npc/fennick-serious.webp":[1312,2048],"npc/fennick-shock.webp":[1312,2048],"npc/fennick-shy.webp":[1312,2048],"npc/fennick.webp":[1312,2048],"npc/goblin-chibi.webp":[1312,2048],"npc/heart-f.webp":[1312,2048],"npc/heart-m.webp":[1312,2048],"npc/herald.webp":[1312,2047],"npc/hollis-calm.webp":[1312,2047],"npc/hollis-chibi.webp":[1312,2047],"npc/jin.webp":[1312,2048],"npc/johta-calm.webp":[1312,2048],"npc/kira.webp":[1312,2048],"npc/maelis.webp":[1312,2047],"npc/pip-calm.webp":[1312,2047],"npc/pip-chibi.webp":[1312,2047],"npc/poppy.webp":[1312,2047],"npc/pottle-calm.webp":[1312,2047],"npc/pottle-chibi.webp":[1312,2047],"npc/rin-calm.webp":[1312,2047],"npc/sable.webp":[1312,2047],"npc/saffi-calm.webp":[1312,2047],"npc/saffi-chibi.webp":[1312,2048],"npc/saffi-idle.webp":[1312,2047],"npc/saffi.webp":[1312,2047],"npc/seraphine-calm.webp":[1312,2047],"npc/seraphine-idle.webp":[1312,2047],"npc/seraphine.webp":[1312,2048],"npc/seren.webp":[1312,2047],"npc/silas.webp":[1312,2047],"npc/thessa.webp":[1312,2047],"npc/vesper.webp":[1312,2047],"npc/wren-chibi.webp":[1312,2047],"npc/yuzuha.webp":[1312,2047],"oreh-null.webp":[1312,2047],"oreh.webp":[1312,2047],"paul.webp":[1312,2047],"reo-buio.webp":[1312,2047],"reo-luce.webp":[1312,2048],"reo.webp":[1312,2048],"rin.webp":[1281,2000],"robin.webp":[1312,2047],"sadara.webp":[1312,2047],"skills/albert-pizza.webp":[1312,2047],"skills/albert-ramen.webp":[1312,2047],"skills/albert-ult.webp":[1312,2047],"skills/alfael-lacera.webp":[1312,2047],"skills/alfael-raggio.webp":[1312,2047],"skills/alfael-ult.webp":[1312,2047],"skills/ana-arti.webp":[1312,2048],"skills/ana-bombardamento.webp":[1312,2048],"skills/ana-ult.webp":[1312,2048],"skills/clea-giudizio.webp":[1312,2047],"skills/clea-mano-nera.webp":[1312,2047],"skills/clea-ordine.webp":[1312,2047],"skills/clea-talent.webp":[1312,2047],"skills/crystal-ether.webp":[1312,2047],"skills/crystal-shard.webp":[1312,2047],"skills/crystal-ult.webp":[1312,2047],"skills/dalila-frusta.webp":[1312,2048],"skills/dalila-furia.webp":[1312,2048],"skills/dalila-hammer.webp":[1312,2048],"skills/ektor-lance.webp":[1312,2047],"skills/ektor-sweep.webp":[1312,2047],"skills/ektor-ult.webp":[1312,2047],"skills/elian-gaze.webp":[1312,2047],"skills/elian-sky.webp":[1312,2047],"skills/elian-ult.webp":[1312,2047],"skills/hela-fiamma.webp":[1312,2047],"skills/hela-taglio.webp":[1312,2047],"skills/hela-ult.webp":[1312,2047],"skills/iris-grinder.webp":[1312,2048],"skills/iris-ripper.webp":[1312,2048],"skills/iris-vengeance.webp":[1312,2048],"skills/johta-ashen-step.webp":[1312,2048],"skills/johta-ember-power.webp":[1312,2048],"skills/johta-five-suns.webp":[1312,2048],"skills/julie-flood.webp":[1312,2047],"skills/julie-halo.webp":[1312,2047],"skills/julie-ult.webp":[1312,2047],"skills/kaori-fang-rush.webp":[1312,2048],"skills/kaori-high-kick.webp":[1312,2047],"skills/kaori-ult-fail.webp":[1312,2048],"skills/kaori-ult.webp":[1312,2048],"skills/kayla-blu.webp":[1312,2047],"skills/kayla-fatuo.webp":[1312,2047],"skills/kayla-tetro.webp":[1312,2047],"skills/lilith-curtsy.webp":[1312,2047],"skills/lilith-serve.webp":[1312,2047],"skills/lilith-ult.webp":[1312,2047],"skills/marea-current.webp":[1312,2047],"skills/marea-riptide.webp":[1312,2047],"skills/marea-ult.webp":[1312,2048],"skills/nana-haze.webp":[1312,2047],"skills/nana-jab.webp":[1312,2047],"skills/nana-ult.webp":[1312,2048],"skills/oreh-gold-blaze.webp":[1312,2047],"skills/oreh-judgment.webp":[1312,2047],"skills/oreh-lightning-flare.webp":[1312,2047],"skills/oreh-nihil.webp":[1312,2047],"skills/oreh-shadow.webp":[1312,2047],"skills/oreh-singularity.webp":[1312,2047],"skills/paul-fire.webp":[1312,2047],"skills/paul-round.webp":[1312,2047],"skills/paul-ult.webp":[1312,2047],"skills/reo-buio-sfera.webp":[1312,2048],"skills/reo-buio-spada.webp":[1312,2048],"skills/reo-luce-sfera.webp":[1312,2048],"skills/reo-luce-spada.webp":[1312,2048],"skills/reo-profezione.webp":[1312,2047],"skills/reo-scissione.webp":[1312,2048],"skills/reo-spacca.webp":[1312,2047],"skills/reo-tempo.webp":[1312,2048],"skills/rin-crimson-sphere-1.webp":[656,1024],"skills/rin-crimson-sphere-2.webp":[656,1024],"skills/rin-crimson-sphere-3.webp":[656,1024],"skills/rin-ember-cut-1.webp":[656,1024],"skills/rin-ember-cut-2.webp":[656,1024],"skills/rin-ember-cut-3.webp":[656,1024],"skills/rin-talent.webp":[656,1024],"skills/rin-ult.webp":[1004,1567],"skills/robin-break.webp":[1312,2047],"skills/robin-prayer.webp":[1312,2047],"skills/robin-ult.webp":[1312,2047],"skills/sadara-guitar.webp":[1312,2047],"skills/sadara-sax.webp":[1312,2047],"skills/sadara-ult.webp":[1312,2047],"skills/stranger-1.webp":[1312,2047],"skills/stranger-2.webp":[1312,2047],"skills/stranger-ult.webp":[1312,2047],"skills/tachibana-queens-will-true.webp":[656,1024],"skills/tachibana-queens-will.webp":[656,1024],"skills/tachibana-royal-guard.webp":[656,1024],"skills/tachibana-true-form.webp":[656,1024],"skills/tachibana-ult-wait.webp":[656,1024],"skills/tachibana-ult.webp":[1312,2048],"skills/ymir-raggio.webp":[1312,2047],"skills/ymir-sfera.webp":[1312,2047],"skills/ymir-vipera.webp":[1312,2047],"skills/zenith-blade.webp":[1312,2047],"skills/zenith-ghosts.webp":[1312,2047],"skills/zenith-vita.webp":[1312,2047],"story/aerial.webp":[1672,941],"story/brackenford.webp":[1672,941],"story/brimwick.webp":[1672,941],"story/chapel.webp":[2048,1112],"story/cinderglass.webp":[2048,1112],"story/clouds.webp":[2560,1440],"story/crossing.webp":[1920,1440],"story/fernwatch.webp":[2048,1112],"story/goblin-cave-in.webp":[2048,1112],"story/goblin-cave.webp":[2048,1112],"story/hearth.webp":[2048,1112],"story/kettle-in.webp":[2048,1112],"story/kettle.webp":[2048,1112],"story/lake.webp":[1672,941],"story/lighthouse95.webp":[2048,1112],"story/pier95.webp":[2048,1112],"story/registry95.webp":[2048,1112],"story/street.webp":[1672,941],"story/talk-crimson-reach.webp":[2048,1112],"story/talk-gilded-steppe.webp":[2048,1112],"story/talk-goblin-hollow.webp":[2048,1112],"story/talk-tidal-shelf.webp":[2048,1112],"story/tavern.webp":[2048,1112],"story/tower-view.webp":[2048,1112],"story/truck.webp":[1600,1200],"story/vents.webp":[2048,1112],"stranger.webp":[1312,2047],"tachibana-bg.webp":[1312,2048],"tachibana.webp":[1312,2048],"ui/lr-m.webp":[640,360],"ui/lr-s.webp":[256,144],"ui/lr.webp":[1420,799],"ui/ur-m.webp":[640,352],"ui/ur-s.webp":[256,141],"ui/ur.webp":[1581,869],"ymir.webp":[1312,2047],"you/chibi-f-fire.webp":[1312,2048],"you/chibi-f-grass.webp":[1312,2048],"you/chibi-f-water.webp":[1312,2048],"you/chibi-m-fire.webp":[1312,2048],"you/chibi-m-grass.webp":[1312,2048],"you/chibi-m-water.webp":[1312,2048],"you/f-fire.webp":[1312,2048],"you/f-grass.webp":[1312,2048],"you/f-water.webp":[1312,2048],"you/fight-f-fire.webp":[1312,2048],"you/fight-f-grass.webp":[1312,2048],"you/fight-f-water.webp":[1312,2048],"you/fight-m-fire.webp":[1312,2048],"you/fight-m-grass.webp":[1312,2048],"you/fight-m-water.webp":[1312,2048],"you/m-fire.webp":[1312,2048],"you/m-grass.webp":[1312,2048],"you/m-water.webp":[1312,2048],"zenith.webp":[1312,2047]};
+const NATIVE67 = {"albert.webp":[1312,2048],"alfael.webp":[1312,2047],"ana.webp":[1312,2048],"clea.webp":[1312,2047],"crystal.webp":[1312,2047],"dalila.webp":[1312,2048],"ektor.webp":[1312,2047],"elian.webp":[1312,2047],"enemies/crimson-ashfang.webp":[1312,2048],"enemies/crimson-bee.webp":[1312,2048],"enemies/crimson-golem.webp":[1312,2048],"enemies/crimson-imp-1.webp":[1312,2048],"enemies/crimson-imp-2.webp":[1312,2048],"enemies/crimson-imp-3.webp":[1312,2048],"enemies/crimson-imp-4.webp":[1312,2048],"enemies/crimson-maw.webp":[1312,2048],"enemies/crimson-vixen.webp":[1312,2048],"enemies/crimson-wraith.webp":[1312,2048],"enemies/gilded-altea-skill-1.webp":[1312,2047],"enemies/gilded-altea-skill-2.webp":[1312,2047],"enemies/gilded-altea.webp":[1312,2047],"enemies/gilded-common-1.webp":[1312,2047],"enemies/gilded-common-2.webp":[1312,2047],"enemies/gilded-common-3.webp":[1312,2047],"enemies/gilded-common-4.webp":[1312,2047],"enemies/gilded-elite-1.webp":[1312,2047],"enemies/gilded-elite-2.webp":[1312,2047],"enemies/gilded-elite-3.webp":[1312,2047],"enemies/gilded-elite-4.webp":[1312,2047],"enemies/gilded-guard-x.webp":[1312,2047],"enemies/gilded-guard-y.webp":[1312,2047],"enemies/goblin-assassin-1.webp":[1312,2048],"enemies/goblin-assassin-2.webp":[1312,2048],"enemies/goblin-assassin-3.webp":[1312,2048],"enemies/goblin-beast-1.webp":[1312,2047],"enemies/goblin-beast-2.webp":[1312,2048],"enemies/goblin-brawler-1.webp":[1312,2048],"enemies/goblin-brawler-2.webp":[1312,2048],"enemies/goblin-flyer-1.webp":[1312,2047],"enemies/goblin-flyer-2.webp":[1312,2047],"enemies/goblin-flyer-3.webp":[1312,2047],"enemies/goblin-guard.webp":[1312,2047],"enemies/goblin-king-full.webp":[1312,2047],"enemies/goblin-king.webp":[1312,2047],"enemies/goblin-mage-1.webp":[1312,2048],"enemies/goblin-mage-2.webp":[1312,2048],"enemies/goblin-mage-3.webp":[1312,2048],"enemies/goblin-raider-1.webp":[1312,2048],"enemies/goblin-raider-2.webp":[1312,2048],"enemies/goblin-raider-3.webp":[1312,2048],"enemies/goblin-raider-4.webp":[1312,2048],"enemies/ignara.webp":[1312,2048],"enemies/tidal-eel.webp":[1312,2047],"enemies/tidal-gulper.webp":[1312,2047],"enemies/tidal-hag.webp":[1312,2047],"enemies/tidal-lurker.webp":[1312,2047],"enemies/tidal-maiden.webp":[1312,2047],"enemies/tidal-nerelle.webp":[1312,2047],"enemies/tidal-siren-abyss.webp":[1312,2047],"enemies/tidal-siren-pale.webp":[1312,2047],"enemies/tidal-siren-tide.webp":[1312,2047],"hela.webp":[1312,2048],"ignara-forge.webp":[1282,2000],"iris.webp":[1312,2048],"items/ember-ore.webp":[384,384],"items/gruk-head.webp":[512,512],"items/mirror-shard.webp":[512,512],"items/potion-l.webp":[384,384],"items/potion-m.webp":[384,384],"items/potion-s.webp":[384,384],"johta.webp":[1312,2048],"julie.webp":[1312,2047],"kaori.webp":[1312,2048],"kayla.webp":[1312,2048],"lilith.webp":[1312,2048],"marea.webp":[1312,2048],"nana.webp":[1312,2047],"npc/barkeep-chibi.webp":[1312,2048],"npc/barkeep-shock.webp":[1312,2048],"npc/barkeep-shout.webp":[1312,2048],"npc/barkeep-smug.webp":[1312,2048],"npc/barkeep.webp":[1312,2048],"npc/bram.webp":[1312,2048],"npc/cinder.webp":[1312,2048],"npc/clerk-chibi.webp":[1312,2048],"npc/clerk-facepalm.webp":[1312,2048],"npc/clerk-shock.webp":[1312,2048],"npc/clerk-smug.webp":[1312,2048],"npc/clerk.webp":[1312,2048],"npc/fennick-chibi.webp":[1312,2048],"npc/fennick-serious.webp":[1312,2048],"npc/fennick-shock.webp":[1312,2048],"npc/fennick-shy.webp":[1312,2048],"npc/fennick.webp":[1312,2048],"npc/goblin-chibi.webp":[1312,2048],"npc/heart-f.webp":[1312,2048],"npc/heart-m.webp":[1312,2048],"npc/herald.webp":[1312,2047],"npc/hollis-calm.webp":[1312,2047],"npc/hollis-chibi.webp":[1312,2047],"npc/jin.webp":[1312,2048],"npc/johta-calm.webp":[1312,2048],"npc/kira.webp":[1312,2048],"npc/maelis.webp":[1312,2047],"npc/pip-calm.webp":[1312,2047],"npc/pip-chibi.webp":[1312,2047],"npc/poppy.webp":[1312,2047],"npc/pottle-calm.webp":[1312,2047],"npc/pottle-chibi.webp":[1312,2047],"npc/rin-calm.webp":[1312,2047],"npc/sable.webp":[1312,2047],"npc/saffi-calm.webp":[1312,2047],"npc/saffi-chibi.webp":[1312,2048],"npc/saffi-idle.webp":[1312,2047],"npc/saffi.webp":[1312,2047],"npc/seraphine-calm.webp":[1312,2047],"npc/seraphine-idle.webp":[1312,2047],"npc/seraphine.webp":[1312,2048],"npc/seren.webp":[1312,2047],"npc/silas.webp":[1312,2047],"npc/thessa.webp":[1312,2047],"npc/vesper.webp":[1312,2047],"npc/wren-chibi.webp":[1312,2047],"npc/yuzuha.webp":[1312,2047],"oreh-null.webp":[1312,2047],"oreh.webp":[1312,2047],"paul.webp":[1312,2047],"reo-buio.webp":[1312,2047],"reo-luce.webp":[1312,2048],"reo.webp":[1312,2048],"rin.webp":[1281,2000],"robin.webp":[1312,2047],"sadara.webp":[1312,2047],"skills/albert-pizza.webp":[1312,2047],"skills/albert-ramen.webp":[1312,2047],"skills/albert-ult.webp":[1312,2047],"skills/alfael-lacera.webp":[1312,2047],"skills/alfael-raggio.webp":[1312,2047],"skills/alfael-ult.webp":[1312,2047],"skills/ana-arti.webp":[1312,2048],"skills/ana-bombardamento.webp":[1312,2048],"skills/ana-ult.webp":[1312,2048],"skills/clea-giudizio.webp":[1312,2047],"skills/clea-mano-nera.webp":[1312,2047],"skills/clea-ordine.webp":[1312,2047],"skills/clea-talent.webp":[1312,2047],"skills/crystal-ether.webp":[1312,2047],"skills/crystal-shard.webp":[1312,2047],"skills/crystal-ult.webp":[1312,2047],"skills/dalila-frusta.webp":[1312,2048],"skills/dalila-furia.webp":[1312,2048],"skills/dalila-hammer.webp":[1312,2048],"skills/ektor-lance.webp":[1312,2047],"skills/ektor-sweep.webp":[1312,2047],"skills/ektor-ult.webp":[1312,2047],"skills/elian-gaze.webp":[1312,2047],"skills/elian-sky.webp":[1312,2047],"skills/elian-ult.webp":[1312,2047],"skills/hela-fiamma.webp":[1312,2047],"skills/hela-taglio.webp":[1312,2047],"skills/hela-ult.webp":[1312,2047],"skills/iris-grinder.webp":[1312,2048],"skills/iris-ripper.webp":[1312,2048],"skills/iris-vengeance.webp":[1312,2048],"skills/johta-ashen-step.webp":[1312,2048],"skills/johta-ember-power.webp":[1312,2048],"skills/johta-five-suns.webp":[1312,2048],"skills/julie-flood.webp":[1312,2047],"skills/julie-halo.webp":[1312,2047],"skills/julie-ult.webp":[1312,2047],"skills/kaori-fang-rush.webp":[1312,2048],"skills/kaori-high-kick.webp":[1312,2047],"skills/kaori-ult-fail.webp":[1312,2048],"skills/kaori-ult.webp":[1312,2048],"skills/kayla-blu.webp":[1312,2047],"skills/kayla-fatuo.webp":[1312,2047],"skills/kayla-tetro.webp":[1312,2047],"skills/lilith-curtsy.webp":[1312,2047],"skills/lilith-serve.webp":[1312,2047],"skills/lilith-ult.webp":[1312,2047],"skills/marea-current.webp":[1312,2047],"skills/marea-riptide.webp":[1312,2047],"skills/marea-ult.webp":[1312,2048],"skills/nana-haze.webp":[1312,2047],"skills/nana-jab.webp":[1312,2047],"skills/nana-ult.webp":[1312,2048],"skills/oreh-gold-blaze.webp":[1312,2047],"skills/oreh-judgment.webp":[1312,2047],"skills/oreh-lightning-flare.webp":[1312,2047],"skills/oreh-nihil.webp":[1312,2047],"skills/oreh-shadow.webp":[1312,2047],"skills/oreh-singularity.webp":[1312,2047],"skills/paul-fire.webp":[1312,2047],"skills/paul-round.webp":[1312,2047],"skills/paul-ult.webp":[1312,2047],"skills/reo-buio-sfera.webp":[1312,2048],"skills/reo-buio-spada.webp":[1312,2048],"skills/reo-luce-sfera.webp":[1312,2048],"skills/reo-luce-spada.webp":[1312,2048],"skills/reo-profezione.webp":[1312,2047],"skills/reo-scissione.webp":[1312,2048],"skills/reo-spacca.webp":[1312,2047],"skills/reo-tempo.webp":[1312,2048],"skills/rin-crimson-sphere-1.webp":[656,1024],"skills/rin-crimson-sphere-2.webp":[656,1024],"skills/rin-crimson-sphere-3.webp":[656,1024],"skills/rin-ember-cut-1.webp":[656,1024],"skills/rin-ember-cut-2.webp":[656,1024],"skills/rin-ember-cut-3.webp":[656,1024],"skills/rin-talent.webp":[656,1024],"skills/rin-ult.webp":[1004,1567],"skills/robin-break.webp":[1312,2047],"skills/robin-prayer.webp":[1312,2047],"skills/robin-ult.webp":[1312,2047],"skills/sadara-guitar.webp":[1312,2047],"skills/sadara-sax.webp":[1312,2047],"skills/sadara-ult.webp":[1312,2047],"skills/stranger-1.webp":[1312,2047],"skills/stranger-2.webp":[1312,2047],"skills/stranger-ult.webp":[1312,2047],"skills/tachibana-queens-will-true.webp":[656,1024],"skills/tachibana-queens-will.webp":[656,1024],"skills/tachibana-royal-guard.webp":[656,1024],"skills/tachibana-true-form.webp":[656,1024],"skills/tachibana-ult-wait.webp":[656,1024],"skills/tachibana-ult.webp":[1312,2048],"skills/ymir-raggio.webp":[1312,2047],"skills/ymir-sfera.webp":[1312,2047],"skills/ymir-vipera.webp":[1312,2047],"skills/zenith-blade.webp":[1312,2047],"skills/zenith-ghosts.webp":[1312,2047],"skills/zenith-vita.webp":[1312,2047],"story/aerial.webp":[1672,941],"story/brackenford.webp":[1672,941],"story/brimwick.webp":[1672,941],"story/chapel.webp":[2048,1112],"story/cinderglass.webp":[2048,1112],"story/clouds.webp":[2560,1440],"story/crossing.webp":[1920,1440],"story/fernwatch.webp":[2048,1112],"story/goblin-cave-in.webp":[2048,1112],"story/goblin-cave.webp":[2048,1112],"story/hearth.webp":[2048,1112],"story/kettle-in.webp":[2048,1112],"story/kettle.webp":[2048,1112],"story/lake.webp":[1672,941],"story/lighthouse95.webp":[2048,1112],"story/pier95.webp":[2048,1112],"story/registry95.webp":[2048,1112],"story/street.webp":[1672,941],"story/talk-crimson-reach.webp":[2048,1112],"story/talk-gilded-steppe.webp":[2048,1112],"story/talk-goblin-hollow.webp":[2048,1112],"story/talk-tidal-shelf.webp":[2048,1112],"story/tavern.webp":[2048,1112],"story/tower-view.webp":[2048,1112],"story/truck.webp":[1600,1200],"story/vents.webp":[2048,1112],"stranger.webp":[1312,2047],"tachibana-bg.webp":[1312,2048],"tachibana.webp":[1312,2048],"ui/lr-m.webp":[640,360],"ui/lr-s.webp":[256,144],"ui/lr.webp":[1420,799],"ui/ur-m.webp":[640,352],"ui/ur-s.webp":[256,141],"ui/ur.webp":[1581,869],"ymir.webp":[1312,2047],"you/chibi-f-fire.webp":[1312,2048],"you/chibi-f-grass.webp":[1312,2048],"you/chibi-f-water.webp":[1312,2048],"you/chibi-m-fire.webp":[1312,2048],"you/chibi-m-grass.webp":[1312,2048],"you/chibi-m-water.webp":[1312,2048],"you/f-fire.webp":[1312,2048],"you/f-grass.webp":[1312,2048],"you/f-water.webp":[1312,2048],"you/fight-f-fire.webp":[1312,2048],"you/fight-f-grass.webp":[1312,2048],"you/fight-f-water.webp":[1312,2048],"you/fight-m-fire.webp":[1312,2048],"you/fight-m-grass.webp":[1312,2048],"you/fight-m-water.webp":[1312,2048],"you/m-fire.webp":[1312,2048],"you/m-grass.webp":[1312,2048],"you/m-water.webp":[1312,2048],"you/ssr-f-fire.webp":[1312,2047],"you/ssr-f-grass.webp":[1312,2047],"you/ssr-f-water.webp":[1312,2047],"you/ssr-m-fire.webp":[1312,2047],"you/ssr-m-grass.webp":[1312,2047],"you/ssr-m-water.webp":[1312,2047],"you/ur-f-fire.webp":[1312,2047],"you/ur-f-grass.webp":[1312,2047],"you/ur-f-water.webp":[1312,2047],"you/ur-m-fire.webp":[1312,2047],"you/ur-m-grass.webp":[1312,2047],"you/ur-m-water.webp":[1312,2047],"zenith.webp":[1312,2047]};
 const SAGOME67 = {"art/albert.webp":"g/PAw/PA4/PA4/fA4//A8/fA8//58///4//f4//P4//H8//Hw//Hw//Dw//Dw//Dw//Dw//Dw//Dw//H4//H4//H4//H8//H+//H///H///P///P///P/9/P/9/P///Pf+/PH+/fD//fh//fj//f","art/alfael.webp":"AnfAw3gz43Az+3/x+z/w/z/w/7/w/7/g///g///h///w///x///5///9////////H///D///B///A///I///Q///o//f5//f5//fx//f1///9///7///z//f+///4//to//r4///4///4///8///","art/ana.webp":"AMfAAc3CAc/DA+/Dk//B+//B/9/B/8/B/+/B///B///f+///8//g4/PAw/fAA+/AA8/BA+/PA+//A+//A+//A+f/A8f/A4/fAw/PAw/HAg/HAw/HA4/PA8/PA8nPA8DfA+DcA+B4A+AwAfAgA/Ag","art/clea.webp":"LAsIeB+N/C/O/j/v/7/v/n+n///v/z///Y///B///7/////f///f///P8//P+//f4///w//v///////////////////////////f///f///b///x///x///z///x///j///D///D///f+///////","art/crystal.webp":"AA+BAA/DAg/DAg/HAg/HDw/HYw/H/5/X9//3///7///7///5///////7///////3f//n3//33///j///B///z///7///4/P/4/H/8/De+/Pc+/fA//fA+//A+//A8/fA8/fA8/fA8/PA4/PA4/PA","art/dalila.webp":"g3AAw/HAg/PAw/PAg/PAw/PAg/PAA/PAA/PAA/fAA/fPA//PA//fA//fA//fg//fw//fg//fw//fw//f4//f4//N4//B8//B4//D8//D4//D4//D4//D4//D4//D4//D4//D4/9A4/5Aw/5AA84A","art/ektor.webp":"AA8DAA+HAA+HAA/HAA/HAg/PAg/fAg//As//g///w///4//f4//f4//f4//H4//H4//H4//H8//H8//H+7/H+//H+9/P++/P8+/H8+/B8+/A4//A4//A4//AwfcAwfMAwPMAwPYAwD4AwDwAwAAA","art/elian.webp":"AA8AAgfBAw/CA8/DA8/HA+/HA+/HA//PA//PA//PA//PA//PA//fA///A+//A///4///8///+//////////f///////////////////////v///f///f///f///f///////////////////f///P","art/hela.webp":"AE/AA8/AAc4AA+hAA+3RA/3YA/ffv//ff//P///P///P5//f///fz///8///+///////////7///5//f5//fx//fw//f4//f8//f8///+///+///+///+7//+5/f+o/fAA9fAAw/AAA/AAA+AAA+","art/ignara-forge.webp":"A8PAA+fAA/fAA//AA//AA//Ag//Bg//BA//BA+/AA/fAg/PAg/fAg//Aw//Dw//Hw//Hw//H7//H7//H7//D7//D///f////////////////////////////////////////////////////////","art/iris.webp":"gHfcwH0xwD+f4D//6H+/6H/f4j/f6j/f5h/f7k/f/g/f/n/f///P///P///f///f///f///f///Pf7/Pf4/PP4/PP4/fPw/fP8/fH+/fH//fj//cj//Yj/fwj/fwj/fwj/Pwh/HAD/DAD/BAD+BA","art/johta.webp":"4AGaewfQO4fwO8fwK8/QY8/R48/x85/9+4/94y/Y2i/Py2/Pw//fw//f6///+//v+///+//f3//f+//f///f///f///f///f///f///////////////f///////////n///v///n///P///P///H","art/julie.webp":"AAUIAA+PAAYPAA/PAg/9fw/b/w/T/5/////n///D///D///B///hn//xm//96//e4///4///4///4///4///4///4///8f//8f8/8/8/4/4/4/w/w/B8g/BgA/BAA/DAA7HAAzPAAAPAAAOAAAMA","art/kaori.webp":"wPAAg/DAw/PA4/fA8//Aw//Aw//Bw//Bw//B4//A4//A4//A43/A83/A83/I+//c6///6///6//3o///o//fa//fS//Ps//Dc+/D+//Dm//Hi//Dg8/Dw4/Dw8/Dg//BA//BA4/AA4fAA4PAA8PA","art/kayla.webp":"AAPAgw/Qww/Yww/R44/945/54x/94//9o///w//387/f8//f+///+///+///////+///A+//g///A///w///4//34//H4//P4//H8//H8//H4//Lw//H4//H4//P4//P4//Hw//Pw//Pg//Hg//H","art/lilith.webp":"gwvDQ8/DQ+/D4//H8//H+//H+//H2//H+//H8//H+7/H+//H+//H+//T///////3///3///3////////////w//f8///8///8///8///8///8///8///8///8///4//f4//Pw//HA//HAg/HAA/H","art/marea.webp":"AAUAAA/DAAvBAg/DAg/GAw/BAw/BAw/BAw/BAw/BAw/BAg/BA8/BAw/DA4/HA4/HA+/DA//DA//BA//BA//Bg//Bg//Ag/vAw/vCg//Hg//Hg//Gg//HA//HA//HA+/HA+/DA+/Hg//Hg//Dw//H","art/nana.webp":"A8AAwfAA4/AA8/BA+/FA+/DA+/DA+/DA+/DA+/HA+/HA+/HA+/DA+/BA8/PAw/fAg//Aw//Dw//Dw//D4//D4//Dw7/Dg//DA+/DA8/BA8/DA8/DA8/DA+/DA8/DA8/DA8/HA8/HA8/PA4/PAw/P","art/oreh-null.webp":"L4/gLcoBL2Gjf2fSf0/zP8/9/9///9/3/7/////+////////////////////////////////////+///+///////////////////f///f+/9///9///////////7+//3////+///////////////","art/oreh.webp":"AwLAA4ZAAc0AAs/AA8/AC8/AI5/AcyfA8vfA8/fAw//B4//B8//D8//D8//H4//H4//Hw//PA//PA//fA//fA8/fA4/fA4//Aw//Aw/HAw/HA4/HA4/HA8/PA8/PA+/PA+/fA+/fA+/fA//fA//f","art/paul.webp":"AA4fDA4/DA8/GA+/GA+/PA+/fH8//j///x///8/////f////////////////////////////G8//A8//A8//A8//A8//A8//A+//A+//A+//A///A///A///A///A///A///A///A///A///A+//","art/reo-buio.webp":"4//f4fk/0H//4z//4x/9/w/7/w/7/4/xPw/jfw/5/w/48w/84h/+4z//4//fw//fw//Pw//X4//bw//fw//Py//P6//P4//P8//P8//f89//8//f8//f8//f8//f4//P8//P+///////////////","art/reo-luce.webp":"AQEBAQ/BA4/BAMkDAEfFAk/GA8/DAw/AAg/BEg/EG+/Yj//Yz//Rz//Tm//L8//Lf//P///f///X///X///P///f/////7///3///6//e+/f8//f2///8///8///8///9//f////////////////","art/reo.webp":"AAAAAgPAA4fAA4/AA8/AA8/BA8/AA8/AA8/AA4/AAwfAA8fAA8/AA+/BA+/DA+/Pg//fA+/fA+/fA+/fA+/fA//fA//fA//fg//fA//fg//eg//eg//eg//eg//Pg//Pg//Pg//Pg//Hg//Hg//H","art/rin.webp":"gH/fw9//S///T///3///f///O///e///////////////+///+///8///w///w///8+//U+//I+//w///w///w///4///4//+4///4///w//fg///A8/fA4//Aw//Ag//Aw//Aw//Aw//A4n/A4D/","art/robin.webp":"A+/HA//vB3/9j///3///f+//P+//P//////////////////////////f///f///D///D///HH//HD4/PBw/PAw/PA4/HA4/HA8/fA8//A+/3A//Hg//Hw/8HwP+H4A+HYA+HYA+DMA+DMA+DAA/B","art/sadara.webp":"gDAA4HfA8v/A+//B+//B+//D+//D///D///D///f////////////////////////+///4//f4//f4//f4///w//fg+/fA+/HA//BA//AA//AA//AA//AA/8AAf4AAf4AAPwBgHgBgDgDgDADgBAA","art/stranger.webp":"k///k///m///+///+///8///8///4///8////////////////////////9//7////v//+///+n//4n//w///+//////////////f///f///P///f+//f8//f4//P8//Le//Hg/vDw/HAw/DA4/AA","art/tachibana-bg.webp":"////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////","art/tachibana.webp":"AA/DAg/GAw/HAg/HAg/HAg/DAg/DAg/DAg/DAg/HAg/PAg/PA6/Pm//Pm//P6//P8//P8//P+//f+//f6//f8//H8//H6+/b6//P+//P+//H+//f+//f+//f+//f+//f+//f+///+///8///8/Pf","art/ymir.webp":"4/3/8+vbe//3v///3///////+///+///////////////+///+///6//f8///////+///////+///////r///3///7///////////////////////7///F///5///w///4///4///5///5///5///","art/zenith.webp":"Ag/AAw/BAw/DA4/DA4/DA4/DA4/DA4/DA4/DA4/DA4/DA4/DA4/DA8/DA+/PA+/fI+/f8+/f++/f+//f+//f///f///P///P///P+//P8//Pg//PA//PA+/PA+/PA+/PA+/PA+/PA+/PA+/HA+/H","art/skills/albert-pizza.webp":"6/BA+/DA//DO//Hf//P///v///////v///////37+/39+///////+///w///A///A///A//Hg//Hg//Pw//P4//f4//f4//P4//f8//f+//f+//f+///+///+///+///+///+///+n//+h//+g//","art/skills/albert-ramen.webp":"A8/AA+/BA+/HA//DA//jA///A///A///A///A///A///A+//A4//A///w///8//f+//P///P///f///f///P///P///H///H///P///f/w/f/4/f/4/ff4//////+///4///4///4///4///4///","art/skills/albert-ult.webp":"8//Pw//Pw//f4///4//f8//f4//f4//f4///4///8//fw//Hw//HA//DA+/fA///A+//A+//A///g///w///4///4///8///+///////////////////////////////////+///+//v+///+//f","art/skills/alfael-lacera.webp":"MAEAE4/gEcwwEEe4U8P+c6//86//84//84//Y4//Y8//Y8//Z+//x+/fx///j///j///H///P///P+//f+/7/8///4/fg//fA//fAu/fAP/fAP/Pwf+P4/8/8/5/8/z/8/H/8/f+///8///5///n","art/skills/alfael-raggio.webp":"ewfwfcwxfs/xP4fwP4/wP4/wP8/gP8/wP8/zP+/zP8/7P+//f8///+/////////////////////////////////////////////P///f////9///B///D///j//vn//////////f////////////","art/skills/alfael-ult.webp":"A8/BA+/AA//AQ//CQ//Cw//Bw//hw//hg//wA//4h/H8j//9nff9/f///f/9/f/////////////////f///f///P///f///f///f+//f4//fA//fA//fg8//4s//4///Y///s///2//f+///8///","art/skills/ana-arti.webp":"AABAAxPAAjfAA//AA//AY//BM//DQ/vHo/PHo/PP8/Pfc//fe///u///s+//++/fO//n+//3//Pz//P2//H8+/HEe+HE+8fH+8/D+9/B+//B+5/B+9/D+//D+v/D4f/H4f9H8/5H4/xHg/jPA//e","art/skills/ana-bombardamento.webp":"4x/fyJI+6RI88Z8z85dz+//n+//n+3/f///P///v+///+//n8//r/9/99+/Z9+fEc8PcN8P9P8P1P/P0//P8//Pd//vJ//3J7//Pj8//j//f////////////m///I///g///w///w///w///A///","art/skills/ana-ult.webp":"feHYP+fe/+/Pv+/Pf+/Pf+/P/+/H///Hf//H///H///Hv//Hv//HH//DH//dG//4D//wB//xB//3h///j///x///x///1///r///P+///8///8///8//+4//+4/54z/xgv/hAe/hAw/BAA/AAAfA","art/skills/clea-giudizio.webp":"38Pyn88zv067///b/+/5/+/5/5/5/7/5/5/5/4/9/4/9/8//N8/3/9/////3///z///f+///////4///g//fg//fg//f9//f///P///P///P///N///d///N///M///M///E///E///Eu//Eg//E","art/skills/clea-mano-nera.webp":"oDm//T///313/++3/8//////f8///+///+//////f//////////f///////////////f///f///f////////////////////////33//3///n///x///5//////H///H///B///B///D///D+//H","art/skills/clea-ordine.webp":"HYBAD+TAH+fgX/f8f/P8f+P+//P//+v/7+v/7/v/b/P/r/P/////////////7//f///////P///f///n7//P4//Do//Dw//P4//f///X9//f+//P///P///P///P///////////////f///P///H","art/skills/clea-talent.webp":"T8/SH81jP84j/8/z/9/7/9/7/9/7/5/5/4/5/4/5+5/9/5/d+///4//f5//vh//Hx//v8//n+//D///f///////v////Q///W//fe//fP+/fD8/////P///H//fP//f+//f8///4///5///D8//H","art/skills/crystal-ether.webp":"2/3/7/+/+f+//v/////v///P////////////////////////5///2///5///9//////f+//f+//f///////c///d///t///l+//09/f4//f88///+///8///8///8//f4/4PwfgHgfADgXAAgHAA","art/skills/crystal-shard.webp":"///s///e///////////////////////////f///f///P///f///f///X///f///f///////////////////v/3/P+z/P/x/H/5/H/8/Hf8/Hf4/DP4/DP4/Bf4/Ae8/A+8DA88AAYMAAAMAAAMAA","art/skills/crystal-ult.webp":"A8BAA+D8A/D8A/H8C/H+G/P+O/P8M/f4A/v4A//4k//46//b9//f///f///f///f///f///////v///3///P///f/v///n///n///n//+n//+j/f+v/f8t/fsD+fsD8fAL8fAZkfA4AfAgAfAAAe","art/skills/dalila-frusta.webp":"A4HAA8HAA+fA8//Ae//AG//BO//RG//9///H+3/j+3/hO//x/4/fX///+///+///8///6///////9//H///P+//N///B///BP9/BH8/BC8/BA8/BA//DQ93Hg8xFY8hDY8ADY8ADQeAGQeAAAOAA","art/skills/dalila-furia.webp":"oBw58AwzQAsnUofEC2HGi//Lq//f6//f5///p///9///5///5///9///9//f5//f5//f5//vz//v7//P7//Hj//HH//HP//HX//DP//DPe8BP+8BO+9Ad+NA58JAz8BAm5DAM4DAD5Hgc/v5A//D","art/skills/dalila-hammer.webp":"8//PyPyf//ue//f4///4///w+//g///w8//g7//n9//v9///9///////3///j///z///9///x///Q///I///E///G///m+/fm///G///E///I///I/P/A/P/A/H/A+HeA+DBA+hBA8xAA4BAA4BA","art/skills/ektor-lance.webp":"AAAAAACEAgHEAgHEAwPEA+PEA/PEA/fEw//E2//E8//E+//E/5/E+7/HCw/HAw/HAw/EA4/HA//PA//fA///A///A+//A/7/A/5/w/4/wf4OwP4E4PAc4HAc8AAecAAOOAAMOAAMHAAMDAAMDAAM","art/skills/ektor-sweep.webp":"AA4xAA8fAA8DAA+PAw//A///i////8//Hw//Dg//Hg//Ag//Ag//Ag/3Aw/xA4/wA4/4A8/oA//gw//R4//J+//D+//D///D/f/H///f///f//9f/z5PYg5fAg5fAgxfAAg/AQA+AAA8AAA4AAAw","art/skills/ektor-ult.webp":"///f///f///f///f///f///f///f///f///f///f///f///f///H///H///P///P///P///P///f+//X+//Hg//PA//PA//PA//fg/vfg//fg/fPw/ffw//Pw//P4//O4//O4//P4//P4//P4//H","art/skills/elian-gaze.webp":"AgHAAwPAA4fAA8/AG8/AH8/AH8/AP8/Af+/BP+/BP//Bv//B///P3//f////////+///+///8///8///8///+///+///+///+///+///+///+///+///+///8///8//f4///4///4///w///4///","art/skills/elian-sky.webp":"A4fAA0/BAy/DA6/HA+/HA8/HA8/HA9/HA+/HA+/PA+/Hs//H8//H8//P4//f4///w///g///g///w///w///w///w///4///4///4///4///4//f4//P4//H4//H4//H4//fw///4///8///+///","art/skills/elian-ult.webp":"j//Dx//H4//P8//f+//f+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////","art/skills/hela-fiamma.webp":"IfBAsfAD8/AD4//D4//Dw///w///g///A///A///A+//04//85//e5///8/////////f///P////////////////////+///8//fA8/PA8/HA+/DA//DA//DA//Hw/9P4f8P4H8P4A4fYAgPMAAE","art/skills/hela-taglio.webp":"6j/874oxsw/j3j/vzv/Pd///d///+//z///z///3+///+//9P//9///+///+//f///f/+///4///w///A+//A///A///A///A///A///A///A+//Aw//Ag/nAg/HAg/HAA/HAA+DAA8DAA4BAA8A","art/skills/hela-ult.webp":"/9f/f+H8P+H6f+v/P+v///v/j/v/h///B///B+//B8//B8//H8/vn3/jPv/HL//PP//fP//fr//fv//f///PP//Pv//fv//fn///3H/f/D/H/B/H/B/H/B/H/B/H/L+H/L+H/f8H/P4H/PwH/fAP","art/skills/iris-grinder.webp":"APAgAEwHYA+PMA+fMA+/Ee//C///w///+//f2//fg//Ph//Pg//PA//HA//DA+/DB+/DB+/BD8/A+/fA+/PA+/fA+//E+//J///Zyj/R+H/T6H+DnH+nHE+nPI8nPQ4/Pgx/fCgv/CA/6TA+A/R9","art/skills/iris-ripper.webp":"fxzHf4/Cf//Df5/P/9/H/5/H/9/H/9/H/8/H/9/H/5/H/5/H/z/P///H///H+//D+//D+//D+//H+//P8//P4//Py9/PA8/PA4/PA8/PA+/cB//9B//5B//xB//4D//YD//AD/fAH/PAO+PAw9HA","art/skills/iris-vengeance.webp":"4Pf/4D//95//////y/f/5/f+///8///+///////f///f///f/+/P/9/D///f///f///////////////////fv7/P/x/H/g/PfG/ffm///w//fw//e4//f4/494fA58PA88PA88HAw8DAg8BAA/AA","art/skills/johta-ashen-step.webp":"2/jB6+fGe+fMe//4P/fgP+fCP+/+X+//H///D//PD+/PD+/PD//H///P///f///////////////////////////////////f////////////////////////////////4///0//+w/b+9/ZH+/hH","art/skills/johta-ember-power.webp":"A8HAA8HAA/HAA/PAg/PAA/vAw/PAA//BA/vFA//HA8/HA8/HA+/PA//Pg//Pg//Pg//Pg//P4//P6//f6//f5///7///y///7///z///7//////////////////////////H///X///P///P///P","art/skills/johta-five-suns.webp":"A8/HgPA+oDM8wB/x4o/x8h/fM5/fM5/b+//P+//Pyz/P72/E72/3jm/vj9//39//X///P///L///b///////3///H///H///P///+///+///8//+8///8//X4//P8//D6//H4///4///8///////","art/skills/julie-flood.webp":"g///w///4///4///4///0///////////////////////////M///A///g///g//fg//Hg//PA+/fA///A///A///A///A/f+A8//A4//A4//A8//A8//A+/nA+/HA+7HA+5HA+xHA/hPA/APA/AO","art/skills/julie-halo.webp":"/nDA/9PA//fA//fA///A///A///A///D//////////////////////fe/////////////////////////7///5//P8/PA+fAA/fAA/PAg/PAw/HAw/PA4/fA+//A///Bf8/DD4/HB4/HBw+HBw9H","art/skills/julie-ult.webp":"AA/DAA/DAc//A///AJ+/A/p/A/v/g/n/A/v/g/v/u///+///////////////////////v//Pg+/zg8//A9/fA+/PA+/PA+/PA8/fAw/fA4/fA4/fA8f/A8f+A8f8A+DwA+BgAcAAAAAAAAAAAAAA","art/skills/kaori-fang-rush.webp":"ADgEwP0PwP8/4H/fwv//8//f+//f/8/f/8//+9//+///8///4///w//9g//+g+//A///w///w///w///4///w///w///g//8A/PQg/PfA/ffg//XA//DA//HA//HA+/HA+/DA8/DAE/BAA/BAA8A","art/skills/kaori-high-kick.webp":"/EAA/AAM/BAP/Bwf/Dwf/Dw//D4//H4//P4//P4//P4//P4/+v/f6//X///7/////f+/8f+/8/+/8///8///4///4//v4//B8//A+/fAm/PAm/DAs//B4/jHA/BGA+BGA+hHA8hDA4BAA4BAA4BA","art/skills/kaori-ult-fail.webp":"AA/AA8/AA8/BA4/DA4/Hc+/P++/P45/fg9/fg9/fw9/f49/fe8//H8/fD+/fB//fB//fB//fD//fH///+///8///4//+8/f88/f4+//x+//D+//H+//H+//P+//f+//f+///+/9/+///8/7/4/Hc","art/skills/kaori-ult.webp":"AAIBAA4BAA8DAA/Dwg/HQw/HYw/DYw/DM//Hw//n+//n+//v6//Pi//PA8/vI//vI///A///g7//A6f/Q8P/w+//w/fP4+fTY+fD4+/hY8/4A//4A+/Zg+/Lgf+Hgf+BgN4TADhfAMgfAAwbAAQX","art/skills/kayla-blu.webp":"/4g/P8PwH/fgj+/gR+/AZ+/5I+/9Q///M+//3//////////////f///f///f///N///P9//P///f///f///f///f///f///H+v/H8v/H8//jQ4/jx+/TB//DD//PG///h///j///+///8///M///","art/skills/kayla-fatuo.webp":"c8xBe+nDO/PCC/fMB//YF//wN//wB//xH//BH//TH//DD//HP+/f///////3///X///////D///P///P///f///f///f///////////3/n/H3y/H05/Pj//P6//P+//vu//vG//vS8/nS4/nw5/j","art/skills/kayla-tetro.webp":"gX8D8B+D8I/H8i/P8j/f9j/f5z/f/z/f/3/f/v/f+n/P+3/P///P+//P87/P8+/H4//P4//f8///8///6///6///6///q///u///4//9Y//9Y//8A/f4A//wA//AA//AA//AA//AA+/AA+/AA8/A","art/skills/lilith-curtsy.webp":"APAAI/fAo//A4///g///o///s///s///I///c///8//fe+/f++fP//fH///H///P///v/8/uO8/PM8/PA+/nA8/vA8//A4//A8//A+//A///g///g///w///4///4///8///8v/f8D4f4DA/wHA8","art/skills/lilith-serve.webp":"+3wf+/HO//P4////8///9///9///9//f9//f8//f7//f7//f//3f///f///d///d///Zn///v//vl///h///g///g///g///A///A///g///g///g///g///A//fA+/PA+/HA+/HA8/DA8/BA4/A","art/skills/lilith-ult.webp":"4OAO4bAfoPgfoPgf8fgf8P//w///w//fg//Pg//fw///47//44//Y8/7Y2/ZYn/dw//Fg//Bg//B8//Aw//A6//F6//L7//f7//f7//fy//Xy//b2//L2//J2//D+//Da//a8/fL8//B+//N+//P","art/skills/marea-current.webp":"Aw/AA8nDA0vAA//BA8/AA4/AA4/AA8/FA//zA//zw8//49//6///e8//28//3///j///7//////f+//f+//H+c/H+//Dw//DC//Di//Zg//fw//Dw//Dw//J4/fA4/ff4/v/y//////////////P","art/skills/marea-riptide.webp":"AA/HA+LMm/PQ23Dca6H8q///u+//G+/ZG+/BG+/BP8/BD+/BD//AH+/AX8/AP8/D/9/Hv//PP//PP2//fw//c4/3+9/T2//Dk//DA//bB//Q///P///f////////////8///+///+///+///8//P","art/skills/marea-ult.webp":"AAAAAAQAAAeAAAmBgA+AwD/B4i/AQw/Yw4/4w//4g//9A//5A+/xA0/nA8/Pf+/ff+//f+//H+//////7///z/////P/v/f9///8////////////////////////////////////////////////","art/skills/nana-haze.webp":"AAAAAgDAAwfAA4/AA8fAA8/AA8/AA+/BA+/BA8/BA8/DA+/BA//HA//Dg//Hg//Hg//Hw//Dw//Dg//Dg//Bg//Aw//Bw//Bw//B4//B4//D+//D8//H///P///P+//P///P///P///P+//P8//P","art/skills/nana-jab.webp":"m/E+yPH49z/g85/ze4/AO+/gG+/hC+/xB+/xh//59//4///4///8////j///g///A///A///B///g//fg//fg//vg//3w//z4//x4/f48/P88/P+8/P/8/Hf8/nO4/HD4/nB4//A4/PA4/HA4/HA","art/skills/nana-ult.webp":"4DwfY+HeM7f8E9/wG+/gG//hy//h0//B///B///j///j///jv//jv//TP//ZC/fMA4fAP8fAf+//f//wf//gf//Df//DP+/HO+/Pe//f8//f4///4//f4///4/9/4f8/gB+fYA+vwA+vg//nAH+z","art/skills/oreh-gold-blaze.webp":"AAAAAAwRAQIwAQkngE0viB8vu39v83/v4//f///P///H+//H+//P8//Ps//f4//fA///A8//A4/fA4/fAg/fAg//Aw//Q4//A8//A+//A+//A///g//Pw//P4//P+//P///f///f///f///f////","art/skills/oreh-judgment.webp":"AgHAA4fAAcwAIGgBIG/BEj/DEz/Dn//C3//L+//D///H///P+//f///f///f///P///P8//H8//H4//H4//P4//P9//f6//f+//f8///+///////////v///f+//H6//H///H9//t///4//f+//f","art/skills/oreh-lightning-flare.webp":"8fAA+DAA+XAA/fAA/PAA7MAA+HAA4BQA4BAC4AAA4AgA4hDA4xHA45PE4/fAw/PAw/HAw/fA4//Aw//Aw//Bg//DA+/Dg8/DA8/BA4/DEw/DA4/PQ8/PI8/PA8/PA+/fA//fA//fi//fw//f4//f","art/skills/oreh-nihil.webp":"AAAAAAAAAwCAAMEAA2PAE+fDC+fGG9/HA9/DA+/Hs+/H+//H+//D8//H+//D8//F+//H8//H4//H4//f4//c8//7///3///X///H///f///f///////f///f////////////////////////////","art/skills/oreh-shadow.webp":"AYAAAOAAAfFAgHAAwxPAwhPA4wPA42PA4yfA41PA4/PBw/vAw//Ag//AA//DA+/DA+/HA+/HA+/XA8/HA8/XA8/fA/Pfg/f/g///g//Pw//fg//Pg//Pw//M4//e4//fw//P8//P8//P8//D8//H","art/skills/oreh-singularity.webp":"gHfJwh/BgwFH8xfG8w/H/x/D///D///B///B///B/+/A8+/IA+/yC8/vB8//B8//D8//C8//C8//G4//M4/fE4//E4//E4//I8//5///9//+////////////////////////////////////////","art/skills/paul-fire.webp":"A8/AA8/BA+/BM//B+//D///f///f///////b///D///D///D///D///D///D///D///P///f///f///f8//cw//AA//AA4/AA4/AA4/Ag//Ag//AA//AA4/BA8/PA+/fAf/AgH3BgB3DAAnDAAHD","art/skills/paul-round.webp":"AA8PAA/fAG//AH//AH//wn//8H///z/////////////f///f///f///f///f4///A8//A8//A8//w8//8///8///8///8+//++//++//+///+///+///+///+//f8///8///8///4///4///w///","art/skills/paul-ult.webp":"AAwHAA8PAA8fAA+fAA+/Aw//Aw/fA4/fA4/fA8/fA8/fA+/fg//fg///w///w///g///w///4///8v//8v//+n///h///n//////+///+//f////f///H///H8//D4//Dw//BA//BA+/BA+/AA8/","art/skills/reo-buio-sfera.webp":"AAAAAAAAAIAEw/AEgzBAwgBEY+BE4/BG4/BOw/hPg/z/A///A/7/A+//A8//A8/fA4/fA4/fA4/fA4/fI6/fA6/fI+//I+//I+//4///4///4///8///4///6///+///8///+///+///8///8///","art/skills/reo-buio-spada.webp":"7////fA89PA4+P/g/9/J///b///3///////v///////5/5/x/4/z/4/j/4/n/4/n/8/n/8/v/8/v/8/v/9//////////////////////////////////////////////////////////////////","art/skills/reo-luce-sfera.webp":"A+wBg/hDgJBDw+BGw/DEw/HEw/LEg/fEg/fEA/fIg//Iz//c3/fe//f8+//8///////////f///B///E///H///P///H///P///f///f///////////f///f///f////////////////////////","art/skills/reo-luce-spada.webp":"vA/3zpzsxh/bzg/Pxg/P5h/H5h/P40/H/u/H+n/P+3/f+//f///f/////////////////////7/f+9/P+//P/9/////v7///5///5///+///+///////////////////////////////////////","art/skills/reo-profezione.webp":"AgkAAw/AAw/AAw/AAy/AA5/Bgx/hg5/gg8/gg8/B4+/R5+/bp//bh//X///f+//f///f////////////////////////////////////////////////////////////////////////////////","art/skills/reo-scissione.webp":"Aw/DA0/zM//78///4///8///7///7///7///////////////////////////////////////////////////////////////////////////////////////////////////////////////+///","art/skills/reo-spacca.webp":"A/H+g+/4gn/wg7/gA//gA/fwA/P4A+PcA+POA+/HA+/BA+/BA4/DA4/DA4/HA4/PA8/fA+/fA+/fA///A3//gz//ww//Y4//M8/7G8/7D8/7B+/zA+/zw///4///4///8///8///8///8///8///","art/skills/reo-tempo.webp":"IAAAAA/DAgBOOg/Ish/M+x/P/z/H/7/H/7/H///H///H///f///f///f7//fA+//A8//A8//A+//A+/fw+/fY+//o///6///+///+//f////////////////////////////////////////////","art/skills/rin-crimson-sphere-1.webp":"93EA/vPA+/+z+f+///////+///+f//+P///P///P///P+//H+//H+//H4//H+//H///P///f/3//f2//Py//Pg//Pg///n/////f///D///B///D///H0//Hw//Ew//Bw//Bw//Bw//Dwf+Dwf+D","art/skills/rin-crimson-sphere-2.webp":"AwDYA+v+A8/fA+v/A+v/A8v/A8v/A4f/A4ffA4/Z47//8///w///w//Bw//H4//H4//P4//P4//P4//H0//Di//Bz//F34/J/4/X/6/e///c/3f4/jfw/BPwfBOwsBOwgDMQgDcQgDcIAD4AAewC","art/skills/rin-crimson-sphere-3.webp":"+3NC/v/n///////+////////////////+//f///P9//P/v/H+5/De//j///z///////////f////w///4///8///8///8///8///8///4///w///A+/vA+/nA8/PA8/vA+//A//fg//Pg//Pw/9P","art/skills/rin-ember-cut-1.webp":"A8/DANiDAu/Dg//Gg//DA//CC7/DB+/DP8/9/8//+8/f+//f+//d///d///d///f///f///f///f///f///P///P+//P+///8///4//4g//Qg//Bg//Dw//Dw//Hw/+Hw/8Pwf4PwfwfwPAf4HAe","art/skills/rin-ember-cut-2.webp":"9HoA/PxA///M0//H+///x/f/6/fH8/fG+/PG//fH6/PX//f3///n////v///P///P+/4P8/9/8/j/9/H///n/7/n///z///4//fY//PE5/fAj//Aj//A///Bm//Bg//BA//BA//BA+/BA8/BA4/B","art/skills/rin-ember-cut-3.webp":"/h/A+hvA/wjBvI/Bvs/Pv//PP8/XP4/zf4/7/4///4///4/f/8/////////////////////3///v///f///////////f+//f///P9//D+//B+//A8//A8//D4//H4//P4//f8///8///8/7/+3n/","art/skills/rin-talent.webp":"/9/8/7/4P//5H+/hD+/hB//BF8/tH8/BK8/FB8/D95/D97/H5//Lx//X9//P8//f4//f8//f+//f+//f+///////////////////////+//f+//f9//95//Z9//jv//TH//jn+/nP+/n88/ng/nv","art/skills/rin-ult.webp":"A80vQ+/vw+//w//v4///4/7/k/7v2/7v2///3//vz/7/7//////f////3///8///4///4///4///4///8///8///4///4//Pw//Hg//Bw//B4//D8//D+/+H+f+H+D8H8D8HgD4PwBwfAAA/AAA+","art/skills/robin-break.webp":"wH/D45dEY8/I+u/I+//Q+9/x+5/z65/z67/z67/j+z/9+h/////////////////////3///z///r/////4/X/7/b/9/ZP//fm//E8//e+//b+//f///T///f///X///Hf/4vIO/PAvv/gHw/YGw/","art/skills/robin-prayer.webp":"AABAA8fAAsZAA33DA+/AA8/AA8fAA+/AA+/AA+/AA+/AA+/AA+/AA+/AA+fAg//Dw//Hw//Hw//Hw//H4//P4//P4//P4//Hw//Hw//Hw//H4//H4//H4//P8//P8//P8//f+//f+//f+//f++/f","art/skills/robin-ult.webp":"AA+BAg/HgA/Dgg/Pgj/DwD/D4D/D8H/D8j/D83+D7w/D/9/B///H///f///H///P///f///////P///n///3///zf+/zf+/3P///P///P///P///P//eP//3P//HO//BY//B4//T9//jm//bc+/z","art/skills/sadara-guitar.webp":"gPAAw/AA4/BA8/Bg8/Bw8/Dw8/Dw8/734/f/4///4///w///4///8///+//f+///+//////////f///H+//H///P///P///P///P///H///P///P+//f+/nf8/H88/D44/Dw8//hC/DjEyBCMyBC","art/skills/sadara-sax.webp":"AAfAAw/BAw/BA4/DA4/DA4/DA4/DA4//A4//A4//A8//A8//A+//A8//A+//A+//A///g///w///w///w///w///w///4///////////////f+//Ps/BPg/BGw9BA49DAY4HAAgHAAAnAAAHAAAG","art/skills/sadara-ult.webp":"D/DV3/3X8/v/4//9//fZ///////R////9///////////////////////////////////////////5///+///7///5//////f5//f///fw//f4//f8//f8//P9f+H9f+H8P+O8HfIghHAAADAAiDA","art/skills/stranger-1.webp":"k///k///m///+///+///8///8///4///8////////////////////////9//7////v//+///+n//4n//w///+//////////////f///f///P///f+//f8//f4//P8//Le//Hg/vDw/HAw/DA4/AA","art/skills/stranger-2.webp":"k///k///m///+///+///8///8///4///8////////////////////////9//7////v//+///+n//4n//w///+//////////////f///f///P///f+//f8//f4//P8//Le//Hg/vDw/HAw/DA4/AA","art/skills/stranger-ult.webp":"k///k///m///+///+///8///8///4///8////////////////////////9//7////v//+///+n//4n//w///+//////////////f///f///P///f+//f8//f4//P8//Le//Hg/vDw/HAw/DA4/AA","art/skills/tachibana-queens-will-true.webp":"AA8Aw45Ag8/Aw8/Iy+fMx/PI5/P8n/f8H///////+///+//9///R///B///f////////////////////////9///x+/f6//H8//P+//f+//f+//f+///////////////////////////////////","art/skills/tachibana-queens-will.webp":"XAAfJgucN43NP6/JH8/J38/de//d///P+//L///H///L///H///P///f///////////3///nj//3z//Pz//f6//f///////////////f///f///D///H///P///f///f///f///f////////////","art/skills/tachibana-royal-guard.webp":"3/gB//xD//TC+//P9//P+//f8///8///6///6///4///8///8///+///+//P///P///H+//D///B///H///P///f///f///f//7f//3////////v///P8//P9//P///P///P///H///H///P///P","art/skills/tachibana-true-form.webp":"TGAmCHOmKnfusz/cs7/dg//fh//fQ//PY+/HQ8/xQ9/x4///+///7//////////////f///f///f///////////f////////+///d//3t//ns//H+//P+//H+//P4//v9//v////////////////","art/skills/tachibana-ult-wait.webp":"w//PI//fA//fg///0///0///8///4///4///g///8///+///P///H///C+//A+/fA8/BA8/DA+/HA//PA//fA///A///A///A+//A8//A+//A///w///4///4//////////P///P///f////////","art/skills/tachibana-ult.webp":"AGAAAHAAAHMAAG/AAm/Bgn/Dgj/DAz/Dg3/DA3/Dw//D0//D6//H+//f///f+//f+//v///v///f///H///P+//P+///8///u//////////P///f///f///f////////////////////////////","art/skills/ymir-raggio.webp":"A+//w//v47/f4+//w///8///+///+///+///+///+///+///+///////////////////////////////////8///8+//G///j///h///w///x///x///h///G//DH//HB/vPA+AOA+AcA8AYA8AY","art/skills/ymir-sfera.webp":"g//Hwz/nw5/Pw4/PQ8/fQ8/fE8/fU8/fC+/fi//fa//P+//P+///////////////////////////////////////////+///8///////9///////+///////////////////////////+//f4//P","art/skills/ymir-vipera.webp":"/n55Hg/3Dw/Hz8/P78/f64/f5///7////////////9///8/f///f///////////////////////////////////////////////fz//fi///G///s///4///4///8///8//f8//f///f////+///","art/skills/zenith-blade.webp":"AA8PAA+fAA+fAA//AA//Ag//Ag//Ag//A4//A//fgv/fwv/fw//f4//f8///+///+///////////+///+9//O8/fA+/fA///g///g///g//fg///w//vw//Hw//Dw//Hw//Hw//Hw//Hw+/Dw+/B","art/skills/zenith-ghosts.webp":"IwHII4fMI8/eK8/eM+/ee+/f/+/f/+/e/+/A/+/A/8/M+8/4Y8/hM+/zG//TG//DC//DC//Dm//H0//P4//P8//f8//f6//v6//n6//36//Hr//Pb//P2//P+//Pw//Hw//Hg//PA//HA//HA3/M","art/skills/zenith-vita.webp":"AwfAAw/Bg8/DA8/Dg+/HQ+/DY8/LY8/T4+/b4//X8//X8//f8///+//f+//f+//f+//f+//P+//P+//f+//f+//P+//P8//P+//P6//Py//P////////+///+///////////////////////////"};
 const COVER = (() => {
   const M55 = COVER55;
@@ -31710,6 +31720,7 @@ const initGame = () => {
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => toastEl.classList.remove("is-on"), 2000);
   };
+  window.GM_TOAST97 = (text) => { toast(text); clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove("is-on"), 4200); };
 
   /* the entrance: one orchestrated rise, then the screen is still but alive */
   const enter = () => {
@@ -32205,7 +32216,7 @@ const initGame = () => {
     if (!pf) return;
     const box = document.createElement("div");
     box.className = a ? "pf64" : "pf64 is-none";
-    box.innerHTML = `<div class="pf64-pic"${a ? ` style="--ec:${attrColour(elOf64(a))}"` : " hidden"}>${a ? `<img src="${mid64(lookOf64(a))}" alt="" draggable="false">` : ""}</div>
+    box.innerHTML = `<div class="pf64-pic"${a ? ` style="--ec:${attrColour(elOf64(a))}"` : " hidden"}>${a ? `<img src="${mid64(youArt97(a.sex, elOf64(a)))}" alt="" draggable="false">` : ""}</div>
       <div class="pf64-t"><small>your character</small><b>${esc64(a?.name || "No name yet")}</b><span>${a ? `${youSay64(a)} · your heart: a ${SEX64[a.hsex] ?? "man"}` : "Not made yet."}</span></div>
       <button type="button" class="gm-btn gm-btn--ghost" data-gm-route="create">${a ? "change" : "make it"}</button>${a && (isAdmin() || PLAYER.player.started) ? '<button type="button" class="gm-btn gm-btn--ghost" data-s69-replay>replay the prologue</button>' : ""}`;
     $(".pf-me", pf)?.after(box);
@@ -33063,706 +33074,81 @@ const BRACKENFORD66 = {"w": 1672, "h": 941, "hot": {
  "signpost": [[0.937, 0.18], [0.952, 0.17], [0.996, 0.25], [0.996, 0.36], [0.972, 0.37], [0.972, 0.455], [0.99, 0.46], [0.99, 0.545], [0.972, 0.55], [0.972, 0.877], [0.94, 0.877], [0.937, 0.55], [0.919, 0.545], [0.919, 0.47], [0.937, 0.455]]
 }};
 const BUSTI66 = {
- "art/npc/jin.webp": {
-  "face": [
-   0.57,
-   0.27
-  ],
-  "crown": 0.05,
-  "chin": 0.37,
-  "bust": 0.52,
-  "waist": 0.68,
-  "aspect": 0.6406
- },
- "art/ektor.webp": {
-  "face": [
-   0.71,
-   0.18
-  ],
-  "crown": 0.01,
-  "chin": 0.32,
-  "bust": 0.5,
-  "waist": 0.61,
-  "aspect": 0.6409
- },
- "art/npc/bram.webp": {
-  "face": [
-   0.45,
-   0.27
-  ],
-  "crown": 0.13,
-  "chin": 0.345,
-  "bust": 0.48,
-  "waist": 0.55,
-  "aspect": 0.6406
- },
- "art/npc/cinder.webp": {
-  "face": [
-   0.59,
-   0.29
-  ],
-  "crown": 0.05,
-  "chin": 0.39,
-  "bust": 0.53,
-  "waist": 0.66,
-  "aspect": 0.6406
- },
- "art/npc/kira.webp": {
-  "face": [
-   0.63,
-   0.28
-  ],
-  "crown": 0.12,
-  "chin": 0.36,
-  "bust": 0.45,
-  "waist": 0.55,
-  "aspect": 0.6406
- },
- "art/npc/poppy.webp": {
-  "face": [
-   0.6,
-   0.32
-  ],
-  "crown": 0.12,
-  "chin": 0.46,
-  "bust": 0.6,
-  "waist": 0.7,
-  "aspect": 0.6406
- },
- "art/npc/silas.webp": {
-  "face": [
-   0.52,
-   0.28
-  ],
-  "crown": 0.08,
-  "chin": 0.44,
-  "bust": 0.56,
-  "waist": 0.72,
-  "aspect": 0.6406
- },
- "art/enemies/goblin-raider-1.webp": {
-  "face": [
-   0.485,
-   0.395
-  ],
-  "crown": 0.035,
-  "chin": 0.565,
-  "bust": 0.68,
-  "waist": 0.75,
-  "aspect": 0.6406
- },
- "art/npc/saffi.webp": {
-  "face": [
-   0.45,
-   0.3
-  ],
-  "crown": 0.055,
-  "chin": 0.39,
-  "bust": 0.52,
-  "waist": 0.65,
-  "aspect": 0.6406
- },
- "art/npc/thessa.webp": {
-  "face": [
-   0.77,
-   0.325
-  ],
-  "crown": 0.11,
-  "chin": 0.43,
-  "bust": 0.58,
-  "waist": 0.68,
-  "aspect": 0.6406
- },
- "art/npc/seraphine.webp": {
-  "face": [
-   0.48,
-   0.285
-  ],
-  "crown": 0.17,
-  "chin": 0.35,
-  "bust": 0.47,
-  "waist": 0.58,
-  "aspect": 0.6406
- },
- "art/npc/vesper.webp": {
-  "face": [
-   0.72,
-   0.28
-  ],
-  "crown": 0.01,
-  "chin": 0.35,
-  "bust": 0.5,
-  "waist": 0.61,
-  "aspect": 0.6406
- },
- "art/dalila.webp": {
-  "face": [
-   0.52,
-   0.265
-  ],
-  "crown": 0.04,
-  "chin": 0.4,
-  "bust": 0.56,
-  "waist": 0.67,
-  "aspect": 0.6406
- },
- "art/ymir.webp": {
-  "face": [
-   0.52,
-   0.33
-  ],
-  "crown": 0.01,
-  "chin": 0.44,
-  "bust": 0.66,
-  "waist": 0.8,
-  "aspect": 0.6409
- },
- "art/lilith.webp": {
-  "face": [
-   0.61,
-   0.28
-  ],
-  "crown": 0.03,
-  "chin": 0.37,
-  "bust": 0.55,
-  "waist": 0.68,
-  "aspect": 0.6406
- },
- "art/you/m-fire.webp": {
-  "face": [
-   0.56,
-   0.143
-  ],
-  "crown": 0.01,
-  "chin": 0.215,
-  "bust": 0.41,
-  "waist": 0.55,
-  "aspect": 0.6406
- },
- "art/you/m-water.webp": {
-  "face": [
-   0.545,
-   0.139
-  ],
-  "crown": 0.025,
-  "chin": 0.212,
-  "bust": 0.4,
-  "waist": 0.55,
-  "aspect": 0.6406
- },
- "art/you/m-grass.webp": {
-  "face": [
-   0.526,
-   0.2
-  ],
-  "crown": 0.045,
-  "chin": 0.277,
-  "bust": 0.5,
-  "waist": 0.62,
-  "aspect": 0.6406
- },
- "art/you/f-fire.webp": {
-  "face": [
-   0.571,
-   0.2
-  ],
-  "crown": 0.038,
-  "chin": 0.277,
-  "bust": 0.52,
-  "waist": 0.63,
-  "aspect": 0.6406
- },
- "art/you/f-water.webp": {
-  "face": [
-   0.625,
-   0.195
-  ],
-  "crown": 0.017,
-  "chin": 0.272,
-  "bust": 0.47,
-  "waist": 0.6,
-  "aspect": 0.6406
- },
- "art/you/f-grass.webp": {
-  "face": [
-   0.615,
-   0.2
-  ],
-  "crown": 0.012,
-  "chin": 0.277,
-  "bust": 0.48,
-  "waist": 0.6,
-  "aspect": 0.6406
- },
- "art/npc/clerk.webp": {
-  "face": [
-   0.615,
-   0.197
-  ],
-  "crown": 0.04,
-  "chin": 0.295,
-  "bust": 0.5,
-  "waist": 0.63,
-  "aspect": 0.6406
- },
- "art/npc/clerk-facepalm.webp": {
-  "face": [
-   0.6,
-   0.207
-  ],
-  "crown": 0.045,
-  "chin": 0.305,
-  "bust": 0.51,
-  "waist": 0.64,
-  "aspect": 0.6406
- },
- "art/npc/clerk-smug.webp": {
-  "face": [
-   0.745,
-   0.214
-  ],
-  "crown": 0.015,
-  "chin": 0.335,
-  "bust": 0.6,
-  "waist": 0.7,
-  "aspect": 0.6406
- },
- "art/npc/clerk-shock.webp": {
-  "face": [
-   0.54,
-   0.265
-  ],
-  "crown": 0.035,
-  "chin": 0.4,
-  "bust": 0.62,
-  "waist": 0.75,
-  "aspect": 0.6406
- },
- "art/npc/saffi-calm.webp": {
-  "face": [
-   0.49,
-   0.207
-  ],
-  "crown": 0.07,
-  "chin": 0.32,
-  "bust": 0.58,
-  "waist": 0.8,
-  "aspect": 0.6409
- },
- "art/npc/seraphine-calm.webp": {
-  "face": [
-   0.557,
-   0.322
-  ],
-  "crown": 0.095,
-  "chin": 0.452,
-  "bust": 0.76,
-  "waist": 0.9,
-  "aspect": 0.6409
- },
- "art/npc/rin-calm.webp": {
-  "face": [
-   0.58,
-   0.239
-  ],
-  "crown": 0.02,
-  "chin": 0.365,
-  "bust": 0.68,
-  "waist": 0.86,
-  "aspect": 0.6409
- },
- "art/npc/heart-m.webp": {
-  "face": [
-   0.6,
-   0.213
-  ],
-  "crown": 0.025,
-  "chin": 0.345,
-  "bust": 0.6,
-  "waist": 0.75,
-  "aspect": 0.6406
- },
- "art/npc/heart-f.webp": {
-  "face": [
-   0.67,
-   0.252
-  ],
-  "crown": 0.025,
-  "chin": 0.37,
-  "bust": 0.64,
-  "waist": 0.8,
-  "aspect": 0.6406
- },
- "art/you/fight-m-fire.webp": {
-  "face": [
-   0.206,
-   0.259
-  ],
-  "crown": 0.01,
-  "chin": 0.355,
-  "bust": 0.55,
-  "waist": 0.7,
-  "aspect": 0.6406
- },
- "art/you/fight-m-water.webp": {
-  "face": [
-   0.759,
-   0.235
-  ],
-  "crown": 0.024,
-  "chin": 0.34,
-  "bust": 0.55,
-  "waist": 0.7,
-  "aspect": 0.6406
- },
- "art/you/fight-m-grass.webp": {
-  "face": [
-   0.772,
-   0.249
-  ],
-  "crown": 0.017,
-  "chin": 0.368,
-  "bust": 0.56,
-  "waist": 0.72,
-  "aspect": 0.6406
- },
- "art/you/fight-f-fire.webp": {
-  "face": [
-   0.64,
-   0.256
-  ],
-  "crown": 0.01,
-  "chin": 0.39,
-  "bust": 0.58,
-  "waist": 0.72,
-  "aspect": 0.6406
- },
- "art/you/fight-f-water.webp": {
-  "face": [
-   0.524,
-   0.263
-  ],
-  "crown": 0.005,
-  "chin": 0.375,
-  "bust": 0.58,
-  "waist": 0.72,
-  "aspect": 0.6406
- },
- "art/you/fight-f-grass.webp": {
-  "face": [
-   0.72,
-   0.27
-  ],
-  "crown": 0.031,
-  "chin": 0.41,
-  "bust": 0.6,
-  "waist": 0.75,
-  "aspect": 0.6406
- },
- "art/npc/barkeep.webp": {
-  "face": [
-   0.68,
-   0.15
-  ],
-  "crown": 0.02,
-  "chin": 0.31,
-  "bust": 0.52,
-  "waist": 0.86,
-  "aspect": 0.6406
- },
- "art/npc/barkeep-shout.webp": {
-  "face": [
-   0.56,
-   0.15
-  ],
-  "crown": 0.065,
-  "chin": 0.34,
-  "bust": 0.55,
-  "waist": 0.88,
-  "aspect": 0.6406
- },
- "art/npc/barkeep-smug.webp": {
-  "face": [
-   0.615,
-   0.165
-  ],
-  "crown": 0.03,
-  "chin": 0.33,
-  "bust": 0.55,
-  "waist": 0.88,
-  "aspect": 0.6406
- },
- "art/npc/barkeep-shock.webp": {
-  "face": [
-   0.71,
-   0.22
-  ],
-  "crown": 0.04,
-  "chin": 0.46,
-  "bust": 0.62,
-  "waist": 0.9,
-  "aspect": 0.6406
- },
- "art/npc/pottle-calm.webp": {
-  "face": [
-   0.556,
-   0.19
-  ],
-  "crown": 0.03,
-  "chin": 0.31,
-  "bust": 0.55,
-  "waist": 0.8,
-  "aspect": 0.6409
- },
- "art/npc/pip-calm.webp": {
-  "face": [
-   0.47,
-   0.225
-  ],
-  "crown": 0.02,
-  "chin": 0.345,
-  "bust": 0.56,
-  "waist": 0.82,
-  "aspect": 0.6409
- },
- "art/npc/hollis-calm.webp": {
-  "face": [
-   0.48,
-   0.25
-  ],
-  "crown": 0.03,
-  "chin": 0.38,
-  "bust": 0.6,
-  "waist": 0.86,
-  "aspect": 0.6409
- },
- "art/npc/wren-chibi.webp": {
-  "face": [
-   0.535,
-   0.39
-  ],
-  "crown": 0.21,
-  "chin": 0.47,
-  "bust": 0.6,
-  "waist": 0.72,
-  "aspect": 0.6409
- },
- "art/kayla.webp": {
-  "face": [
-   0.6,
-   0.215
-  ],
-  "crown": 0.01,
-  "chin": 0.31,
-  "bust": 0.555,
-  "waist": 0.68,
-  "aspect": 0.6406,
-  "sd": 10
- },
- "art/nana.webp": {
-  "face": [
-   0.42,
-   0.25
-  ],
-  "crown": 0.025,
-  "chin": 0.34,
-  "bust": 0.595,
-  "waist": 0.7,
-  "aspect": 0.6409
- },
- "art/elian.webp": {
-  "face": [
-   0.625,
-   0.345
-  ],
-  "crown": 0.02,
-  "chin": 0.5,
-  "bust": 0.75,
-  "waist": 0.86,
-  "aspect": 0.6409
- },
- "art/robin.webp": {
-  "face": [
-   0.6,
-   0.26
-  ],
-  "crown": 0.025,
-  "chin": 0.41,
-  "bust": 0.645,
-  "waist": 0.76,
-  "aspect": 0.6409,
-  "sd": 12
- },
- "art/alfael.webp": {
-  "face": [
-   0.58,
-   0.27
-  ],
-  "crown": 0.015,
-  "chin": 0.345,
-  "bust": 0.6,
-  "waist": 0.72,
-  "aspect": 0.6409,
-  "sd": 12
- },
- "art/julie.webp": {
-  "face": [
-   0.52,
-   0.29
-  ],
-  "crown": 0.06,
-  "chin": 0.37,
-  "bust": 0.6,
-  "waist": 0.72,
-  "aspect": 0.6409
- },
- "art/enemies/goblin-guard.webp": {
-  "face": [
-   0.34,
-   0.3
-  ],
-  "crown": 0.03,
-  "chin": 0.48,
-  "bust": 0.66,
-  "waist": 0.75,
-  "aspect": 0.6409,
-  "sd": 10
- },
- "art/enemies/goblin-king.webp": {
-  "face": [
-   0.565,
-   0.15
-  ],
-  "crown": 0.005,
-  "chin": 0.285,
-  "bust": 0.52,
-  "waist": 0.62,
-  "aspect": 0.6409
- },
- "art/enemies/crimson-ashfang.webp": {
-  "face": [
-   0.77,
-   0.32
-  ],
-  "crown": 0.05,
-  "chin": 0.46,
-  "bust": 0.7,
-  "waist": 0.8,
-  "aspect": 0.6406,
-  "sl": 24
- },
- "art/enemies/tidal-nerelle.webp": {
-  "face": [
-   0.535,
-   0.2
-  ],
-  "crown": 0.015,
-  "chin": 0.29,
-  "bust": 0.5,
-  "waist": 0.62,
-  "aspect": 0.6409
- },
- "art/enemies/gilded-altea.webp": {
-  "face": [
-   0.605,
-   0.27
-  ],
-  "crown": 0.025,
-  "chin": 0.39,
-  "bust": 0.58,
-  "waist": 0.7,
-  "aspect": 0.6409
- },
- "art/enemies/crimson-wraith.webp": {
-  "face": [
-   0.545,
-   0.266
-  ],
-  "crown": 0.01,
-  "chin": 0.36,
-  "bust": 0.6,
-  "waist": 0.72,
-  "aspect": 0.6406
- },
- "art/npc/fennick.webp": {
-  "face": [
-   0.55,
-   0.18
-  ],
-  "crown": 0.05,
-  "chin": 0.31,
-  "bust": 0.5,
-  "waist": 0.7,
-  "aspect": 0.6406
- },
- "art/npc/fennick-serious.webp": {
-  "face": [
-   0.61,
-   0.185
-  ],
-  "crown": 0.03,
-  "chin": 0.33,
-  "bust": 0.52,
-  "waist": 0.72,
-  "aspect": 0.6406
- },
- "art/npc/fennick-shock.webp": {
-  "face": [
-   0.626,
-   0.135
-  ],
-  "crown": 0.01,
-  "chin": 0.3,
-  "bust": 0.5,
-  "waist": 0.7,
-  "aspect": 0.6406
- },
- "art/npc/fennick-shy.webp": {
-  "face": [
-   0.57,
-   0.195
-  ],
-  "crown": 0.03,
-  "chin": 0.32,
-  "bust": 0.52,
-  "waist": 0.72,
-  "aspect": 0.6406
- },
- "art/npc/johta-calm.webp": {
-  "face": [
-   0.66,
-   0.17
-  ],
-  "crown": 0.01,
-  "chin": 0.29,
-  "bust": 0.52,
-  "waist": 0.72,
-  "aspect": 0.6406
- },
- "art/johta.webp": {
-  "face": [
-   0.65,
-   0.265
-  ],
-  "crown": 0.02,
-  "chin": 0.32,
-  "bust": 0.52,
-  "waist": 0.72,
-  "aspect": 0.6406
- },
- "art/npc/herald.webp": {
-  "face": [
-   0.63,
-   0.28
-  ],
-  "crown": 0.01,
-  "chin": 0.37,
-  "bust": 0.62,
-  "waist": 0.71,
-  "aspect": 0.6408,
-  "sl": 36,
-  "sr": 26
- }
+ "art/npc/jin.webp": { "face": [0.57,0.27], "crown": 0.05, "chin": 0.37, "bust": 0.52, "waist": 0.68, "aspect": 0.6406 },
+ "art/ektor.webp": { "face": [0.71,0.18], "crown": 0.01, "chin": 0.32, "bust": 0.5, "waist": 0.61, "aspect": 0.6409 },
+ "art/npc/bram.webp": { "face": [0.45,0.27], "crown": 0.13, "chin": 0.345, "bust": 0.48, "waist": 0.55, "aspect": 0.6406 },
+ "art/npc/cinder.webp": { "face": [0.59,0.29], "crown": 0.05, "chin": 0.39, "bust": 0.53, "waist": 0.66, "aspect": 0.6406 },
+ "art/npc/kira.webp": { "face": [0.63,0.28], "crown": 0.12, "chin": 0.36, "bust": 0.45, "waist": 0.55, "aspect": 0.6406 },
+ "art/npc/poppy.webp": { "face": [0.6,0.32], "crown": 0.12, "chin": 0.46, "bust": 0.6, "waist": 0.7, "aspect": 0.6406 },
+ "art/npc/silas.webp": { "face": [0.52,0.28], "crown": 0.08, "chin": 0.44, "bust": 0.56, "waist": 0.72, "aspect": 0.6406 },
+ "art/enemies/goblin-raider-1.webp": { "face": [0.485,0.395], "crown": 0.035, "chin": 0.565, "bust": 0.68, "waist": 0.75, "aspect": 0.6406 },
+ "art/npc/saffi.webp": { "face": [0.45,0.3], "crown": 0.055, "chin": 0.39, "bust": 0.52, "waist": 0.65, "aspect": 0.6406 },
+ "art/npc/thessa.webp": { "face": [0.77,0.325], "crown": 0.11, "chin": 0.43, "bust": 0.58, "waist": 0.68, "aspect": 0.6406 },
+ "art/npc/seraphine.webp": { "face": [0.48,0.285], "crown": 0.17, "chin": 0.35, "bust": 0.47, "waist": 0.58, "aspect": 0.6406 },
+ "art/npc/vesper.webp": { "face": [0.72,0.28], "crown": 0.01, "chin": 0.35, "bust": 0.5, "waist": 0.61, "aspect": 0.6406 },
+ "art/dalila.webp": { "face": [0.52,0.265], "crown": 0.04, "chin": 0.4, "bust": 0.56, "waist": 0.67, "aspect": 0.6406 },
+ "art/ymir.webp": { "face": [0.52,0.33], "crown": 0.01, "chin": 0.44, "bust": 0.66, "waist": 0.8, "aspect": 0.6409 },
+ "art/lilith.webp": { "face": [0.61,0.28], "crown": 0.03, "chin": 0.37, "bust": 0.55, "waist": 0.68, "aspect": 0.6406 },
+ "art/you/m-fire.webp": { "face": [0.56,0.143], "crown": 0.01, "chin": 0.215, "bust": 0.41, "waist": 0.55, "aspect": 0.6406 },
+ "art/you/m-water.webp": { "face": [0.545,0.139], "crown": 0.025, "chin": 0.212, "bust": 0.4, "waist": 0.55, "aspect": 0.6406 },
+ "art/you/m-grass.webp": { "face": [0.526,0.2], "crown": 0.045, "chin": 0.277, "bust": 0.5, "waist": 0.62, "aspect": 0.6406 },
+ "art/you/f-fire.webp": { "face": [0.571,0.2], "crown": 0.038, "chin": 0.277, "bust": 0.52, "waist": 0.63, "aspect": 0.6406 },
+ "art/you/f-water.webp": { "face": [0.625,0.195], "crown": 0.017, "chin": 0.272, "bust": 0.47, "waist": 0.6, "aspect": 0.6406 },
+ "art/you/f-grass.webp": { "face": [0.615,0.2], "crown": 0.012, "chin": 0.277, "bust": 0.48, "waist": 0.6, "aspect": 0.6406 },
+ "art/npc/clerk.webp": { "face": [0.615,0.197], "crown": 0.04, "chin": 0.295, "bust": 0.5, "waist": 0.63, "aspect": 0.6406 },
+ "art/npc/clerk-facepalm.webp": { "face": [0.6,0.207], "crown": 0.045, "chin": 0.305, "bust": 0.51, "waist": 0.64, "aspect": 0.6406 },
+ "art/npc/clerk-smug.webp": { "face": [0.745,0.214], "crown": 0.015, "chin": 0.335, "bust": 0.6, "waist": 0.7, "aspect": 0.6406 },
+ "art/npc/clerk-shock.webp": { "face": [0.54,0.265], "crown": 0.035, "chin": 0.4, "bust": 0.62, "waist": 0.75, "aspect": 0.6406 },
+ "art/npc/saffi-calm.webp": { "face": [0.49,0.207], "crown": 0.07, "chin": 0.32, "bust": 0.58, "waist": 0.8, "aspect": 0.6409 },
+ "art/npc/seraphine-calm.webp": { "face": [0.557,0.322], "crown": 0.095, "chin": 0.452, "bust": 0.76, "waist": 0.9, "aspect": 0.6409 },
+ "art/npc/rin-calm.webp": { "face": [0.58,0.239], "crown": 0.02, "chin": 0.365, "bust": 0.68, "waist": 0.86, "aspect": 0.6409 },
+ "art/npc/heart-m.webp": { "face": [0.6,0.213], "crown": 0.025, "chin": 0.345, "bust": 0.6, "waist": 0.75, "aspect": 0.6406 },
+ "art/npc/heart-f.webp": { "face": [0.67,0.252], "crown": 0.025, "chin": 0.37, "bust": 0.64, "waist": 0.8, "aspect": 0.6406 },
+ "art/you/fight-m-fire.webp": { "face": [0.206,0.259], "crown": 0.01, "chin": 0.355, "bust": 0.55, "waist": 0.7, "aspect": 0.6406 },
+ "art/you/fight-m-water.webp": { "face": [0.759,0.235], "crown": 0.024, "chin": 0.34, "bust": 0.55, "waist": 0.7, "aspect": 0.6406 },
+ "art/you/fight-m-grass.webp": { "face": [0.772,0.249], "crown": 0.017, "chin": 0.368, "bust": 0.56, "waist": 0.72, "aspect": 0.6406 },
+ "art/you/fight-f-fire.webp": { "face": [0.64,0.256], "crown": 0.01, "chin": 0.39, "bust": 0.58, "waist": 0.72, "aspect": 0.6406 },
+ "art/you/fight-f-water.webp": { "face": [0.524,0.263], "crown": 0.005, "chin": 0.375, "bust": 0.58, "waist": 0.72, "aspect": 0.6406 },
+ "art/you/fight-f-grass.webp": { "face": [0.72,0.27], "crown": 0.031, "chin": 0.41, "bust": 0.6, "waist": 0.75, "aspect": 0.6406 },
+ "art/npc/barkeep.webp": { "face": [0.68,0.15], "crown": 0.02, "chin": 0.31, "bust": 0.52, "waist": 0.86, "aspect": 0.6406 },
+ "art/npc/barkeep-shout.webp": { "face": [0.56,0.15], "crown": 0.065, "chin": 0.34, "bust": 0.55, "waist": 0.88, "aspect": 0.6406 },
+ "art/npc/barkeep-smug.webp": { "face": [0.615,0.165], "crown": 0.03, "chin": 0.33, "bust": 0.55, "waist": 0.88, "aspect": 0.6406 },
+ "art/npc/barkeep-shock.webp": { "face": [0.71,0.22], "crown": 0.04, "chin": 0.46, "bust": 0.62, "waist": 0.9, "aspect": 0.6406 },
+ "art/npc/pottle-calm.webp": { "face": [0.556,0.19], "crown": 0.03, "chin": 0.31, "bust": 0.55, "waist": 0.8, "aspect": 0.6409 },
+ "art/npc/pip-calm.webp": { "face": [0.47,0.225], "crown": 0.02, "chin": 0.345, "bust": 0.56, "waist": 0.82, "aspect": 0.6409 },
+ "art/npc/hollis-calm.webp": { "face": [0.48,0.25], "crown": 0.03, "chin": 0.38, "bust": 0.6, "waist": 0.86, "aspect": 0.6409 },
+ "art/npc/wren-chibi.webp": { "face": [0.535,0.39], "crown": 0.21, "chin": 0.47, "bust": 0.6, "waist": 0.72, "aspect": 0.6409 },
+ "art/kayla.webp": { "face": [0.6,0.215], "crown": 0.01, "chin": 0.31, "bust": 0.555, "waist": 0.68, "aspect": 0.6406, "sd": 10 },
+ "art/nana.webp": { "face": [0.42,0.25], "crown": 0.025, "chin": 0.34, "bust": 0.595, "waist": 0.7, "aspect": 0.6409 },
+ "art/elian.webp": { "face": [0.625,0.345], "crown": 0.02, "chin": 0.5, "bust": 0.75, "waist": 0.86, "aspect": 0.6409 },
+ "art/robin.webp": { "face": [0.6,0.26], "crown": 0.025, "chin": 0.41, "bust": 0.645, "waist": 0.76, "aspect": 0.6409, "sd": 12 },
+ "art/alfael.webp": { "face": [0.58,0.27], "crown": 0.015, "chin": 0.345, "bust": 0.6, "waist": 0.72, "aspect": 0.6409, "sd": 12 },
+ "art/julie.webp": { "face": [0.52,0.29], "crown": 0.06, "chin": 0.37, "bust": 0.6, "waist": 0.72, "aspect": 0.6409 },
+ "art/enemies/goblin-guard.webp": { "face": [0.34,0.3], "crown": 0.03, "chin": 0.48, "bust": 0.66, "waist": 0.75, "aspect": 0.6409, "sd": 10 },
+ "art/enemies/goblin-king.webp": { "face": [0.565,0.15], "crown": 0.005, "chin": 0.285, "bust": 0.52, "waist": 0.62, "aspect": 0.6409 },
+ "art/enemies/crimson-ashfang.webp": { "face": [0.77,0.32], "crown": 0.05, "chin": 0.46, "bust": 0.7, "waist": 0.8, "aspect": 0.6406, "sl": 24 },
+ "art/enemies/tidal-nerelle.webp": { "face": [0.535,0.2], "crown": 0.015, "chin": 0.29, "bust": 0.5, "waist": 0.62, "aspect": 0.6409 },
+ "art/enemies/gilded-altea.webp": { "face": [0.605,0.27], "crown": 0.025, "chin": 0.39, "bust": 0.58, "waist": 0.7, "aspect": 0.6409 },
+ "art/enemies/crimson-wraith.webp": { "face": [0.545,0.266], "crown": 0.01, "chin": 0.36, "bust": 0.6, "waist": 0.72, "aspect": 0.6406 },
+ "art/npc/fennick.webp": { "face": [0.55,0.18], "crown": 0.05, "chin": 0.31, "bust": 0.5, "waist": 0.7, "aspect": 0.6406 },
+ "art/npc/fennick-serious.webp": { "face": [0.61,0.185], "crown": 0.03, "chin": 0.33, "bust": 0.52, "waist": 0.72, "aspect": 0.6406 },
+ "art/npc/fennick-shock.webp": { "face": [0.626,0.135], "crown": 0.01, "chin": 0.3, "bust": 0.5, "waist": 0.7, "aspect": 0.6406 },
+ "art/npc/fennick-shy.webp": { "face": [0.57,0.195], "crown": 0.03, "chin": 0.32, "bust": 0.52, "waist": 0.72, "aspect": 0.6406 },
+ "art/npc/johta-calm.webp": { "face": [0.66,0.17], "crown": 0.01, "chin": 0.29, "bust": 0.52, "waist": 0.72, "aspect": 0.6406 },
+ "art/johta.webp": { "face": [0.65,0.265], "crown": 0.02, "chin": 0.32, "bust": 0.52, "waist": 0.72, "aspect": 0.6406 },
+ "art/npc/herald.webp": { "face": [0.63,0.28], "crown": 0.01, "chin": 0.37, "bust": 0.62, "waist": 0.71, "aspect": 0.6408, "sl": 36, "sr": 26 },
+ "art/you/ssr-m-fire.webp": { "face": [0.55,0.32], "crown": 0.06, "chin": 0.4, "bust": 0.6, "waist": 0.76, "aspect": 0.6409 },
+ "art/you/ssr-m-water.webp": { "face": [0.53,0.28], "crown": 0.04, "chin": 0.36, "bust": 0.58, "waist": 0.74, "aspect": 0.6409 },
+ "art/you/ssr-m-grass.webp": { "face": [0.52,0.3], "crown": 0.04, "chin": 0.38, "bust": 0.6, "waist": 0.76, "aspect": 0.6409 },
+ "art/you/ssr-f-fire.webp": { "face": [0.69,0.39], "crown": 0.18, "chin": 0.47, "bust": 0.66, "waist": 0.78, "aspect": 0.6409 },
+ "art/you/ssr-f-water.webp": { "face": [0.52,0.33], "crown": 0.07, "chin": 0.42, "bust": 0.6, "waist": 0.75, "aspect": 0.6409 },
+ "art/you/ssr-f-grass.webp": { "face": [0.59,0.3], "crown": 0.02, "chin": 0.38, "bust": 0.58, "waist": 0.7, "aspect": 0.6409 },
+ "art/you/ur-m-fire.webp": { "face": [0.46,0.34], "crown": 0.07, "chin": 0.42, "bust": 0.62, "waist": 0.78, "aspect": 0.6409 },
+ "art/you/ur-m-water.webp": { "face": [0.645,0.34], "crown": 0.01, "chin": 0.42, "bust": 0.62, "waist": 0.78, "aspect": 0.6409 },
+ "art/you/ur-m-grass.webp": { "face": [0.45,0.33], "crown": 0.03, "chin": 0.41, "bust": 0.62, "waist": 0.78, "aspect": 0.6409 },
+ "art/you/ur-f-fire.webp": { "face": [0.55,0.41], "crown": 0.09, "chin": 0.48, "bust": 0.66, "waist": 0.8, "aspect": 0.6409 },
+ "art/you/ur-f-water.webp": { "face": [0.645,0.31], "crown": 0.02, "chin": 0.38, "bust": 0.58, "waist": 0.74, "aspect": 0.6409 },
+ "art/you/ur-f-grass.webp": { "face": [0.7,0.35], "crown": 0.02, "chin": 0.42, "bust": 0.6, "waist": 0.76, "aspect": 0.6409 }
 };
 /* ══ Round 69 (lab 66's engine, brought into the game with the user's picks: anime classico box A, two busts D, the fall D
  *  Risveglio, the lens A) · the stage the story plays on, inside the game's own page (its fonts, colours, cards, pictures):
@@ -34621,8 +34007,8 @@ const STORY66 = (() => {
     .replace(/\{c:([^|}]*)\|([^}]*)\}/g, (_, w, m) => (ST.love === "f" ? w : m))
     .replace(/\{name\}/g, ST.name).replace(/\{el\}/g, EL[ST.el]).replace(/\{item\}/g, ITEM).replace(/\{Item\}/g, ITEM[0].toUpperCase() + ITEM.slice(1));
   // you, as the user drew you (round 70): at ease (the talks), in a fight (your card) and struck by love (the gags)
-  const me = () => `art/you/${ST.sex}-${ST.el}.webp`;
-  const meFight = () => `art/you/fight-${ST.sex}-${ST.el}.webp`;
+  const me = () => youArt97(ST.sex, ST.el);
+  const meFight = () => youArt97(ST.sex, ST.el, true);
   const faceOf = (src) => (typeof BUSTI66 !== "undefined" && BUSTI66[src]?.face) || [0.5, 0.25];
   const ME_COL = { fire: "#ff9f7a", water: "#7fcaff", grass: "#97e08c" };
   // the one who walks past and steals your attention, of the kind you fall for: for a heart set on women it is Rin, the
@@ -36389,7 +35775,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-08-1850";
+const BUILD = "2026-11-08-1921";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
