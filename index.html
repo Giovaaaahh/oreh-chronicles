@@ -7708,6 +7708,18 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
 /* the Items page: a slot's own pieces fill the panel (the whole bag's list squeezed them to nothing once the bag grew) */
 .p77-bag-l { flex: 1 1 auto; }
 
+/* Round 98: a walk's cost under a sheet's button, the teleports' state, and the question before a worn piece moves */
+.sm25-note.w98-walk { margin: 4px 0 0; font-size: 13px; color: var(--foreground-on-dark-muted); }
+.t72-meta.w98-tp { color: #9fe9ff; }
+.ask98 { position: fixed; inset: 0; z-index: 9000; display: grid; place-items: center; padding: 16px; background: rgb(2 4 8 / 0.66); }
+.ask98-in { width: min(440px, 100%); box-sizing: border-box; padding: 22px 22px 18px; background: var(--plate, #0f1218); border-left: 3px solid #ffd58a; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%); color: #fff; }
+.ask98-in small { display: block; margin-bottom: 6px; font: 700 12px/1 var(--font-display); letter-spacing: 0.08em; text-transform: uppercase; color: #ffd58a; }
+.ask98-in p { margin: 0; font: 500 16px/1.45 var(--font-sans); }
+.ask98-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.ask98-btns .gm-btn { min-height: 44px; }
+@media (prefers-reduced-motion: no-preference) { .ask98-in { animation: ask98-in 0.18s cubic-bezier(0.23, 1, 0.32, 1); } }
+@keyframes ask98-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
 </style>
 </head>
 <body>
@@ -15606,6 +15618,25 @@ const webStore = () => (isAdmin() ? ADMIN_WEB : (PLAYER.player.web ??= {}));
 const hpStore = () => (isAdmin() ? ADMIN_HP : (PLAYER.player.hp ??= {}));
 const saveWeb = () => { if (isAdmin()) { try { localStorage.setItem(WEB_KEY, JSON.stringify(ADMIN_WEB)); localStorage.setItem(HP_KEY, JSON.stringify(ADMIN_HP)); } catch { /* it lasts this visit */ } } else savePlayer(); };
 const hpOf = (id) => hpStore()[id] ?? 1;
+/** Round 98: a question with two answers, over everything (Escape or a tap outside says no). */
+const confirm98 = (text, yes = "Move it", no = "Cancel", kicker = "Already in use") => new Promise((res) => {
+  const e98 = (x) => String(x).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const d = document.createElement("div");
+  d.className = "ask98"; d.setAttribute("role", "dialog"); d.setAttribute("aria-modal", "true"); d.setAttribute("aria-label", kicker);
+  d.innerHTML = `<div class="ask98-in"><small>${e98(kicker)}</small><p>${e98(text)}</p><div class="ask98-btns"><button type="button" class="gm-btn" data-ask98="y">${e98(yes)}</button><button type="button" class="gm-btn gm-btn--ghost" data-ask98="n">${e98(no)}</button></div></div>`;
+  const key = (e) => { if (e.key === "Escape") { e.stopPropagation(); e.preventDefault(); done(false); } };
+  const done = (v) => { removeEventListener("keydown", key, true); d.remove(); res(v); };
+  d.addEventListener("click", (e) => { e.stopPropagation(); const b = e.target.closest("[data-ask98]"); if (b) done(b.dataset.ask98 === "y"); else if (e.target === d) done(false); });
+  addEventListener("keydown", key, true);
+  document.body.append(d);
+  d.querySelector('[data-ask98="y"]')?.focus();
+});
+/** A piece worn by another hero: the question; the answer is a yes or a no (each place moves the piece itself on a yes: a
+ *  phone's sheet closes under the question). */
+const askMove98 = (itemId, from, to) => {
+  const it = ITEM_BY_ID[itemId], a = heroineById(from)?.name ?? "another hero", b = heroineById(to)?.name ?? "this hero";
+  return confirm98(`${it?.name ?? "This item"} is already worn by ${a}. Are you sure? It comes off ${a} and goes on ${b}.`);
+};
 /** Round 97: your look by the story: SSR once Nerelle has fallen (stage index 74, map 3's boss), UR after map 7's boss (174). */
 const YOU97 = {"ssr":true,"ur":true};
 const youTier97 = () => {
@@ -15655,7 +15686,7 @@ const TIDE95_DONE = { light: "The lighthouse burns again.", pier: "The sirens' s
 const TIDE95_AT = { pier: ["pier95", 54, "The Singing Pier"], light: ["lighthouse95", 59, "The Drowned Lighthouse"], reg: ["registry95", 64, "The Drowned Registry"] };
 const tideStage95 = (key) => { const [, i, name] = TIDE95_AT[key] ?? TIDE95_AT.pier; return { id: `tide95-${key}`, town69: true, name, reg: 2, level: STORY.stages[i]?.level ?? 50, waves: [["lurker:SR", "eel:SR", "maiden:R"]] }; };
 /** What a new place can be, and the pictures it may show (the story's own). */
-const PLACE_KINDS72 = ["village", "inn", "camp"];
+const PLACE_KINDS72 = ["village", "inn", "camp", "teleport"];
 const PLACE_PICS72 = ["brackenford", "kettle", "fernwatch", "tavern", "chapel", "kettle-in", "tower-view", "aerial"];
 /** The places as this game shows them: the built ones where the pack moved them, then the ones the Database made. */
 /** Round 76: a name as the Database's places are matched by it ("The Wolf’s Hearth" and "wolf's hearth" are one). */
@@ -15816,7 +15847,7 @@ const webState = (r, n, now) => {
   if (r >= STORY_OPEN) return "soon";
   if (nodeDone(r, n)) return "done";
   const nd = STORY_WEB[r].nodes[n];
-  if (nd.town) return placeOpen81(r, n) ? "open" : "locked";
+  if (nd.town) return (isTp98(nd) ? tpOpen98(r) : placeOpen81(r, n)) ? "open" : "locked";
   if (nd.s != null && STORY.stages[nd.s] === now) return "now";
   return nodeOpen(r, n) ? "open" : "locked";
 };
@@ -15862,6 +15893,68 @@ const near94 = (r, n) => {
   if (r === pr + 1) return n === STORY_WEB[r].door && pn === STORY_WEB[pr].boss;
   if (r === pr - 1) return n === STORY_WEB[r].boss && pn === STORY_WEB[pr].door;
   return false;
+};
+/** Round 98: a walk costs 1 stamina a cell; another map costs 35 (the user's numbers). */
+const WALK98 = { cell: 1, map: 35 };
+const isTp98 = (nd) => nd?.kind === "teleport";
+/** A map's teleports open once its boss has fallen (a boss beaten before round 98 counts too). */
+const tpOpen98 = (r) => !!STORY_WEB[r] && nodeDone(r, STORY_WEB[r].boss);
+const isFight98 = (nd) => nd?.s != null || nd?.t === "mini" || nd?.t === "skirm";
+/** A place you can stand on or walk through: where you are, a place cleared, an open camp or place, an open teleport. */
+const walk98 = (r, n, me) => {
+  const nd = STORY_WEB[r]?.nodes[n];
+  if (!nd || nd.gone) return false;
+  if (me && me[0] === r && me[1] === n) return true;
+  if (isTp98(nd)) return tpOpen98(r);
+  if (nd.town) return placeOpen81(r, n);
+  if (nd.t === "camp") return nodeDone(r, n) || nodeOpen(r, n);
+  return nodeDone(r, n);
+};
+/** The fewest cells from one place to another on one map, through places you can stand on; the target may be a fight one cell
+ *  past them; the open teleports of the map are no cells from each other. */
+const cells98 = (r, from, to, me) => {
+  const W = STORY_WEB[r], N = W.nodes.length, dist = new Array(N).fill(Infinity), q = [from];
+  const tps = tpOpen98(r) ? W.nodes.map((x, i) => (isTp98(x) && !x.gone ? i : -1)).filter((i) => i >= 0) : [];
+  dist[from] = 0;
+  while (q.length) {
+    const u = q.shift();
+    if (u === to) return dist[u];
+    if (u !== from && !walk98(r, u, me)) continue;
+    const go = (v, w) => { if (dist[u] + w < dist[v]) { dist[v] = dist[u] + w; if (w) q.push(v); else q.unshift(v); } };
+    for (const v of WEB_ADJ[r][u] ?? []) if (v === to || walk98(r, v, me)) go(v, 1);
+    if (tps.includes(u)) for (const v of tps) if (v !== u) go(v, 0);
+  }
+  return dist[to];
+};
+/** What going to a place costs from where you stand: { ok, cost, cells, cross } or { ok: false, why }. The Admin goes free. */
+const move98 = (r, n) => {
+  if (isAdmin() || window.__FREE94) return { ok: true, cost: 0, cells: 0 };
+  const W = STORY_WEB[r], nd = W?.nodes[n];
+  if (!nd) return { ok: false, why: "That place is not on the map." };
+  if (r >= STORY_OPEN) return { ok: false, why: "Coming soon." };
+  if (!regionOpen(r)) { const b = STORY.stages[STORY_WEB[r - 1]?.nodes[STORY_WEB[r - 1].boss]?.s]; return { ok: false, why: `Beat ${b?.name ?? "the boss"}, the boss of ${STORY_REGIONS[r - 1]?.name ?? "the map before"}, to open ${STORY_REGIONS[r]?.name ?? "this map"}.` }; }
+  if (isFight98(nd) && !nodeDone(r, n) && !nodeOpen(r, n)) return { ok: false, why: "Not reachable yet: clear a place beside it first." };
+  if (isTp98(nd) && !tpOpen98(r)) { const b = STORY.stages[W.nodes[W.boss]?.s]; return { ok: false, why: `This teleport opens once ${b?.name ?? "the boss"}, the boss of ${STORY_REGIONS[r]?.name ?? "this map"}, has fallen.` }; }
+  const me = pos94();
+  if (me[0] === r && me[1] === n) return { ok: true, cost: 0, cells: 0 };
+  let from = me[1], base = 0, cross = false;
+  if (me[0] !== r) {
+    cross = true; base = WALK98.map; from = r > me[0] ? W.door : W.boss;
+    if (from === n) return { ok: true, cost: base, cells: 0, cross };
+    if (!walk98(r, from, null)) return { ok: false, why: `Start ${STORY_REGIONS[r]?.name ?? "this map"} at its entrance.` };
+  }
+  const c = cells98(r, from, n, cross ? null : me);
+  if (!Number.isFinite(c)) return { ok: false, why: "Not reachable yet: clear a place beside it first." };
+  return { ok: true, cost: base + c * WALK98.cell, cells: c, cross };
+};
+/** Pays a walk: false (and the stamina's sheet) when there is not enough. */
+const pay98 = (cost) => { if (!cost || isAdmin() || window.__FREE94) return true; if (stam94().v < cost) { ST94.ask?.(cost); return false; } stamAdd94(-cost); return true; };
+/** Round 98: a region's boss beaten: you land in the next region, in the town beside its entrance, else on the entrance (its first
+ *  fight), so you can always move on from where you are. */
+const land98 = (r) => {
+  if (!STORY_WEB[r] || r >= STORY_OPEN) return null;
+  const W = STORY_WEB[r], d = W.door, t = (WEB_ADJ[r][d] ?? []).find((m) => W.nodes[m]?.town && !W.nodes[m].gone && !isTp98(W.nodes[m]));
+  return [r, t ?? d];
 };
 /** The place of the map a fight is on (the places' own fights, the forge and the Ember Vein have none). */
 const at94of = (run) => {
@@ -21974,6 +22067,8 @@ void main() {
     if (won) count73(run);
     const carried = carryOut(won), story = run.kind === "battle" && !run.smith && !run.deep && !run.town69;
     if (story) { MAP_FOCUS.at = placeOf(run.stage); MAP_FOCUS.sheet = false; if (won || isAdmin()) here89Set(MAP_FOCUS.at); }
+    // round 98: a region's boss beaten: you land in the next region, beside its entrance
+    if (story && won && !isAdmin()) { const i98 = STORY.stages.indexOf(run.stage); if (i98 >= 0 && i98 % 25 === 24) { const l98 = land98(Math.floor(i98 / 25) + 1); if (l98) { here89Set(l98); MAP_FOCUS.at = l98; } } }
     const opened = story && won ? MAP_FOCUS.fresh.length : 0;
     const actions = won ? [...(story ? [["choose on the map", "map"]] : run.deep ? [["back to the Ember Vein", "deep"]] : run.smith ? [["Ignara's forge", "forge"]] : run.town69 === "hearth" ? [["back to the Wolf's Hearth", "hearth76"]] : run.town69 === "warcamp" ? [["back to Fernwatch", "fern"]] : run.town69 === "tide95" ? [[`back to ${run.stage?.name ?? "the Tidal Shelf"}`, `tide95:${TIDE95_AT[String(run.stage?.id ?? "").slice(7)]?.[0] ?? "pier95"}`]] : run.town69 ? [["back to Brackenford", "town"]] : []), ["play again", "again", story || !!run.deep || !!run.smith || !!run.town69], ["back to the home", "leave", true]]
       : [["try again", "again"], ...(story ? [["the map", "map", true]] : run.deep ? [["the Ember Vein", "deep", true]] : run.smith ? [["the map", "map", true]] : run.town69 === "hearth" ? [["the map", "map", true]] : run.town69 === "warcamp" ? [["back to Fernwatch", "fern", true]] : run.town69 ? [["back to Brackenford", "town", true]] : []), ["back to the home", "leave", true]];
@@ -22409,9 +22504,10 @@ void main() {
       // round 94: a Player fights one place at a time, and a fight costs stamina; a place already cleared is fought at 50%
       if (kind === "battle" && !isAdmin()) {
         const run94 = runOf(kind, id), at94 = at94of(run94);
-        if (at94 && !near94(...at94)) { live = false; host.hidden = true; toast("Too far: walk there one place at a time."); location.hash = "#/play/story"; return; }
+        const mv98 = at94 ? move98(...at94) : { ok: true, cost: 0 };
+        if (!mv98.ok) { live = false; host.hidden = true; toast(mv98.why); location.hash = "#/play/story"; return; }
         if (at94 && nodeDone(...at94)) run94.back94 = true;
-        const c94 = cost94(run94);
+        const c94 = cost94(run94) + (mv98.cost ?? 0);
         if (stam94().v < c94) { live = false; host.hidden = true; location.hash = "#/play/story"; setTimeout(() => ST94.ask?.(c94), 300); return; }
         stamAdd94(-c94);
         guard(start(run94));
@@ -25287,7 +25383,7 @@ const GOLD_SHOP = (() => {
         if (e.target === el || e.target.closest("[data-sh-close]")) { closeSheet(); return; }
         if (e.target.closest("[data-sh-off]")) { const prev = statsOf(h, lineupIds()); equip(h.id, slot, null); closeSheet(); api.toast("Taken off"); paint(prev); return; }
         const o = e.target.closest("[data-sh-opt]");
-        if (o && !o.disabled) wear(ITEM_BY_ID[o.dataset.shOpt], slot);
+        if (o && !o.disabled) { const id98 = o.dataset.shOpt, w98 = itemFree(id98, h.id) > 0 ? null : wearer89(id98, h.id); if (w98) { askMove98(id98, w98, h.id).then((y) => { if (y) wear(ITEM_BY_ID[id98], slot); }); return; } wear(ITEM_BY_ID[id98], slot); }
       });
     };
     const closeSheet = () => { const s = document.querySelector(".sh3-sheet"); if (!s) return; s.querySelector(".td-picker-in").animate([{ transform: "none" }, { transform: "translateY(100%)" }], { duration: 220, easing: "cubic-bezier(0.7, 0, 0.84, 0)" }).onfinish = () => s.remove(); setTimeout(() => s.remove(), 260); };
@@ -27804,10 +27900,10 @@ const tOf = (n) => (n.t === "skirm" && n.waves ? "made" : n.t);
 /* ── round 72 · the places that are not fights (villages, inns, camps with people in them; Gruk's den) and Ignara's
  *  forge. Places move and link like the rest; here new ones are made ("Coming soon" in the game until their story is
  *  written) and the forge goes to another camp. They go online as the pack's "places" and "smith" (round72.cjs). ── */
-const PLACE_IT = { village: "Villaggio", inn: "Locanda", camp: "Accampamento" };
-const PLACE_EN = { village: "village", inn: "inn", camp: "camp" };
+const PLACE_IT = { village: "Villaggio", inn: "Locanda", camp: "Accampamento", teleport: "Teletrasporto" };
+const PLACE_EN = { village: "village", inn: "inn", camp: "camp", teleport: "teleport" };
 const PIC_IT = { brackenford: "Brackenford", kettle: "The Crooked Kettle", fernwatch: "Fernwatch", tavern: "La taverna, dentro", chapel: "La chiesetta, dentro", "kettle-in": "La locanda, dentro", "tower-view": "Dalla torre di guardia", aerial: "Goblin Hollow dall'alto" };
-const PLACE_D = { village: "M4 11.5L12 4.5L20 11.5V20H14.5V15H9.5V20H4Z", inn: "M5 6H15V19H5Z M15 9H19.5V15.5H15V13.5H17.5V11H15Z", camp: "M2.5 19.5L12 4.5L21.5 19.5H14.5L12 14.5L9.5 19.5Z" };
+const PLACE_D = { village: "M4 11.5L12 4.5L20 11.5V20H14.5V15H9.5V20H4Z", inn: "M5 6H15V19H5Z M15 9H19.5V15.5H15V13.5H17.5V11H15Z", camp: "M2.5 19.5L12 4.5L21.5 19.5H14.5L12 14.5L9.5 19.5Z", teleport: "M4 12A8 8 0 1 0 20 12A8 8 0 1 0 4 12Z M7.5 12A4.5 4.5 0 1 1 16.5 12A4.5 4.5 0 1 1 7.5 12Z M12 9.6L14.4 12L12 14.4L9.6 12Z" };
 /** Every place as the draft puts it (the built ones where it moved them, then the new ones). */
 const placesNow = () => places72(D.places && typeof D.places === "object" ? D.places : {});
 /** The camp with the forge, in the draft (or where the game built it). */
@@ -28063,7 +28159,7 @@ const viewStory = (host) => {
         <button type="button" data-tool="move" aria-pressed="true">${ic("move")}<span>Sposta</span></button>
         <button type="button" data-tool="link" aria-pressed="false">${ic("link")}<span>Collega</span></button>
         <button type="button" data-tool="add" aria-pressed="false">${ic("plus")}<span>Aggiungi</span></button>
-        <select data-addtype aria-label="Tipo di luogo da aggiungere">${ADD_T.map(([t, n]) => `<option value="${t}">${n}</option>`).join("")}<option value="place">Luogo (villaggio, locanda, accampamento)</option></select>
+        <select data-addtype aria-label="Tipo di luogo da aggiungere">${ADD_T.map(([t, n]) => `<option value="${t}">${n}</option>`).join("")}<option value="place">Luogo (villaggio, locanda, accampamento)</option><option value="teleport">Teletrasporto (si apre battuto il boss della mappa)</option></select>
         <i></i><button type="button" data-fit aria-label="Mostra tutta la regione">${ic("eye")}<span>Tutta</span></button>
         <i></i><button type="button" data-live aria-pressed="false" title="La mappa come la vedono i giocatori, mentre la cambi">${ic("story")}<span>Come nel gioco</span></button>
       </div>
@@ -28412,9 +28508,9 @@ const viewStory = (host) => {
   // a new place where the map was tapped: a fight, a camp… or, from round 72, a village, an inn, a camp with people
   const addAt = (x, y) => {
     const t = qs("[data-addtype]", host).value;
-    if (t === "place") {
+    if (t === "place" || t === "teleport") {
       const key = `new-${Date.now().toString(36).slice(-8)}`;
-      (D.places ??= {})[key] = { r: reg, x: +x.toFixed(4), y: +y.toFixed(4), kind: "village", kicker: "village", name: "New place", sub: "", txt: "", pic: null };
+      (D.places ??= {})[key] = t === "teleport" ? { r: reg, x: +x.toFixed(4), y: +y.toFixed(4), kind: "teleport", kicker: "teleport", name: "Teleport", sub: "", txt: "A ring of old stones. Step in, and step out at any other open teleport of this map.", pic: null } : { r: reg, x: +x.toFixed(4), y: +y.toFixed(4), kind: "village", kicker: "village", name: "New place", sub: "", txt: "", pic: null };
       refreshPlaces(); drawEdges(); drawNodes(); placesChanged(key, "nuovo luogo");
       const g = qs(`[data-p="${key}"]`, gN); if (g) anim(g, [{ opacity: 0 }, { opacity: 1 }], 300);
       pickPlace(key, false);
@@ -30442,7 +30538,62 @@ const initGame = () => {
   };
   /** Round 94: a sheet's buttons for where you stand: a fight's cost (and 50% for a place already cleared, and no stamina no fight),
    *  one place at a time, a camp's fire, an inn's bed. */
+  /** Round 98: a sheet's buttons: what the walk costs on top of the fight, enter or rest; a place to stand on can be walked to; a
+   *  teleport's sheet takes you to the map's other open teleports. */
   const act94 = (box, at) => {
+    if (!at) return;
+    const [r, n] = at, nd = STORY_WEB[r]?.nodes[n];
+    if (!nd) return;
+    const adm = isAdmin(), mv = move98(r, n), done = nodeDone(r, n), cost = costAt94(r, n);
+    const lock = (t) => { const p = document.createElement("p"); p.className = "sm25-lock"; p.textContent = t; return p; };
+    const cellsTxt = (c) => `${c} cell${c === 1 ? "" : "s"}`;
+    const note = mv.ok && mv.cost > 0 ? (mv.cross ? `Another map: ${WALK98.map} stamina to go there${mv.cells ? `, then ${cellsTxt(mv.cells)}` : ""}, counted in.` : `${cellsTxt(mv.cells)} to walk there: ${mv.cost} stamina, counted in.`) : "";
+    for (const b of box.querySelectorAll('.sm25-go[data-gm-route^="battle/"]')) {
+      if (!mv.ok) { b.replaceWith(lock(mv.why)); continue; }
+      const total = cost + mv.cost;
+      b.textContent = done && !adm ? `fight again · 50% HP · ${total} stamina` : `${done ? "fight again" : "fight"} · ${total} stamina`;
+      b.addEventListener("click", (e) => { if (stam94().v < total) { e.stopPropagation(); e.preventDefault(); ST94.ask?.(total); } });
+      if (note) b.insertAdjacentHTML("afterend", `<p class="sm25-note w98-walk">${note}</p>`);
+    }
+    for (const b of box.querySelectorAll(".w44-rest, [data-walk94], [data-l66-enter]")) {
+      if (!mv.ok) { b.replaceWith(lock(mv.why)); continue; }
+      if (mv.cost > 0) { b.textContent = `${b.textContent} · ${mv.cost} stamina`; b.addEventListener("click", (e) => { if (!pay98(mv.cost)) { e.stopPropagation(); e.preventDefault(); } }); }
+    }
+    // a place to stand on, away from you: walk there (no fight on the way)
+    const stand = mv.ok && mv.cost > 0 && !box.querySelector("[data-walk94], [data-l66-enter], .w44-rest") && (walk98(r, n, null) || isTp98(nd));
+    if (stand) { const w = document.createElement("button"); w.type = "button"; w.className = "gm-btn gm-btn--ghost sm25-go"; w.dataset.w98Walk = ""; w.textContent = `walk here · ${mv.cost} stamina`; (box.querySelector(".sm25-sheet-in > :last-child") ?? box.querySelector(".sm25-sheet-in"))?.after(w); }
+    // an inn or a village: its bed (round 94), the walk paid on the way
+    if (mv.ok && nd.t === "town" && ["village", "inn"].includes(nd.kind)) {
+      const price = adm ? 0 : nd.kind === "inn" ? 60 : 100, bed = document.createElement("button");
+      bed.type = "button"; bed.className = "gm-btn gm-btn--gold sm25-go w94-sleep";
+      bed.textContent = `sleep at the inn · stamina full, every fire lit again${price ? ` · ${price} gold` : ""}${mv.cost ? ` · ${mv.cost} stamina to walk there` : ""}`;
+      (box.querySelector("[data-l66-enter]") ?? box.querySelector(".sm25-sheet-in > :last-child"))?.after(bed);
+      bed.addEventListener("click", () => {
+        const p = PLAYER.player;
+        if (price && (p.gold ?? 0) < price) { toast(`Not enough gold: a bed costs ${price}.`); return; }
+        if (!pay98(mv.cost)) return;
+        if (price) p.gold -= price;
+        sleep94();
+        here89Set([r, n]);
+        savePlayer(); paintGems(); paintStory();
+        box.remove();
+        toast("You sleep at the inn: stamina full, everyone back to full HP, and every fire on the map burns again.");
+      });
+    }
+    // walking there, or through the stones to another teleport of the map
+    box.addEventListener("click", (e) => {
+      const w = e.target.closest("[data-w98-walk], [data-tp98]");
+      if (!w) return;
+      const [tr, tn] = w.dataset.tp98 ? w.dataset.tp98.split("-").map(Number) : [r, n], m = move98(tr, tn);
+      if (!m.ok) { toast(m.why); return; }
+      if (!pay98(m.cost)) return;
+      here89Set([tr, tn]); NODE89.last = [tr, tn];
+      savePlayer(); paintGems(); paintStory();
+      box.remove();
+      toast(w.dataset.tp98 ? `You step through the stones and out at ${STORY_WEB[tr].nodes[tn].name}.` : m.cost ? `You walk there: ${m.cost} stamina.` : "You are there.");
+    });
+  };
+  const act94old = (box, at) => {
     if (!at) return;
     const [r, n] = at, nd = STORY_WEB[r]?.nodes[n];
     if (!nd) return;
@@ -30471,6 +30622,14 @@ const initGame = () => {
         toast("You sleep at the inn: stamina full, everyone back to full HP, and every fire on the map burns again.");
       });
     }
+  };
+  /** Round 98: a teleport's sheet: why it is shut, or every other open teleport of the map, and what reaching them costs. */
+  const tpSheet98 = (r, n) => {
+    const W = STORY_WEB[r], R = STORY_REGIONS[r]?.name ?? "this map";
+    if (!tpOpen98(r)) { const b = STORY.stages[W.nodes[W.boss]?.s]; return `<p class="sm25-lock">Locked: it opens once ${b?.name ?? "the boss"}, the boss of ${R}, has fallen.</p>`; }
+    const others = W.nodes.map((x, i) => [x, i]).filter(([x, i]) => i !== n && isTp98(x) && !x.gone);
+    const go = others.map(([x, i]) => { const m = move98(r, i); return m.ok ? `<button class="gm-btn sm25-go" type="button" data-tp98="${r}-${i}">teleport to ${x.name}${isAdmin() ? "" : ` · ${m.cost ? `${m.cost} stamina` : "free"}`}</button>` : ""; }).join("");
+    return `<p class="t72-meta w98-tp">Open: from here every open teleport of ${R} is one step away, at no cost.</p>${go || '<p class="sm25-note">No other teleport on this map yet.</p>'}`;
   };
   const sheetBox = (html, label, col) => {
     $(".sm25-sheet", stage)?.remove();
@@ -30503,7 +30662,7 @@ const initGame = () => {
     }
     if (nd.t === "town") {
       // round 70: each place shows its own picture (the user's)
-      sheetBox(`${head(nd.kicker, nd.name, nd.sub)}${nd.pic ? `<img class="t70-pic" src="art/story/${nd.pic}.webp" alt="" draggable="false">` : ""}<p class="w44-txt">${nd.txt}</p>${nd.fang ? `<p class="t72-meta r76-state">${s69Of72().fang?.[nd.fang] ? "The Fangstone here is broken." : "Its Fangstone still feeds Ashfang."}</p>` : ""}${nd.tide95 ? `<p class="t72-meta r76-state">${s69Of72().tide95?.[nd.tide95] ? TIDE95_DONE[nd.tide95] : `Its riddle is still to solve: then ${TIDE95_TXT[nd.tide95]}.`}</p>` : ""}${["brackenford", "kettle", "fernwatch", "cinderglass", "vents", "hearth", "goblin-cave", "pier95", "lighthouse95", "registry95", ...(BRIM76_READY ? ["brimwick"] : [])].includes(nd.town) ? (placeOpen81(r, n) ? `<button class="gm-btn sm25-go" type="button" data-l66-enter="${nd.town}">enter ${nd.name}</button>` : far) : '<p class="sm25-lock">Coming soon.</p>'}`, nd.name, "#ffd58a");
+      sheetBox(`${head(nd.kicker, nd.name, nd.sub)}${nd.pic ? `<img class="t70-pic" src="art/story/${nd.pic}.webp" alt="" draggable="false">` : ""}<p class="w44-txt">${nd.txt}</p>${nd.fang ? `<p class="t72-meta r76-state">${s69Of72().fang?.[nd.fang] ? "The Fangstone here is broken." : "Its Fangstone still feeds Ashfang."}</p>` : ""}${nd.tide95 ? `<p class="t72-meta r76-state">${s69Of72().tide95?.[nd.tide95] ? TIDE95_DONE[nd.tide95] : `Its riddle is still to solve: then ${TIDE95_TXT[nd.tide95]}.`}</p>` : ""}${["brackenford", "kettle", "fernwatch", "cinderglass", "vents", "hearth", "goblin-cave", "pier95", "lighthouse95", "registry95", ...(BRIM76_READY ? ["brimwick"] : [])].includes(nd.town) ? (placeOpen81(r, n) ? `<button class="gm-btn sm25-go" type="button" data-l66-enter="${nd.town}">enter ${nd.name}</button>` : far) : isTp98(nd) ? tpSheet98(r, n) : '<p class="sm25-lock">Coming soon.</p>'}`, nd.name, "#ffd58a");
       return;
     }
     if (nd.t === "camp") {
@@ -31268,6 +31427,7 @@ const initGame = () => {
     const it = t.closest("[data-p77-item]");
     if (it && P77.sel && P77.slot) {
       const v = it.dataset.p77Item || null, at = P77.slot, from = v ? it.dataset.from89 : null;
+      if (from) { const sel98 = P77.sel; askMove98(v, from, sel98).then((y) => { if (!y) return; unwear89(v, from); equip(sel98, at, v); toast(`${ITEM_BY_ID[v].name} moved from ${heroineById(from)?.name ?? "another hero"} to ${heroineById(sel98)?.name ?? "her"}`); renderItems(); }); return; }
       if (from) unwear89(v, from);
       equip(P77.sel, at, v);
       toast(from ? `${ITEM_BY_ID[v].name} moved from ${heroineById(from)?.name ?? "another hero"} to ${heroineById(P77.sel)?.name ?? "her"}` : v ? `${ITEM_BY_ID[v].name} +${ITEM_BY_ID[v].pct}% equipped` : "Taken off");
@@ -32900,6 +33060,7 @@ const initGame = () => {
     const item = t.closest("[data-td-item]");
     if (item) {
       const at = picking, from = item.dataset.tdItem ? item.dataset.from89 : null;
+      if (from) { const id98 = item.dataset.tdItem, at98 = picking, to98 = fileId; askMove98(id98, from, to98).then((y) => { if (!y) return; unwear89(id98, from); equip(to98, at98, id98); picking = null; renderFile(); toast(`${ITEM_BY_ID[id98].name} moved from ${heroineById(from)?.name ?? "another hero"} to ${heroineById(to98)?.name ?? "her"}`); }); return; }
       if (from) unwear89(item.dataset.tdItem, from);
       equip(fileId, picking, item.dataset.tdItem || null);
       if (from) toast(`${ITEM_BY_ID[item.dataset.tdItem].name} moved from ${heroineById(from)?.name ?? "another hero"} to ${heroineById(fileId)?.name ?? "her"}`);
@@ -32995,7 +33156,7 @@ initRoster();
  * the numbers at the top painted again */
 const HOOK69 = {};
 /* a place on the map with people in it: a round plate, a village's roof, an inn's mug, a camp's tent */
-const TOWN69_ICON = { village: new Path2D("M4 11.5L12 4.5L20 11.5V20H14.5V15H9.5V20H4Z"), inn: new Path2D("M5 6H15V19H5Z M15 9H19.5V15.5H15V13.5H17.5V11H15Z"), camp: new Path2D("M2.5 19.5L12 4.5L21.5 19.5H14.5L12 14.5L9.5 19.5Z"), crystal: new Path2D("M12 2.5L17 9.5L12 21.5L7 9.5Z M12 6.5L10 9.8L12 16L14 9.8Z"), cave: new Path2D("M3 20.5V13.5A9 8.5 0 0 1 21 13.5V20.5H15.5V15.5A3.5 3.5 0 0 0 8.5 15.5V20.5Z"), lighthouse: new Path2D("M12 2.5L15.5 5.5H8.5Z M9 6H15V8.6H9Z M9.7 9.6H14.3L16 21H8Z M8.4 6.5L2.5 4.6V9.2L8.4 7.7Z M15.6 6.5L21.5 4.6V9.2L15.6 7.7Z"), pier: new Path2D("M2.5 9H21.5V12H2.5Z M4.5 12H6.5V17.5H4.5Z M11 12H13V17.5H11Z M17.5 12H19.5V17.5H17.5Z M18.6 3.5H20V9H18.6Z M2.5 19.6Q5.5 17.9 8.5 19.6T14.5 19.6T20.5 19.6L21.5 19.6V21.5H2.5Z"), registry: new Path2D("M4.5 2.5H16.5V14.85A4.6 4.6 0 0 0 12.64 20H4.5Z M7 5.5V6.9H14V5.5Z M7 8.6V10H14V8.6Z M7 11.7V13.1H11.5V11.7Z M14.2 19.4A3 3 0 1 0 20.2 19.4A3 3 0 1 0 14.2 19.4Z") };
+const TOWN69_ICON = { village: new Path2D("M4 11.5L12 4.5L20 11.5V20H14.5V15H9.5V20H4Z"), inn: new Path2D("M5 6H15V19H5Z M15 9H19.5V15.5H15V13.5H17.5V11H15Z"), camp: new Path2D("M2.5 19.5L12 4.5L21.5 19.5H14.5L12 14.5L9.5 19.5Z"), crystal: new Path2D("M12 2.5L17 9.5L12 21.5L7 9.5Z M12 6.5L10 9.8L12 16L14 9.8Z"), cave: new Path2D("M3 20.5V13.5A9 8.5 0 0 1 21 13.5V20.5H15.5V15.5A3.5 3.5 0 0 0 8.5 15.5V20.5Z"), lighthouse: new Path2D("M12 2.5L15.5 5.5H8.5Z M9 6H15V8.6H9Z M9.7 9.6H14.3L16 21H8Z M8.4 6.5L2.5 4.6V9.2L8.4 7.7Z M15.6 6.5L21.5 4.6V9.2L15.6 7.7Z"), pier: new Path2D("M2.5 9H21.5V12H2.5Z M4.5 12H6.5V17.5H4.5Z M11 12H13V17.5H11Z M17.5 12H19.5V17.5H17.5Z M18.6 3.5H20V9H18.6Z M2.5 19.6Q5.5 17.9 8.5 19.6T14.5 19.6T20.5 19.6L21.5 19.6V21.5H2.5Z"), registry: new Path2D("M4.5 2.5H16.5V14.85A4.6 4.6 0 0 0 12.64 20H4.5Z M7 5.5V6.9H14V5.5Z M7 8.6V10H14V8.6Z M7 11.7V13.1H11.5V11.7Z M14.2 19.4A3 3 0 1 0 20.2 19.4A3 3 0 1 0 14.2 19.4Z"), teleport: new Path2D("M4 12A8 8 0 1 0 20 12A8 8 0 1 0 4 12Z M7.5 12A4.5 4.5 0 1 1 16.5 12A4.5 4.5 0 1 1 7.5 12Z M12 9.6L14.4 12L12 14.4L9.6 12Z") };
 /* round 72: the job's state, and the den shown only while it is under way (or while the Database shows the map) */
 const s69Of72 = () => (isAdmin() ? PLAYER.admin : PLAYER.player).s69 ?? {};
 /** Round 76: Brimwick opens once the user's pictures of the village and of Brother Fennick are in the art (the build looks). */
@@ -35775,7 +35936,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-08-1921";
+const BUILD = "2026-11-08-2036";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
