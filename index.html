@@ -7724,6 +7724,23 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
 .sm99-now { display: block; margin-bottom: 6px; font: 700 13px/1.4 var(--font-display); letter-spacing: 0.02em; color: var(--accent); }
 .sm99-now.is-sure { color: var(--rarity-ssr); }
 
+/* Round 100: the summon count as ten notches (lab 99, pick A). Cyan while the 0 is a 50/50, gold once it is sure. */
+.sm100 { --c: var(--accent); --cg: rgb(2 210 227 / 0.5); display: flex; align-items: center; gap: 12px; color: var(--foreground-on-dark); }
+.sm100.is-sure { --c: var(--rarity-ssr); --cg: rgb(242 182 50 / 0.5); }
+.sm100 small { font: 600 9px/1.1 var(--font-display); letter-spacing: 0.1em; text-transform: uppercase; color: var(--foreground-on-dark-muted); }
+.sm100-n { flex: none; display: flex; align-items: center; gap: 6px; }
+.sm100-n b { font: 700 28px/1 var(--font-display); color: var(--c); font-variant-numeric: tabular-nums; min-width: 2.1ch; text-align: right; }
+.sm100-track { flex: 1; display: flex; gap: 5px; }
+.sm100-track i { flex: 1; height: 15px; background: linear-gradient(90deg, var(--c) calc(var(--f) * 100%), rgb(255 255 255 / 0.1) 0); clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%); }
+.sm100-goal { flex: none; display: grid; justify-items: center; padding: 3px 12px 4px; border: 1px solid var(--c); background: rgb(0 0 0 / 0.35); clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px); box-shadow: inset 0 0 16px var(--cg); }
+.sm100-goal b { font: 700 19px/1 var(--font-display); color: var(--c); }
+.sm100-goal span { font: 700 10px/1.2 var(--font-display); letter-spacing: 0.06em; text-transform: uppercase; }
+.sm8-info .sm100-line { margin: 4px 0 0; font-size: 12.5px; line-height: 1.4; color: var(--foreground-on-dark-muted); }
+.gm[data-device="phone"] .sm100 { gap: 8px; }
+.gm[data-device="phone"] .sm100-n b { font-size: 24px; }
+.gm[data-device="phone"] .sm100-track { gap: 3px; }
+.gm[data-device="phone"] .sm100-track i { height: 13px; clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%); }
+
 </style>
 </head>
 <body>
@@ -32006,8 +32023,10 @@ const initGame = () => {
   /** What the Pull page shows: the number, a bar that empties from 100 to 0, and what the 0 brings. */
   const count93Text = (b) => {
     const nh = nh93(b), c = count93(), s = c.left === 1 ? "" : "s";
-    return `<div class="sm93-count${c.spec ? " is-sure" : ""}" role="img" aria-label="${c.left} pulls of 100 left, then ${c.spec ? "100%" : "a 50% chance of"} ${nh.name}"><b>${c.left}</b><span class="sm93-bar"><i style="width:${c.left}%"></i></span><small>/100</small></div>
-      <p>${c.spec ? `${c.left} more pull${s}, then ${nh.name} at 100%: you lost the last 50/50, so this 0 is ${nh.name} for sure.` : `${c.left} more pull${s}, then a 50% chance of ${nh.name}. If it is lost, the next 0 is ${nh.name} at 100%.`} A pull counts 1, a ×11 counts 10, and the count goes on from summon to summon.</p>`;
+    // round 100: ten notches of ten pulls fill towards the 0; the plate says what the 0 brings (the user's pick A, lab 99)
+    const done = 100 - c.left, segs = Array.from({ length: 10 }, (_, k) => `<i style="--f:${Math.max(0, Math.min(1, (done - k * 10) / 10))}"></i>`).join("");
+    return `<div class="sm100${c.spec ? " is-sure" : ""}" role="img" aria-label="${c.left} pulls of 100 left, then ${c.spec ? "100%" : "a 50% chance of"} ${nh.name}"><div class="sm100-n"><b>${c.left}</b><small>pull${s}<br>left</small></div><div class="sm100-track">${segs}</div><div class="sm100-goal"><small>at 0</small><b>${c.spec ? 100 : 50}%</b><span>${nh.name}</span></div></div>
+      <p class="sm100-line">${c.spec ? `${c.left} more pull${s}, then ${nh.name} at 100%: you lost the last 50/50.` : `${c.left} more pull${s}, then a 50% chance of ${nh.name}. Lose it, and the next 0 is ${nh.name} at 100%.`} A pull counts 1, a ×11 counts 10.</p>`;
   };
   /** The rule, for «who's inside». */
   const rule93 = (b) => { const nh = nh93(b), c = count93(), s = c.left === 1 ? "" : "s"; return `<b class="sm99-now${c.spec ? " is-sure" : ""}">${c.spec ? `Your next 0: ${nh.name} at 100%, ${c.left} more pull${s} away. You lost the last 50/50.` : `Your next 0: a 50% chance of ${nh.name}, ${c.left} more pull${s} away.`}</b>Every summon with a new hero shares one count from 100 to 0: a pull counts 1, a ×11 counts 10 (its 11th card is a gift). At 0 it is ${nh.name} with a 50% chance, otherwise another ${baseRarity(nh)} of this summon, and then the next 0 is ${nh.name} for sure, at 100%. If ${nh.name} comes sooner, the count starts again from 100.`; };
@@ -35941,7 +35960,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-08-2234";
+const BUILD = "2026-11-08-2244";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
