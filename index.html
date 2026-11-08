@@ -7620,6 +7620,83 @@ em.is-from89 { display: block; font-style: normal; font-size: 11px; font-weight:
 .g76-drop [data-ddel] { grid-column: 4; }
 .g76-drop + .g76-drop { padding-top: 10px; border-top: 1px solid var(--g-line); }
 
+/* Round 93: the count from 100 to 0 that every summon with a new hero shares (cyan; gold once the new hero is sure) */
+.sm93-count { display: flex; align-items: center; gap: 10px; margin: 2px 0 4px; }
+.sm93-count b { min-width: 2.4ch; font: 700 26px/1 var(--font-display); color: var(--accent); text-align: right; font-variant-numeric: tabular-nums; }
+.sm93-count small { font: 600 11px var(--font-display); letter-spacing: 0.06em; color: var(--foreground-on-dark-muted); }
+.sm93-bar { position: relative; flex: 1; height: 8px; background: rgb(255 255 255 / 0.12); clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%); }
+.sm93-bar i { position: absolute; inset: 0 auto 0 0; background: var(--accent); box-shadow: 0 0 10px rgb(2 210 227 / 0.55); }
+.sm93-count.is-sure b { color: var(--rarity-ssr); }
+.sm93-count.is-sure .sm93-bar i { background: var(--rarity-ssr); box-shadow: 0 0 10px rgb(242 182 50 / 0.55); }
+
+/* Round 94: stamina. The pill in the top bar is a button; its sheet is the map's own sheet (round 25), in the stamina's gold */
+button.gm-pill[data-gm-stam] { cursor: pointer; }
+.st94-now { display: flex; align-items: baseline; gap: 6px; margin: 6px 0 2px; }
+.st94-now b { font: 700 40px/1 var(--font-display); color: var(--rarity-ssr); font-variant-numeric: tabular-nums; }
+.st94-now small { font: 600 14px var(--font-display); color: var(--foreground-on-dark-muted); }
+.st94-bar { height: 8px; margin: 4px 0 10px; background: rgb(255 255 255 / 0.12); clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%); }
+.st94-bar i { display: block; height: 100%; background: var(--rarity-ssr); box-shadow: 0 0 10px rgb(242 182 50 / 0.5); }
+.st94-need { margin: 6px 0; color: #ffb4a8; font-weight: 600; }
+.st94-acts { display: grid; gap: 8px; margin-top: 10px; }
+.st94-acts .gm-btn { margin-top: 0; justify-content: space-between; width: 100%; }
+.st94-acts .gm-btn small { font-size: 12px; opacity: 0.8; }
+/* the shop's Stamina Potion: a potion's bottle in the stamina's gold until its own picture comes */
+.pot94 { filter: hue-rotate(185deg) saturate(1.4) brightness(1.08); }
+/* the narrowest phones (360 wide): the pill keeps only its number, so the profile, Home and the purse stay side by side */
+@media (max-width: 380px) { button.gm-pill[data-gm-stam] small { display: none; } }
+
+/* Round 95: the Tidal Shelf's three places (the user's option A): the riddles' panel is map 2's (.l72-ask.l76-ask), in the sea's teal */
+/* below the place's title and its buttons (a laptop's 1280 is too narrow to fit the panel between them), in the middle */
+.l95-ask { pointer-events: auto; top: 104px; left: 50%; translate: -50% 0; width: min(760px, calc(100% - 32px)); max-height: calc(100% - 118px); overflow-y: auto; border-left-color: #6fe3ff; }
+.l95-ask small { color: #9fe9ff; }
+.l95-ask .l95-says { margin: 8px 0 0; font: 600 16px/1.35 var(--font-sans); color: #fff; }
+.l95-ask .l95-says i { font-style: normal; color: #9fe9ff; }
+.l95-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.l95-ask .l95-miss { margin: 8px 0 0; font: 600 14px/1.35 var(--font-sans); color: #ffb4a8; min-height: 1.35em; }
+.l95-plank:disabled { cursor: default; }
+.l95-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+/* the lighthouse: three cisterns of 8, 5 and 3 barrels */
+.l95-cis { position: relative; flex: 1 1 0; min-width: 88px; min-height: 120px; padding: 10px 8px 8px; border: 0; background: rgb(0 0 0 / 0.35); color: #fff; font: 700 15px/1 var(--font-display); letter-spacing: 0.04em; cursor: pointer; overflow: hidden; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%); }
+.l95-cis i { position: absolute; inset: auto 0 0 0; height: var(--fill, 0%); background: linear-gradient(180deg, rgb(111 227 255 / 0.85), rgb(20 90 140 / 0.9)); transition: height 0.32s cubic-bezier(0.23, 1, 0.32, 1); }
+.l95-cis b, .l95-cis span { position: relative; display: block; }
+.l95-cis b { font-size: 26px; }
+.l95-cis span { margin-top: 4px; font: 600 12px var(--font-sans); color: #d8f6ff; }
+.l95-cis.is-from { box-shadow: inset 0 0 0 3px #6fe3ff, 0 0 18px rgb(111 227 255 / 0.5); }
+.l95-cis:focus-visible, .l95-plank:focus-visible, .l95-scroll:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+/* the pier: seven planks, each with its note */
+.l95-plank { flex: 1 1 0; min-width: 44px; min-height: 64px; border: 0; background: #3a2a1c; color: #f1e2b4; font: 700 16px/1 var(--font-display); cursor: pointer; transition: background-color 0.18s, box-shadow 0.18s, transform 0.12s; }
+.l95-plank.is-lit { background: #6fe3ff; color: #03141a; box-shadow: 0 0 22px rgb(111 227 255 / 0.7); }
+.l95-plank.is-bad { background: #b23a2c; color: #fff; }
+.l95-plank:active { transform: translateY(2px); }
+/* the registry: three copies of one promise */
+.l95-scroll { flex: 1 1 200px; display: flex; flex-direction: column; justify-content: flex-start; padding: 12px 14px; border: 0; text-align: left; background: #efe3c2; color: #2a1d0e; font: 500 14px/1.4 var(--font-sans); cursor: pointer; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%); }
+.l95-scroll b { display: block; margin-bottom: 6px; font: 700 13px/1 var(--font-display); letter-spacing: 0.06em; color: #6b3b14; }
+.l95-scroll.is-on { box-shadow: inset 0 0 0 3px #6fe3ff; }
+.l95-scroll.is-void { background: #d9cfb4; }
+.l95-scroll.is-void::after { content: "VOID"; display: block; margin-top: 8px; font: 700 26px/1 var(--font-display); color: #b23a2c; letter-spacing: 0.1em; }
+/* on a phone the riddle waits at the bottom like every riddle of the map: the place's title, its buttons and the journal stay at
+   the top, over it (the instructions stay: here they are the rule) */
+@media (max-width: 760px) {
+  .l95-ask { top: auto; bottom: 14px; left: 12px; right: 12px; translate: none; width: auto; max-height: calc(100% - 210px); padding: 10px 12px 12px; }
+  .l95-ask small { display: block; font-size: 12.5px; line-height: 1.3; }
+  .l95-ask .l95-miss { font-size: 13px; }
+  .l95-ask .l95-says { font-size: 13.5px; }
+  .l95-cis { min-height: 96px; }
+  .l95-plank { min-width: 38px; min-height: 52px; font-size: 14px; }
+  .l95-scroll { flex-basis: 100%; font-size: 12.5px; padding: 8px 10px; }
+}
+/* a phone held sideways: the same, under the one row of the place's title and buttons */
+@media (max-height: 520px) and (pointer: coarse) {
+  .l95-ask { top: auto; bottom: 10px; max-height: calc(100% - 92px); padding: 8px 12px 10px; }
+  .l95-ask small { font-size: 12px; }
+  .l95-row { margin-top: 8px; }
+  .l95-btns { margin-top: 8px; }
+  .l95-cis { min-height: 78px; }
+  .l95-plank { min-height: 48px; }
+  .l95-scroll { flex-basis: 0; font-size: 12px; padding: 8px 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .l95-cis i, .l95-plank { transition: none; } }
+
 </style>
 </head>
 <body>
@@ -15541,7 +15618,21 @@ const PLACES72 = [
   { key: "vents", r: 1, x: 0.3301, y: 0.1865, t: "town", kind: "crystal", pic: "vents", fang: "vents", name: "The Howling Vents", kicker: "Fangstone", sub: "where the pipes howl", txt: "A cave of pipes and steam on the volcano's side. The pipes end in iron wolf heads, and when the steam runs, they howl." },
   { key: "hearth", r: 1, x: 0.2086, y: 0.3069, t: "town", kind: "crystal", pic: "hearth", fang: "hearth", name: "The Wolf's Hearth", kicker: "Fangstone", sub: "a ring of stone on the crater", txt: "A ring of black stone on the crater's lip, stone wolves all around it. The biggest Fangstone stands in the middle, and something guards it." },
   { key: "goblin-cave", r: 0, x: 0.4283, y: 0.613, t: "town", kind: "cave", pic: "goblin-cave", hide76: "horde", name: "The Goblins' Cave", kicker: "the Horde King's lair", sub: "open since the king fell", txt: "Under the roots of the great trees, the Horde King's own cave. With the king gone, his goblins are packing in a hurry.", link: false },
+  // round 95: the Tidal Shelf's three places, each beside the stage that opens it. The three stages stand on the shelf's edge in a
+  // thick part of its web, so the places sit close to them and their names show once the map is zoomed in (tagZoom: the map opens at
+  // 2.8, one tap on «+» makes it 3.9), like the SMITH tag
+  { key: "pier95", r: 2, x: 0.5, y: 0.5, linkS: 54, dx: 0.0014, dy: -0.0206, tagZoom: 3.5, t: "town", kind: "pier", tide95: "pier", pic: "talk-tidal-shelf", name: "The Singing Pier", kicker: "the sirens' pier", sub: "don't listen to the words", txt: "A long pier over black water. Something sings under it, and the planks sing back." },
+  { key: "lighthouse95", r: 2, x: 0.5, y: 0.5, linkS: 59, dx: -0.024, dy: -0.0311, tagZoom: 3.5, t: "town", kind: "lighthouse", tide95: "light", pic: "talk-tidal-shelf", name: "The Drowned Lighthouse", kicker: "Robin's lighthouse", sub: "the sea is inside", txt: "Robin's lighthouse, half under the water. Its lamp has been dark since the tide stopped going out." },
+  { key: "registry95", r: 2, x: 0.5, y: 0.5, linkS: 64, dx: -0.0161, dy: -0.0078, tagZoom: 3.5, t: "town", kind: "registry", tide95: "reg", pic: "talk-tidal-shelf", name: "The Drowned Registry", kicker: "a customs office", sub: "under the sea", txt: "A customs office the sea swallowed whole. The clerks are still at their desks, and the stamps still come down." },
 ];
+/** Round 95: a place that stands beside a stage takes that stage's spot on the map, and its thread goes to it. */
+for (const p of PLACES72) if (p.linkS != null) { const W = STORY_WEB[p.r], i = W ? W.nodes.findIndex((n) => n.s === p.linkS) : -1; if (i >= 0) { p.link = i; p.x = +(W.nodes[i].x + (p.dx ?? 0.04)).toFixed(4); p.y = +(W.nodes[i].y + (p.dy ?? 0)).toFixed(4); } }
+/** What each of the Tidal Shelf's places takes from Nerelle in her story fight. */
+const TIDE95_TXT = { light: "her court holds only while both her sirens stand", pier: "she calls one creature at a time", reg: "her Undertow no longer heals her" };
+const TIDE95_DONE = { light: "The lighthouse burns again.", pier: "The sirens' song is broken.", reg: "The promise is void. The tide goes out." };
+/** The ambush at a place's third mistake: the shelf's creatures, at the level of the stage beside it. */
+const TIDE95_AT = { pier: ["pier95", 54, "The Singing Pier"], light: ["lighthouse95", 59, "The Drowned Lighthouse"], reg: ["registry95", 64, "The Drowned Registry"] };
+const tideStage95 = (key) => { const [, i, name] = TIDE95_AT[key] ?? TIDE95_AT.pier; return { id: `tide95-${key}`, town69: true, name, reg: 2, level: STORY.stages[i]?.level ?? 50, waves: [["lurker:SR", "eel:SR", "maiden:R"]] }; };
 /** What a new place can be, and the pictures it may show (the story's own). */
 const PLACE_KINDS72 = ["village", "inn", "camp"];
 const PLACE_PICS72 = ["brackenford", "kettle", "fernwatch", "tavern", "chapel", "kettle-in", "tower-view", "aerial"];
@@ -15709,18 +15800,83 @@ const webState = (r, n, now) => {
   return nodeOpen(r, n) ? "open" : "locked";
 };
 /** A camp: the whole team rests, everyone back to full HP, the fallen stand again; the camp is where a fallen team wakes. */
+/** Round 94: stamina (the user's numbers): 120 at most, 1 back every 5 minutes, the game shut too. */
+const STAM94 = { max: 120, every: 5 * 60 * 1000, gems: 3, back: 60, price: 300 };
+/** The stamina now, and how long to the next point. The Admin has no limit. */
+const stam94 = () => {
+  // (window.__FREE94: the test copies that play many fights far apart, never the game)
+  if (isAdmin() || window.__FREE94) return { v: Infinity, next: 0 };
+  const s = (PLAYER.player.stam94 ??= { v: STAM94.max, at: Date.now() }), now = Date.now();
+  s.v = Math.max(0, Math.min(STAM94.max, Math.round(+s.v || 0)));
+  if (s.v >= STAM94.max) { s.at = now; return { v: s.v, next: 0 }; }
+  const k = Math.floor((now - s.at) / STAM94.every);
+  if (k > 0) { s.v = Math.min(STAM94.max, s.v + k); s.at = s.v >= STAM94.max ? now : s.at + k * STAM94.every; }
+  return { v: s.v, next: s.v >= STAM94.max ? 0 : STAM94.every - (now - s.at) };
+};
+/** The game's top bar and sheet set these: the pill's number, and the sheet that refills. */
+const ST94 = { paint: null, ask: null };
+const stamAdd94 = (n) => { if (isAdmin() || window.__FREE94) return; stam94(); const s = (PLAYER.player.stam94 ??= { v: STAM94.max, at: Date.now() }); s.v = Math.max(0, Math.min(STAM94.max, s.v + n)); if (s.v >= STAM94.max) s.at = Date.now(); savePlayer(); ST94.paint?.(); };
+/** A fire is out once you rested at it, until you sleep at an inn. */
+const out94 = (r, n) => !!webStore().fire94?.[nodeKey(r, n)];
+/** An inn's bed: all the stamina back, everyone's HP too, and every fire on the map lit again. */
+const sleep94 = () => { const ws = webStore(); ws.fire94 = {}; healAll(); saveWeb(); stamAdd94(STAM94.max); };
+/** Where you stand: round 89's place; a save from before stands on the last place the story reached, else on the first entrance. */
+const pos94 = () => {
+  const h = here89();
+  if (h) return h;
+  const i = STORY.stages.indexOf(currentStage()), at = WEB_STAGE.get(i);
+  let to = [0, STORY_WEB[0].door];
+  if (at && nodeDone(...at)) to = at;
+  else if (at) { const m = (WEB_ADJ[at[0]][at[1]] ?? []).find((x) => nodeDone(at[0], x)); to = m != null ? [at[0], m] : [at[0], STORY_WEB[at[0]].door]; }
+  if (!isAdmin()) here89Set(to);
+  return to;
+};
+/** One place at a time: the place you stand on, or one beside it; a region's boss leads on to the next region's first place (its
+ *  entrance, which is its first stage), and back. The Admin goes anywhere. */
+const near94 = (r, n) => {
+  if (isAdmin() || window.__FREE94) return true;
+  const [pr, pn] = pos94();
+  if (pr === r && pn === n) return true;
+  if (pr === r) return (WEB_ADJ[r][pn] ?? []).includes(n);
+  if (r === pr + 1) return n === STORY_WEB[r].door && pn === STORY_WEB[pr].boss;
+  if (r === pr - 1) return n === STORY_WEB[r].boss && pn === STORY_WEB[pr].door;
+  return false;
+};
+/** The place of the map a fight is on (the places' own fights, the forge and the Ember Vein have none). */
+const at94of = (run) => {
+  if (!run || run.kind !== "battle" || run.town69 || run.smith || run.deep) return null;
+  if (run.skirm) return run.skirm;
+  if (run.mini) return run.mini;
+  return WEB_STAGE.get(STORY.stages.indexOf(run.stage)) ?? null;
+};
+/** What a fight costs: 8, a mini boss 20, a region's boss 35. */
+const cost94 = (run) => {
+  if (!run || run.kind !== "battle") return 0;
+  if (run.mini) return 20;
+  if (run.town69) return run.town69 === "goblin" || run.town69 === "tide95" ? 8 : 20;
+  if (run.smith) return 35;
+  if (run.deep) return deepNode66(run.deep)?.k === "boss" ? 35 : 8;
+  if (run.skirm) return 8;
+  const i = STORY.stages.indexOf(run.stage);
+  return i >= 0 && i % 25 === 24 ? 35 : 8;
+};
+/** The same, from a place of the map. */
+const costAt94 = (r, n) => { const t = STORY_WEB[r]?.nodes[n]?.t; return t === "mini" ? 20 : t === "boss" ? 35 : 8; };
 const restAt = (r, n) => {
   const ws = webStore();
   healAll();
   (ws.camps ??= {})[nodeKey(r, n)] = 1;
   ws.camp = [r, n];
+  (ws.fire94 ??= {})[nodeKey(r, n)] = true;
   saveWeb();
+  stamAdd94(Math.round(STAM94.max / 2));
 };
 /** The whole team fell: it wakes at the last camp, healed (the first region's entrance before any camp). */
 const fallBack = () => {
   healAll();
   saveWeb();
   const c = webStore().camp;
+  if (!isAdmin()) here89Set(c ?? [0, STORY_WEB[0].door]);
   return c ? `the camp of ${STORY_REGIONS[c[0]].name}` : "the entrance of Goblin Hollow";
 };
 /** Mini-bosses: the region's own (its mini-boss art), powered: HP ×2, ATK ×1.5, only SR cards or better. */
@@ -16074,6 +16230,7 @@ const runOf = (kind, id) => {
   if (kind !== "raid" && id === "hearth-76") { const hs = hearthStage76(); return { kind: "battle", stage: hs, town69: "hearth", title: "The Wolf's Hearth · the Fangstone's guardian", waves: hs.waves, level: hs.level, won: "the guardian sinks into the lava, and the Fangstone cracks" }; }
   if (kind !== "raid" && id === "warcamp") { const ws = warcampStage73(); return { kind: "battle", stage: ws, town69: "warcamp", title: "Goblin Warcamp · secret mini boss", waves: ws.waves, level: ws.level, won: "the warcamp falls" }; }
   if (kind !== "raid" && id === "gruk-den") { const gs = grukStage72(); return { kind: "battle", stage: gs, town69: "gruk", title: "Gruk's Den · mini boss", waves: gs.waves, level: gs.level, won: "Gruk is down, and his head is yours" }; }
+  if (kind !== "raid" && /^tide95-(pier|light|reg)$/.test(id ?? "")) { const ts = tideStage95(id.slice(7)); return { kind: "battle", stage: ts, town69: "tide95", title: `${ts.name} · ambush`, waves: ts.waves, level: ts.level, won: "the shelf goes quiet" }; }
   if (kind !== "raid" && id === "brackenford-goblin") { const gs = goblinStage69(); return { kind: "battle", stage: gs, town69: "goblin", title: "Brackenford · the barrel goblin", waves: gs.waves, level: gs.level, won: "the goblin runs for it" }; }
   if (kind === "raid") { const b = bossById(id); return { kind: "raid", boss: b, title: `Boss · ${b.name}`, waves: b.waves ?? [[b.token]], level: b.level ?? 60, won: `${b.name} falls` }; }
   // round 66: Ignara at her camp (once the camp is reached), and the Ember Vein's places once she has fallen
@@ -19201,7 +19358,9 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     // the Labyrinth: from halfway up floor 1 its enemies are 30% stronger, and an elite has half again its HP
     const used = new Set();
     const pick = (t) => { if (!t.startsWith("?")) return t; const opts = t.slice(1).split(","), free = opts.filter((k) => !used.has(k)), k = btPick(free.length ? free : opts); used.add(k); return `${k}:${FOE_KINDS[k].faces[0].rarity}`; };
-    F.foes = run.waves[F.wave].map(pick).map((t0) => { const t = t0.replace(/[!^]$/, ""), e = { uid: ++uid, ...spawnFoe(t, run.level) }; if (t0.endsWith("!")) { e.mini = true; e.max = Math.round(e.max * 2); e.atk = Math.round(e.atk * 1.5); } else if (t0.endsWith("^")) e.mini = true; if (run.statMul) { e.atk = Math.round(e.atk * run.statMul); e.def = Math.round(e.def * run.statMul); e.max = Math.round(e.max * run.statMul); } if (run.hpMul) e.max = Math.round(e.max * run.hpMul); if ((e.kind === "ashfang" || FOE_KINDS[e.kind]?.made === "ashfang") && fang76() && fang76Run(run)) { const k = fang76K(); e.max = Math.round(e.max * k); e.atk = Math.round(e.atk * k); e.def = Math.round(e.def * k); e.fang76 = fang76(); } e.hp = e.max; return e; });
+    F.foes = run.waves[F.wave].map(pick).map((t0) => { const t = t0.replace(/[!^]$/, ""), e = { uid: ++uid, ...spawnFoe(t, run.level) }; if (t0.endsWith("!")) { e.mini = true; e.max = Math.round(e.max * 2); e.atk = Math.round(e.atk * 1.5); } else if (t0.endsWith("^")) e.mini = true; if (run.statMul) { e.atk = Math.round(e.atk * run.statMul); e.def = Math.round(e.def * run.statMul); e.max = Math.round(e.max * run.statMul); } if (run.hpMul) e.max = Math.round(e.max * run.hpMul); if ((e.kind === "ashfang" || FOE_KINDS[e.kind]?.made === "ashfang") && fang76() && fang76Run(run)) { const k = fang76K(); e.max = Math.round(e.max * k); e.atk = Math.round(e.atk * k); e.def = Math.round(e.def * k); e.fang76 = fang76(); } if (run.back94) e.max = Math.max(1, Math.round(e.max / 2)); e.hp = e.max; return e; });
+    // round 95: what the Tidal Shelf's places took from Nerelle, said as she comes in
+    { const nz = F.foes.find((x) => x.court); const gone = nz ? ["light", "pier", "reg"].filter((k) => tide95on(k)) : []; if (gone.length) { logIt("state", `${nz.name}: the Tidal Shelf`, gone.map((k) => TIDE95_TXT[k]).join(" · ")); toast(`The Tidal Shelf: ${gone.map((k) => TIDE95_TXT[k]).join(", ")}`); } }
     // round 76: the broken Fangstones, said as Ashfang comes in
     { const a = F.foes.find((x) => x.fang76); if (a) { logIt("state", `${a.name}: the Fangstones`, `${a.fang76} of 3 broken · HP, ATK and DEF −${15 * a.fang76}%`); toast(`${a.fang76} Fangstone${a.fang76 === 1 ? "" : "s"} broken: ${a.name} fights at −${15 * a.fang76}%`); } }
     const EL = run.stage?.elites;
@@ -20181,7 +20340,9 @@ void main() {
   /** Does a card strike every enemy? Then it reaches Nerelle through her court. */
   const aoeOf = (c) => (c.ult ? !!ultDef(c)?.preview?.(3)?.aoe || ultMode(cardH(c)) === "all" : !!BT_CARDS[c.move]?.preview?.(c.rank)?.aoe);
   /** The drowned court: while anyone stands beside her, only area attacks reach Nerelle. */
-  const guarded = (e) => !!e?.court && !e.dead && F.foes.some((x) => x !== e && !x.dead);
+  /** Round 95: one of the Tidal Shelf's places is done, in Nerelle's story fight (15-5; Boss mode keeps her whole). */
+  const tide95on = (k) => run.kind === "battle" && run.stage === STORY.stages[74] && !!s69Of72().tide95?.[k];
+  const guarded = (e) => !!e?.court && !e.dead && F.foes.some((x) => x !== e && !x.dead) && (!tide95on("light") || F.foes.filter((x) => x !== e && !x.dead).length >= 2);
   const pickTarget = () => { const i = F.foes.findIndex((x) => !x.dead && !guarded(x)); return i >= 0 ? i : F.foes.findIndex((x) => !x.dead); };
   /** Lava hide: whoever strikes Ashfang takes 3% of its max HP, once for each move. */
   const lava = (e, m) => {
@@ -20223,7 +20384,7 @@ void main() {
       if (!e.calling) { if (others.some((x) => x.boss)) continue; e.calling = true; e.summonIn = 3; paintFoes(); continue; }
       if (--e.summonIn > 0) { paintFoes(); continue; }
       e.summonIn = 3;
-      const room = 2 - others.length;
+      const room = (tide95on("pier") ? 1 : 2) - others.length;
       if (room <= 0) { paintFoes(); continue; }
       const fresh = Array.from({ length: room }, () => ({ uid: ++uid, ...spawnFoe(btPick(e.calls), run.level) })), all = [...others, ...fresh];
       metFoes(fresh);
@@ -20622,7 +20783,7 @@ void main() {
       if (m.hp === 0) { paintTeam(); await knockOut(i); }
     }
     // Undertow: the Drowned Court heals when its turn begins
-    for (const e of F.foes.filter((x) => !x.dead && x.tribe === "Drowned Court" && x.hp < x.max)) {
+    for (const e of F.foes.filter((x) => !x.dead && x.tribe === "Drowned Court" && x.hp < x.max && !(x.court && tide95on("reg")))) {
       const add = Math.min(e.max - e.hp, Math.round(e.max * 0.04)), p = foeAt(e);
       e.hp += add;
       any = true;
@@ -21673,7 +21834,7 @@ void main() {
       const first = webStore().minis?.[run.stage.id] == null, r = run.mini[0], dust = 60 * (r + 1);
       xp = Math.round((120 + 90 * run.stage.base) / 10);
       if (first) { p.gems += 15; p.items.dust = (p.items.dust ?? 0) + dust; p.items.l += 1; got.push("+15 gems", `+${dust} star dust`, `${POTIONS.l.name} ×1`); items.push(...gainItems(ITEM_DROPS.story(run.stage.level), 2)); }
-      else { p.items.s += 1; got.push(`${POTIONS.s.name} ×1`); }
+      else if (!run.back94) { p.items.s += 1; got.push(`${POTIONS.s.name} ×1`); }
       const sh = (first ? 2 : 1) * SHARD_MINI;
       p.items.dshard = (p.items.dshard ?? 0) + sh;
       got.push(`+${sh} Dragon Heart shard${sh === 1 ? "" : "s"}`);
@@ -21694,7 +21855,7 @@ void main() {
     } else if (run.kind === "battle") {
       const i = STORY.stages.indexOf(run.stage), first = p.cleared[run.stage.id] == null;
       xp = Math.round((120 + 90 * i) / 10); // round 41: a tenth, training items are the way to level
-      const loot = first ? run.stage.loot ?? STAGE_LOOT[i] ?? (run.stage.boss ? { m: 2, l: 1 } : i > 100 ? { m: 1, l: 1 } : i > 40 ? { s: 2, m: 1 } : { s: 3 }) : { s: 1 };
+      const loot = first ? run.stage.loot ?? STAGE_LOOT[i] ?? (run.stage.boss ? { m: 2, l: 1 } : i > 100 ? { m: 1, l: 1 } : i > 40 ? { s: 2, m: 1 } : { s: 3 }) : run.back94 ? {} : { s: 1 };
       if (first) { const gm = run.stage.gems ?? 3; p.gems += gm; if (gm) got.push(`+${gm} gem${gm === 1 ? "" : "s"}`); }
       if (i % 25 === 24) { const sh = (first ? 2 : 1) * SHARD_BOSS; p.items.dshard = (p.items.dshard ?? 0) + sh; got.push(`+${sh} Dragon Heart shards`); }
       for (const [k, n] of Object.entries(loot)) { p.items[k] += n; got.push(`${POTIONS[k].name} ×${n}`); }
@@ -21721,7 +21882,7 @@ void main() {
         if (!first76 && !d.every) continue;
         if (d.t === "item") { const it = ITEM_BY_ID[d.id]; if (!it) continue; const bag = (p.bag ??= {}); bag[d.id] = (bag[d.id] ?? 0) + d.n; for (let k = 0; k < d.n; k++) items.push(it); }
         else if (d.t === "gold") p.gold = (p.gold ?? 0) + d.n;
-        else if (d.t === "gems") p.gems += d.n;
+        else if (d.t === "gems") { if (run.back94) continue; p.gems += d.n; }
         else if (d.t === "pot") p.items[d.p] = (p.items[d.p] ?? 0) + d.n;
         else if (d.t === "dust") p.items.dust = (p.items.dust ?? 0) + d.n;
         else if (d.t === "ore") oreGive66(d.n);
@@ -21729,6 +21890,8 @@ void main() {
         got.push(`special drop: ${drop76Name(d)}`);
       }
     }
+    // round 94: a place fought again to pass: gold and star dust
+    if (run.back94) { const lv94 = run.stage?.level ?? 1, g94 = Math.round(20 + 4 * lv94), d94 = Math.round(10 + lv94 / 2); p.gold = (p.gold ?? 0) + g94; p.items.dust = (p.items.dust ?? 0) + d94; got.push(`+${g94} gold`, `+${d94} star dust`); }
     // round 90: one fight yes, one no gives a sure item of its region's highest rarity, the first win only
     {
       const st90 = run.mini || run.town69 || run.smith || run.deep || !(run.skirm || run.kind === "battle") ? null : run.stage, rar90 = sure90(st90);
@@ -21756,7 +21919,7 @@ void main() {
       if (run.kind === "battle") {
         if (run.mini) { const ws = webStore(); (ws.minis ??= {})[run.stage.id] = Math.max(ws.minis[run.stage.id] ?? 0, stars); saveWeb(); }
         else if (run.skirm) { const ws = webStore(); (ws.skirms ??= {})[run.stage.id] = Math.max(ws.skirms[run.stage.id] ?? 0, stars); saveWeb(); }
-        else if (run.town69) { const p69 = isAdmin() ? PLAYER.admin : PLAYER.player, s69 = (p69.s69 ??= {}); if (run.town69 === "gruk") { if ((s69.gruk ?? 0) < 2) s69.gruk = 2; } else if (run.town69 === "warcamp") (s69.fw ??= {}).warcamp = 2; else if (run.town69 === "hearth") (s69.fang ??= {}).hearth = true; else s69.goblin = true; savePlayer(); }
+        else if (run.town69) { const p69 = isAdmin() ? PLAYER.admin : PLAYER.player, s69 = (p69.s69 ??= {}); if (run.town69 === "gruk") { if ((s69.gruk ?? 0) < 2) s69.gruk = 2; } else if (run.town69 === "warcamp") (s69.fw ??= {}).warcamp = 2; else if (run.town69 === "hearth") (s69.fang ??= {}).hearth = true; else if (run.town69 === "tide95") { ((s69.tide95 ??= {}).miss ??= {})[String(run.stage?.id ?? "").slice(7)] = 0; } else s69.goblin = true; savePlayer(); }
         else if (run.smith) { const ws = webStore(); ws.smith = Math.max(ws.smith ?? 0, stars); saveWeb(); }
         else if (run.deep) { const d = deepStore66(); d[run.deep] = Math.max(d[run.deep] ?? 0, stars); saveWeb(); }
         else { const store = starsOf(); store[run.stage.id] = Math.max(store[run.stage.id] ?? 0, stars); saveProgress(); }
@@ -21786,9 +21949,9 @@ void main() {
     if (won && F.i62 >= 0) STORY62.after(F.i62, host);
     if (won) count73(run);
     const carried = carryOut(won), story = run.kind === "battle" && !run.smith && !run.deep && !run.town69;
-    if (story) { MAP_FOCUS.at = placeOf(run.stage); MAP_FOCUS.sheet = false; here89Set(MAP_FOCUS.at); }
+    if (story) { MAP_FOCUS.at = placeOf(run.stage); MAP_FOCUS.sheet = false; if (won || isAdmin()) here89Set(MAP_FOCUS.at); }
     const opened = story && won ? MAP_FOCUS.fresh.length : 0;
-    const actions = won ? [...(story ? [["choose on the map", "map"]] : run.deep ? [["back to the Ember Vein", "deep"]] : run.smith ? [["Ignara's forge", "forge"]] : run.town69 === "hearth" ? [["back to the Wolf's Hearth", "hearth76"]] : run.town69 === "warcamp" ? [["back to Fernwatch", "fern"]] : run.town69 ? [["back to Brackenford", "town"]] : []), ["play again", "again", story || !!run.deep || !!run.smith || !!run.town69], ["back to the home", "leave", true]]
+    const actions = won ? [...(story ? [["choose on the map", "map"]] : run.deep ? [["back to the Ember Vein", "deep"]] : run.smith ? [["Ignara's forge", "forge"]] : run.town69 === "hearth" ? [["back to the Wolf's Hearth", "hearth76"]] : run.town69 === "warcamp" ? [["back to Fernwatch", "fern"]] : run.town69 === "tide95" ? [[`back to ${run.stage?.name ?? "the Tidal Shelf"}`, `tide95:${TIDE95_AT[String(run.stage?.id ?? "").slice(7)]?.[0] ?? "pier95"}`]] : run.town69 ? [["back to Brackenford", "town"]] : []), ["play again", "again", story || !!run.deep || !!run.smith || !!run.town69], ["back to the home", "leave", true]]
       : [["try again", "again"], ...(story ? [["the map", "map", true]] : run.deep ? [["the Ember Vein", "deep", true]] : run.smith ? [["the map", "map", true]] : run.town69 === "hearth" ? [["the map", "map", true]] : run.town69 === "warcamp" ? [["back to Fernwatch", "fern", true]] : run.town69 ? [["back to Brackenford", "town", true]] : []), ["back to the home", "leave", true]];
     overlay(won ? "" : "is-lost", won ? "victory" : "defeat", (won ? `${run.won} in ${F.turn} turn${F.turn === 1 ? "" : "s"}` : "the team fell") + (opened ? ` · ${opened} new place${opened === 1 ? "" : "s"} open on the map` : "") + (carried ? ` · ${carried}` : ""), actions, stars, loot);
   };
@@ -22102,6 +22265,7 @@ void main() {
     else if (act === "town") { location.hash = "#/play/story"; setTimeout(() => STORY66.town(), 450); }
     else if (act === "fern") { location.hash = "#/play/story"; setTimeout(() => STORY66.town("fernwatch"), 450); }
     else if (act === "hearth76") { location.hash = "#/play/story"; setTimeout(() => STORY66.town("hearth"), 450); }
+    else if (act?.startsWith("tide95:")) { location.hash = "#/play/story"; setTimeout(() => STORY66.town(act.slice(7)), 450); }
     else if (act?.startsWith("stage:")) {
       const to = act.slice(6), i = STORY.stages.indexOf(run.stage);
       // round 44: the march down the road is gone with the road; the next place of the web opens straight away
@@ -22218,6 +22382,17 @@ void main() {
       if (!lineup().team.length) { live = false; host.hidden = true; onLeave(); return; }
       // round 44: a team all down cannot fight; it rests at a camp first
       if (kind === "battle" && lineupIds().every((x) => hpOf(x) <= 0)) { live = false; host.hidden = true; toast("Your whole team is down: rest at a camp, or put other heroes in the team."); onLeave(); return; }
+      // round 94: a Player fights one place at a time, and a fight costs stamina; a place already cleared is fought at 50%
+      if (kind === "battle" && !isAdmin()) {
+        const run94 = runOf(kind, id), at94 = at94of(run94);
+        if (at94 && !near94(...at94)) { live = false; host.hidden = true; toast("Too far: walk there one place at a time."); location.hash = "#/play/story"; return; }
+        if (at94 && nodeDone(...at94)) run94.back94 = true;
+        const c94 = cost94(run94);
+        if (stam94().v < c94) { live = false; host.hidden = true; location.hash = "#/play/story"; setTimeout(() => ST94.ask?.(c94), 300); return; }
+        stamAdd94(-c94);
+        guard(start(run94));
+        return;
+      }
       guard(start(runOf(kind, id)));
     },
     close: () => { clearTimeout(autoTimer85); live = false; gen += 1; LUX.GLX?.reset(); LUX.CLOCK.setSpeed(1); F.asking?.(false); busy = false; paused = false; clearTimeout(countdown); host.hidden = true; host.replaceChildren(); },
@@ -23956,7 +24131,7 @@ const STORYMAP = (() => {
         // names only where they still matter: a place done keeps its mark, not its name
         if (zoom > 1.35 && w.r === SMITH_AT[0] && n === SMITH_AT[1] && st[n] !== "soon") tags.push(["SMITH", x, y - 14 * k, W44_CAMP]);
         if (nd.t === "den") { if (zoom > 0.9) tags.push([nd.den === "warcamp" ? "WARCAMP" : "WANTED · GRUK", x, y - 17 * k, W44_RED]); return; }
-        if (nd.t === "town") { if (zoom > 0.9) tags.push([nd.name.toUpperCase(), x, y - 17 * k, st[n] === "locked" ? "rgba(255,213,138,0.5)" : "#ffd58a"]); return; }
+        if (nd.t === "town") { if (zoom > (nd.tagZoom ?? 0.9)) tags.push([nd.name.toUpperCase(), x, y - 17 * k, st[n] === "locked" ? "rgba(255,213,138,0.5)" : "#ffd58a"]); return; }
         if (zoom > 1.35 && st[n] !== "soon" && st[n] !== "done") {
           const word = nd.t === "camp" ? (w.r === SMITH_AT[0] && n === SMITH_AT[1] ? null : "CAMP") : nd.t === "mini" ? "MINI BOSS" : nd.t === "skirm" ? (st[n] === "open" ? (nd.tokens ? nd.name.toUpperCase() : "SKIRMISH") : null) : nd.t === "boss" ? STORY.stages[nd.s].name.toUpperCase() : nd.t === "door" && st[n] !== "done" ? "ENTRANCE" : st[n] === "now" ? STORY.stages[nd.s].id : null;
           if (word) tags.push([word, x, y - ((st[n] === "now" && !at89) || (at89 && at89[0] === w.r && at89[1] === n) ? 49 : nd.t === "boss" ? 22 : 14) * k, nd.t === "camp" ? W44_CAMP : nd.t === "mini" ? W44_RED : nd.t === "boss" ? R.c : "#fff"]);
@@ -24958,7 +25133,7 @@ const GOLD_SHOP = (() => {
     /* ── round 64 · the shop is D · Offerte (the user's pick in lab 64): today's three offers on top, then Potions, Chests
      *  and Skins. The "For her" page is gone: a hero's pieces and her training live in her own file. Potions go to the
      *  bag; the day's offers change at 05:00 and each can be taken once. ── */
-    const q64 = { s: 1, m: 1, l: 1 };
+    const q64 = { s: 1, m: 1, l: 1, stam: 1 };
     const gems64 = () => (isAdmin() ? Infinity : PLAYER.player.gems ?? 0);
     const offers64 = () => { const p = PLAYER.player; if (p.offers64?.day !== DAY64()) p.offers64 = { day: DAY64(), got: [] }; return p.offers64; };
     const dayN64 = () => Math.floor(Date.parse(`${DAY64()}T12:00:00Z`) / 864e5);
@@ -24987,6 +25162,14 @@ const GOLD_SHOP = (() => {
         <span class="sh64-row"><span class="sh8-step"><button type="button" data-sh64-q="${k}:-1" aria-label="One less" ${n <= 1 ? "disabled" : ""}>−</button><output>${n}</output><button type="button" data-sh64-q="${k}:1" aria-label="One more" ${n >= 99 ? "disabled" : ""}>+</button></span>
         ${buy64(`data-sh64-pot="${k}"`, price)}</span></article>`;
     };
+    /** Round 94: the Stamina Potion: +60 stamina, drunk from the stamina's sheet (the pill in the top bar). */
+    const stamWare94 = () => {
+      const n = q64.stam, price = n * STAM94.price;
+      return `<article class="sh64-ware is-pot is-stam"><div class="sh64-ware-vis">${POT64("m", "is-big pot94")}</div><b>Stamina Potion</b>
+        <small>+${STAM94.back} stamina · drink it from the stamina in the top bar</small><span class="sh64-have">you have ${isAdmin() ? "∞" : nf(PLAYER.player.items.stam94 ?? 0)}</span>
+        <span class="sh64-row"><span class="sh8-step"><button type="button" data-sh64-q="stam:-1" aria-label="One less" ${n <= 1 ? "disabled" : ""}>−</button><output>${n}</output><button type="button" data-sh64-q="stam:1" aria-label="One more" ${n >= 99 ? "disabled" : ""}>+</button></span>
+        ${buy64('data-sh94-stam', price)}</span></article>`;
+    };
     const chestWare64 = (c) => { const odds = chestOdds(c);
       return `<article class="sh64-ware is-chest sh9-chest" data-chest-row="${c.id}"><div class="sh64-ware-vis">${sealHTML(c, stat)}</div><b>${c.name}</b>
         <small>One ${ITEM_STAT[stat].label} piece · ${ITEM_SLOTS.filter((s) => s.stat === stat).map((s) => s.type).join(" or ")}</small>
@@ -24995,7 +25178,7 @@ const GOLD_SHOP = (() => {
     const paint64 = () => {
       const tabs = [["potions", "Potions"], ["chests", "Chests"], ["skins", "Skins"]];
       if (!tabs.some(([k]) => k === tab)) tab = "potions";
-      const body = tab === "potions" ? `<div class="sh64-grid">${["s", "m", "l"].map(potWare64).join("")}</div>`
+      const body = tab === "potions" ? `<div class="sh64-grid">${["s", "m", "l"].map(potWare64).join("")}${stamWare94()}</div>`
         : tab === "chests" ? `<div class="sh8-chips sh9-stats" role="group" aria-label="The kind of piece">${["hp", "atk", "def"].map((k) => `<button type="button" data-sh-stat="${k}" aria-pressed="${k === stat}" style="--sc:${ITEM_STAT[k].c}">${ITEM_STAT[k].label}</button>`).join("")}</div>
             <div class="sh64-grid">${SHOP_CHESTS.map(chestWare64).join("")}</div>
             <p class="sh3-note">${chestsHigh() ? "SSR can come out of the Silver and Golden chests." : "Until you beat Altea and reach the Frostspine, chests give SR at most."} Every piece rolls its %: N ${ITEM_ROLL.N.join("–")}%, R ${ITEM_ROLL.R.join("–")}%, SR ${ITEM_ROLL.SR.join("–")}%, SSR ${ITEM_ROLL.SSR.join("–")}%. A piece goes on a hero in her file.${isAdmin() ? " Admin: chests are free and only for show." : ""}</p>`
@@ -25010,6 +25193,17 @@ const GOLD_SHOP = (() => {
     const click64 = (t) => {
       const qb = t.closest("[data-sh64-q]");
       if (qb) { const [k, d] = qb.dataset.sh64Q.split(":"); q64[k] = Math.max(1, Math.min(99, q64[k] + +d)); paint64(); return true; }
+      if (t.closest("[data-sh94-stam]")) {
+        const n = q64.stam, price = n * STAM94.price;
+        if (isAdmin()) { api.toast("Admin: the shop is only for show."); return true; }
+        if (!can(price)) { short64(price); return true; }
+        const p = PLAYER.player;
+        p.gold -= price; p.items.stam94 = (p.items.stam94 ?? 0) + n;
+        savePlayer(); api.paintGems();
+        api.toast(`Stamina Potion ×${n}: drink it from the stamina in the top bar`);
+        q64.stam = 1; paint64();
+        return true;
+      }
       const pb = t.closest("[data-sh64-pot]");
       if (pb) {
         const k = pb.dataset.sh64Pot, n = q64[k], price = n * SHOP_POTION_PRICE[k];
@@ -28703,6 +28897,13 @@ const viewSummon = (host) => {
       qs("[data-e89-say]", easy89).innerHTML = !h ? `${ic("warn")}<span>Scegli l'eroe della carta garantita: entra tra chi può uscire. Il Rate Up qui sotto è un'altra cosa e può restare vuoto.</span>`
         : at < 1 ? `${ic("warn")}<span>Scrivi ogni quante multi arriva la carta garantita.</span>`
         : `${ic("check")}<span>Così, per i giocatori: ${esc(h.name)} si può pullare. ${when} l'ultima carta è un ${h.rarity}${pct == null ? ": scrivi la percentuale che sia lui" : pct >= 100 || !rest ? `, ed è sempre ${esc(h.name)}` : `: ${pct}% che sia ${esc(h.name)}, altrimenti ${rest === 1 ? `l'altro ${h.rarity}` : `un altro dei ${rest} ${h.rarity}`} della summon`}.${+b.rates[h.rarity] > 0 ? "" : ` Nelle pull normali gli ${h.rarity} hanno 0%: esce solo dalla carta garantita.`}${same.length ? ` Attenzione: in Rate Up c'è anche ${same.map(esc).join(" e ")}, che si divide quella percentuale con lui.` : ""}</span>`;
+      // round 93: a summon with a new hero follows the shared count, not «every N multis» (those boxes stay for the others)
+      const lines93 = qsa(".g89-line", easy89);
+      if (lines93[1]) lines93[1].hidden = !!h;
+      sure86.hidden = !!h;
+      const pf93 = pity89()?.closest(".g-num");
+      if (pf93) pf93.hidden = !!h;
+      if (h) qs("[data-e89-say]", easy89).innerHTML = `${ic("check")}<span>Così, per i giocatori: ${esc(h.name)} si può pullare. Vale il conto unico di tutte le summon con un eroe nuovo: parte da 100, una pull toglie 1 e una multi 10. A 0 è ${esc(h.name)} col 50%, altrimenti un altro ${h.rarity} della summon, e allora allo 0 dopo è ${esc(h.name)} di sicuro. Se esce prima, il conto riparte da 100.${+b.rates[h.rarity] > 0 ? "" : ` Nelle pull normali gli ${h.rarity} hanno 0%: esce solo allo 0 del conto.`}</span>`;
     };
     qs("[data-e89-hero]", easy89).addEventListener("change", (ev) => {
       const id = ev.target.value, h = HEROINES.find((x) => x.id === id);
@@ -30053,9 +30254,40 @@ const initGame = () => {
   /** The leader: Admin keeps its own; a Player's is one of her heroines. */
   const pickLeader = () => (isAdmin() ? heroineById(keep.get(LEADER_KEY)) ?? FEATURED[0] : heroineById(PLAYER.player.leader) ?? ownedHeroines()[0] ?? heroineById(STARTERS[0]));
   let leader = pickLeader();
+  /** Round 94: the pill's number, kept up to date as the stamina comes back. */
+  const paintStam94 = () => { const v = $("[data-gm-stam-v]", stage); if (v) v.textContent = isAdmin() ? "∞" : String(stam94().v); };
+  setInterval(() => { if (!document.hidden) paintStam94(); }, 20000);
+  /** The stamina's sheet: what you have, when the next point comes, and how to get more. `need`: what a fight asked for. */
+  const stamAsk94 = (need = 0) => {
+    $(".sm25-sheet", stage)?.remove();
+    const s = stam94(), p = PLAYER.player, pots = isAdmin() ? 0 : p.items.stam94 ?? 0, min = Math.floor(s.next / 60000), sec = Math.floor((s.next % 60000) / 1000);
+    const box = document.createElement("div");
+    box.className = "sm25-sheet";
+    box.innerHTML = `<div class="sm25-sheet-in" role="dialog" aria-label="Stamina" style="--rc:var(--rarity-ssr)">
+      <div class="sm25-sheet-head"><p><small>stamina</small><b>Stamina</b><span>a fight costs 8, a mini boss 20, a region's boss 35</span></p><button type="button" data-sm-close aria-label="Close">×</button></div>
+      <div class="st94-now">${gameIcon("bolt", "gm-ic--fill gm-bolt")}<b>${isAdmin() ? "∞" : s.v}</b><small>/ ${STAM94.max}</small></div>
+      ${isAdmin() ? "" : `<div class="st94-bar"><i style="width:${(100 * s.v) / STAM94.max}%"></i></div>`}
+      ${need && !isAdmin() ? `<p class="st94-need">This fight needs ${need} stamina: you have ${s.v}.</p>` : ""}
+      <p class="sm25-note">${isAdmin() ? "Admin: no limit." : s.v >= STAM94.max ? "Full." : `One point comes back every 5 minutes, even with the game shut: the next in ${min}:${String(sec).padStart(2, "0")}.`} A camp's fire gives back half, an inn's bed all of it and lights every fire again.</p>
+      ${isAdmin() ? "" : `<div class="st94-acts">
+        <button type="button" class="gm-btn" data-st94-pot ${pots && s.v < STAM94.max ? "" : "disabled"}><span>drink a Stamina Potion · +${STAM94.back}</span><small>you have ${pots}</small></button>
+        <button type="button" class="gm-btn gm-btn--gold" data-st94-gems ${p.gems >= STAM94.gems && s.v < STAM94.max ? "" : "disabled"}><span>refill half · +${STAM94.back}</span><small>${STAM94.gems} gems</small></button>
+        <button type="button" class="gm-btn gm-btn--ghost" data-st94-shop><span>Stamina Potions in the shop</span><small>${STAM94.price} gold each</small></button></div>`}</div>`;
+    stage.append(box);
+    if (!REDUCED) $(".sm25-sheet-in", box).animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration: 340, easing: "cubic-bezier(0.32, 0.72, 0, 1)" });
+    box.addEventListener("click", (e) => {
+      if (e.target === box || e.target.closest("[data-sm-close]")) { box.remove(); return; }
+      if (e.target.closest("[data-st94-pot]")) { if ((p.items.stam94 ?? 0) < 1) return; p.items.stam94 -= 1; stamAdd94(STAM94.back); toast(`Stamina Potion: +${STAM94.back} stamina.`); stamAsk94(need); return; }
+      if (e.target.closest("[data-st94-gems]")) { if (p.gems < STAM94.gems) return; p.gems -= STAM94.gems; stamAdd94(STAM94.back); paintGems(); toast(`+${STAM94.back} stamina for ${STAM94.gems} gems.`); stamAsk94(need); return; }
+      if (e.target.closest("[data-st94-shop]")) { box.remove(); location.hash = "#/play/shop"; }
+    });
+  };
+  ST94.paint = () => paintStam94();
+  ST94.ask = (need) => stamAsk94(need);
   const paintGems = () => {
     $("[data-gm-gems]", stage).textContent = isAdmin() ? "∞" : PLAYER.player.gems.toLocaleString("en-US");
     $("[data-gm-gold]", stage).textContent = isAdmin() ? "∞" : (PLAYER.player.gold ?? 0).toLocaleString("en-US");
+    paintStam94();
     $("[data-gm-mode]", stage).textContent = isAdmin() ? "admin" : `player · ${ownedHeroines().length} hero${ownedHeroines().length === 1 ? "" : "es"}`;
   };
 
@@ -30137,7 +30369,7 @@ const initGame = () => {
       <button class="gm-me" type="button" data-gm-route="profile" aria-label="Your profile and the Admin or Player mode"><span class="gm-fc" data-gm-me style="width:40px;height:52px"></span><span class="gm-id"><b>Founder</b><small data-gm-mode>admin</small><i class="gm-xp"><i></i></i></span></button>
       <button class="gm-home85" type="button" data-gm-go="home" aria-label="Back to the Home">${gameIcon("home")}<span>home</span></button>
       <div class="gm-res">
-        <span class="gm-pill" title="Stamina">${gameIcon("bolt", "gm-ic--fill gm-bolt")}86<small>/120</small></span>
+        <button class="gm-pill" type="button" data-gm-stam title="Stamina" aria-label="Stamina">${gameIcon("bolt", "gm-ic--fill gm-bolt")}<span data-gm-stam-v>120</span><small>/120</small></button>
         <span class="gm-pill" title="Gold">${gameIcon("coin", "gm-coin")}<span data-gm-gold>∞</span></span>
         <button class="gm-pill" type="button" data-gm-soon="The gem shop opens at launch. Clear stages and bosses for gems." aria-label="Gems">${gameIcon("gem", "gm-ic--fill gm-gem")}<span data-gm-gems>∞</span><span class="gm-plus" aria-hidden="true">+</span></button>
       </div>
@@ -30171,7 +30403,8 @@ const initGame = () => {
       ${s.soon ? `<p class="sm25-lock">Coming soon: the enemies of ${R.name} are on their way.</p>` : open ? `<button class="gm-btn sm25-go" type="button" data-gm-route="battle/${s.id}">${stars != null ? "fight again" : "fight"} · 8 stamina</button>` : lock88(s.reg)}</div>`;
     $("[data-gm-sub='story']", stage).append(box);
     if (!REDUCED) $(".sm25-sheet-in", box).animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration: 340, easing: "cubic-bezier(0.32, 0.72, 0, 1)" });
-    box.addEventListener("click", (e) => { if (e.target.closest("[data-gm-route]")) here89Set(placeOf(s)); if (e.target === box || e.target.closest("[data-sm-close], [data-gm-route]")) box.remove(); });
+    box.addEventListener("click", (e) => { if (isAdmin() && e.target.closest("[data-gm-route]")) here89Set(placeOf(s)); if (e.target === box || e.target.closest("[data-sm-close], [data-gm-route]")) box.remove(); });
+    act94(box, placeOf(s));
   };
   /* ── round 44 · the web's places that are not stages (camps, mini-bosses), and the team's HP under the map ── */
   /** The team as it stands between fights: each one's HP, the fallen marked. */
@@ -30183,6 +30416,38 @@ const initGame = () => {
       return `<div class="w44-mem${f <= 0 ? " is-down" : ""}"><span class="w44-face">${faceChip(h)}</span><span class="w44-mem-t"><b>${h.name}${id === l.bench ? " <small>bench</small>" : ""}</b><span class="w44-hp" style="--p:${Math.max(0, f)}"><i></i></span><small>${f <= 0 ? "down until a camp" : `${Math.round(f * 100)}% HP`}</small></span></div>`;
     }).join("")}</div>`;
   };
+  /** Round 94: a sheet's buttons for where you stand: a fight's cost (and 50% for a place already cleared, and no stamina no fight),
+   *  one place at a time, a camp's fire, an inn's bed. */
+  const act94 = (box, at) => {
+    if (!at) return;
+    const [r, n] = at, nd = STORY_WEB[r]?.nodes[n];
+    if (!nd) return;
+    const far = () => { const p = document.createElement("p"); p.className = "sm25-lock"; p.textContent = "Too far: walk there one place at a time, from where you stand."; return p; };
+    const near = near94(r, n), done = nodeDone(r, n), cost = costAt94(r, n);
+    for (const b of box.querySelectorAll('.sm25-go[data-gm-route^="battle/"]')) {
+      if (!near) { b.replaceWith(far()); continue; }
+      b.textContent = done && !isAdmin() ? `fight again · 50% HP · ${cost} stamina` : `${done ? "fight again" : "fight"} · ${cost} stamina`;
+      b.addEventListener("click", (e) => { if (stam94().v < cost) { e.stopPropagation(); e.preventDefault(); ST94.ask?.(cost); } });
+    }
+    for (const b of box.querySelectorAll(".w44-rest, [data-walk94], [data-l66-enter]")) if (!near) b.replaceWith(far());
+    // an inn or a village: its bed
+    if (near && nd.t === "town" && ["village", "inn"].includes(nd.kind)) {
+      const price = isAdmin() ? 0 : nd.kind === "inn" ? 60 : 100, bed = document.createElement("button");
+      bed.type = "button"; bed.className = "gm-btn gm-btn--gold sm25-go w94-sleep";
+      bed.textContent = `sleep at the inn · stamina full, every fire lit again${price ? ` · ${price} gold` : ""}`;
+      (box.querySelector("[data-l66-enter]") ?? box.querySelector(".sm25-sheet-in > :last-child"))?.after(bed);
+      bed.addEventListener("click", () => {
+        const p = PLAYER.player;
+        if (price && (p.gold ?? 0) < price) { toast(`Not enough gold: a bed costs ${price}.`); return; }
+        if (price) p.gold -= price;
+        sleep94();
+        here89Set([r, n]);
+        savePlayer(); paintGems(); paintStory();
+        box.remove();
+        toast("You sleep at the inn: stamina full, everyone back to full HP, and every fire on the map burns again.");
+      });
+    }
+  };
   const sheetBox = (html, label, col) => {
     $(".sm25-sheet", stage)?.remove();
     const box = document.createElement("div");
@@ -30190,7 +30455,8 @@ const initGame = () => {
     box.innerHTML = `<div class="sm25-sheet-in" role="dialog" aria-label="${label}" style="--rc:${col}">${html}</div>`;
     $("[data-gm-sub='story']", stage).append(box);
     if (!REDUCED) $(".sm25-sheet-in", box).animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration: 340, easing: "cubic-bezier(0.32, 0.72, 0, 1)" });
-    box.addEventListener("click", (e) => { if (e.target.closest("[data-gm-route], [data-w44-rest]")) here89Set(NODE89.last); if (e.target === box || e.target.closest("[data-sm-close], [data-gm-route], [data-w44-rest]")) box.remove(); });
+    box.addEventListener("click", (e) => { if (e.target.closest("[data-w44-rest], [data-walk94], [data-l66-enter]") || (isAdmin() && e.target.closest("[data-gm-route]"))) here89Set(NODE89.last); if (e.target === box || e.target.closest("[data-sm-close], [data-gm-route], [data-w44-rest], [data-walk94]")) box.remove(); });
+    act94(box, NODE89.last);
   };
   if (window.__T) window.__T.nodeSheet69 = (r, n) => nodeSheet(r, n);
   const nodeSheet = (r, n) => {
@@ -30213,14 +30479,14 @@ const initGame = () => {
     }
     if (nd.t === "town") {
       // round 70: each place shows its own picture (the user's)
-      sheetBox(`${head(nd.kicker, nd.name, nd.sub)}${nd.pic ? `<img class="t70-pic" src="art/story/${nd.pic}.webp" alt="" draggable="false">` : ""}<p class="w44-txt">${nd.txt}</p>${nd.fang ? `<p class="t72-meta r76-state">${s69Of72().fang?.[nd.fang] ? "The Fangstone here is broken." : "Its Fangstone still feeds Ashfang."}</p>` : ""}${["brackenford", "kettle", "fernwatch", "cinderglass", "vents", "hearth", "goblin-cave", ...(BRIM76_READY ? ["brimwick"] : [])].includes(nd.town) ? (placeOpen81(r, n) ? `<button class="gm-btn sm25-go" type="button" data-l66-enter="${nd.town}">enter ${nd.name}</button>` : far) : '<p class="sm25-lock">Coming soon.</p>'}`, nd.name, "#ffd58a");
+      sheetBox(`${head(nd.kicker, nd.name, nd.sub)}${nd.pic ? `<img class="t70-pic" src="art/story/${nd.pic}.webp" alt="" draggable="false">` : ""}<p class="w44-txt">${nd.txt}</p>${nd.fang ? `<p class="t72-meta r76-state">${s69Of72().fang?.[nd.fang] ? "The Fangstone here is broken." : "Its Fangstone still feeds Ashfang."}</p>` : ""}${nd.tide95 ? `<p class="t72-meta r76-state">${s69Of72().tide95?.[nd.tide95] ? TIDE95_DONE[nd.tide95] : `Its riddle is still to solve: then ${TIDE95_TXT[nd.tide95]}.`}</p>` : ""}${["brackenford", "kettle", "fernwatch", "cinderglass", "vents", "hearth", "goblin-cave", "pier95", "lighthouse95", "registry95", ...(BRIM76_READY ? ["brimwick"] : [])].includes(nd.town) ? (placeOpen81(r, n) ? `<button class="gm-btn sm25-go" type="button" data-l66-enter="${nd.town}">enter ${nd.name}</button>` : far) : '<p class="sm25-lock">Coming soon.</p>'}`, nd.name, "#ffd58a");
       return;
     }
     if (nd.t === "camp") {
       sheetBox(`${head("camp", "Camp", done ? "you rested here" : "a fire on the way to the boss")}
-        <p class="w44-txt">Rest here: the whole team, bench and all, is back to full HP, and whoever fell stands again. Resting also opens the places beside the camp. If the whole team falls later, it wakes at the last camp it rested at.</p>
+        <p class="w44-txt">Rest here: the whole team, bench and all, is back to full HP, and whoever fell stands again. Resting also opens the places beside the camp. If the whole team falls later, it wakes at the last camp it rested at. A rest gives back half your stamina; then the fire stays out until you sleep at an inn.</p>
         ${teamHP()}
-        ${soon ? '<p class="sm25-lock">Coming soon.</p>' : done ? '<p class="sm25-note">You rested here. This fire is out: the next camp is further in.</p>' : open ? `<button class="gm-btn w44-rest" type="button" data-w44-rest="${r}-${n}">rest · everyone back to full HP</button>` : far}`, "Camp", "#ffb34d");
+        ${soon ? '<p class="sm25-lock">Coming soon.</p>' : (done || open) && out94(r, n) ? `<p class="sm25-note">This fire is out. Sleep at an inn and every fire on the map burns again.</p><button class="gm-btn gm-btn--ghost sm25-go" type="button" data-walk94="${r}-${n}">walk here</button>` : open || done ? `<button class="gm-btn w44-rest" type="button" data-w44-rest="${r}-${n}">rest · full HP${isAdmin() ? "" : `, +${STAM94.back} stamina`}</button>` : far}`, "Camp", "#ffb34d");
       if (r === SMITH_AT[0] && n === SMITH_AT[1]) smithBlock66(open || done);
       return;
     }
@@ -30257,7 +30523,8 @@ const initGame = () => {
   // round 46: "continue the story" opens the map on the place the story suggests, its sheet open; you choose from there
   stage.addEventListener("click", (e) => { if (e.target.closest("[data-gm-cta]")) Object.assign(MAP_FOCUS, { at: placeOf(currentStage()), sheet: true, go: true }); }, true);
   // round 44: resting at a camp
-  stage.addEventListener("click", (e) => { const b = e.target.closest("[data-w44-rest]"); if (!b) return; const [r, n] = b.dataset.w44Rest.split("-").map(Number); restAt(r, n); toast("You rest at the camp: everyone is back to full HP"); paintStory(); });
+  stage.addEventListener("click", (e) => { const b = e.target.closest("[data-w44-rest]"); if (!b) return; const [r, n] = b.dataset.w44Rest.split("-").map(Number); restAt(r, n); toast(isAdmin() ? "You rest at the camp: everyone is back to full HP" : `You rest at the camp: everyone is back to full HP, +${STAM94.back} stamina. The fire is out now.`); paintStory(); paintGems(); });
+  stage.addEventListener("click", (e) => { if (e.target.closest("[data-walk94]")) { paintStory(); toast("You walk on."); } });
   const home = $("[data-gm-home]", stage);
   // the home is H10 Coppia: the leader and her partner, split by a living rift; the bench calls a new partner in
   const PARTNER_KEY = "oreh-ai-partner";
@@ -31525,6 +31792,36 @@ const initGame = () => {
   /** "a sure SSR", and what % of them is the hero in Rate Up. */
   const sureSay86 = (b, ups, rar, pct) => { const who = pct != null ? ups.map((u) => u.h.name) : []; return `a sure ${rar}${who.length ? `: ${+pct.toFixed(1)}% it is ${who.join(" or ")}` : ""}`; };
   const banSure86 = (b) => { const rar = b.sureRar || "SSR", sh = sureHero92(b.sureHero, rar, surePct86(b)); return sureSay86(b, sh ? [{ h: sh }] : banUps(b, rar), rar, surePct86(b)); };
+  /** Round 93: a summon's new hero (its guaranteed one, round 92); every summon with one shares the same count. */
+  const nh93 = (b) => { const h = b?.sureHero ? heroineById(b.sureHero) : null; return h && !h.guest ? h : null; };
+  /** The account's count: how many pulls are left to the 0 (1–100), and whether that 0 is the new hero for sure. */
+  const count93 = () => { const c = (PLAYER.player.pity93 ??= { left: 100, spec: false }); c.left = Math.max(1, Math.min(100, Math.round(+c.left || 100))); c.spec = !!c.spec; return c; };
+  /** A pull on a summon with a new hero, card by card: a pull counts 1, a ×11 counts 10 (its last card is a gift). */
+  const pity93 = (b, got, n) => {
+    const nh = nh93(b);
+    if (!nh) return;
+    const c = count93(), rar = baseRarity(nh);
+    for (let k = 0; k < got.length; k++) {
+      // the new hero by luck: the count starts again from 100
+      if (got[k]?.id === nh.id) { c.left = 100; c.spec = false; continue; }
+      if (n > 1 && k === got.length - 1) continue;
+      c.left -= 1;
+      if (c.left > 0) continue;
+      // 0: the new hero with 50% (or for sure after a lost 50/50), otherwise another of its rarity in this summon
+      const L = banPool(b, rar).filter((h) => h.id !== nh.id);
+      got[k] = c.spec || !L.length || Math.random() < 0.5 ? nh : btPick(L);
+      c.spec = got[k].id !== nh.id;
+      c.left = 100;
+    }
+  };
+  /** What the Pull page shows: the number, a bar that empties from 100 to 0, and what the 0 brings. */
+  const count93Text = (b) => {
+    const nh = nh93(b), c = count93(), s = c.left === 1 ? "" : "s";
+    return `<div class="sm93-count${c.spec ? " is-sure" : ""}" role="img" aria-label="${c.left} pulls of 100 left"><b>${c.left}</b><span class="sm93-bar"><i style="width:${c.left}%"></i></span><small>/100</small></div>
+      <p>${c.spec ? `${c.left} more pull${s} and ${nh.name} is yours for sure.` : `${c.left} more pull${s}, then a 50% chance of ${nh.name}.`} A pull counts 1, a ×11 counts 10, and the count goes on from summon to summon.</p>`;
+  };
+  /** The rule, for «who's inside». */
+  const rule93 = (b) => { const nh = nh93(b); return `Every summon with a new hero shares one count from 100 to 0: a pull counts 1, a ×11 counts 10 (its 11th card is a gift). At 0 it is ${nh.name} with a 50% chance, otherwise another ${baseRarity(nh)} of this summon, and then the next 0 is ${nh.name} for sure. If ${nh.name} comes sooner, the count starts again from 100.`; };
   const banPityText = (b) => {
     const at = banAt(b);
     if (at < 1) return "";
@@ -31549,8 +31846,8 @@ const initGame = () => {
     return p.sixth;
   };
   const pityText = () => {
-    if (isAdmin()) return "Admin: pulls are free and only for show.";
-    if (curBan()) return banPityText(curBan());
+    if (isAdmin()) return `<p>Admin: pulls are free and only for show.</p>${nh93(curBan()) ? count93Text(curBan()) : ""}`;
+    if (curBan()) return nh93(curBan()) ? count93Text(curBan()) : banPityText(curBan());
     const st = starterOf(), pick = !st.chose, what = pick ? "lets you choose one SSR" : "has a sure SSR";
     const n = Math.min(STARTER_AT, sixthOf());
     if (n < STARTER_AT) return `<div class="sm31-pips" aria-label="${n} of ${STARTER_AT} multis done">${Array.from({ length: STARTER_AT }, (_, k) => `<i class="${k < n ? "is-on" : ""}"></i>`).join("")}<b>6</b></div>
@@ -31569,7 +31866,7 @@ const initGame = () => {
     title: () => escB(curBan()?.name ?? "Starter banner"),
     rates: () => { const b = curBan(); return (b ? banRates(b) : PULL_RATES).map(([r, p]) => `<span><b class="tier-${RARITY_LEVEL[r]}"><span class="tier-text">${lrTxt(r)}</span></b>${+(p * 100).toFixed(1)}%</span>`).join("") + (b ? "" : '<span class="sm31-no">no UR · no LR</span>'); },
     text: () => (curBan() ? banText(curBan()) : STARTER_UP67.length ? `${upText67(STARTER_UP67)} Every hero except UR and LR.` : "Every hero except UR and LR. A copy of a hero you have is kept for Copies, up to six; past that it burns into gold for the shop."),
-    whoFoot: () => { const b = curBan(); return !b ? `<p class="sm42-foot">Every 6th ×11 has ${sureSay86(null, sureHero92(STARTER_SURE86.hero, STARTER_SURE86.rar || "SSR", STARTER_SURE86.pct) ? [{ h: heroineById(STARTER_SURE86.hero) }] : starterUps67(STARTER_SURE86.rar || "SSR"), STARTER_SURE86.rar || "SSR", STARTER_SURE86.pct)}; in this banner the first one lets you choose it.</p>` : banAt(b) === 1 ? `<p class="sm42-foot">Every ×11 has ${banSure86(b)}.</p>` : banAt(b) >= 2 ? `<p class="sm42-foot">Every ${ordOf(banAt(b))} ×11 has ${banSure86(b)}.</p>` : ""; },
+    whoFoot: () => { const b = curBan(); return !b ? `<p class="sm42-foot">Every 6th ×11 has ${sureSay86(null, sureHero92(STARTER_SURE86.hero, STARTER_SURE86.rar || "SSR", STARTER_SURE86.pct) ? [{ h: heroineById(STARTER_SURE86.hero) }] : starterUps67(STARTER_SURE86.rar || "SSR"), STARTER_SURE86.rar || "SSR", STARTER_SURE86.pct)}; in this banner the first one lets you choose it.</p>` : nh93(b) ? `<p class="sm42-foot">${rule93(b)}</p>` : banAt(b) === 1 ? `<p class="sm42-foot">Every ×11 has ${banSure86(b)}.</p>` : banAt(b) >= 2 ? `<p class="sm42-foot">Every ${ordOf(banAt(b))} ×11 has ${banSure86(b)}.</p>` : ""; },
     /** Round 42 · P1: who is in the banner, by rarity, each with her odds and what you hold of her (copies combined and waiting). */
     blank: () => { const b = curBan(); if (!b) return PULL_POOL("R").length ? null : { odds: PULL_RATES.find(([x]) => x === "R")?.[1] ?? 0, dust: DUST_PER_R }; const p = banRates(b).find(([x]) => x === "R")?.[1] ?? 0; return p && !banPool(b, "R").length ? { odds: p, dust: DUST_PER_R } : null; },
     pool: () => curBan() ? banRates(curBan()).flatMap(([r, p]) => {
@@ -31590,12 +31887,13 @@ const initGame = () => {
       const B = curBan(), cost = banCost(n);
       if (!isAdmin() && PLAYER.player.gems < cost) { toast(`Not enough gems: ${cost} needed. Clear stages and bosses for more.`); return null; }
       // the 6th ×11: a sure SSR on its last card, unless it is the one you chose
-      const sure = n > 1 && !isAdmin() && !pick && (B ? banAt(B) >= 1 && banDone(B) >= banAt(B) - 1 : sixthOf() >= STARTER_AT);
+      const sure = n > 1 && !isAdmin() && !pick && (B ? !nh93(B) && banAt(B) >= 1 && banDone(B) >= banAt(B) - 1 : sixthOf() >= STARTER_AT);
       // an R pull gives star dust while there are no R heroines
       const got = Array.from({ length: n }, (_, k) => banDraw(B, sure && k === n - 1));
       // the chosen SSR is the first card of the 6th multi
       if (pick && heroineById(pick)) got[0] = heroineById(pick);
       if (isAdmin()) return got.map((x) => (x.dust ? { dust: x.dust, admin: true } : { h: x, isNew: false, gold: 0, admin: true }));
+      if (B) pity93(B, got, n);
       const p = PLAYER.player, out = [];
       p.gems -= cost;
       paintGems();
@@ -32374,6 +32672,7 @@ const initGame = () => {
       if (current === "file") renderFile();
       return;
     }
+    if (t.closest("[data-gm-stam]")) { ST94.ask?.(0); return; }
     const route = t.closest("[data-gm-route]");
     if (route) { location.hash = `#/play/${route.dataset.gmRoute}`; return; }
     const mrow = t.closest("[data-ml-row]");
@@ -32672,7 +32971,7 @@ initRoster();
  * the numbers at the top painted again */
 const HOOK69 = {};
 /* a place on the map with people in it: a round plate, a village's roof, an inn's mug, a camp's tent */
-const TOWN69_ICON = { village: new Path2D("M4 11.5L12 4.5L20 11.5V20H14.5V15H9.5V20H4Z"), inn: new Path2D("M5 6H15V19H5Z M15 9H19.5V15.5H15V13.5H17.5V11H15Z"), camp: new Path2D("M2.5 19.5L12 4.5L21.5 19.5H14.5L12 14.5L9.5 19.5Z"), crystal: new Path2D("M12 2.5L17 9.5L12 21.5L7 9.5Z M12 6.5L10 9.8L12 16L14 9.8Z"), cave: new Path2D("M3 20.5V13.5A9 8.5 0 0 1 21 13.5V20.5H15.5V15.5A3.5 3.5 0 0 0 8.5 15.5V20.5Z") };
+const TOWN69_ICON = { village: new Path2D("M4 11.5L12 4.5L20 11.5V20H14.5V15H9.5V20H4Z"), inn: new Path2D("M5 6H15V19H5Z M15 9H19.5V15.5H15V13.5H17.5V11H15Z"), camp: new Path2D("M2.5 19.5L12 4.5L21.5 19.5H14.5L12 14.5L9.5 19.5Z"), crystal: new Path2D("M12 2.5L17 9.5L12 21.5L7 9.5Z M12 6.5L10 9.8L12 16L14 9.8Z"), cave: new Path2D("M3 20.5V13.5A9 8.5 0 0 1 21 13.5V20.5H15.5V15.5A3.5 3.5 0 0 0 8.5 15.5V20.5Z"), lighthouse: new Path2D("M12 2.5L15.5 5.5H8.5Z M9 6H15V8.6H9Z M9.7 9.6H14.3L16 21H8Z M8.4 6.5L2.5 4.6V9.2L8.4 7.7Z M15.6 6.5L21.5 4.6V9.2L15.6 7.7Z"), pier: new Path2D("M2.5 9H21.5V12H2.5Z M4.5 12H6.5V17.5H4.5Z M11 12H13V17.5H11Z M17.5 12H19.5V17.5H17.5Z M18.6 3.5H20V9H18.6Z M2.5 19.6Q5.5 17.9 8.5 19.6T14.5 19.6T20.5 19.6L21.5 19.6V21.5H2.5Z"), registry: new Path2D("M4.5 2.5H16.5V14.85A4.6 4.6 0 0 0 12.64 20H4.5Z M7 5.5V6.9H14V5.5Z M7 8.6V10H14V8.6Z M7 11.7V13.1H11.5V11.7Z M14.2 19.4A3 3 0 1 0 20.2 19.4A3 3 0 1 0 14.2 19.4Z") };
 /* round 72: the job's state, and the den shown only while it is under way (or while the Database shows the map) */
 const s69Of72 = () => (isAdmin() ? PLAYER.admin : PLAYER.player).s69 ?? {};
 /** Round 76: Brimwick opens once the user's pictures of the village and of Brother Fennick are in the art (the build looks). */
@@ -34339,6 +34638,7 @@ const STORY66 = (() => {
     lilith: { name: "Lilith", art: "art/lilith.webp", col: "#d2b8ff", face: [0.61, 0.28] },
   };
   S66.setCast(CAST, tok);
+  Object.assign(S66.BG, { pier95: "art/story/talk-tidal-shelf.webp", lighthouse95: "art/story/talk-tidal-shelf.webp", registry95: "art/story/talk-tidal-shelf.webp" });
   Object.assign(S66.BG, { brimwick: "art/story/brimwick.webp", cinderglass: "art/story/cinderglass.webp", vents: "art/story/vents.webp", hearth: "art/story/hearth.webp", "goblin-cave": "art/story/goblin-cave.webp", "goblin-cave-in": "art/story/goblin-cave-in.webp" });
   Object.assign(S66.BG, { kettle: "art/story/kettle.webp", "kettle-in": "art/story/kettle-in.webp", fernwatch: "art/story/fernwatch.webp", "tower-view": "art/story/tower-view.webp" }, { street: "art/story/street.webp", lake: "art/story/lake.webp", aerial: "art/story/aerial.webp", clouds: "art/story/clouds.webp", brackenford: "art/story/brackenford.webp", chapel: "art/story/chapel.webp", tavern: "art/story/tavern.webp" });
   const icon = (n) => gameIcon(n);
@@ -34999,7 +35299,7 @@ const STORY66 = (() => {
     rest.remove();
   };
   /** Everyone back to full HP (the camps' own rest), kept with the save. */
-  const healUp = () => { if (typeof healAll === "function") { healAll(); saveWeb(); } };
+  const healUp = () => { if (typeof healAll === "function") { healAll(); saveWeb(); } if (typeof sleep94 === "function") sleep94(); };
   const rest = async (S) => {
     const p = isAdmin() ? null : PLAYER.player;
     if (!team72().some((id) => hpNow(id) < 0.999)) { await S.say("barkeep", "A bed? You look fine to me. For a dead person.", { mood: "smug" }); return; }
@@ -35625,6 +35925,192 @@ const STORY66 = (() => {
   const ventsScene = (S) => S.scene({ name: "The Howling Vents", region: "Crimson Reach · Fangstone", people: [], spots: VN_SPOTS(), leave: () => S66.close(), journal });
   const vents = () => { DRY = false; fromAvatar(); return S66.play(async (S) => { await S.bg("vents", { how: "fade", ms: 420 }); if (once("vents-76")) { S.mode("box"); await S.narr("Steam, pipes, and iron wolf heads everywhere. Now and then one of them howls, and the whole cave shivers."); } ventsScene(S); hud(); }); };
 
+  /* ── round 95 · the Tidal Shelf: three places undo the Herald's promise to Nerelle. A mistake: the sea strikes the team (−10% HP,
+   *  kept from fight to fight); the third: an ambush, a fight, then you try again ── */
+  const tideOf95 = () => (save().tide95 ??= {});
+  /** A panel's own buttons: the next one pressed (the scene does not take the click); null once the panel is gone (the scene closed). */
+  const press95 = (ask, sel) => new Promise((res) => {
+    let t = 0;
+    const done = (x) => { clearInterval(t); ask.removeEventListener("click", on); res(x); };
+    const on = (ev) => { const x = ev.target.closest(sel); if (!x || x.disabled) return; ev.stopPropagation(); done(x); };
+    t = setInterval(() => { if (!ask.isConnected) done(null); }, 400);
+    ask.addEventListener("click", on);
+  });
+  /** A pause the skip button does not shorten (the sirens' song has to be seen); it stops if the scene closes. */
+  const nap95 = async (S, ms) => { S.live(); await S.sleep(ms); S.live(); };
+  /** A mistake: everyone on the team loses 10% of their HP (never the last of it); true on the third, when the shelf ambushes you. */
+  const miss95 = async (S, key) => {
+    const m = (tideOf95().miss ??= {});
+    m[key] = (m[key] ?? 0) + 1; keep();
+    if (typeof hpStore === "function") { const st = hpStore(); for (const id of team72()) { const v = st[id] ?? 1; if (v > 0) st[id] = Math.max(0.05, +(v - 0.1).toFixed(3)); } saveWeb(); }
+    await S.shake(10);
+    await S.flash("#6fe3ff", 240);
+    return m[key] >= 3;
+  };
+  const missSay95 = (key) => `Everyone loses 10% of their HP (${tideOf95().miss?.[key] ?? 0} of 3: the third wakes the shelf).`;
+  const ambush95 = async (S, key) => {
+    S.mode("box");
+    await S.narr("The noise wakes the shelf. Things climb out of the water, and they are hungry.");
+    await S.say("me", "Fine. We fight, then we try again.");
+    S66.close();
+    location.hash = `#/play/battle/tide95-${key}`;
+  };
+  const tideDone95 = async (S, key, title) => {
+    tideOf95()[key] = true; keep(); hud();
+    await S.flash("#9fe9ff", 380);
+    await S.banner(title, `Nerelle: ${TIDE95_TXT[key]}`, { icon: gameIcon("diamond") });
+  };
+  /** The lighthouse: 8, 5 and 3 barrels; exactly 4 in the big one lifts the lamp. */
+  const lighthouseRiddle95 = async (S) => {
+    S.mode("box");
+    if (once("lighthouse95-rule")) {
+      await S.narr("The sea has come in through the door. Three wooden cisterns stand in the water, chained to the lamp's counterweight: one of 8 barrels, one of 5, one of 3.");
+      await S.narr("A brass plate on the chain: THE LAMP RISES ON FOUR. NOT THREE. NOT FIVE. FOUR.");
+      await S.say("me", "So the big one has to hold exactly four. No measuring cup, of course.");
+    } else await S.narr("The three cisterns, 8, 5 and 3 barrels. The lamp rises on four in the big one.");
+    S.clear();
+    const CAP = [8, 5, 3];
+    let v = [8, 0, 0], from = -1, moves = 0;
+    S.ui.insertAdjacentHTML("beforeend", `<div class="l72-ask l76-ask l95-ask" aria-live="polite"><small>The Drowned Lighthouse · tap a cistern, then another to pour into it · leave exactly 4 barrels in the big one, then pull the chain</small>
+      <div class="l95-row" role="group" aria-label="The cisterns">${CAP.map((c, i) => `<button type="button" class="l95-cis" data-l95-cis="${i}"><i></i><b>${c}</b><span></span></button>`).join("")}</div>
+      <p class="l95-miss" data-l95-miss></p>
+      <div class="l95-btns"><button type="button" class="l76-btn" data-l95-act="pull">Pull the chain</button><button type="button" class="l76-btn" data-l95-act="reset">Start over</button><button type="button" class="l76-btn" data-l95-act="leave">Leave it</button></div></div>`);
+    const ask = S.ui.lastElementChild, say = (t) => { ask.querySelector("[data-l95-miss]").textContent = t; };
+    const paint = () => ask.querySelectorAll("[data-l95-cis]").forEach((b, i) => { b.style.setProperty("--fill", `${(100 * v[i]) / CAP[i]}%`); b.querySelector("span").textContent = `${v[i]} of ${CAP[i]}`; b.classList.toggle("is-from", i === from); b.setAttribute("aria-label", `The cistern of ${CAP[i]}: ${v[i]} barrels${i === from ? ", to pour from" : ""}`); });
+    paint();
+    for (;;) {
+      const b = await press95(ask, "[data-l95-cis], [data-l95-act]");
+      if (!b) return false;
+      const act = b.dataset.l95Act;
+      if (act === "leave") { ask.remove(); return false; }
+      if (act === "reset") { v = [8, 0, 0]; from = -1; moves = 0; say(""); paint(); continue; }
+      if (act === "pull") {
+        if (v[0] === 4) break;
+        if (await miss95(S, "light")) { ask.remove(); await ambush95(S, "light"); return false; }
+        say(`The chain jerks and drops back: ${v[0]} is not four. A wave bursts through the door. ${missSay95("light")}`);
+        continue;
+      }
+      const i = +b.dataset.l95Cis;
+      if (from < 0) { if (v[i] > 0) from = i; paint(); continue; }
+      if (from === i) { from = -1; paint(); continue; }
+      const pour = Math.min(v[from], CAP[i] - v[i]);
+      v[from] -= pour; v[i] += pour; from = -1; moves++; paint();
+      if (moves === 14) { ask.hidden = true; await S.say("me", "The 5 into the 3, the 3 back into the big one… somewhere in there, a 4 is hiding."); ask.hidden = false; }
+    }
+    ask.remove();
+    S.mode("box");
+    await S.narr("The counterweight sinks, the chain sings, and far above, the lamp catches.");
+    await tideDone95(S, "light", "The lighthouse burns");
+    await S.narr("For the first time in a week, a beam sweeps the Tidal Shelf. Under the pier, the sirens' shadows show.");
+    return true;
+  };
+  /** The pier: seven planks, the sirens' melody; their words name the wrong plank. */
+  const pierRiddle95 = async (S) => {
+    S.mode("box");
+    if (once("pier95-rule")) {
+      await S.narr("Seven wide planks at the end of the pier, and each one sings a note when you step on it. Under the water, the sirens are singing too.");
+      await S.narr("They sing you which plank to step on. Their voices are sweet, and every word is a lie.");
+      await S.say("me", "Don't listen to the words. Watch the light, step where it shone.");
+    } else await S.narr("The seven planks hum. The sirens are already singing. Watch the light, not the words.");
+    S.clear();
+    const NOTE = ["I", "II", "III", "IV", "V", "VI", "VII"], ROUNDS = [4, 5, 6];
+    S.ui.insertAdjacentHTML("beforeend", `<div class="l72-ask l76-ask l95-ask" aria-live="polite"><small>The Singing Pier · watch the planks light up, then step on them in the same order · three songs, longer each time</small>
+      <p class="l95-says" data-l95-says></p>
+      <div class="l95-row" role="group" aria-label="The planks">${NOTE.map((n, i) => `<button type="button" class="l95-plank" data-l95-plank="${i}" aria-label="Plank ${n}">${n}</button>`).join("")}</div>
+      <p class="l95-miss" data-l95-miss></p>
+      <div class="l95-btns"><button type="button" class="l76-btn" data-l95-act="leave">Leave it</button></div></div>`);
+    const ask = S.ui.lastElementChild, says = ask.querySelector("[data-l95-says]"), planks = [...ask.querySelectorAll("[data-l95-plank]")];
+    const say = (t) => { ask.querySelector("[data-l95-miss]").textContent = t; };
+    const lie = (k) => { let x; do x = Math.floor(Math.random() * 7); while (x === k); return x; };
+    const step = (i) => { planks[i].classList.add("is-lit"); setTimeout(() => planks[i].classList.remove("is-lit"), 220); };
+    let round = 0, seq = null;
+    while (round < ROUNDS.length) {
+      // a song: each note lights its plank while the sirens name another; a mistake sings the same song again
+      seq ??= Array.from({ length: ROUNDS[round] }, () => Math.floor(Math.random() * 7));
+      planks.forEach((p) => { p.disabled = true; });
+      S.stopSkip();
+      says.textContent = `Song ${round + 1} of 3: watch the light.`;
+      await nap95(S, 700);
+      for (const k of seq) { says.innerHTML = `«Step on plank <i>${NOTE[lie(k)]}</i>, little one…»`; planks[k].classList.add("is-lit"); await nap95(S, 560); planks[k].classList.remove("is-lit"); await nap95(S, 240); }
+      says.textContent = `Song ${round + 1} of 3: your turn. Step where the light was.`;
+      planks.forEach((p) => { p.disabled = false; });
+      let good = true;
+      for (let k = 0; k < seq.length; k++) {
+        const b = await press95(ask, "[data-l95-plank], [data-l95-act]");
+        if (!b) return false;
+        if (b.dataset.l95Act === "leave") { ask.remove(); return false; }
+        const i = +b.dataset.l95Plank;
+        if (i === seq[k]) { step(i); continue; }
+        b.classList.add("is-bad"); setTimeout(() => b.classList.remove("is-bad"), 600);
+        good = false;
+        if (await miss95(S, "pier")) { ask.remove(); await ambush95(S, "pier"); return false; }
+        say(`The plank gives way and the water grabs at you. ${missSay95("pier")} The song starts again.`);
+        break;
+      }
+      if (good) { round++; seq = null; say(""); await nap95(S, 400); }
+    }
+    ask.remove();
+    S.mode("box");
+    await S.narr("The last note rings out over the water, and the sirens' song breaks off in the middle of a word.");
+    await tideDone95(S, "pier", "The song is broken");
+    await S.narr("Under the pier, something hisses, and goes quiet.");
+    return true;
+  };
+  /** The registry: three copies of the Herald's promise; two are forged; VOID goes on the true one. */
+  const REG95 = [
+    { id: "true", t: "I, the undersigned, promise Queen Nerelle of the Drowned Court that the sea shall never end. Done on the 12th of Tidemonth, in the Court's own hall. Signed: H." },
+    { id: "date", t: "I, the undersigned, promise Queen Nerelle of the Drowned Court that the sea shall never end. Done on the 31st of Tidemonth, in the Court's own hall. Signed: H." },
+    { id: "page", t: "I, the undersigned, promise Queen Nerelle of the Drowned Court that the sea shall never end, as set out on page 113 of Form 112-B. Signed: H." },
+  ];
+  const registryRiddle95 = async (S) => {
+    S.mode("box");
+    if (once("registry95-rule")) {
+      await S.narr("Drowned clerks stamp forms that turn to pulp as they land. Nobody looks up. The queue's red rope goes nowhere.");
+      await S.narr("On the wall, a calendar: TIDEMONTH, THIRTY DAYS. On the lectern, a pinned note: FORM 112-B. ONE HUNDRED AND TWELVE PAGES. NO MORE.");
+      await S.narr("And under the note, three copies of one promise, each sealed in blue wax.");
+      await S.say("me", "The office keeps one real copy. The other two are fakes. VOID on the real one, and the promise is over.");
+    } else await S.narr("The calendar: TIDEMONTH, THIRTY DAYS. The note: FORM 112-B, ONE HUNDRED AND TWELVE PAGES. And the three copies, one of them the real promise.");
+    S.clear();
+    const list = [...REG95].sort(() => Math.random() - 0.5);
+    let on = -1;
+    S.ui.insertAdjacentHTML("beforeend", `<div class="l72-ask l76-ask l95-ask" aria-live="polite"><small>The Drowned Registry · choose the true copy, then stamp it VOID</small>
+      <div class="l95-row" role="group" aria-label="The three copies">${list.map((c, i) => `<button type="button" class="l95-scroll" data-l95-scroll="${i}"><b>Copy ${"ABC"[i]}</b>${c.t}</button>`).join("")}</div>
+      <p class="l95-miss" data-l95-miss></p>
+      <div class="l95-btns"><button type="button" class="l76-btn" data-l95-act="stamp" disabled>Stamp it VOID</button><button type="button" class="l76-btn" data-l95-act="leave">Leave it</button></div></div>`);
+    const ask = S.ui.lastElementChild, stamp = ask.querySelector('[data-l95-act="stamp"]'), say = (t) => { ask.querySelector("[data-l95-miss]").textContent = t; };
+    for (;;) {
+      const b = await press95(ask, "[data-l95-scroll], [data-l95-act]");
+      if (!b) return false;
+      const act = b.dataset.l95Act;
+      if (act === "leave") { ask.remove(); return false; }
+      if (act !== "stamp") { on = +b.dataset.l95Scroll; ask.querySelectorAll("[data-l95-scroll]").forEach((x, i) => x.classList.toggle("is-on", i === on)); stamp.disabled = false; continue; }
+      if (list[on]?.id === "true") { ask.querySelectorAll("[data-l95-scroll]")[on].classList.add("is-void"); break; }
+      if (await miss95(S, "reg")) { ask.remove(); await ambush95(S, "reg"); return false; }
+      say(`The clerks look up as one. A fake! The sea pours in through the windows. ${missSay95("reg")}`);
+    }
+    await S.wait(900);
+    ask.remove();
+    S.mode("box");
+    await S.narr("VOID. The stamp comes down, and the office goes silent. Somewhere far out, the sea lets out a long breath.");
+    await tideDone95(S, "reg", "The promise is void");
+    await S.narr("For the first time in a week, the tide goes out.");
+    await S.say("me", "Signed: H. She signs her promises like tax forms.");
+    return true;
+  };
+  const TIDE95 = {
+    pier95: { key: "pier", name: "The Singing Pier", spot: "The seven planks", verb: "Step on them", riddle: pierRiddle95, intro: "A long pier over black water. The planks at its end hum, and under them, something sings.", done: "The planks are only planks now. Nobody sings under the pier." },
+    lighthouse95: { key: "light", name: "The Drowned Lighthouse", spot: "The cisterns and the chain", verb: "Pour", riddle: lighthouseRiddle95, intro: "Robin's lighthouse. The sea is inside, up to the knees, and the lamp at the top is dark.", done: "The lamp burns at the top of the tower. The water inside is going down." },
+    registry95: { key: "reg", name: "The Drowned Registry", spot: "The lectern", verb: "Read", riddle: registryRiddle95, intro: "A customs office the sea swallowed whole. The clerks are still at their desks.", done: "The promise lies on the lectern, VOID in red across it. The clerks have gone back to their forms." },
+  };
+  const TIDE95_SPOTS = (k) => { const T = TIDE95[k]; return [{ id: `t95-${k}`, name: T.spot, verb: tideOf95()[T.key] ? "Look" : T.verb, poly: box76(0.3, 0.3, 0.7, 0.78), run: async (S) => {
+    if (tideOf95()[T.key]) { S.mode("box"); await S.narr(T.done); return; }
+    if ((tideOf95().miss?.[T.key] ?? 0) >= 3) { await ambush95(S, T.key); return; }
+    await T.riddle(S);
+    S.live();
+    S.spots(TIDE95_SPOTS(k));
+  } }]; };
+  const tide95 = (k) => { DRY = false; fromAvatar(); return S66.play(async (S) => { await S.bg(k, { how: "fade", ms: 420 }); if (once(`${k}-95`)) { S.mode("box"); await S.narr(TIDE95[k].intro); } S.scene({ name: TIDE95[k].name, region: "Tidal Shelf", people: [], spots: TIDE95_SPOTS(k), leave: () => S66.close(), journal }); hud(); }); };
+
   /* ── The Wolf's Hearth: the biggest Fangstone and its guardian, a hard fight ── */
   const WH = {
     stone: { name: "The Fangstone", poly: IN76.poly([[0.478, 0.6], [0.488, 0.52], [0.5, 0.48], [0.512, 0.52], [0.522, 0.6], [0.5, 0.67]]), at: [IN76.x(0.5), 0.47] },
@@ -35813,6 +36299,8 @@ const STORY66 = (() => {
     if (key === "vents") return vents();
     if (key === "hearth") return hearth();
     if (key === "goblin-cave") return goblinCave();
+    // round 95: the Tidal Shelf's three places
+    if (key === "pier95" || key === "lighthouse95" || key === "registry95") return tide95(key);
     DRY = false;
     fromAvatar();
     return S66.play(async (S) => {
@@ -35875,7 +36363,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-08-1313";
+const BUILD = "2026-11-08-1641";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
