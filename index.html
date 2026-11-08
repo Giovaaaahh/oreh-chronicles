@@ -7606,6 +7606,11 @@ em.is-from89 { display: block; font-style: normal; font-size: 11px; font-weight:
 .g89-say { display: flex; gap: 8px; align-items: flex-start; margin-top: 10px; line-height: 1.5; }
 .g89-say .g-ic { flex: none; width: 18px; height: 18px; margin-top: 2px; }
 
+/* Round 90: what a fight's first win gives: on the map's sheets (the same look as the special drops' line) and in the Database */
+.r90-first b { margin-right: 6px; color: #ffd58a; }
+.g90-base { color: var(--g-text); }
+.g90-base .g-ic { color: var(--g-ok); }
+
 </style>
 </head>
 <body>
@@ -14862,6 +14867,32 @@ const drops76Clean = (a) => (Array.isArray(a) ? a : []).slice(0, 8).map((d) => {
 }).filter(Boolean);
 /** What a drop is called on the map's sheets and in the win's list. */
 const drop76Name = (d) => d.t === "item" ? `${ITEM_BY_ID[d.id]?.name ?? "a piece"}${d.n > 1 ? ` ×${d.n}` : ""}` : d.t === "pot" ? `${POTIONS[d.p]?.name ?? "Potion"} ×${d.n}` : `${Math.round(+d.n || 0).toLocaleString("en-US")} ${{ gold: "gold", gems: d.n === 1 ? "gem" : "gems", dust: "star dust", ore: "Ember Ore", shard: d.n === 1 ? "Dragon Heart shard" : "Dragon Heart shards" }[d.t]}`;
+/** Round 90: every fight's first win pays gems (skirmishes and the Database's new fights 3, as the story's stages; mini bosses their
+ *  15), and one fight yes, one no, also a sure item of the highest rarity the story allows up to its region (the user's picks). */
+const GEMS90 = 3;
+const SURE_RAR90 = ["SR", "SR", "SR", "SSR", "SSR", "SSR", "SSR", "SSR"];
+/** A fight with gems among its own special drops pays those instead of the 3 (the user had set 3 by hand on many skirmishes). */
+const ownGems90 = (nd) => (nd?.drops ?? []).some((d) => d.t === "gems");
+/** Skirmishes and new fights take turns in their order on the map; a removed one keeps its slot, so the others never change. */
+const skirmSure90 = (nodes, n) => nodes.slice(0, n).filter((x) => x?.t === "skirm").length % 2 === 0;
+/** The rarity of the sure item a fight gives at its first win, or null: the story's stages one yes, one no in their region (its first,
+ *  its third, … and its boss), skirmishes and new fights one yes, one no on their map; mini bosses have their own prize. */
+const sure90 = (st) => {
+  if (!st || st.mini) return null;
+  if (st.skirm) { const [r, n] = st.skirm, w = STORY_WEB[r]; return w?.nodes?.[n] && skirmSure90(w.nodes, n) ? SURE_RAR90[r] ?? "SSR" : null; }
+  const i = STORY.stages.indexOf(st);
+  return i >= 0 && (i % 25) % 2 === 0 ? SURE_RAR90[Math.floor(i / 25)] ?? "SSR" : null;
+};
+/** A list said as a sentence: «a, b and c». */
+const and90 = (l) => (l.length > 1 ? `${l.slice(0, -1).join(", ")} and ${l.at(-1)}` : l[0] ?? "");
+/** A story stage's sheet: what its first win gives (as payOut pays it). */
+const first90Sheet = (s) => {
+  if (s.soon) return "";
+  const i = STORY.stages.indexOf(s), gm = s.gems ?? GEMS90, sure = sure90(s);
+  const loot = s.loot ?? STAGE_LOOT[i] ?? (s.boss ? { m: 2, l: 1 } : i > 100 ? { m: 1, l: 1 } : i > 40 ? { s: 2, m: 1 } : { s: 3 });
+  const pots = Object.entries(loot).filter(([k, n]) => n > 0 && POTIONS[k]).map(([k, n]) => `${POTIONS[k].name} ×${n}`);
+  return `<p class="sm25-note r90-first"><b>First win</b> ${and90([gm > 0 ? `${gm} gem${gm === 1 ? "" : "s"}` : "", sure ? `a sure ${sure} item` : "", ...pots].filter(Boolean))}.</p>`;
+};
 const drops76Sheet = (list) => (list?.length ? `<p class="sm25-note r76-drops"><b>Special drops</b>${list.map((d) => `${drop76Name(d)} (${d.every ? "every win" : "first win"})`).join(", ")}</p>` : "");
 /** The first half of a pack: heroes, enemies, stages and webs, before the webs are read. */
 /* ══════════ Round 85 · the words on the page, the order of the heroes, the items a lazy player leaves to the game ══════════ */
@@ -21632,6 +21663,7 @@ void main() {
       // round 45: a skirmish pays a little, once; after that only its experience and its chests
       const first = webStore().skirms?.[run.stage.id] == null, dust = 15 * (run.skirm[0] + 1);
       xp = Math.round((120 + 90 * run.stage.base) / 20);
+      if (first && !ownGems90(STORY_WEB[run.skirm[0]]?.nodes?.[run.skirm[1]])) { p.gems += GEMS90; got.push(`+${GEMS90} gems`); }
       if (first) { p.items.dust = (p.items.dust ?? 0) + dust; p.items.s += 1; got.push(`+${dust} star dust`, `${POTIONS.s.name} ×1`); }
       const gold = (F.chests ?? []).reduce((t, c) => t + (c.gold ?? 0), 0), bag = (p.bag ??= {});
       for (const c of F.chests ?? []) if (c.item) bag[c.item.id] = (bag[c.item.id] ?? 0) + 1;
@@ -21674,6 +21706,12 @@ void main() {
         else if (d.t === "shard") p.items.dshard = (p.items.dshard ?? 0) + d.n;
         got.push(`special drop: ${drop76Name(d)}`);
       }
+    }
+    // round 90: one fight yes, one no gives a sure item of its region's highest rarity, the first win only
+    {
+      const st90 = run.mini || run.town69 || run.smith || run.deep || !(run.skirm || run.kind === "battle") ? null : run.stage, rar90 = sure90(st90);
+      const first90 = run.skirm ? webStore().skirms?.[run.stage.id] == null : p.cleared?.[run.stage?.id] == null;
+      if (rar90 && first90) items.push(...gainItems({ [rar90]: 1 }, 1));
     }
     for (const id of ids) { const n = addXp(id, xp); if (n) ups.push(`${heroineById(id).name} lv ${progOf(id).lv}`); }
     if (benchId) { const n = addXp(benchId, xp / 2); if (n) ups.push(`${heroineById(benchId).name} lv ${progOf(benchId).lv}`); }
@@ -27542,7 +27580,21 @@ const DROP_IT76 = [["item", "Oggetto"], ["gold", "Oro"], ["gems", "Gemme"], ["po
 const DROP_N76 = { item: 1, gold: 500, gems: 10, pot: 1, dust: 100, ore: 5, shard: 1 };
 const dropItems76 = () => [...SPECIAL_ITEMS, ...(typeof STORY_ITEMS76 !== "undefined" ? STORY_ITEMS76 : []), ...ITEMS];
 /** The list of drops in a section: `get` gives the list (made if missing), `set` keeps it and says what changed. */
-const dropsEditor76 = (host, get, set) => {
+/** Round 90: what the game itself gives at a fight's first win, said above its special drops (so nobody adds it again by hand). */
+const base90Txt = (l, tail = "") => `${ic("check")}<span>Il gioco dà già, alla prima vittoria: ${l.length > 1 ? `${l.slice(0, -1).join(", ")} e ${l.at(-1)}` : l[0]}.${tail ? ` ${tail}` : ""} Qui sotto metti solo quello in più.</span>`;
+const base90Stage = (si, st) => {
+  const sure = (si % 25) % 2 === 0 ? SURE_RAR90[Math.floor(si / 25)] ?? "SSR" : null;
+  return base90Txt(["le gemme e le pozioni scritte qui sopra", sure ? `un oggetto ${sure} garantito` : ""].filter(Boolean),
+    `${sure ? "" : "L'oggetto garantito ce l'ha uno stage sì e uno no: questo no. "}A ogni vittoria, anche un oggetto a caso.`);
+};
+const base90Node = (r, nodes, i, t) => {
+  const n = nodes[i];
+  if (t === "mini") return base90Txt(["15 gemme", `${60 * (r + 1)} polvere di stelle`, "una Pozione L", "due oggetti"]);
+  const sure = skirmSure90(nodes, i) ? SURE_RAR90[r] ?? "SSR" : null, own = ownGems90(n);
+  return base90Txt([own ? "" : `${GEMS90} gemme`, `${15 * (r + 1)} polvere di stelle`, "una Pozione S", sure ? `un oggetto ${sure} garantito` : ""].filter(Boolean),
+    `${own ? "Le gemme dei drop speciali qui sotto prendono il posto delle 3." : "Se qui sotto metti delle gemme, prendono il posto delle 3."}${sure ? "" : " L'oggetto garantito ce l'ha un combattimento sì e uno no tra scaramucce e combattimenti nuovi: questo no."}`);
+};
+const dropsEditor76 = (host, get, set, base90 = null) => {
   const row = (d, i) => `<div class="g76-drop" data-di="${i}">
       <select data-dt aria-label="Drop ${i + 1}: che cosa">${DROP_IT76.map(([k, n]) => `<option value="${k}"${k === d.t ? " selected" : ""}>${n}</option>`).join("")}</select>
       ${d.t === "item" ? `<select data-did aria-label="Drop ${i + 1}: quale oggetto">${dropItems76().map((it) => `<option value="${it.id}"${it.id === d.id ? " selected" : ""}>${esc(it.name)} · ${ITEM_STAT[it.stat].label} ${it.n} · ${it.rarity}${it.special ? " · speciale" : it.story ? " · della storia" : ""}</option>`).join("")}</select>` : d.t === "pot" ? `<select data-dp aria-label="Drop ${i + 1}: quale pozione">${["s", "m", "l"].map((p) => `<option value="${p}"${p === d.p ? " selected" : ""}>Pozione ${p.toUpperCase()}</option>`).join("")}</select>` : "<span></span>"}
@@ -27552,6 +27604,7 @@ const dropsEditor76 = (host, get, set) => {
   const paint = () => {
     const list = get();
     host.innerHTML = `<div class="g-sec-h"><h3>Drop speciali</h3><button type="button" class="g-btn g-btn--ghost g-btn--sm" data-dadd>${ic("plus")}<span>Drop</span></button></div>
+      ${base90 ? `<p class="g-note g90-base" data-base90>${base90()}</p>` : ""}
       ${list.length ? `<div class="g76-drops">${list.map(row).join("")}</div>` : ""}
       <p class="g-note">${list.length ? "Il giocatore li prende la prima volta che vince; quelli con «ogni vittoria», ogni volta. Li vede nella scheda sulla mappa." : "Nessun drop speciale: aggiungine uno per dare al giocatore un oggetto, oro, gemme o altro quando vince."}</p>`;
   };
@@ -27935,7 +27988,7 @@ const viewStory = (host) => {
     if (n.s != null) bindStage(box, n.s);
     else if (t === "made") bindMade(box, n, i);
     // round 76: a skirmish and a mini boss drop what you choose too
-    else if (t === "skirm" || t === "mini") dropsEditor76(qs("[data-drops]", box), () => (n.drops ??= []), (l, what) => { n.drops = l; if (!l.length) delete n.drops; mapChanged(what); });
+    else if (t === "skirm" || t === "mini") dropsEditor76(qs("[data-drops]", box), () => (n.drops ??= []), (l, what) => { n.drops = l; if (!l.length) delete n.drops; mapChanged(what); }, () => base90Node(reg, W.nodes, i, t));
     stagger(box, old ? 80 : 0, 40);
   };
   // round 72: a place's page. The ones with a story move and link but stay; a new one is all yours (it says "Coming soon"
@@ -28014,7 +28067,7 @@ const viewStory = (host) => {
       ...["s", "m", "l"].map((p) => numField({ label: `Pozione ${p.toUpperCase()}`, value: st.loot[p] ?? 0, min: 0, max: 20, step: 1, onInput: (v, done) => { st.loot[p] = v; if (done) sv(); } })),
     );
     // round 76: its special drops
-    dropsEditor76(qs("[data-drops]", box), () => st.drops, (l) => { st.drops = l; sv(); });
+    dropsEditor76(qs("[data-drops]", box), () => st.drops, (l) => { st.drops = l; sv(); }, () => base90Stage(si, st));
     // round 62: the stage's rule (and how many turns to hold), and what its boss can do
     const r62 = qs("[data-r62]", box), auto = STORY62.ruleOf(si), am = STORY62.mechOf(si);
     const autoMech = am ? (am.ward ? "all" : am.phase ? "charge+phase" : "charge") : "off";
@@ -28033,7 +28086,7 @@ const viewStory = (host) => {
     const ed = waveEditor(box, n, reg, sv);
     qs("[data-snums]", box).append(numField({ label: "Livello", value: n.level, min: 1, max: 200, step: 1, onInput: (v, done) => { n.level = v; if (done) { ed.paint(); sv(); } } }));
     // round 76: its special drops
-    dropsEditor76(qs("[data-drops]", box), () => (n.drops ??= []), (l, what) => { n.drops = l; if (!l.length) delete n.drops; mapChanged(what); });
+    dropsEditor76(qs("[data-drops]", box), () => (n.drops ??= []), (l, what) => { n.drops = l; if (!l.length) delete n.drops; mapChanged(what); }, () => base90Node(reg, W.nodes, i, "made"));
   };
   insp.addEventListener("click", (ev) => {
     if (ev.target.closest("[data-goboss]")) G.go("bosses");
@@ -30090,6 +30143,7 @@ const initGame = () => {
       ${s.soon ? "" : kinds.map((k) => FOE_KINDS[k]).filter((K) => K?.boss).map((K) => { const t = K.note ?? (K.rage ? `Rage: each turn a ${Math.round(K.rage * 100)}% chance to strike once more, ${Math.round((K.ragePower ?? 0.1) * 100)}% harder.` : ""); return t ? `<p class="sm25-power"><b>${K.name}</b> ${t}</p>` : ""; }).join("")}
       ${s.soon ? "" : teamHP()}
       <dl class="sm25-rows"><div><dt>level</dt><dd>${s.level}</dd></div><div><dt>stars</dt><dd>${stars != null ? "★".repeat(stars) + "☆".repeat(3 - stars) : "—"}</dd></div><div><dt>items</dt><dd>${drops}</dd></div></dl>
+      ${first90Sheet(s)}
       ${fang76Sheet(s)}
       ${drops76Sheet(s.drops)}
       ${STORY62.sheet(i)}
@@ -30158,7 +30212,7 @@ const initGame = () => {
       sheetBox(`${head("skirmish", `Near ${ss.near}`, `level ${ss.level} · optional`)}
         <div class="sm25-foes">${faces}</div>
         <p class="w44-txt">One short wave against the enemies of this part of ${R.name}. You don't need it to reach the boss, but winning it opens the places beside it, like a stage.</p>
-        <p class="sm25-note">First win: ${15 * (r + 1)} star dust and a ${POTIONS.s.name}. ${stars != null ? `Won with ${"★".repeat(stars)}${"☆".repeat(3 - stars)}.` : ""}</p>${drops76Sheet(nd.drops)}
+        <p class="sm25-note r90-first"><b>First win</b> ${and90([ownGems90(nd) ? "" : `${GEMS90} gems`, `${15 * (r + 1)} star dust`, `a ${POTIONS.s.name}`, sure90(ss) ? `a sure ${sure90(ss)} item` : ""].filter(Boolean))}. ${stars != null ? `Won with ${"★".repeat(stars)}${"☆".repeat(3 - stars)}.` : ""}</p>${drops76Sheet(nd.drops)}
         ${teamHP()}
         ${soon ? '<p class="sm25-lock">Coming soon.</p>' : open || done ? `<button class="gm-btn sm25-go" type="button" data-gm-route="battle/${ss.id}">${stars != null ? "fight again" : "fight"} · 8 stamina</button>` : far}`, `Skirmish near ${ss.near}`, R.c);
       return;
@@ -35796,7 +35850,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-08-0928";
+const BUILD = "2026-11-08-1033";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
