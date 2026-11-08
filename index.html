@@ -7610,6 +7610,15 @@ em.is-from89 { display: block; font-style: normal; font-size: 11px; font-weight:
 .r90-first b { margin-right: 6px; color: #ffd58a; }
 .g90-base { color: var(--g-text); }
 .g90-base .g-ic { color: var(--g-ok); }
+/* the special drops' rows (the user: «Sì, allargalo»; in the inspector the type menu was ~45 px and read nothing): the type on a line
+   of its own, the piece or the potion on the next, then how many, every win and the bin */
+.g76-drop { grid-template-columns: 84px auto minmax(0, 1fr) 40px; }
+.g76-drop [data-dt], .g76-drop [data-did], .g76-drop [data-dp] { grid-column: 1 / -1; }
+.g76-drop > span:empty { display: none; }
+.g76-drop [data-dn] { grid-column: 1; }
+.g76-drop .g76-every { grid-column: 2; }
+.g76-drop [data-ddel] { grid-column: 4; }
+.g76-drop + .g76-drop { padding-top: 10px; border-top: 1px solid var(--g-line); }
 
 </style>
 </head>
@@ -14846,6 +14855,12 @@ const unitToken = (u, lv) => {
 };
 const waveTokens = (waves, lv) => (Array.isArray(waves) ? waves : []).slice(0, 6).map((w) => (Array.isArray(w) ? w : []).slice(0, 3).map((u) => unitToken(u, lv)).filter(Boolean)).filter((w) => w.length);
 /** A made enemy or boss, as the fight knows it: fixed numbers at its own level, one face. */
+/** Round 91: the boss a Database edit stands in for, by its token: its own kind (an edit of an edit goes back to the first one). */
+const base91 = (tok) => { const k = String(tok ?? "").split(":")[0], K = FOE_KINDS[k]; return !K ? null : typeof K.made === "string" ? K.made : K.made ? null : k; };
+/** The region boss of a last wave: its strongest boss (Altea beside her Royal Guards, Nerelle beside her sirens), not the first one. */
+const bossAt91 = (w) => { let at = -1, best = -1; (w ?? []).forEach((t, i) => { const K = FOE_KINDS[String(t).split(":")[0]]; if (!K?.boss) return; const hp = (K.fixed?.hp ?? K.lv100?.hp ?? 0) * (K.hpBoost ?? 1); if (hp > best) { best = hp; at = i; } }); return at; };
+/** The edited boss: every power of the one it stands in for (court, calls, Feast, charm, skills, its notes), the user's numbers and look. */
+const kept91 = (base, made) => (base && FOE_KINDS[base] ? { ...FOE_KINDS[base], ...made, hpBoost: 1, made: base } : made);
 const madeKind = (b, tribe, scale = { hp: 1, atk: 1 }) => {
   const face = String(b.art ?? "").match(/art\/enemies\/([a-z0-9-]+)\.webp$/) ? b.art : FOE_ART("goblin-king");
   return {
@@ -15882,14 +15897,14 @@ const packLate = (P) => {
     if (where === "mini") {
       // a mini-boss is made stronger as it fights (HP ×2, ATK ×1.5): its own numbers are what the Gestionale showed, before that
       const id = `pk-${key}`;
-      FOE_KINDS[id] = madeKind(b, STORY_REGIONS[r].tribe ?? "Made", { hp: 2, atk: 1.5 });
+      FOE_KINDS[id] = kept91(base91(MINI_KINDS[r]?.[pnum(b.slot, 0, 2, 0)]), madeKind(b, STORY_REGIONS[r].tribe ?? "Made", { hp: 2, atk: 1.5 }));
       FOE_KINDS[id].boss = false;
       if (MINI_KINDS[r]) MINI_KINDS[r][pnum(b.slot, 0, 2, 0)] = `${id}:${FOE_KINDS[id].faces[0].rarity}`;
     } else if (where === "region") {
       // the region's boss: the boss of its last stage's last wave gives up its place
       const id = `pk-${key}`, s = STORY.stages[r * 25 + 24];
-      FOE_KINDS[id] = madeKind(b, STORY_REGIONS[r].tribe ?? "Made");
-      const w = s.waves.at(-1), at = w.findIndex((t) => FOE_KINDS[t.split(":")[0]]?.boss);
+      const w = s.waves.at(-1), at = bossAt91(w);
+      FOE_KINDS[id] = kept91(base91(w[at >= 0 ? at : 0]), madeKind(b, STORY_REGIONS[r].tribe ?? "Made"));
       w[at >= 0 ? at : 0] = `${id}:${FOE_KINDS[id].faces[0].rarity}`;
     } else if (where === "mode") {
       const face = /([a-z0-9-]+)\.webp$/.exec(b.art ?? "")?.[1] ?? "goblin-king", u = { name: pstr(b.name, "Nameless"), face, attr: ATTRIBUTES[b.attr] ? b.attr : "dark", rarity: RARITIES.includes(b.rarity) ? b.rarity : "UR" };
@@ -18140,7 +18155,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     if (!F.mech62 || F.wave !== run.waves.length - 1) return;
     const R = ["N", "R", "SR", "SSR", "UR", "LR", "Z"], live = F.foes.filter((e) => !e.dead), bosses = live.filter((e) => e.boss);
     for (const e of bosses.length ? bosses : live.slice().sort((a, b) => R.indexOf(b.rarity) - R.indexOf(a.rarity)).slice(0, 1)) {
-      if (e.kind === "king" || e.m62) continue;
+      if (e.kind === "king" || FOE_KINDS[e.kind]?.made === "king" || e.m62) continue;
       e.m62 = F.mech62;
       if (F.mech62.ward) { e.ward62 = 3; e.wardBy = STORY62.BREAK[e.attr] ?? "light"; }
     }
@@ -18238,7 +18253,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
       <div class="ins-hp ins-hp--foe"><span style="--p:${(e.hp / e.max) * 100}%;--hpc:${hpColour(e.hp / e.max)}"><i></i></span><b>${fmt(e.hp)} / ${fmt(e.max)} HP</b></div>
       <dl class="ins-rows">${rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("")}</dl>
       <p class="ins-h">states</p>${states.length ? `<ul class="ins-list">${states.map((x) => `<li>${x}</li>`).join("")}</ul>` : '<p class="ins-txt">None right now.</p>'}
-      <p class="ins-h">how it fights</p><p class="ins-txt">${FOE_NOTES[e.kind] ?? allBosses().find((b) => b.id === e.kind)?.note ?? ""}</p>${e.regal ? "" : `<p class="ins-txt">${kitText(e)}</p>`}`;
+      <p class="ins-h">how it fights</p><p class="ins-txt">${FOE_NOTES[e.kind] ?? FOE_NOTES[FOE_KINDS[e.kind]?.made] ?? allBosses().find((b) => b.id === e.kind)?.note ?? ""}</p>${e.regal ? "" : `<p class="ins-txt">${kitText(e)}</p>`}`;
   };
   const foeVsTab = (e) => {
     const vow = F.team.find((m) => m.id === "rin" && talentOn(m) && !m.ko);
@@ -19186,7 +19201,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     // the Labyrinth: from halfway up floor 1 its enemies are 30% stronger, and an elite has half again its HP
     const used = new Set();
     const pick = (t) => { if (!t.startsWith("?")) return t; const opts = t.slice(1).split(","), free = opts.filter((k) => !used.has(k)), k = btPick(free.length ? free : opts); used.add(k); return `${k}:${FOE_KINDS[k].faces[0].rarity}`; };
-    F.foes = run.waves[F.wave].map(pick).map((t0) => { const t = t0.replace(/[!^]$/, ""), e = { uid: ++uid, ...spawnFoe(t, run.level) }; if (t0.endsWith("!")) { e.mini = true; e.max = Math.round(e.max * 2); e.atk = Math.round(e.atk * 1.5); } else if (t0.endsWith("^")) e.mini = true; if (run.statMul) { e.atk = Math.round(e.atk * run.statMul); e.def = Math.round(e.def * run.statMul); e.max = Math.round(e.max * run.statMul); } if (run.hpMul) e.max = Math.round(e.max * run.hpMul); if (e.kind === "ashfang" && fang76() && fang76Run(run)) { const k = fang76K(); e.max = Math.round(e.max * k); e.atk = Math.round(e.atk * k); e.def = Math.round(e.def * k); e.fang76 = fang76(); } e.hp = e.max; return e; });
+    F.foes = run.waves[F.wave].map(pick).map((t0) => { const t = t0.replace(/[!^]$/, ""), e = { uid: ++uid, ...spawnFoe(t, run.level) }; if (t0.endsWith("!")) { e.mini = true; e.max = Math.round(e.max * 2); e.atk = Math.round(e.atk * 1.5); } else if (t0.endsWith("^")) e.mini = true; if (run.statMul) { e.atk = Math.round(e.atk * run.statMul); e.def = Math.round(e.def * run.statMul); e.max = Math.round(e.max * run.statMul); } if (run.hpMul) e.max = Math.round(e.max * run.hpMul); if ((e.kind === "ashfang" || FOE_KINDS[e.kind]?.made === "ashfang") && fang76() && fang76Run(run)) { const k = fang76K(); e.max = Math.round(e.max * k); e.atk = Math.round(e.atk * k); e.def = Math.round(e.def * k); e.fang76 = fang76(); } e.hp = e.max; return e; });
     // round 76: the broken Fangstones, said as Ashfang comes in
     { const a = F.foes.find((x) => x.fang76); if (a) { logIt("state", `${a.name}: the Fangstones`, `${a.fang76} of 3 broken · HP, ATK and DEF −${15 * a.fang76}%`); toast(`${a.fang76} Fangstone${a.fang76 === 1 ? "" : "s"} broken: ${a.name} fights at −${15 * a.fang76}%`); } }
     const EL = run.stage?.elites;
@@ -21056,9 +21071,16 @@ void main() {
       for (let k = 0; field.length && F.hand.length < BT_HAND - 1 - (F.team.some((m) => reoHas(m, "ult")) ? 1 : 0); k++) F.hand.push({ uid: ++uid, ...field[k % field.length], rank: 1 });
       F.hand.push({ uid: ++uid, wild: true, owner: null, move: "Wild", rank: 1 });
     }
+    for (const m of F.team) if (!m.ko && m.orbs >= 5 && !F.pending.includes(m.id) && !reoHas(m, "ult") && !F.hand.some((c) => c.ult && c.owner === m.id)) F.pending.push(m.id);
     for (const id of F.pending.splice(0)) {
       const m = F.team.find((x) => x.id === id && !x.ko);
-      if (!m || F.hand.length >= BT_HAND) continue;
+      if (!m) continue;
+      if (F.hand.length >= BT_HAND) {
+        const gone = F.hand.filter((x) => !x.ult).sort((a, b) => (a.wild ? 9 : a.rank) - (b.wild ? 9 : b.rank))[0];
+        if (!gone) { F.pending.push(id); continue; }
+        F.hand.splice(F.hand.indexOf(gone), 1);
+        cardEl(gone)?.remove();
+      }
       F.hand.push({ uid: ++uid, owner: id, move: m.h.ultimate.name, rank: 3, ult: true, ...(isReo(m) ? { ver: btPick(["sfera", "spada"]) } : {}) });
       m.orbs = 0;
     }
@@ -27396,7 +27418,7 @@ const attrOfKind = (K) => (K.attr === "random" ? "grass" : [].concat(K.attr)[0])
 const bossesNow = () => {
   const out = [];
   for (let r = 0; r < STORY_OPEN; r++) {
-    const i = r * 25 + 24, st = STORY.stages[i], tok = ORIG.stages[i].waves.at(-1).find((t) => FOE_KINDS[t.split(":")[0]]?.boss) ?? ORIG.stages[i].waves.at(-1)[0], [k, rar] = tok.split(":"), K = FOE_KINDS[k], f = K.faces.find((x) => x.rarity === rar) ?? K.faces[0], lv = ORIG.stages[i].level;
+    const i = r * 25 + 24, st = STORY.stages[i], tok = ORIG.stages[i].waves.at(-1)[bossAt91(ORIG.stages[i].waves.at(-1))] ?? ORIG.stages[i].waves.at(-1)[0], [k, rar] = tok.split(":"), K = FOE_KINDS[k], f = K.faces.find((x) => x.rarity === rar) ?? K.faces[0], lv = ORIG.stages[i].level;
     out.push({ key: `rb-${r}`, group: "region", where: "region", region: r, name: ORIG.kinds[k]?.name ?? K.name, rarity: rar, attr: attrOfKind(K), art: f.art, focus: f.focus, level: lv, ...foeBaseAt(K, rar, lv), hits: K.hits ?? 1, rage: Math.round((K.rage ?? 0) * 100), ragePower: Math.round((K.ragePower ?? 0.1) * 100), crit: 0, note: `Storia ${st.id}, ${ORIG.stages[i].name}`, fixedPlace: true });
   }
   ORIG.minis.forEach((row, r) => {
@@ -35850,7 +35872,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-08-1033";
+const BUILD = "2026-11-08-1223";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
