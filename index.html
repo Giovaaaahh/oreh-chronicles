@@ -15938,7 +15938,7 @@ const packLate = (P) => {
     if (st.pity) STARTER_AT = pnum(st.pity, 2, 50, 6) - 1;
     if (Array.isArray(st.pool) && st.pool.length) PULL_ONLY = new Set(st.pool);
     STARTER_COVER67 = { tpl: typeof st.tpl === "string" ? st.tpl : null, look: st.look && typeof st.look === "object" ? st.look : null, cover: Array.isArray(st.cover) ? st.cover.filter((id) => typeof id === "string") : [] };
-    STARTER_SURE86 = { rar: RARITIES.includes(st.sureRar) ? st.sureRar : "", pct: st.surePct == null || st.surePct === "" ? null : pnum(st.surePct, 0, 100, 0) };
+    STARTER_SURE86 = { rar: RARITIES.includes(st.sureRar) ? st.sureRar : "", pct: st.surePct == null || st.surePct === "" ? null : pnum(st.surePct, 0, 100, 0), hero: typeof st.sureHero === "string" ? st.sureHero : "" };
     STARTER_UP67 = Array.isArray(st.rateUp) ? st.rateUp.filter((r) => r && typeof r.id === "string").map((r) => ({ id: r.id, pct: pnum(r.pct, 0, 100, 0) })) : [];
   }
 };
@@ -28405,10 +28405,10 @@ const bannerChecks = (b) => {
   }
   // round 86: the sure card must be able to come out
   if (b.sureRar && ![...b.pool, ...ups].some((id) => HEROINES.find((h) => h.id === id)?.rarity === b.sureRar)) out.push(["bad", `La carta sicura è ${b.sureRar}, ma nessun ${b.sureRar} può uscire.`]);
-  if (b.surePct != null && b.surePct !== "" && !ups.some((id) => HEROINES.find((h) => h.id === id)?.rarity === (b.sureRar || "SSR"))) out.push(["warn", `Hai messo ${b.surePct}% sulla carta sicura, ma in Rate Up non c'è nessun ${b.sureRar || "SSR"}.`]);
+  if (b.surePct != null && b.surePct !== "" && !b.sureHero && !ups.some((id) => HEROINES.find((h) => h.id === id)?.rarity === (b.sureRar || "SSR"))) out.push(["warn", `Hai messo ${b.surePct}% sulla carta sicura, ma in Rate Up non c'è nessun ${b.sureRar || "SSR"}.`]);
   for (const [r, s] of Object.entries(rateSums(b))) if (s > 100.01) out.push(["bad", `In Rate Up gli ${r} fanno ${s.toLocaleString("it-IT")}%: al massimo 100%.`]);
   for (const id of ups) { const x = HEROINES.find((y) => y.id === id); if (x && !(+b.rates[x.rarity] > 0)) out.push(["warn", b.sureRar === x.rarity && +b.pity >= 1 ? `${x.name} esce solo dalla carta garantita: nelle pull normali gli ${x.rarity} hanno 0%.` : `${x.name} è in Rate Up, ma gli ${x.rarity} hanno 0%: non uscirà mai.`]); }
-  if (b.type !== "standard" && !ups.length) out.push(["warn", "Nessun eroe in Rate Up."]);
+  if (b.type !== "standard" && !ups.length && !b.sureHero) out.push(["warn", "Nessun eroe in Rate Up."]);
   if (!b.always && b.start && b.end && Date.parse(b.end) <= Date.parse(b.start)) out.push(["bad", "Finisce prima di cominciare."]);
   for (const t of b._left ?? []) out.push(["warn", t]);
   return out;
@@ -28673,10 +28673,10 @@ const viewSummon = (host) => {
     cost.append(numField({ label: "Gemme a pull", value: b.one, max: 999, step: 1, onInput: (v) => { b.one = v; } }), numField({ label: "Gemme ×11", value: b.multi, max: 9999, step: 1, onInput: (v) => { b.multi = v; } }), numField({ label: "Carta sicura ogni", value: b.pity, max: 50, step: 1, unit: "° multi", onInput: (v) => { b.pity = v; paintSure86(); refresh(); } }));
     /* round 86: which rarity that card is, and how often it is the hero in Rate Up */
     let paintEasy89 = () => {};
-    const sure86 = mk("div", "g-field g86-sure", `<span>La carta sicura</span><div class="g-numgrid"><label class="g-field"><span>Rarità</span><select data-sure-rar><option value="">SSR o meglio, secondo le probabilità</option>${["SSR", "UR", "LR"].map((r) => `<option value="${r}"${b.sureRar === r ? " selected" : ""}>${r} sicuro</option>`).join("")}</select></label><label class="g-field"><span>% che sia l'eroe in Rate Up</span><input type="number" data-sure-pct min="0" max="100" step="1" placeholder="come una carta normale" value="${b.surePct ?? ""}"></label></div><p class="g-note" data-sure-say></p>`);
+    const sure86 = mk("div", "g-field g86-sure", `<span>La carta sicura</span><div class="g-numgrid"><label class="g-field"><span>Rarità</span><select data-sure-rar><option value="">SSR o meglio, secondo le probabilità</option>${["SSR", "UR", "LR"].map((r) => `<option value="${r}"${b.sureRar === r ? " selected" : ""}>${r} sicuro</option>`).join("")}</select></label><label class="g-field"><span>% che sia l'eroe garantito</span><input type="number" data-sure-pct min="0" max="100" step="1" placeholder="come una carta normale" value="${b.surePct ?? ""}"></label></div><p class="g-note" data-sure-say></p>`);
     const paintSure86 = () => {
       paintEasy89();
-      const at = +b.pity || 0, rar = b.sureRar || "SSR", pct = b.surePct == null || b.surePct === "" ? null : +b.surePct, ups = (b.rateUp ?? []).map((r) => HEROINES.find((h) => h.id === r.id)).filter((h) => h?.rarity === rar).map((h) => h.name);
+      const at = +b.pity || 0, rar = b.sureRar || "SSR", pct = b.surePct == null || b.surePct === "" ? null : +b.surePct, ups = b.sureHero && HEROINES.find((h) => h.id === b.sureHero)?.rarity === rar ? [HEROINES.find((h) => h.id === b.sureHero).name] : (b.rateUp ?? []).map((r) => HEROINES.find((h) => h.id === r.id)).filter((h) => h?.rarity === rar).map((h) => h.name);
       qs("[data-sure-say]", sure86).innerHTML = at < 1 ? `${ic("bad")}<span>Metti un numero in «Carta sicura ogni»: con 0 non c'è nessuna carta sicura.</span>`
         : `${ic("check")}<span>${at === 1 ? "A ogni multi" : `A ogni ${at}ª multi`}: l'ultima carta è ${b.sureRar ? `un ${rar}` : "un SSR o meglio"}${pct != null && ups.length ? `, ${pct}% che sia ${ups.join(" o ")}, altrimenti un altro ${rar} della summon` : ""}.</span>`;
     };
@@ -28690,29 +28690,26 @@ const viewSummon = (host) => {
       <p class="g-note g89-say" data-e89-say></p>`);
     const pity89 = () => qsa(".g-num", cost).find((w) => qs(".g-num-l", w)?.textContent.trim() === "Carta sicura ogni")?.querySelector("input") ?? null;
     paintEasy89 = () => {
-      const sel = qs("[data-e89-hero]", easy89), h = HEROINES.find((x) => x.id === b.rateUp?.[0]?.id) ?? null;
+      if (b.sureHero === undefined && b.rateUp?.[0]?.id && b.surePct != null && b.surePct !== "") b.sureHero = b.rateUp[0].id;
+      const sel = qs("[data-e89-hero]", easy89), h = HEROINES.find((x) => x.id === b.sureHero) ?? null;
       if (!sel.options.length) sel.innerHTML = `<option value="">scegli l'eroe</option>` + RARS.filter((r) => HEROINES.some((x) => x.rarity === r && !x.guest)).map((r) => `<optgroup label="${r}">${HEROINES.filter((x) => x.rarity === r && !x.guest).map((x) => `<option value="${x.id}">${esc(x.name)} · ${r}</option>`).join("")}</optgroup>`).join("");
       sel.value = h?.id ?? "";
       const at = +b.pity || 0, pct = b.surePct == null || b.surePct === "" ? null : +b.surePct, ai = qs("[data-e89-at]", easy89), pi = qs("[data-e89-pct]", easy89);
       if (document.activeElement !== ai) ai.value = at || "";
       if (document.activeElement !== pi) pi.value = pct ?? "";
-      const same = h ? b.rateUp.filter((r) => r.id !== h.id && HEROINES.find((x) => x.id === r.id)?.rarity === h.rarity).map((r) => HEROINES.find((x) => x.id === r.id)?.name) : [];
+      const same = [];
       const rest = h ? [...new Set(b.pool)].filter((id) => id !== h.id && HEROINES.find((x) => x.id === id)?.rarity === h.rarity).length : 0;
       const when = at === 1 ? "A ogni multi" : `Alla ${at}ª multi (e alla ${at * 2}ª, alla ${at * 3}ª…)`;
-      qs("[data-e89-say]", easy89).innerHTML = !h ? `${ic("warn")}<span>Scegli l'eroe nuovo: entra nel Rate Up e tra chi può uscire.</span>`
+      qs("[data-e89-say]", easy89).innerHTML = !h ? `${ic("warn")}<span>Scegli l'eroe della carta garantita: entra tra chi può uscire. Il Rate Up qui sotto è un'altra cosa e può restare vuoto.</span>`
         : at < 1 ? `${ic("warn")}<span>Scrivi ogni quante multi arriva la carta garantita.</span>`
-        : `${ic("check")}<span>Così, per i giocatori: ${esc(h.name)} si può pullare. ${when} l'ultima carta è un ${h.rarity}${pct == null ? ", con le quote del Rate Up" : pct >= 100 || !rest ? `, ed è sempre ${esc(h.name)}` : `: ${pct}% che sia ${esc(h.name)}, altrimenti un altro dei ${rest} ${h.rarity} della summon`}.${+b.rates[h.rarity] > 0 ? "" : ` Nelle pull normali gli ${h.rarity} hanno 0%: esce solo dalla carta garantita.`}${same.length ? ` Attenzione: in Rate Up c'è anche ${same.map(esc).join(" e ")}, che si divide quella percentuale con lui.` : ""}</span>`;
+        : `${ic("check")}<span>Così, per i giocatori: ${esc(h.name)} si può pullare. ${when} l'ultima carta è un ${h.rarity}${pct == null ? ": scrivi la percentuale che sia lui" : pct >= 100 || !rest ? `, ed è sempre ${esc(h.name)}` : `: ${pct}% che sia ${esc(h.name)}, altrimenti ${rest === 1 ? `l'altro ${h.rarity}` : `un altro dei ${rest} ${h.rarity}`} della summon`}.${+b.rates[h.rarity] > 0 ? "" : ` Nelle pull normali gli ${h.rarity} hanno 0%: esce solo dalla carta garantita.`}${same.length ? ` Attenzione: in Rate Up c'è anche ${same.map(esc).join(" e ")}, che si divide quella percentuale con lui.` : ""}</span>`;
     };
     qs("[data-e89-hero]", easy89).addEventListener("change", (ev) => {
       const id = ev.target.value, h = HEROINES.find((x) => x.id === id);
-      if (!h) return;
-      const was = b.rateUp.findIndex((r) => r.id === id);
-      if (was > 0) b.rateUp.unshift(...b.rateUp.splice(was, 1));
-      else if (was < 0) {
-        const old = b.rateUp[0];
-        if (old) { qs(`[data-up="${old.id}"]`, ru)?.setAttribute("aria-pressed", "false"); b.rateUp[0] = { id, pct: old.pct || 50 }; } else b.rateUp.unshift({ id, pct: 50 });
-      }
-      qs(`[data-up="${id}"]`, ru)?.setAttribute("aria-pressed", "true");
+      if (!h) { b.sureHero = ""; paintSure86(); redraw(false); return; }
+      // round 92: the guaranteed hero, not a Rate Up (the user: «il rate up è diverso dal personaggio garantito»)
+      b.sureHero = id;
+      if (b.surePct == null || b.surePct === "") b.surePct = 50;
       if (!b.pool.includes(id)) { b.pool.push(id); qs(`[data-h="${id}"]`, pool)?.setAttribute("aria-pressed", "true"); }
       b.sureRar = h.rarity;
       const sr = qs("[data-sure-rar]", sure86); if (sr) sr.value = h.rarity;
@@ -31484,6 +31481,8 @@ const initGame = () => {
     return btPick(rest.length ? rest : L);
   };
   const surePct86 = (b) => (b.surePct == null || b.surePct === "" ? null : pnum(b.surePct, 0, 100, 0));
+  /** Round 92: the summon's own guaranteed hero (not the Rate Up's), when it is of the card's rarity and has its %. */
+  const sureHero92 = (id, r, pct) => { const h = id ? heroineById(id) : null; return h && !h.guest && baseRarity(h) === r && pct != null ? h : null; };
   const upPick67 = (U, L) => {
     const rest = L.filter((h) => !U.some((u) => u.h === h)), all = U.reduce((t, u) => t + u.pct, 0);
     if (U.length && (!rest.length || Math.random() * 100 < Math.min(100, all))) { let x = Math.random() * all; for (const u of U) if ((x -= u.pct) < 0) return u.h; return U.at(-1).h; }
@@ -31504,6 +31503,8 @@ const initGame = () => {
     if (!b) {
       const want = sure && STARTER_SURE86.rar, wr = want && (PULL_POOL(want).length || starterUps67(want).length) ? want : null, r = wr ?? rollRarity(sure), U = starterUps67(r);
       if (r === "R" && !PULL_POOL("R").length && !U.length) return { dust: DUST_PER_R };
+      const sh92 = sure ? sureHero92(STARTER_SURE86.hero, r, STARTER_SURE86.pct) : null;
+      if (sh92) return surePick86([{ h: sh92, pct: 100 }], [...new Set([...PULL_POOL(r), sh92])], STARTER_SURE86.pct);
       if (sure && STARTER_SURE86.pct != null && U.length) return surePick86(U, [...new Set([...PULL_POOL(r), ...U.map((u) => u.h)])], STARTER_SURE86.pct);
       return U.length ? upPick67(U, PULL_POOL(r)) : rollHeroine(sure, r);
     }
@@ -31511,6 +31512,8 @@ const initGame = () => {
     if (!banPool(b, r).length) { if (r === "R") return { dust: DUST_PER_R }; r = ["SSR", "SR", "R"].find((x) => banPool(b, x).length) ?? r; }
     const L = banPool(b, r), f = banFeat(b, r);
     if (!L.length) return rollHeroine(sure);
+    const sh92 = sure ? sureHero92(b.sureHero, r, surePct86(b)) : null;
+    if (sh92) return surePick86([{ h: sh92, pct: 100 }], [...new Set([...L, sh92])], surePct86(b));
     if (sure && surePct86(b) != null && banUps(b, r).length) return surePick86(banUps(b, r), L, surePct86(b));
     return upPick67(banUps(b, r), L);
   };
@@ -31521,7 +31524,7 @@ const initGame = () => {
   const ordOf = (n) => `${n}${n % 10 === 1 && n % 100 !== 11 ? "st" : n % 10 === 2 && n % 100 !== 12 ? "nd" : n % 10 === 3 && n % 100 !== 13 ? "rd" : "th"}`;
   /** "a sure SSR", and what % of them is the hero in Rate Up. */
   const sureSay86 = (b, ups, rar, pct) => { const who = pct != null ? ups.map((u) => u.h.name) : []; return `a sure ${rar}${who.length ? `: ${+pct.toFixed(1)}% it is ${who.join(" or ")}` : ""}`; };
-  const banSure86 = (b) => { const rar = b.sureRar || "SSR"; return sureSay86(b, banUps(b, rar), rar, surePct86(b)); };
+  const banSure86 = (b) => { const rar = b.sureRar || "SSR", sh = sureHero92(b.sureHero, rar, surePct86(b)); return sureSay86(b, sh ? [{ h: sh }] : banUps(b, rar), rar, surePct86(b)); };
   const banPityText = (b) => {
     const at = banAt(b);
     if (at < 1) return "";
@@ -31566,7 +31569,7 @@ const initGame = () => {
     title: () => escB(curBan()?.name ?? "Starter banner"),
     rates: () => { const b = curBan(); return (b ? banRates(b) : PULL_RATES).map(([r, p]) => `<span><b class="tier-${RARITY_LEVEL[r]}"><span class="tier-text">${lrTxt(r)}</span></b>${+(p * 100).toFixed(1)}%</span>`).join("") + (b ? "" : '<span class="sm31-no">no UR · no LR</span>'); },
     text: () => (curBan() ? banText(curBan()) : STARTER_UP67.length ? `${upText67(STARTER_UP67)} Every hero except UR and LR.` : "Every hero except UR and LR. A copy of a hero you have is kept for Copies, up to six; past that it burns into gold for the shop."),
-    whoFoot: () => { const b = curBan(); return !b ? `<p class="sm42-foot">Every 6th ×11 has ${sureSay86(null, starterUps67(STARTER_SURE86.rar || "SSR"), STARTER_SURE86.rar || "SSR", STARTER_SURE86.pct)}; in this banner the first one lets you choose it.</p>` : banAt(b) === 1 ? `<p class="sm42-foot">Every ×11 has ${banSure86(b)}.</p>` : banAt(b) >= 2 ? `<p class="sm42-foot">Every ${ordOf(banAt(b))} ×11 has ${banSure86(b)}.</p>` : ""; },
+    whoFoot: () => { const b = curBan(); return !b ? `<p class="sm42-foot">Every 6th ×11 has ${sureSay86(null, sureHero92(STARTER_SURE86.hero, STARTER_SURE86.rar || "SSR", STARTER_SURE86.pct) ? [{ h: heroineById(STARTER_SURE86.hero) }] : starterUps67(STARTER_SURE86.rar || "SSR"), STARTER_SURE86.rar || "SSR", STARTER_SURE86.pct)}; in this banner the first one lets you choose it.</p>` : banAt(b) === 1 ? `<p class="sm42-foot">Every ×11 has ${banSure86(b)}.</p>` : banAt(b) >= 2 ? `<p class="sm42-foot">Every ${ordOf(banAt(b))} ×11 has ${banSure86(b)}.</p>` : ""; },
     /** Round 42 · P1: who is in the banner, by rarity, each with her odds and what you hold of her (copies combined and waiting). */
     blank: () => { const b = curBan(); if (!b) return PULL_POOL("R").length ? null : { odds: PULL_RATES.find(([x]) => x === "R")?.[1] ?? 0, dust: DUST_PER_R }; const p = banRates(b).find(([x]) => x === "R")?.[1] ?? 0; return p && !banPool(b, "R").length ? { odds: p, dust: DUST_PER_R } : null; },
     pool: () => curBan() ? banRates(curBan()).flatMap(([r, p]) => {
@@ -35872,7 +35875,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-08-1223";
+const BUILD = "2026-11-08-1313";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
