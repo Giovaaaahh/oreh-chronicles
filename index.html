@@ -7720,6 +7720,10 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
 @media (prefers-reduced-motion: no-preference) { .ask98-in { animation: ask98-in 0.18s cubic-bezier(0.23, 1, 0.32, 1); } }
 @keyframes ask98-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
+/* Round 99: «who's inside» opens with your own next 0 (cyan at 50%, gold once it is sure) */
+.sm99-now { display: block; margin-bottom: 6px; font: 700 13px/1.4 var(--font-display); letter-spacing: 0.02em; color: var(--accent); }
+.sm99-now.is-sure { color: var(--rarity-ssr); }
+
 </style>
 </head>
 <body>
@@ -15894,8 +15898,9 @@ const near94 = (r, n) => {
   if (r === pr - 1) return n === STORY_WEB[r].boss && pn === STORY_WEB[pr].door;
   return false;
 };
-/** Round 98: a walk costs 1 stamina a cell; another map costs 35 (the user's numbers). */
-const WALK98 = { cell: 1, map: 35 };
+/** Round 98 charged 1 stamina a cell and 35 for another map; round 99 (the players did not like it): moving on the map is free,
+ *  only a fight costs stamina. */
+const WALK98 = { cell: 0, map: 0 };
 const isTp98 = (nd) => nd?.kind === "teleport";
 /** A map's teleports open once its boss has fallen (a boss beaten before round 98 counts too). */
 const tpOpen98 = (r) => !!STORY_WEB[r] && nodeDone(r, STORY_WEB[r].boss);
@@ -25104,7 +25109,7 @@ const SUMMON = (() => {
       sheet.setAttribute("role", "dialog");
       sheet.setAttribute("aria-label", `Who is in the ${api.title?.() ?? "Starter banner"}`);
       sheet.innerHTML = `<header><b>${api.title?.() ?? "Starter banner"} · who's inside</b><button type="button" class="sm42-x" data-sm-who-close aria-label="Close">×</button></header><p class="sm61-hint">Hold a card to see everything about that hero.</p>
-        ${groups.map(([r, l]) => `<section><h4><span class="tier-${RARITY_LEVEL[r]}"><span class="tier-text">${lrTxt(r)}</span></span> ${l.length} hero${l.length === 1 ? "" : "es"} · ${pc(l.reduce((t, x) => t + x.odds, 0))} in all${l.every((x) => Math.abs(x.odds - l[0].odds) < 1e-9) ? ` · ${pc(l[0].odds)} each` : ""}</h4><div class="sm42-grid">${l.map((x) => `<div class="sm42-cell" data-sm42-id="${x.h.id}"><div class="sm42-c" tabindex="0" role="button" aria-label="${x.h.name}: hold to see everything about this hero">${makeCard(x.h).outerHTML}</div><p><b>${x.h.name}</b>${x.feat ? `<span class="sm55-feat">rate up · ${pc(x.odds)}</span>` : ""}${x.own == null ? '<span class="sm42-new">new</span>' : `<span class="sm42-own">yours · ${x.own}/6</span>`}</p></div>`).join("")}</div></section>`).join("")}
+        ${groups.map(([r, l]) => `<section><h4><span class="tier-${RARITY_LEVEL[r]}"><span class="tier-text">${lrTxt(r)}</span></span> ${l.length} hero${l.length === 1 ? "" : "es"} · ${pc(l.reduce((t, x) => t + x.odds, 0))} in all${l.every((x) => Math.abs(x.odds - l[0].odds) < 1e-9) ? ` · ${pc(l[0].odds)} each` : ""}</h4><div class="sm42-grid">${l.map((x) => `<div class="sm42-cell" data-sm42-id="${x.h.id}"><div class="sm42-c" tabindex="0" role="button" aria-label="${x.h.name}: hold to see everything about this hero">${makeCard(x.h).outerHTML}</div><p><b>${x.h.name}</b>${x.own == null ? '<span class="sm42-new">new</span>' : `<span class="sm42-own">yours · ${x.own}/6</span>`}</p></div>`).join("")}</div></section>`).join("")}
         ${blank ? `<p class="sm42-foot"><span class="tier-${RARITY_LEVEL.R}"><span class="tier-text">R</span></span> ${pc(blank.odds)} · no R hero yet: in a ×11 each R is ${blank.dust} star dust, and a single pull turns it into an SR.</p>` : ""}
         ${api.whoFoot ? api.whoFoot() : '<p class="sm42-foot">Every 6th ×11 has a sure SSR; in this banner the first one lets you choose it.</p>'}`;
       root.append(sheet);
@@ -30560,8 +30565,8 @@ const initGame = () => {
       if (mv.cost > 0) { b.textContent = `${b.textContent} · ${mv.cost} stamina`; b.addEventListener("click", (e) => { if (!pay98(mv.cost)) { e.stopPropagation(); e.preventDefault(); } }); }
     }
     // a place to stand on, away from you: walk there (no fight on the way)
-    const stand = mv.ok && mv.cost > 0 && !box.querySelector("[data-walk94], [data-l66-enter], .w44-rest") && (walk98(r, n, null) || isTp98(nd));
-    if (stand) { const w = document.createElement("button"); w.type = "button"; w.className = "gm-btn gm-btn--ghost sm25-go"; w.dataset.w98Walk = ""; w.textContent = `walk here · ${mv.cost} stamina`; (box.querySelector(".sm25-sheet-in > :last-child") ?? box.querySelector(".sm25-sheet-in"))?.after(w); }
+    const stand = mv.ok && (mv.cells > 0 || mv.cross || mv.cost > 0) && !box.querySelector("[data-walk94], [data-l66-enter], .w44-rest") && (walk98(r, n, null) || isTp98(nd));
+    if (stand) { const w = document.createElement("button"); w.type = "button"; w.className = "gm-btn gm-btn--ghost sm25-go"; w.dataset.w98Walk = ""; w.textContent = mv.cost ? `walk here · ${mv.cost} stamina` : "walk here"; (box.querySelector(".sm25-sheet-in > :last-child") ?? box.querySelector(".sm25-sheet-in"))?.after(w); }
     // an inn or a village: its bed (round 94), the walk paid on the way
     if (mv.ok && nd.t === "town" && ["village", "inn"].includes(nd.kind)) {
       const price = adm ? 0 : nd.kind === "inn" ? 60 : 100, bed = document.createElement("button");
@@ -30590,7 +30595,7 @@ const initGame = () => {
       here89Set([tr, tn]); NODE89.last = [tr, tn];
       savePlayer(); paintGems(); paintStory();
       box.remove();
-      toast(w.dataset.tp98 ? `You step through the stones and out at ${STORY_WEB[tr].nodes[tn].name}.` : m.cost ? `You walk there: ${m.cost} stamina.` : "You are there.");
+      toast(w.dataset.tp98 ? `You step through the stones and out at ${STORY_WEB[tr].nodes[tn].name}.` : m.cost ? `You walk there: ${m.cost} stamina.` : "You walk there.");
     });
   };
   const act94old = (box, at) => {
@@ -32001,11 +32006,11 @@ const initGame = () => {
   /** What the Pull page shows: the number, a bar that empties from 100 to 0, and what the 0 brings. */
   const count93Text = (b) => {
     const nh = nh93(b), c = count93(), s = c.left === 1 ? "" : "s";
-    return `<div class="sm93-count${c.spec ? " is-sure" : ""}" role="img" aria-label="${c.left} pulls of 100 left"><b>${c.left}</b><span class="sm93-bar"><i style="width:${c.left}%"></i></span><small>/100</small></div>
-      <p>${c.spec ? `${c.left} more pull${s} and ${nh.name} is yours for sure.` : `${c.left} more pull${s}, then a 50% chance of ${nh.name}.`} A pull counts 1, a ×11 counts 10, and the count goes on from summon to summon.</p>`;
+    return `<div class="sm93-count${c.spec ? " is-sure" : ""}" role="img" aria-label="${c.left} pulls of 100 left, then ${c.spec ? "100%" : "a 50% chance of"} ${nh.name}"><b>${c.left}</b><span class="sm93-bar"><i style="width:${c.left}%"></i></span><small>/100</small></div>
+      <p>${c.spec ? `${c.left} more pull${s}, then ${nh.name} at 100%: you lost the last 50/50, so this 0 is ${nh.name} for sure.` : `${c.left} more pull${s}, then a 50% chance of ${nh.name}. If it is lost, the next 0 is ${nh.name} at 100%.`} A pull counts 1, a ×11 counts 10, and the count goes on from summon to summon.</p>`;
   };
   /** The rule, for «who's inside». */
-  const rule93 = (b) => { const nh = nh93(b); return `Every summon with a new hero shares one count from 100 to 0: a pull counts 1, a ×11 counts 10 (its 11th card is a gift). At 0 it is ${nh.name} with a 50% chance, otherwise another ${baseRarity(nh)} of this summon, and then the next 0 is ${nh.name} for sure. If ${nh.name} comes sooner, the count starts again from 100.`; };
+  const rule93 = (b) => { const nh = nh93(b), c = count93(), s = c.left === 1 ? "" : "s"; return `<b class="sm99-now${c.spec ? " is-sure" : ""}">${c.spec ? `Your next 0: ${nh.name} at 100%, ${c.left} more pull${s} away. You lost the last 50/50.` : `Your next 0: a 50% chance of ${nh.name}, ${c.left} more pull${s} away.`}</b>Every summon with a new hero shares one count from 100 to 0: a pull counts 1, a ×11 counts 10 (its 11th card is a gift). At 0 it is ${nh.name} with a 50% chance, otherwise another ${baseRarity(nh)} of this summon, and then the next 0 is ${nh.name} for sure, at 100%. If ${nh.name} comes sooner, the count starts again from 100.`; };
   const banPityText = (b) => {
     const at = banAt(b);
     if (at < 1) return "";
@@ -35936,7 +35941,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-08-2036";
+const BUILD = "2026-11-08-2234";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
