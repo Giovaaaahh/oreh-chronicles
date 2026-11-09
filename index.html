@@ -7741,6 +7741,119 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
 .gm[data-device="phone"] .sm100-track { gap: 3px; }
 .gm[data-device="phone"] .sm100-track i { height: 13px; clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%); }
 
+/* Round 102: coins (bronze, silver, gold: the game's coin mark in each metal) and the Coin Shop, the Database's wares and bundles. */
+.c102 { display: inline-flex; align-items: center; justify-content: center; width: 1.25em; height: 1.25em; color: var(--cc); filter: drop-shadow(0 0 6px color-mix(in srgb, var(--cc) 45%, transparent)); vertical-align: -0.2em; }
+.c102 .gm-ic { width: 100%; height: 100%; }
+.c102.is-big { width: 58px; height: 58px; }
+/* the pull: a copy that became a coin */
+.sm8-chip.is-coin { display: inline-flex; align-items: center; gap: 3px; color: #fff3d6; }
+.sm8-tag.is-coin { display: inline-flex; align-items: center; gap: 4px; color: #ffe5a8; }
+.sm8-end .is-coin { color: #ffe5a8; }
+/* Copies: the copy into a coin */
+.cp-coin, .p77-coin { display: inline-flex; align-items: center; gap: 8px; }
+.cp-coin[disabled], .p77-coin[disabled] { opacity: 0.45; }
+/* the shop's Database wares and bundles */
+.sh102-vis, .sh102-pack { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 96px; }
+.sh102-card { display: block; font-size: 6.2px; }
+.sh102-pack .sh102-card { font-size: 5.2px; }
+.sh102-cur .gm-ic, .sh102-mat .gm-ic { width: 44px; height: 44px; }
+.sh102-cur .gm-gem { color: #5fe0ff; }
+.sh102-cur .gm-coin { color: var(--rarity-ssr); }
+.sh102-mat { display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; color: #ffd27a; filter: drop-shadow(0 0 8px color-mix(in srgb, currentColor 45%, transparent)); }
+.sh102-mat i { display: block; width: 100%; height: 100%; background: currentColor; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); }
+.sh102-mat.is-star { color: #f2b632; }
+.sh102-mat.is-rainbow i, .sh102-mat.is-zstar i { background: conic-gradient(from 0deg, #ff6b6b, #ffd25a, #6bff9e, #5ad2ff, #b26bff, #ff6b6b); }
+.sh102-mat.is-dshard, .sh102-mat.is-dheart { color: #ff5a5a; }
+.sh102-img { width: 64px; height: 64px; object-fit: contain; }
+.sh102-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 18px; font-size: 12px; color: var(--foreground-on-dark-muted); }
+.sh102-was { display: inline-flex; align-items: center; gap: 3px; color: var(--foreground-on-dark-muted); }
+.sh102-off { padding: 1px 6px 2px; font: 700 11px/1.2 var(--font-display); font-style: normal; color: #1a0600; background: var(--rarity-ssr); clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%); }
+.sh102-left { color: #9fe9f0; }
+.sh102-price { display: inline-flex; align-items: center; gap: 4px; }
+/* the Coin Shop's purse */
+.sh102-purse { display: grid; grid-template-columns: repeat(3, minmax(0, 150px)) minmax(0, 1fr); align-items: center; gap: 12px; margin-bottom: 16px; padding: 14px 16px; background: #0d1016; border: 1px solid #232833; }
+.sh102-coin { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; align-items: center; column-gap: 10px; }
+.sh102-coin .c102 { grid-row: 1 / 3; width: 40px; height: 40px; }
+.sh102-coin b { font: 700 26px/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.sh102-coin small { font-size: 12px; color: var(--foreground-on-dark-muted); }
+.sh102-purse p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--raw-color-ice-200); }
+.sh102-row { margin-bottom: 16px; }
+.gm[data-device="phone"] .sh102-purse { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.gm[data-device="phone"] .sh102-purse p { grid-column: 1 / -1; }
+.gm[data-device="phone"] .sh102-coin { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+.gm[data-device="phone"] .sh102-coin .c102 { grid-row: auto; }
+
+/* ── the Database's page «Shop» ── */
+.g102-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px; margin-bottom: 18px; }
+.g102-box { padding: 16px 18px; border: 1px solid var(--g-line, #2a2f3a); background: var(--g-panel, #12151c); }
+.g102-how { margin: 6px 0 12px; }
+.g102-names { display: grid; gap: 10px; }
+.g102-base { display: grid; gap: 8px; margin-top: 8px; }
+.g102-brow { display: grid; grid-template-columns: minmax(0, 1fr) 150px 150px auto; align-items: end; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--g-line, #2a2f3a); }
+.g102-brow > b { align-self: center; font-weight: 600; }
+.g102-brow.is-off > b { opacity: 0.5; text-decoration: line-through; }
+.g102-seg { display: inline-flex; flex-wrap: wrap; gap: 6px; margin: 4px 8px 10px 0; }
+.g102-seg button { padding: 8px 12px; border: 1px solid var(--g-line, #2a2f3a); background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.g102-seg button[aria-pressed="true"] { border-color: var(--g-accent, #02d2e3); color: var(--g-accent, #02d2e3); background: rgb(2 210 227 / 0.08); }
+.g102-sub { margin-top: 14px; }
+.g102-price { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: end; }
+.g102-h { margin: 14px 0 8px; font-weight: 700; letter-spacing: 0.04em; }
+.g102-row.is-off { opacity: 0.6; }
+@media (max-width: 900px) { .g102-top { grid-template-columns: 1fr; } .g102-brow { grid-template-columns: 1fr 1fr; } .g102-price { grid-template-columns: 1fr 1fr; } }
+
+/* Round 102: the Profile, the user's pick A · Tessera (lab 102). The game's own look: Oswald titles, Space Grotesk text, cyan, the hero's element colour (--ec),
+ * dark plates with one cut corner, the protagonist's whole figure (contain, never a cropped face). */
+.p102 { --plate: #0d1016; --line: #232833; color: var(--foreground-on-dark); }
+.p102 .p102-sec { position: relative; padding: 18px 20px 20px; background: var(--plate); border: 1px solid var(--line); clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%); }
+.p102 .p102-sec > h3 { margin: 0 0 14px; font: 600 14px/1 var(--font-display); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.p102 .p102-acc { border-color: rgb(255 81 71 / 0.32); }
+.p102 .p102-acc > h3 { color: #ff8a80; }
+.p102 .pf-note { max-width: 60ch; margin-top: 10px; font-size: 14px; }
+.p102 .pf-confirm { margin: 0; }
+.p102 .p102-name { margin: 0; font: 700 clamp(44px, 4.6vw, 76px)/0.9 var(--font-display); letter-spacing: 0.01em; text-transform: uppercase; color: #fff; }
+.p102 .p102-sub { margin: 10px 0 0; font-size: 16px; color: var(--raw-color-ice-200); }
+.p102 .p102-acts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.p102 .p102-acts .gm-btn { white-space: nowrap; min-width: 0; }
+.p102 small { font: 600 11px/1.2 var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--foreground-on-dark-muted); }
+.p102 .p102-story { display: grid; gap: 7px; min-width: 180px; }
+.p102 .p102-story span { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.p102 .p102-story b { font: 700 22px/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.p102 .p102-story i { position: relative; display: block; height: 6px; background: rgb(255 255 255 / 0.12); }
+.p102 .p102-story i::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--p); background: var(--ec); }
+/* the protagonist, whole, on his element's light */
+.p102 .p102-fig { position: relative; overflow: hidden; background: radial-gradient(62% 52% at 50% 86%, color-mix(in srgb, var(--ec) 34%, transparent), #090b0f 72%); }
+.p102 .p102-fig img { position: absolute; inset: 4% 0 0; width: 100%; height: 96%; object-fit: contain; object-position: 50% 100%; }
+
+/* every option: the run's numbers on one line each; the story's bar says the stages already */
+.p102 .pf-stats dd { white-space: nowrap; font-size: 22px; }
+.p102 .pf-stats > div:nth-child(7) { display: none; }
+
+/* ── A · Tessera: the adventurer's card (figure, who you are, your run), then three plates in a row ── */
+.p102-A { display: grid; gap: 16px; }
+.p102-A .p102-card { display: grid; grid-template-columns: 290px minmax(0, 1fr) 330px; min-height: 380px; background: var(--plate); border: 1px solid var(--line); border-top: 3px solid var(--ec); clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%); }
+.p102-A .p102-id { display: flex; flex-direction: column; justify-content: center; padding: 30px 40px; min-width: 0; }
+.p102-A .p102-facts { display: flex; flex-wrap: wrap; align-items: center; gap: 22px 36px; margin-top: 26px; }
+.p102-A .p102-lead { display: flex; align-items: center; gap: 12px; }
+.p102-A .p102-lead b, .p102-A .p102-fact b { display: block; margin-top: 4px; font: 700 22px/1 var(--font-display); text-transform: uppercase; }
+.p102-A .p102-cardrun .p102-sec { height: 100%; padding: 28px 26px; background: rgb(255 255 255 / 0.02); border: 0; border-left: 1px solid var(--line); clip-path: none; }
+.p102-A .p102-cardrun .pf-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.p102-A .p102-row { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 14px; align-items: stretch; }
+
+/* ── the phone: each one stacked in its own order ── */
+.gm[data-device="phone"] .p102 .p102-name { font-size: 46px; }
+.gm[data-device="phone"] .p102-A .p102-card { grid-template-columns: 1fr; }
+.gm[data-device="phone"] .p102-A .p102-cardrun .p102-sec { border-left: 0; border-top: 1px solid var(--line); }
+.gm[data-device="phone"] .p102-A .p102-fig { height: 360px; }
+.gm[data-device="phone"] .p102-A .p102-id { padding: 22px 20px 24px; }
+
+.p102-A { padding-bottom: 110px; }
+.p102-A .p102-card.is-nofig { grid-template-columns: minmax(0, 1fr) 330px; }
+.gm[data-device="phone"] .p102-A .p102-card.is-nofig { grid-template-columns: 1fr; }
+/* the phone: Mode, Codes and Account one under the other, the run's numbers two by two */
+.gm[data-device="phone"] .p102-A .p102-row { grid-template-columns: 1fr; }
+.gm[data-device="phone"] .p102-A .pf-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.gm[data-device="phone"] .p102-A .p102-facts { gap: 18px 26px; }
+
 </style>
 </head>
 <body>
@@ -16195,11 +16308,84 @@ const codeGive86 = (c) => {
     const r = p.roster[id];
     if (!r) { p.roster[id] = { lv: 1, xp: 0, stars: 0, cons: 0, held: 0 }; got.push(`${h.name} joins you`); continue; }
     if ((r.cons ?? 0) + (r.held ?? 0) < COPY_MAX) { r.held = (r.held ?? 0) + 1; got.push(`A copy of ${h.name}`); continue; }
-    const g = DUP_GOLD[h.rarity] ?? DUP_GOLD.SR;
-    p.gold = (p.gold ?? 0) + g;
-    got.push(`+${nf(g)} gold, for ${h.name}: every copy is there already`);
+    got.push(`${dupGive102(p, h).say}, for ${h.name}: every copy is there already`);
   }
   return got;
+};
+/* ══════════ Round 102 · coins and the Coin Shop (2026-11-09) ══════════
+ * The user: «Ogni volta che io trovo un personaggio che ho già ottengo una moneta, corrispondente ad una sua rarità. Con la moneta io
+ * posso scegliere se usarla per portargli su il livello di copia oppure usarla nel COIN SHOP». Their picks: the coin is that hero's
+ * («Solo di Kayla»): a hero pulled again is still a copy waiting in Copies, where the player combines it or turns it into a coin of the
+ * hero's rarity, Bronze (R), Silver (SR), Gold (SSR); a copy with no room left (all six in) is the coin at once. UR and LR have no coin
+ * yet (none can be pulled) and still burn into gold. Copies already waiting stay copies («Restano copie»).
+ * Coins live in the bag (p.items.coinB / coinS / coinG), so codes and bundles can give them too. What the two shops sell, their prices,
+ * their bundles and offers, and the coins' names come from the Database (the pack's shop102). */
+const COIN_OF102 = { R: "coinB", SR: "coinS", SSR: "coinG" };
+const COIN_KEYS102 = ["coinB", "coinS", "coinG"];
+const COIN_NAMES102 = { coinB: "Bronze Coin", coinS: "Silver Coin", coinG: "Gold Coin" };
+const COIN_TINT102 = { coinB: "#d58b4c", coinS: "#d3dce2", coinG: "#f2b632" };
+Object.assign(CODE_ITEMS86, COIN_NAMES102, { stam94: "Stamina Potion" });
+const esc102 = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const coinOf102 = (h) => (h ? COIN_OF102[baseRarity(h)] ?? null : null);
+const coinName102 = (k, n = 1) => `${COIN_NAMES102[k] ?? k}${n === 1 ? "" : "s"}`;
+const coinIcon102 = (k, cls = "") => `<span class="c102 ${cls}" style="--cc:${COIN_TINT102[k] ?? "#f2b632"}" aria-hidden="true">${gameIcon("coin")}</span>`;
+/** A copy with no room left in Copies: a coin of the hero's rarity, else gold as before. Says what it gave. */
+const dupGive102 = (p, h) => {
+  const k = coinOf102(h);
+  if (k) { p.items[k] = (p.items[k] ?? 0) + 1; return { coin: k, gold: 0, say: `+1 ${coinName102(k)}` }; }
+  const g = DUP_GOLD[h.rarity] ?? DUP_GOLD.SR;
+  p.gold = (p.gold ?? 0) + g;
+  return { coin: null, gold: g, say: `+${g.toLocaleString("en-US")} gold` };
+};
+
+/* ── the shops as the Database sends them ── */
+/** base: the built-in wares' price and «off» (s, m, l, stam, chest-bronze/silver/gold, offer-bundle/lpair/chest); items: the
+ *  Database's own wares and bundles: { id, shop: "gold"|"coin", kind: "ware"|"bundle", name, tag, give: { gems, gold, items, heroes },
+ *  cur: "gold"|"gems"|"coinB"|"coinS"|"coinG", price, was, limit, per: "all"|"week"|"day", until, off }. */
+const SHOP102 = { base: {}, items: [] };
+const shopLive102 = (x) => !!x && !x.off && (!x.until || Date.now() < Date.parse(x.until));
+const shopItems102 = (shop, kind) => SHOP102.items.filter((x) => shopLive102(x) && (x.shop ?? "gold") === shop && (!kind || (x.kind ?? "ware") === kind));
+/** The built-in wares at the Database's prices (the game's own when it gives none). */
+const shopBase102 = (() => {
+  let orig = null;
+  return () => {
+    orig ??= { s: SHOP_POTION_PRICE.s, m: SHOP_POTION_PRICE.m, l: SHOP_POTION_PRICE.l, stam: STAM94.price, ...Object.fromEntries(SHOP_CHESTS.map((c) => [`chest-${c.id}`, c.price])) };
+    const pr = (k) => { const v = Math.round(+SHOP102.base[k]?.price); return v > 0 ? v : orig[k]; };
+    for (const k of ["s", "m", "l"]) SHOP_POTION_PRICE[k] = pr(k);
+    STAM94.price = pr("stam");
+    for (const c of SHOP_CHESTS) c.price = pr(`chest-${c.id}`);
+  };
+})();
+/** The day's three built-in offers, at the Database's prices, without the ones it took off. */
+const offers102 = (list) => list.filter((o) => !SHOP102.base[`offer-${o.id}`]?.off).map((o) => {
+  const b = SHOP102.base[`offer-${o.id}`] ?? {}, n = (v, d) => (Math.round(+v) > 0 ? Math.round(+v) : d);
+  return { ...o, price: n(b.price, o.price), was: n(b.was, o.was) };
+});
+const curName102 = (c, n) => (c === "gems" ? `gem${n === 1 ? "" : "s"}` : c === "gold" ? "gold" : coinName102(c, n));
+const curHave102 = (c) => { if (isAdmin()) return Infinity; const p = PLAYER.player; return c === "gems" ? p.gems ?? 0 : c === "gold" ? p.gold ?? 0 : p.items?.[c] ?? 0; };
+const curIcon102 = (c) => (c === "gems" ? gameIcon("gem", "gm-gem") : c === "gold" ? gameIcon("coin", "gm-coin") : coinIcon102(c));
+/** A ware's limit counts in its period: the day (it turns at 05:00), the week (from Monday) or the whole account. */
+const period102 = (x) => (x.per === "day" ? DAY64() : x.per === "week" ? shopWeek() : "all");
+const taken102 = (x) => { const b = PLAYER.player.buy102?.[x.id]; return b && b.at === period102(x) ? b.n : 0; };
+const left102 = (x) => (+x.limit > 0 ? Math.max(0, +x.limit - taken102(x)) : Infinity);
+/** What a ware gives, in a line. */
+const giveSay102 = (g = {}) => [g.gems ? `${(+g.gems).toLocaleString("en-US")} gems` : "", g.gold ? `${(+g.gold).toLocaleString("en-US")} gold` : "",
+  ...Object.entries(g.items ?? {}).map(([k, n]) => `${CODE_ITEMS86[k] ?? ITEM_BY_ID[k]?.name ?? k} ×${n}`), ...(g.heroes ?? []).map((id) => heroineById(id)?.name ?? id)].filter(Boolean).join(" · ");
+/** Buys a ware: its price and its limit, then what it gives, as a code gives it. What came, or why not. */
+const buy102 = (id) => {
+  const x = SHOP102.items.find((y) => y.id === id);
+  if (!shopLive102(x)) return { bad: "This offer is over." };
+  if (isAdmin()) return { bad: "Admin: the shop is only for show." };
+  if (!left102(x)) return { bad: x.per === "day" ? "Taken today: it comes back tomorrow." : x.per === "week" ? "Taken this week: it comes back on Monday." : "You have taken all of these." };
+  const c = x.cur ?? "gold", price = Math.max(0, Math.round(+x.price || 0)), p = PLAYER.player;
+  if (curHave102(c) < price) return { bad: `Not enough ${curName102(c, 2)}: ${(price - curHave102(c)).toLocaleString("en-US")} more needed.` };
+  if (c === "gems") p.gems -= price; else if (c === "gold") p.gold -= price; else p.items[c] -= price;
+  const got = codeGive86(x.give ?? {});
+  const b = ((p.buy102 ??= {})[x.id] ??= { at: period102(x), n: 0 });
+  if (b.at !== period102(x)) { b.at = period102(x); b.n = 0; }
+  b.n += 1;
+  savePlayer();
+  return { got };
 };
 /** A code typed on the profile: what it gave, or what is wrong with it. A code sent a moment ago is looked for online too. */
 const codeRedeem86 = async (raw) => {
@@ -16266,6 +16452,9 @@ const packLate = (P) => {
   syncCustomKinds();
   // the starter banner: its odds, its cost, the sure SSR, who it gives
   CODES86.list = Array.isArray(P.codes) ? P.codes : [];
+  // round 102: the shops as the Database sends them, and the coins' names
+  { const S = P.shop102 && typeof P.shop102 === "object" ? P.shop102 : {}; SHOP102.base = S.base && typeof S.base === "object" ? S.base : {}; SHOP102.items = Array.isArray(S.items) ? S.items.filter((x) => x && typeof x === "object" && x.id) : [];
+    for (const k of COIN_KEYS102) { const nm = typeof S.names?.[k] === "string" && S.names[k].trim() ? S.names[k].trim().slice(0, 24) : COIN_NAMES102[k]; COIN_NAMES102[k] = nm; CODE_ITEMS86[k] = nm; } }
   PACK_BANNERS = (P.banners ?? []).filter((b) => b && typeof b === "object" && b.key && b.key !== "starter");
   const st = (P.banners ?? []).find((b) => b.key === "starter");
   if (st) {
@@ -17373,7 +17562,7 @@ const STORY62 = (() => {
       const p = PLAYER.player, r = p.roster[id];
       if (!r) p.roster[id] = { lv: 1, xp: 0, stars: 0, cons: 0, held: 0 };
       else if ((r.cons ?? 0) + (r.held ?? 0) < COPY_MAX) { r.held = (r.held ?? 0) + 1; line = `${h.name} joins you: a copy for her Copies`; }
-      else { const gold = DUP_GOLD[h.rarity] ?? DUP_GOLD.SR; p.gold = (p.gold ?? 0) + gold; line = `${h.name} joins you: +${gold} gold`; }
+      else line = `${h.name} joins you: ${dupGive102(p, h).say}`;
     }
     savePlayer();
     const box = document.createElement("div");
@@ -24815,7 +25004,7 @@ const SUMMON = (() => {
     return b;
   });
   const chip = (el, gold, kind = "") => {
-    el.insertAdjacentHTML("beforeend", kind === "dust" ? `<span class="sm8-chip is-dust"><i></i>+${nf(gold)}</span>` : kind === "copy" ? '<span class="sm8-chip is-copy">+1 copy</span>' : gold ? `<span class="sm8-chip">${COIN()}+${nf(gold)}</span>` : '<span class="sm8-chip is-new">new</span>');
+    el.insertAdjacentHTML("beforeend", kind === "dust" ? `<span class="sm8-chip is-dust"><i></i>+${nf(gold)}</span>` : kind.startsWith("coin:") ? `<span class="sm8-chip is-coin">${coinIcon102(kind.slice(5))}+1</span>` : kind === "copy" ? '<span class="sm8-chip is-copy">+1 copy</span>' : gold ? `<span class="sm8-chip">${COIN()}+${nf(gold)}</span>` : '<span class="sm8-chip is-new">new</span>');
     el.lastElementChild.animate([{ opacity: 0, transform: "translateY(40%) scale(0.6)" }, { opacity: 1, transform: "none" }], { duration: 360, easing: SPRING, fill: "both" });
   };
   /** The card turns, and its rarity's light rises: rays from SSR, a pillar for UR and LR, the LR stamp. */
@@ -24823,7 +25012,7 @@ const SUMMON = (() => {
     const x = el._x, r = RANK[rarOf(x)] ?? 0, p = ctx.at(el), L = rtone(rarOf(x));
     el.dataset.up = "1";
     el.classList.add("is-up");
-    el.setAttribute("aria-label", x.dust ? `Star dust, +${x.dust}` : `${x.h.name}, ${x.h.rarity}${x.admin ? "" : x.isNew ? ", new" : x.copy ? ", a copy kept" : ", a copy"}`);
+    el.setAttribute("aria-label", x.dust ? `Star dust, +${x.dust}` : `${x.h.name}, ${x.h.rarity}${x.admin ? "" : x.isNew ? ", new" : x.copy ? ", a copy kept" : x.coin ? `, a copy: +1 ${coinName102(x.coin)}` : ", a copy"}`);
     ctx.a($(".card-tilt", el), [{ transform: "rotateY(0deg)" }, { transform: "rotateY(200deg) scale(1.08)", offset: 0.7 }, { transform: "rotateY(180deg)" }], 600 + r * 120, { easing: "cubic-bezier(0.3, 0.7, 0.3, 1)" });
     if (r >= 1) gRays(L, p, 900 + r * 300, { mode: 1, delay: 260 });
     if (r >= 2) {
@@ -24848,7 +25037,7 @@ const SUMMON = (() => {
     const s = ctx.mk("sm8-band", `--c:${E.c};--d:${E.d};clip-path:${boxP(a)}`,
       `<img class="sm8-band-bg" src="${h.art}" alt=""><i class="sm8-band-dots"></i>${r >= 1 ? `<span class="sm8-rar" style="--rc:${RCOL[h.rarity]};font-size:${Math.round(bh * 0.95)}px;left:${W * 0.03}px;top:${cy - bh * 0.48}px">${h.rarity === "LR" ? '<img class="sm8-rar-lr" src="art/ui/lr.webp" alt="" draggable="false">' : h.rarity === "UR" ? '<img class="sm8-rar-lr" src="art/ui/ur.webp" alt="" draggable="false">' : h.rarity}</span>` : ""}<img class="sm8-band-fig" src="${h.art}" alt="" style="left:${fxp - f[0] * iw}px;top:${yT + 0.3 * bh - f[1] * ih}px;width:${iw}px;transform-origin:${f[0] * 100}% ${f[1] * 100}%">`);
     const nx = W * 0.05, size = Math.round(Math.min(46, bh * 0.2, W * 0.11));
-    const tag = x.admin ? '<span class="sm8-tag">admin · for show</span>' : x.isNew ? '<span class="sm8-tag is-new">new hero</span>' : x.copy ? '<span class="sm8-tag is-copy">copy · kept for Copies</span>' : `<span class="sm8-tag is-gold">copy · ${COIN()} +${nf(x.gold)} gold</span>`;
+    const tag = x.admin ? '<span class="sm8-tag">admin · for show</span>' : x.isNew ? '<span class="sm8-tag is-new">new hero</span>' : x.copy ? '<span class="sm8-tag is-copy">copy · kept for Copies</span>' : x.coin ? `<span class="sm8-tag is-coin">copy · ${coinIcon102(x.coin)} +1 ${coinName102(x.coin)}</span>` : `<span class="sm8-tag is-gold">copy · ${COIN()} +${nf(x.gold)} gold</span>`;
     const nm = ctx.mk("sm8-name", `left:${nx}px;top:${cy + k * (1 - (2 * (nx + W * 0.16)) / W)}px;max-width:${W * 0.5}px;font-size:${size}px;--c:${E.c};--l:${E.l}`,
       `<small>${h.rarity} · ${attrName(h)} · ${h.role}</small><b>${[...h.name].map((ch) => `<i>${ch}</i>`).join("")}</b><em>[${h.epithet}]</em>${tag}<i></i>`, ctx.over);
     ctx.a(s, [{ clipPath: boxP(a) }, { clipPath: band }], 300, { easing: EXPO });
@@ -24931,6 +25120,7 @@ const SUMMON = (() => {
       if (el.querySelector(".sm8-chip") || el._burnt || el._x.admin) continue;
       if (el._x.dust) { chip(el, el._x.dust, "dust"); addDust(ctx, el._x.dust, ctx.at(el)); continue; }
       if (el._x.copy) { chip(el, 0, "copy"); continue; }
+      if (el._x.coin) { chip(el, 0, `coin:${el._x.coin}`); continue; }
       if (el._x.isNew) chip(el, 0);
       else { el._burnt = true; el.classList.add("is-burnt"); ctx.a($(".card", el), [{ filter: "grayscale(0.85) brightness(0.42)" }, { filter: "grayscale(0.85) brightness(0.42)" }], 1); chip(el, el._x.gold); addGold(ctx, el._x.gold, ctx.at(el)); }
     }
@@ -24961,7 +25151,7 @@ const SUMMON = (() => {
     if (!live(ctx.id)) return;
     await cutIn(ctx, el);
     if (!live(ctx.id)) return;
-    if (el._x.admin) { /* only for show */ } else if (el._x.isNew) chip(el, 0); else if (el._x.copy) chip(el, 0, "copy"); else await burnGold(ctx, el);
+    if (el._x.admin) { /* only for show */ } else if (el._x.isNew) chip(el, 0); else if (el._x.copy) chip(el, 0, "copy"); else if (el._x.coin) chip(el, 0, `coin:${el._x.coin}`); else await burnGold(ctx, el);
     el.style.zIndex = 100;
   };
   /** P1 · Il mazzo: the deck falls in, shuffles twice, and deals each card with a trail of light. */
@@ -25021,7 +25211,7 @@ const SUMMON = (() => {
         <div class="sm31-t sm31-tt"><small>Starter banner</small><b>Every hero,<br>your SSR on the 6th</b><span>Zenith · Kaori · Kayla · Tachibana · Alfael</span></div></div>
         <div class="sm8-banner" data-sm-cv hidden></div>
         <div class="sm8-info"><div class="sm8-rates">${PULL_RATES.map(([r, p]) => `<span><b class="tier-${RARITY_LEVEL[r]}"><span class="tier-text">${lrTxt(r)}</span></b>${+(p * 100).toFixed(1)}%</span>`).join("")}<span class="sm31-no">no UR · no LR</span><button type="button" class="sm42-who" data-sm-who aria-haspopup="dialog">${gameIcon("archive")}<span>who's inside · ${api.pool?.().length ?? 0}</span></button></div>
-          <p>Every hero except UR and LR. A copy of a hero you have is kept for Copies, up to six; past that it burns into gold for the shop.</p><div class="sm31-pity" data-sm-pity></div></div></div>
+          <p>Every hero except UR and LR. A copy of a hero you have waits in Copies: combine it, or turn it into a coin for the Coin Shop. With all six copies in, a copy is a coin at once.</p><div class="sm31-pity" data-sm-pity></div></div></div>
       <span class="sm8-take gm-pill" data-sm-take hidden>${COIN()}+<b data-v="0">0</b></span>
       <span class="sm8-take sm36-dtake gm-pill" data-sm-dust hidden><i></i>+<b data-v="0">0</b></span>
       <button class="sm8-skip" type="button" data-sm-skip hidden>skip</button>
@@ -25244,11 +25434,11 @@ const SUMMON = (() => {
       hint(ctx, "");
       $("[data-sm-skip]", root).hidden = true;
       api.paintGems?.();
-      const nNew = list.filter((x) => x.isNew).length, gold = list.reduce((t, x) => t + (x.gold ?? 0), 0), dups = list.filter((x) => x.h && !x.isNew && !x.admin && !x.copy).length;
+      const nNew = list.filter((x) => x.isNew).length, gold = list.reduce((t, x) => t + (x.gold ?? 0), 0), dups = list.filter((x) => x.h && !x.isNew && !x.admin && !x.copy && !x.coin).length, coins102 = list.filter((x) => x.coin);
       const kept = list.filter((x) => x.copy).length, dust = list.reduce((t, x) => t + (x.dust ?? 0), 0);
       const e = document.createElement("div");
       e.className = "sm8-end";
-      e.innerHTML = `<b>${list.length === 1 ? list[0].h?.name ?? "Star dust" : `${list.length} pulls`}</b>${nNew ? `<span class="is-new">${nNew} new</span>` : ""}${kept ? `<span class="is-copy">${kept} cop${kept === 1 ? "y" : "ies"} kept</span>` : ""}${dust && !list.some((x) => x.admin) ? `<span class="is-dust">+${nf(dust)} star dust</span>` : ""}${dups ? `<span class="is-gold">${dups} cop${dups === 1 ? "y" : "ies"} burned · ${COIN()} +${nf(gold)} gold</span>` : ""}${list.some((x) => x.admin) ? "<span>Admin: only for show</span>" : ""}`;
+      e.innerHTML = `<b>${list.length === 1 ? list[0].h?.name ?? "Star dust" : `${list.length} pulls`}</b>${nNew ? `<span class="is-new">${nNew} new</span>` : ""}${kept ? `<span class="is-copy">${kept} cop${kept === 1 ? "y" : "ies"} kept</span>` : ""}${dust && !list.some((x) => x.admin) ? `<span class="is-dust">+${nf(dust)} star dust</span>` : ""}${coins102.length ? `<span class="is-coin">${COIN_KEYS102.filter((k) => coins102.some((x) => x.coin === k)).map((k) => { const n = coins102.filter((x) => x.coin === k).length; return `+${n} ${coinName102(k, n)}`; }).join(" · ")}</span>` : ""}${dups ? `<span class="is-gold">${dups} cop${dups === 1 ? "y" : "ies"} burned · ${COIN()} +${nf(gold)} gold</span>` : ""}${list.some((x) => x.admin) ? "<span>Admin: only for show</span>" : ""}`;
       root.append(e);
       ctx.a(e, [{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], 420, { easing: EXPO });
       acts(ctx, [[`again ×${n} · ${GEMI()}${api.cost?.(n) ?? (n === 1 ? PULL_ONE : PULL_MULTI)}`, "again", n === 1 ? "" : "gm-btn--gold"], ["done", "done", "gm-btn--ghost"]]);
@@ -25419,7 +25609,8 @@ const GOLD_SHOP = (() => {
     const gems64 = () => (isAdmin() ? Infinity : PLAYER.player.gems ?? 0);
     const offers64 = () => { const p = PLAYER.player; if (p.offers64?.day !== DAY64()) p.offers64 = { day: DAY64(), got: [] }; return p.offers64; };
     const dayN64 = () => Math.floor(Date.parse(`${DAY64()}T12:00:00Z`) / 864e5);
-    const OFFERS64 = () => {
+    const OFFERS64 = () => offers102(OFFERS64raw());
+    const OFFERS64raw = () => {
       const st = ["atk", "hp", "def"][dayN64() % 3];
       return [
         { id: "bundle", tag: "Best value", gold: true, name: "Trainer's bundle", say: "Potions: 10 S, 4 M and 1 L", price: 1500, was: 2000, pots: { s: 10, m: 4, l: 1 } },
@@ -25436,6 +25627,59 @@ const GOLD_SHOP = (() => {
       return `<article class="sh64-offer${done ? " is-done" : ""}"><i class="sh64-ribbon${o.gold ? " is-gold" : ""}">${o.tag}</i><div class="sh64-offer-vis">${vis}</div>
         <div class="sh64-offer-t"><b>${o.name}</b><small>${o.say}</small><s>${COIN()}${nf(o.was)}</s>
         ${done ? '<span class="sh64-taken">taken today</span>' : buy64(`data-sh64-offer="${o.id}"`, o.price, o.chest ? "open" : "buy")}</div></article>`;
+    };
+    /* ── round 102 · the Database's own wares and bundles, and the Coin Shop ── */
+    /** A ware's look: what it gives, up to three things side by side (a hero as her whole card, a potion, a piece, a coin). */
+    const vis102 = (g = {}) => {
+      const out = [];
+      for (const id of g.heroes ?? []) { const h = heroineById(id); if (h) out.push(`<span class="sh102-card">${makeCard(h, { label: false }).outerHTML}</span>`); }
+      for (const k of Object.keys(g.items ?? {})) {
+        if (["s", "m", "l"].includes(k)) out.push(POT64(k));
+        else if (k === "stam94") out.push(POT64("m", "pot94"));
+        else if (COIN_KEYS102.includes(k)) out.push(coinIcon102(k, "is-big"));
+        else if (k === "mirror") out.push('<img class="sh102-img" src="art/items/mirror-shard.webp" alt="" draggable="false">');
+        else if (ITEM_BY_ID[k]) out.push(itemTile(ITEM_BY_ID[k]));
+        // star dust, the stars and the Dragon Heart: the game's own four-point mark, in their colour
+        else out.push(`<span class="sh102-mat is-${esc102(k)}"><i></i></span>`);
+      }
+      if (g.gems) out.push(`<span class="sh102-cur">${gameIcon("gem", "gm-gem")}</span>`);
+      if (g.gold) out.push(`<span class="sh102-cur">${COIN()}</span>`);
+      return out.slice(0, 3).join("");
+    };
+    const price102 = (x) => { const c = x.cur ?? "gold", n = Math.round(+x.price || 0); return `<span class="sh64-price sh102-price">${curIcon102(c)}${isAdmin() ? "free" : nf(n)}</span>`; };
+    const limit102 = (x) => (+x.limit > 0 ? `<span class="sh102-left">${Math.min(left102(x), +x.limit)} of ${+x.limit} left${x.per === "day" ? " today" : x.per === "week" ? " this week" : ""}</span>` : "");
+    const until102 = (x) => (x.until ? `<span class="sh102-until">until ${new Date(x.until).toLocaleString("en-GB", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" })}</span>` : "");
+    const was102 = (x) => (+x.was > Math.round(+x.price || 0) ? `<s class="sh102-was">${curIcon102(x.cur ?? "gold")}${nf(+x.was)}</s><i class="sh102-off">−${Math.round(100 - (100 * Math.round(+x.price || 0)) / +x.was)}%</i>` : "");
+    const buy102btn = (x) => { const out = !left102(x), short = curHave102(x.cur ?? "gold") < Math.round(+x.price || 0); return `<button type="button" class="sh64-buy sh102-buy" data-sh102="${esc102(x.id)}" ${out || short ? "disabled" : ""}><span>${out ? "taken" : "buy"}</span>${price102(x)}</button>`; };
+    const ware102 = (x) => `<article class="sh64-ware sh102-ware"><div class="sh64-ware-vis sh102-vis">${vis102(x.give)}</div><b>${esc102(x.name || giveSay102(x.give))}</b>
+      <small>${esc102(giveSay102(x.give))}</small><span class="sh102-meta">${was102(x)}${limit102(x)}${until102(x)}</span>${buy102btn(x)}</article>`;
+    const bundle102 = (x) => `<article class="sh64-offer sh102-bundle${left102(x) ? "" : " is-done"}">${x.tag ? `<i class="sh64-ribbon is-gold">${esc102(x.tag)}</i>` : ""}<div class="sh64-offer-vis"><span class="sh64-pack sh102-pack">${vis102(x.give)}</span></div>
+      <div class="sh64-offer-t"><b>${esc102(x.name || "Bundle")}</b><small>${esc102(giveSay102(x.give))}</small><span class="sh102-meta">${was102(x)}${limit102(x)}${until102(x)}</span>${buy102btn(x)}</div></article>`;
+    /** The day's offers row: the built-in three (at the Database's prices, without the ones it took off) and the gold bundles. */
+    const offersRow102 = () => {
+      const o = OFFERS64(), b = shopItems102("gold", "bundle");
+      return o.length || b.length ? `<section class="sh64-offers"><h3>Today <small>new offers in ${UNTIL64(NEXT_DAY64())}</small></h3><div class="sh64-offer-row">${o.map(offerHTML).join("")}${b.map(bundle102).join("")}</div></section>` : "";
+    };
+    /** The Coin Shop: the purse of coins, the coin bundles, then the coin wares. */
+    const coinTab102 = () => {
+      const W = shopItems102("coin", "ware"), B = shopItems102("coin", "bundle");
+      return `<div class="sh102-purse">${COIN_KEYS102.map((k) => `<span class="sh102-coin">${coinIcon102(k)}<b>${isAdmin() ? "∞" : nf(PLAYER.player.items?.[k] ?? 0)}</b><small>${coinName102(k, 2)}</small></span>`).join("")}
+        <p>Coins come from copies: turn one into a coin in a hero's Copies, and a hero pulled again with all six copies in is a coin at once. Bronze for R, silver for SR, gold for SSR.</p></div>
+        ${B.length ? `<div class="sh64-offer-row sh102-row">${B.map(bundle102).join("")}</div>` : ""}
+        ${W.length ? `<div class="sh64-grid sh102-grid">${W.map(ware102).join("")}</div>` : B.length ? "" : '<div class="sh64-empty"><b>The Coin Shop opens soon</b><p>Its first wares come with an update. Keep your coins: they wait for it.</p></div>'}`;
+    };
+    /** The gold shop's own wares from the Database. */
+    const waresTab102 = () => `<div class="sh64-grid sh102-grid">${shopItems102("gold", "ware").map(ware102).join("")}</div>`;
+    /** A buy: its price and limit, what it gave, the purse again. */
+    const click102 = (t) => {
+      const b = t.closest("[data-sh102]");
+      if (!b) return false;
+      const r = buy102(b.dataset.sh102);
+      if (r.bad) { api.toast(r.bad); return true; }
+      api.paintGems();
+      api.toast(`You got ${r.got.join(", ")}`);
+      paint64();
+      return true;
     };
     const potWare64 = (k) => {
       const n = q64[k], price = n * SHOP_POTION_PRICE[k];
@@ -25458,21 +25702,23 @@ const GOLD_SHOP = (() => {
         <span class="sh9-odds">${Object.entries(odds).map(([r, w]) => `<span><span class="tier-${RARITY_LEVEL[r]}"><span class="tier-text">${lrTxt(r)}</span></span>${w}%</span>`).join("")}</span>
         ${buy64(`data-sh-chest="${c.id}"`, c.price, "open")}</article>`; };
     const paint64 = () => {
-      const tabs = [["potions", "Potions"], ["chests", "Chests"], ["skins", "Skins"]];
+      shopBase102();
+      const tabs = [["potions", "Potions"], ["chests", "Chests"], ...(shopItems102("gold", "ware").length ? [["wares", "Wares"]] : []), ["coins", "Coin Shop"], ["skins", "Skins"]];
       if (!tabs.some(([k]) => k === tab)) tab = "potions";
-      const body = tab === "potions" ? `<div class="sh64-grid">${["s", "m", "l"].map(potWare64).join("")}${stamWare94()}</div>`
+      const body = tab === "coins" ? coinTab102() : tab === "wares" ? waresTab102() : tab === "potions" ? `<div class="sh64-grid">${["s", "m", "l"].filter((k) => !SHOP102.base[k]?.off).map(potWare64).join("")}${SHOP102.base.stam?.off ? "" : stamWare94()}</div>`
         : tab === "chests" ? `<div class="sh8-chips sh9-stats" role="group" aria-label="The kind of piece">${["hp", "atk", "def"].map((k) => `<button type="button" data-sh-stat="${k}" aria-pressed="${k === stat}" style="--sc:${ITEM_STAT[k].c}">${ITEM_STAT[k].label}</button>`).join("")}</div>
-            <div class="sh64-grid">${SHOP_CHESTS.map(chestWare64).join("")}</div>
+            <div class="sh64-grid">${SHOP_CHESTS.filter((c) => !SHOP102.base[`chest-${c.id}`]?.off).map(chestWare64).join("")}</div>
             <p class="sh3-note">${chestsHigh() ? "SSR can come out of the Silver and Golden chests." : "Until you beat Altea and reach the Frostspine, chests give SR at most."} Every piece rolls its %: N ${ITEM_ROLL.N.join("–")}%, R ${ITEM_ROLL.R.join("–")}%, SR ${ITEM_ROLL.SR.join("–")}%, SSR ${ITEM_ROLL.SSR.join("–")}%. A piece goes on a hero in her file.${isAdmin() ? " Admin: chests are free and only for show." : ""}</p>`
         : `<div class="sh64-empty"><b>No skins yet</b><p>The first skins come with an update. A skin changes a hero's main picture and her skill pictures, and adds a small boost to her stats and her passive.</p></div>`;
-      box.innerHTML = `<div class="sh64-top">${wallet64()}<p class="sh64-lede">Gold comes from chests in the story, from copies that burn in the pulls, from missions and the log-in. No real money.</p></div>
-        <section class="sh64-offers"><h3>Today <small>new offers in ${UNTIL64(NEXT_DAY64())}</small></h3><div class="sh64-offer-row">${OFFERS64().map(offerHTML).join("")}</div></section>
+      box.innerHTML = `<div class="sh64-top">${wallet64()}<p class="sh64-lede">Gold comes from chests in the story, from missions and the log-in; coins come from copies. No real money.</p></div>
+        ${offersRow102()}
         <div class="sh64-tabs" role="tablist">${tabs.map(([k, n]) => `<button type="button" role="tab" data-sh-tab="${k}" aria-selected="${tab === k}">${n}</button>`).join("")}</div>
         <div class="sh64-body">${body}</div>`;
     };
     const short64 = (price) => api.toast(`Not enough gold: ${nf(price - gold())} more needed.`);
     /** The shop's own buttons; the chests, their kind and the tabs go through the old handler. */
     const click64 = (t) => {
+      if (click102(t)) return true;
       const qb = t.closest("[data-sh64-q]");
       if (qb) { const [k, d] = qb.dataset.sh64Q.split(":"); q64[k] = Math.max(1, Math.min(99, q64[k] + +d)); paint64(); return true; }
       if (t.closest("[data-sh94-stam]")) {
@@ -26373,11 +26619,13 @@ const COPIES = (() => {
   const STEPS = (h) => Array.from({ length: COPY_MAX }, (_, i) => ({ k: i + 1, add: `+${pct(COPY_RATE[h.rarity] ?? 0)} HP, ATK and DEF`, extra: i === 2 ? h.copies?.c3 ?? "Second passive" : i === 5 ? h.copies?.c6 ?? "A new effect" : null }));
   const stepsHTML = (x) => `<ol class="cp-steps">${STEPS(x.h).map((s) => `<li class="${s.k <= x.cons ? "is-on" : ""}${s.extra ? " is-mile" : ""}"><b>${s.k}</b><span>${s.add}${s.extra ? (s.extra.name ? `<em><b>${s.extra.name}</b> ${s.extra.effect}</em>` : `<em>${s.extra} · coming soon</em>`) : ""}</span></li>`).join("")}</ol>`;
   const sumLine = (x) => `${x.cons ? `Copy ${x.cons} of ${COPY_MAX} · <b>+${pct(copyPct(x.h, x.cons))}</b> HP, ATK and DEF` : "No copies combined yet"}`;
-  const waitLine = (x) => (x.cons >= COPY_MAX ? "All six combined: a new copy burns into gold." : x.held ? `${x.held} cop${x.held === 1 ? "y" : "ies"} waiting · the next gives +${pct(COPY_RATE[x.h.rarity])}` : `Pull ${x.h.gender === "m" ? "him" : "her"} again to get a copy.`);
+  const waitLine = (x) => (x.cons >= COPY_MAX ? "All six combined: a new copy is a coin at once." : x.held ? `${x.held} cop${x.held === 1 ? "y" : "ies"} waiting · the next gives +${pct(COPY_RATE[x.h.rarity])}` : `Pull ${x.h.gender === "m" ? "him" : "her"} again to get a copy.`);
   /* round 82: a Mirror Shard from Boss mode is one more copy, for the hero you choose */
   const MIR = { n: () => 0 };
   const mirrorBtn = (x) => { const n = MIR.n(); if (n == null) return ""; const full = x.cons + x.held >= COPY_MAX; return `<button class="gm-btn cp-mirror" type="button" data-cp-mirror="${x.h.id}"${n > 0 && !full ? "" : " disabled"}><img src="art/items/mirror-shard.webp" alt="" draggable="false"><span>use a Mirror Shard<small>${n} held · from Boss mode</small></span></button>`; };
   const btn = (x, label = "combine") => `<button class="gm-btn cp-go" type="button" data-cp-combine="${x.h.id}"${x.held && x.cons < COPY_MAX ? "" : " disabled"}>${x.cons >= COPY_MAX ? "complete" : label}</button>`;
+  /** Round 102: a waiting copy into a coin of her rarity. */
+  const coinBtn102 = (x) => { const k = coinOf102(x.h); if (!k || isAdmin() || x.cons >= COPY_MAX) return ""; return `<button class="gm-btn gm-btn--ghost cp-coin" type="button" data-cp-coin="${x.h.id}"${x.held > 0 ? "" : " disabled"}>${coinIcon102(k)}<span>a copy → ${coinName102(k)}</span></button>`; };
   const pips = (x) => `<span class="cp-pips" aria-label="${x.cons} of ${COPY_MAX} combined, ${x.held} waiting">${Array.from({ length: COPY_MAX }, (_, i) => `<i class="${i < x.cons ? "is-on" : i < x.cons + x.held ? "is-held" : ""}${i === 2 || i === 5 ? " is-mile" : ""}"></i>`).join("")}</span>`;
 
   /* C1 · Rows: every heroine on a line, like Awakening; a tap on the line opens what each copy does */
@@ -26409,7 +26657,7 @@ const COPIES = (() => {
     return `<div class="cp-sky">
       <div class="cp-pick" role="tablist" aria-label="Heroes">${list.map((y) => `<button type="button" role="tab" data-cp-sel="${y.h.id}" aria-selected="${y.h.id === x.h.id}"><span class="gm-fc">${faceChip(y.h)}</span><span><b>${y.h.name}</b><small>${y.cons} / ${COPY_MAX}${y.held && y.cons < COPY_MAX ? ` · <em>+${y.held}</em>` : ""}</small></span></button>`).join("")}</div>
       <div class="cp-stage${col ? " is-col" : ""}" style="--rc:${RC[x.h.rarity] ?? RC.SR}"><div class="cp-hold">${card(x.h, "is-big")}${col ? "" : trackHTML(x, track)}</div>${col ? trackHTML(x, track) : ""}
-        <div class="cp-side"><h4>${x.h.name}</h4><p class="cp-sum">${sumLine(x)}</p><p class="cp-wait">${waitLine(x)}</p>${btn(x)}${mirrorBtn(x)}${col ? "" : stepsHTML(x)}</div></div></div>`;
+        <div class="cp-side"><h4>${x.h.name}</h4><p class="cp-sum">${sumLine(x)}</p><p class="cp-wait">${waitLine(x)}</p>${btn(x)}${coinBtn102(x)}${mirrorBtn(x)}${col ? "" : stepsHTML(x)}</div></div></div>`;
   };
 
   /* C3 · Stack: her card, the copies waiting as a pile of the same card beside it, and six small cards under it that light up */
@@ -26447,6 +26695,8 @@ const COPIES = (() => {
     };
     host.addEventListener("click", (ev) => {
       const t = ev.target;
+      const cc102 = t.closest("[data-cp-coin]");
+      if (cc102) { api.toCoin?.(cc102.dataset.cpCoin).then((ok) => { if (ok) paint(); }); return; }
       const mr = t.closest("[data-cp-mirror]");
       if (mr) { if (api.useMirror?.(mr.dataset.cpMirror)) { paint(); celebrate(mr.dataset.cpMirror); } return; }
       const go = t.closest("[data-cp-combine]");
@@ -27244,6 +27494,7 @@ const ICON = {
   hammer: '<path d="M13.5 5.5L18.5 10.5 M11 8L16 3L21 8L16 13Z M13.5 10.5L4 20"/>',
   rows: '<path d="M3.5 5H20.5 M3.5 12H20.5 M3.5 19H20.5"/>',
   reset: '<path d="M19.5 12A7.5 7.5 0 1 1 16.8 6.3 M17.6 2.6V6.8H13.4"/>',
+  shop: '<path d="M4.5 8.5H19.5L18.3 20.5H5.7Z M8.5 8.5V7A3.5 3.5 0 0 1 15.5 7V8.5 M9 12.5V13 M15 12.5V13"/>',
 };
 const ic = (k, cls = "") => `<svg class="g-ic${cls ? ` ${cls}` : ""}" viewBox="0 0 24 24" aria-hidden="true">${ICON[k] ?? ""}</svg>`;
 
@@ -27281,7 +27532,7 @@ const gCard = (h, px, { big = false } = {}) => {
 
 /* ── the draft: everything changed here. It starts from what is online (so a new version keeps the old changes), lives on
  * this device (or, in the Database program, on its disk with backups), and goes to players only with "Manda online". ── */
-const PACK_PARTS = ["edits", "news", "bosses", "banners", "stages", "web", "reset", "modes", "app", "notes", "places", "smith", "people", "guest", "cards", "codes"];
+const PACK_PARTS = ["edits", "news", "bosses", "banners", "stages", "web", "reset", "modes", "app", "notes", "places", "smith", "people", "guest", "cards", "codes", "shop102"];
 /** In the Database program the Gestionale is the whole window, with no game behind it. */
 const GEST_ONLY = !!window.OREH_GEST_ONLY;
 const D = { edits: {}, news: [], log: [], bosses: [], banners: null, stages: {}, web: {}, version: 0, history: [], codes: [] };
@@ -30333,6 +30584,190 @@ const codeSay86 = (c) => [
   ...Object.entries(c.items ?? {}).map(([k, n]) => `${codeItemName86(k)} ×${n}`),
   ...(c.heroes ?? []).map((id) => HEROINES.find((h) => h.id === id)?.name ?? id),
 ].filter(Boolean).join(" · ") || "niente";
+/* ══ round 102 · la pagina Shop del Database: i prezzi di quello che c'è già, gli articoli e i bundle nuovi (Shop del gold e Coin
+ *  Shop), i nomi delle monete. Tutto finisce in D.shop102 e arriva ai giocatori con Manda online (il pacchetto, parte shop102). ══ */
+const SHOP_BASE_IT102 = [
+  ["s", "Pozione S", "pozione"], ["m", "Pozione M", "pozione"], ["l", "Pozione L", "pozione"], ["stam", "Stamina Potion", "pozione"],
+  ["chest-bronze", "Forziere di bronzo", "forziere"], ["chest-silver", "Forziere d'argento", "forziere"], ["chest-gold", "Forziere d'oro", "forziere"],
+  ["offer-bundle", "Offerta del giorno: Trainer's bundle", "offerta"], ["offer-lpair", "Offerta del giorno: Potion L × 2", "offerta"], ["offer-chest", "Offerta del giorno: Golden chest −30%", "offerta"],
+];
+/** Il prezzo che il gioco ha già, per ognuna (quando il Database non ne mette uno suo). */
+const shopBasePrice102 = (k) => ({ s: SHOP_POTION_PRICE.s, m: SHOP_POTION_PRICE.m, l: SHOP_POTION_PRICE.l, stam: STAM94.price, "chest-bronze": 1500, "chest-silver": 3000, "chest-gold": 5000, "offer-bundle": 1500, "offer-lpair": 1200, "offer-chest": 3500 })[k];
+const shopBaseWas102 = (k) => ({ "offer-bundle": 2000, "offer-lpair": 1600, "offer-chest": 5000 })[k];
+const CUR_IT102 = { gold: "Oro", gems: "Gemme", coinB: "Moneta di bronzo", coinS: "Moneta d'argento", coinG: "Moneta d'oro" };
+const PER_IT102 = { all: "in tutto", week: "a settimana", day: "al giorno" };
+const shopSay102 = (x) => `${x.name ? `${x.name}: ` : ""}${codeSay86(x.give ?? {})} · ${(+x.price || 0).toLocaleString("it-IT")} ${CUR_IT102[x.cur ?? "gold"]}${+x.was > 0 ? ` (prima ${(+x.was).toLocaleString("it-IT")})` : ""}`;
+const viewShop102 = (host) => {
+  // the draft may hold an empty part (every pack part starts as {}): its three lists made sure each time
+  const S = () => { const s = D.shop102 && typeof D.shop102 === "object" && !Array.isArray(D.shop102) ? D.shop102 : (D.shop102 = {}); if (!s.names || typeof s.names !== "object") s.names = {}; if (!s.base || typeof s.base !== "object") s.base = {}; if (!Array.isArray(s.items)) s.items = []; return s; };
+  const blank = (shop = "coin", kind = "ware") => ({ shop, kind, name: "", tag: "", gems: 0, gold: 0, rows: [], heroes: [], cur: shop === "coin" ? "coinG" : "gold", price: 1, was: 0, limit: 0, per: "all", until: "" });
+  let f = blank(), editing = null;
+  host.innerHTML = `<div class="g86 g102">
+    <div class="g-pagehead"><div><h2 class="g-h2">Shop</h2><p class="g-hint">Quello che si compra nello Shop del gioco: lo Shop del gold e il Coin Shop. Cambi i prezzi di quello che c'è già o lo togli, aggiungi articoli nuovi e bundle con la loro offerta. Arriva ai giocatori con Manda online.</p></div></div>
+    <div class="g102-top"><section class="g102-box" data-coins></section><section class="g102-box" data-base></section></div>
+    <div class="g86-grid"><section class="g86-form" data-form></section><section class="g86-list"><p class="g-lnc-k">I tuoi articoli e bundle</p><div data-list></div></section></div></div>`;
+  const form = qs("[data-form]", host), list = qs("[data-list]", host);
+  /* le monete: come arrivano e come si chiamano nel gioco */
+  const paintCoins = () => {
+    const box = qs("[data-coins]", host), N = S().names;
+    box.innerHTML = `<p class="g-lnc-k">Le monete</p>
+      <p class="g-note g102-how">${ic("check")}<span>Un eroe trovato di nuovo resta una copia in attesa nelle sue Copies: lì il giocatore la unisce, oppure la cambia in una moneta della sua rarità (bronzo per R, argento per SR, oro per SSR). Se l'eroe ha già tutte e 6 le copie, il doppione diventa subito la moneta. UR e LR non danno monete: si bruciano in oro come prima.</span></p>
+      <div class="g102-names">${COIN_KEYS102.map((k) => `<label class="g-field"><span>${CUR_IT102[k]}, nome nel gioco (in inglese)</span><input type="text" maxlength="24" data-name="${k}" value="${esc(N[k] ?? COIN_NAMES102[k])}"></label>`).join("")}</div>`;
+  };
+  host.addEventListener("change", (ev) => {
+    const t = ev.target;
+    if (t.matches("[data-name]")) {
+      const k = t.dataset.name, v = t.value.trim();
+      S().names[k] = v || COIN_NAMES102[k];
+      change("Shop", "shop-names", `Monete: ${COIN_KEYS102.map((x) => S().names[x] ?? COIN_NAMES102[x]).join(", ")}`, t);
+      paintForm(); paintList();
+    }
+  });
+  /* quello che c'è già nello Shop del gold: il prezzo (e il prezzo prima, per le offerte del giorno) e se si vende */
+  const paintBase = () => {
+    const box = qs("[data-base]", host), B = S().base;
+    box.innerHTML = `<p class="g-lnc-k">Shop del gold: quello che c'è già</p><div class="g102-base">${SHOP_BASE_IT102.map(([k, name, kind]) => {
+      const b = B[k] ?? {};
+      return `<div class="g102-brow${b.off ? " is-off" : ""}" data-bk="${k}"><b>${name}</b><span data-num></span>${kind === "offerta" ? "<span data-was></span>" : ""}<label class="g-check"><input type="checkbox" data-sell${b.off ? "" : " checked"}>In vendita</label></div>`;
+    }).join("")}</div><p class="g-note">${ic("warn")}<span>I prezzi sono in oro. Se togli la spunta, nel gioco quella cosa non c'è più finché non la rimetti.</span></p>`;
+    for (const row of qsa("[data-bk]", box)) {
+      const k = row.dataset.bk, b = () => (S().base[k] ??= {});
+      qs("[data-num]", row).append(numField({ label: "Prezzo", value: S().base[k]?.price ?? shopBasePrice102(k), min: 1, max: 9999999, step: 10, onInput: (v) => { b().price = v; change("Shop", `shop-base-${k}`, `${SHOP_BASE_IT102.find((x) => x[0] === k)[1]}: ${v.toLocaleString("it-IT")} oro`, row); } }));
+      const w = qs("[data-was]", row);
+      if (w) w.append(numField({ label: "Prima", value: S().base[k]?.was ?? shopBaseWas102(k), min: 0, max: 9999999, step: 10, onInput: (v) => { b().was = v; change("Shop", `shop-base-${k}`, `${SHOP_BASE_IT102.find((x) => x[0] === k)[1]}: prima ${v.toLocaleString("it-IT")} oro`, row); } }));
+    }
+  };
+  qs("[data-base]", host).addEventListener("change", (ev) => {
+    const t = ev.target, row = t.closest("[data-bk]");
+    if (!row || !t.matches("[data-sell]")) return;
+    const k = row.dataset.bk, b = (S().base[k] ??= {});
+    b.off = !t.checked;
+    row.classList.toggle("is-off", b.off);
+    change("Shop", `shop-base-${k}`, `${SHOP_BASE_IT102.find((x) => x[0] === k)[1]}: ${b.off ? "tolto dallo Shop" : "di nuovo in vendita"}`, row);
+  });
+  /* il modulo: un articolo o un bundle, nello Shop del gold o nel Coin Shop */
+  const curs = () => (f.shop === "coin" ? COIN_KEYS102 : ["gold", "gems"]);
+  const paintForm = () => {
+    if (!curs().includes(f.cur)) f.cur = curs()[0];
+    const nm = (k) => (COIN_KEYS102.includes(k) ? `${CUR_IT102[k]} (${S().names[k] ?? COIN_NAMES102[k]})` : CUR_IT102[k]);
+    form.innerHTML = `<p class="g-lnc-k">${editing ? "Cambia" : "Nuovo"} ${f.kind === "bundle" ? "bundle" : "articolo"}</p>
+      <div class="g102-seg" role="group" aria-label="Dove"><button type="button" data-shop="gold" aria-pressed="${f.shop === "gold"}">Shop del gold</button><button type="button" data-shop="coin" aria-pressed="${f.shop === "coin"}">Coin Shop</button></div>
+      <div class="g102-seg" role="group" aria-label="Tipo"><button type="button" data-kind="ware" aria-pressed="${f.kind === "ware"}">Articolo</button><button type="button" data-kind="bundle" aria-pressed="${f.kind === "bundle"}">Bundle (in alto, con la sua etichetta)</button></div>
+      <label class="g-field"><span>Nome nel gioco (in inglese)</span><input type="text" data-nm maxlength="40" placeholder="es. Mirror Shard pack" value="${esc(f.name)}"></label>
+      ${f.kind === "bundle" ? `<label class="g-field"><span>Etichetta del bundle (in inglese)</span><input type="text" data-tag maxlength="20" placeholder="es. Best value" value="${esc(f.tag)}"></label>` : ""}
+      <p class="g-lnc-k g102-sub">Cosa dà</p>
+      <div class="g-numgrid" data-nums></div>
+      <div class="g-field"><span>Oggetti</span><div class="g86-items" data-items></div><button type="button" class="g-btn g-btn--ghost g86-add" data-add>Aggiungi un oggetto</button></div>
+      <div class="g-field"><span>Eroi: chi lo compra li riceve (se ce l'ha già, una copia)</span><div class="g-heropick" data-heroes></div></div>
+      <p class="g-lnc-k g102-sub">Prezzo</p>
+      <div class="g102-price"><label class="g-field"><span>Si paga in</span><select data-cur>${curs().map((k) => `<option value="${k}"${k === f.cur ? " selected" : ""}>${esc(nm(k))}</option>`).join("")}</select></label><span data-pr></span><span data-was></span></div>
+      <p class="g-note">${ic("check")}<span>«Prima» è il prezzo barrato dell'offerta: se è più alto del prezzo, il gioco mostra anche lo sconto in %. Lascialo a 0 se non c'è offerta.</span></p>
+      <div class="g102-price"><span data-lim></span><label class="g-field"><span>Quante volte</span><select data-per>${Object.entries(PER_IT102).map(([k, t]) => `<option value="${k}"${k === f.per ? " selected" : ""}>${t}</option>`).join("")}</select></label></div>
+      <div class="g-field"><span>Scadenza</span><label class="g-check"><input type="checkbox" data-noend${f.until ? "" : " checked"}>Non scade mai</label>${f.until ? `<input type="datetime-local" data-end value="${esc(f.until)}">` : ""}</div>
+      <p class="g86-sum" data-sum></p>
+      <div class="g86-btns"><button type="button" class="g-cta" data-save>${ic("check")}<span>${editing ? "Salva" : "Aggiungi allo Shop"}</span></button>${editing ? '<button type="button" class="g-btn g-btn--ghost" data-cancel>Annulla</button>' : ""}</div>`;
+    qs("[data-nums]", form).append(numField({ label: "Gemme", value: f.gems, max: 999999, step: 10, onInput: (v) => { f.gems = v; sum(); } }), numField({ label: "Oro", value: f.gold, max: 99999999, step: 100, onInput: (v) => { f.gold = v; sum(); } }));
+    qs("[data-pr]", form).append(numField({ label: "Prezzo", value: f.price, min: 1, max: 9999999, step: 1, onInput: (v) => { f.price = v; sum(); } }));
+    qs("[data-was]", form).append(numField({ label: "Prima", value: f.was, min: 0, max: 9999999, step: 1, onInput: (v) => { f.was = v; sum(); } }));
+    qs("[data-lim]", form).append(numField({ label: "Limite (0 = senza limite)", value: f.limit, min: 0, max: 999, step: 1, onInput: (v) => { f.limit = v; sum(); } }));
+    paintItems();
+    const hp = qs("[data-heroes]", form);
+    hp.innerHTML = RARS.filter((r) => HEROINES.some((h) => h.rarity === r && !h.guest)).map((r) => `<div class="g-hp-r"><small>${tierG(r)}</small><div>${HEROINES.filter((h) => h.rarity === r && !h.guest).map((h) => `<button type="button" data-h="${h.id}" aria-pressed="${f.heroes.includes(h.id)}" aria-label="${esc(h.name)}"><span data-c></span><b>${esc(h.name)}</b></button>`).join("")}</div></div>`).join("");
+    for (const x of qsa("[data-h]", hp)) qs("[data-c]", x).append(gCard(HEROINES.find((h) => h.id === x.dataset.h), 44));
+    sum();
+  };
+  const paintItems = () => {
+    const box = qs("[data-items]", form);
+    box.innerHTML = f.rows.map((r, i) => `<div class="g86-item" data-i="${i}"><select data-it aria-label="Oggetto">${codeOptions86()}</select><input type="number" data-q min="1" max="9999" value="${r.n}" aria-label="Quanti"><button type="button" class="g-iconbtn" data-rm aria-label="Togli">${ic("close")}</button></div>`).join("");
+    qsa("[data-i]", box).forEach((row, i) => { qs("select", row).value = f.rows[i].id; });
+  };
+  const give = () => ({ gems: f.gems, gold: f.gold, items: Object.fromEntries(f.rows.map((r) => [r.id, r.n])), heroes: [...f.heroes] });
+  const sum = () => { qs("[data-sum]", form).textContent = `Dà: ${codeSay86(give())}. Costa ${(+f.price || 0).toLocaleString("it-IT")} ${CUR_IT102[f.cur]}${f.was > f.price ? `, prima ${f.was.toLocaleString("it-IT")} (−${Math.round(100 - (100 * f.price) / f.was)}%)` : ""}${f.limit ? `, al massimo ${f.limit} ${PER_IT102[f.per]}` : ""}.`; };
+  form.addEventListener("input", (ev) => {
+    const t = ev.target;
+    if (t.matches("[data-nm]")) f.name = t.value;
+    if (t.matches("[data-tag]")) f.tag = t.value;
+    if (t.matches("[data-end]")) f.until = t.value;
+    if (t.matches("[data-q]")) { f.rows[+t.closest("[data-i]").dataset.i].n = clamp(Math.round(+t.value || 1), 1, 9999); sum(); }
+    if (t.matches("[data-it]")) { f.rows[+t.closest("[data-i]").dataset.i].id = t.value; sum(); }
+  });
+  form.addEventListener("change", (ev) => {
+    const t = ev.target;
+    if (t.matches("[data-cur]")) { f.cur = t.value; sum(); }
+    if (t.matches("[data-per]")) { f.per = t.value; sum(); }
+    if (t.matches("[data-noend]")) { f.until = t.checked ? "" : new Date(Date.now() + 7 * 864e5 - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16); paintForm(); }
+  });
+  form.addEventListener("click", (ev) => {
+    const t = ev.target;
+    const sb = t.closest("[data-shop]");
+    if (sb) { f.shop = sb.dataset.shop; paintForm(); return; }
+    const kb = t.closest("[data-kind]");
+    if (kb) { f.kind = kb.dataset.kind; paintForm(); return; }
+    if (t.closest("[data-add]")) { f.rows.push({ id: f.shop === "coin" ? "mirror" : "l", n: 1 }); paintItems(); sum(); return; }
+    if (t.closest("[data-rm]")) { f.rows.splice(+t.closest("[data-i]").dataset.i, 1); paintItems(); sum(); return; }
+    const hb = t.closest("[data-h]");
+    if (hb) { const i = f.heroes.indexOf(hb.dataset.h); if (i >= 0) f.heroes.splice(i, 1); else f.heroes.push(hb.dataset.h); hb.setAttribute("aria-pressed", String(i < 0)); sum(); return; }
+    if (t.closest("[data-cancel]")) { editing = null; f = blank(f.shop, f.kind); paintForm(); return; }
+    if (t.closest("[data-save]")) {
+      const g = give();
+      if (!g.gems && !g.gold && !f.rows.length && !f.heroes.length) { toast("Non dà niente: scegli gemme, oro, un oggetto o un eroe."); return; }
+      if (!(+f.price > 0)) { toast("Metti un prezzo."); return; }
+      const L = S().items, x = { id: editing ?? `w${Date.now().toString(36)}`, shop: f.shop, kind: f.kind, name: f.name.trim(), tag: f.kind === "bundle" ? f.tag.trim() : "", give: g, cur: f.cur, price: Math.round(+f.price), was: Math.round(+f.was || 0), limit: Math.round(+f.limit || 0), per: f.per, ...(f.until ? { until: new Date(f.until).toISOString() } : {}) };
+      const i = L.findIndex((y) => y.id === editing);
+      if (i >= 0) { x.off = L[i].off; L[i] = x; } else L.unshift(x);
+      change("Shop", `shop-item-${x.id}`, `${x.shop === "coin" ? "Coin Shop" : "Shop del gold"}, ${x.kind === "bundle" ? "bundle" : "articolo"}: ${shopSay102(x)}`, t.closest("[data-save]"));
+      toast(`${x.name || "L'articolo"} salvato nella bozza: arriva ai giocatori con Manda online.`);
+      editing = null;
+      f = blank(x.shop, x.kind);
+      paintForm();
+      paintList();
+    }
+  });
+  /* la lista: prima il Coin Shop, poi lo Shop del gold */
+  const paintList = () => {
+    const L = S().items;
+    const row = (x) => `<article class="g86-row g102-row${x.off ? " is-off" : ""}" data-id="${esc(x.id)}">
+        <div class="g86-row-t"><b class="g86-code">${esc(x.name || codeSay86(x.give ?? {}))}</b><small>${x.shop === "coin" ? "Coin Shop" : "Shop del gold"} · ${x.kind === "bundle" ? `bundle${x.tag ? ` «${esc(x.tag)}»` : ""}` : "articolo"}</small>
+          <p>Dà: ${esc(codeSay86(x.give ?? {}))}</p><p>Costa ${(+x.price).toLocaleString("it-IT")} ${esc(CUR_IT102[x.cur ?? "gold"])}${+x.was > +x.price ? `, prima ${(+x.was).toLocaleString("it-IT")} (−${Math.round(100 - (100 * x.price) / x.was)}%)` : ""}${+x.limit ? ` · al massimo ${x.limit} ${PER_IT102[x.per ?? "all"]}` : ""}</p>
+          <p class="g86-when">${x.until ? (Date.now() > Date.parse(x.until) ? `Scaduto il ${new Date(x.until).toLocaleString("it-IT", { dateStyle: "short", timeStyle: "short" })}` : `Fino al ${new Date(x.until).toLocaleString("it-IT", { dateStyle: "short", timeStyle: "short" })}`) : "Non scade"}</p></div>
+        <div class="g86-row-b"><button type="button" class="g-btn g-btn--ghost" data-edit>Cambia</button><label class="g-check"><input type="checkbox" data-on${x.off ? "" : " checked"}>In vendita</label><button type="button" class="g-btn g-btn--danger" data-del>${ic("trash")}<span>Elimina</span></button></div></article>`;
+    const C = L.filter((x) => x.shop === "coin"), G = L.filter((x) => x.shop !== "coin");
+    list.innerHTML = L.length ? `${C.length ? `<p class="g102-h">Coin Shop</p>${C.map(row).join("")}` : ""}${G.length ? `<p class="g102-h">Shop del gold</p>${G.map(row).join("")}` : ""}`
+      : '<p class="g-empty">Ancora niente: crea un articolo o un bundle qui a fianco. Il Coin Shop nel gioco resta vuoto finché non ne aggiungi uno.</p>';
+  };
+  list.addEventListener("click", (ev) => {
+    const row = ev.target.closest("[data-id]");
+    if (!row) return;
+    const L = S().items, x = L.find((y) => y.id === row.dataset.id);
+    if (!x) return;
+    if (ev.target.closest("[data-edit]")) {
+      editing = x.id;
+      f = { shop: x.shop ?? "gold", kind: x.kind ?? "ware", name: x.name ?? "", tag: x.tag ?? "", gems: x.give?.gems ?? 0, gold: x.give?.gold ?? 0, rows: Object.entries(x.give?.items ?? {}).map(([id, n]) => ({ id, n })), heroes: [...(x.give?.heroes ?? [])], cur: x.cur ?? "gold", price: x.price ?? 1, was: x.was ?? 0, limit: x.limit ?? 0, per: x.per ?? "all", until: x.until ? new Date(Date.parse(x.until) - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : "" };
+      paintForm();
+      form.scrollIntoView({ block: "start", behavior: "smooth" });
+      return;
+    }
+    if (ev.target.closest("[data-del]")) {
+      L.splice(L.indexOf(x), 1);
+      change("Shop", `shop-item-${x.id}`, `Tolto dallo Shop: ${shopSay102(x)}`, row);
+      if (editing === x.id) { editing = null; f = blank(); paintForm(); }
+      paintList();
+    }
+  });
+  list.addEventListener("change", (ev) => {
+    const row = ev.target.closest("[data-id]");
+    if (!row || !ev.target.matches("[data-on]")) return;
+    const x = S().items.find((y) => y.id === row.dataset.id);
+    if (!x) return;
+    x.off = !ev.target.checked;
+    row.classList.toggle("is-off", x.off);
+    change("Shop", `shop-item-${x.id}`, `${x.off ? "Fermato" : "Di nuovo in vendita"}: ${shopSay102(x)}`, row);
+  });
+  paintCoins();
+  paintBase();
+  paintForm();
+  paintList();
+};
 const viewCodes86 = (host) => {
   const blank = () => ({ code: codeMake86(), note: "", gems: 0, gold: 0, rows: [], heroes: [], end: "" });
   let f = blank(), editing = null;
@@ -30445,7 +30880,7 @@ const viewCodes86 = (host) => {
   paintList();
 };
 
-const TABS = [["heroes", "Personaggi", "heroes"], ["foes", "Nemici", "foes"], ["bosses", "Boss", "crown"], ["story", "Storia", "story"], ["summon", "Summon", "summon"], ["cards", "Carte", "image"], ["guest", "Apparizioni", "fire"], ["codes", "Codici", "send"], ["launch", "Lancio", "reset"]];
+const TABS = [["heroes", "Personaggi", "heroes"], ["foes", "Nemici", "foes"], ["bosses", "Boss", "crown"], ["story", "Storia", "story"], ["summon", "Summon", "summon"], ["cards", "Carte", "image"], ["guest", "Apparizioni", "fire"], ["shop", "Shop", "shop"], ["codes", "Codici", "send"], ["launch", "Lancio", "reset"]];
 let unmount = null, page = null, onClose = null;
 const build = () => {
   const root = (G.root = mk("div", "g54"));
@@ -30481,7 +30916,7 @@ const build = () => {
     anim(page, [{ opacity: 0, transform: `translateX(${dir * 26}px)` }, { opacity: 1, transform: "none" }], 420, { delay: old ? 60 : 0 });
     const kind = tab === "heroes" ? "hero" : tab === "foes" ? "foe" : null;
     try {
-      unmount = kind ? viewArchive(page, kind) : tab === "bosses" ? viewBosses(page) : tab === "story" ? viewStory(page) : tab === "launch" ? viewLaunch(page) : tab === "codes" ? viewCodes86(page) : tab === "guest" ? viewGuest78(page) : tab === "cards" ? viewCards79(page) : viewSummon(page);
+      unmount = kind ? viewArchive(page, kind) : tab === "bosses" ? viewBosses(page) : tab === "story" ? viewStory(page) : tab === "launch" ? viewLaunch(page) : tab === "shop" ? viewShop102(page) : tab === "codes" ? viewCodes86(page) : tab === "guest" ? viewGuest78(page) : tab === "cards" ? viewCards79(page) : viewSummon(page);
     } catch (err) { console.error(err); page.innerHTML = `<p class="g-empty">Questa pagina non si è aperta: ${esc(err.message)}</p>`; }
     if (typeof unmount !== "function") unmount = null;
   };
@@ -31263,7 +31698,19 @@ const initGame = () => {
       savePlayer();
       return true;
     },
-    bank: () => (isAdmin() ? "Admin: every hero has all six copies." : "a copy comes from pulling a hero you already have, or from a Mirror Shard · past six it burns into gold"),
+    /** Round 102: a waiting copy turned into a coin of the hero's rarity, after a question. */
+    toCoin: async (id) => {
+      const p = PLAYER.player, r = p.roster[id], h = heroineById(id), k = coinOf102(h);
+      if (isAdmin() || !r || !(r.held > 0) || !k) return false;
+      const yes = await confirm98(`Turn one waiting copy of ${h.name} into a ${coinName102(k)}? The copy is gone, and the coin is yours to spend in the Shop, under Coin Shop.`, "Turn it", "Keep the copy", "A copy into a coin");
+      if (!yes || !(r.held > 0)) return false;
+      r.held -= 1;
+      p.items[k] = (p.items[k] ?? 0) + 1;
+      savePlayer();
+      toast(`+1 ${coinName102(k)}: spend it in the Shop, under Coin Shop`);
+      return true;
+    },
+    bank: () => (isAdmin() ? "Admin: every hero has all six copies." : "a copy comes from pulling a hero you already have, or from a Mirror Shard · combine it, or turn it into a coin for the Coin Shop · with all six in, a copy is a coin at once"),
   };
   const copiesView = COPIES.mount(tb3Host, copiesApi, "sky", "column");
   const renderCopies = () => (pc77() ? copies77() : copiesView.paint());
@@ -31470,13 +31917,13 @@ const initGame = () => {
       const perk = MILE(i) ? h.copies?.[i === 2 ? "c3" : "c6"] : null;
       return `<li class="${i < cons ? "is-on" : i < cons + held ? "is-held" : ""}${MILE(i) ? " is-mile" : ""}"><b>${i + 1}</b><span>${perk ? `<em>${perk.name}</em><div class="fx85">${fxHTML85(perk.effect)}</div>` : MILE(i) ? `<em>${i === 2 ? "2nd passive" : "New effect"}</em>coming soon` : `${rate} HP, ATK and DEF`}</span></li>`;
     };
-    const wait = cons >= COPY_MAX ? "All six combined: a new copy burns into gold." : held ? `${held} cop${held === 1 ? "y" : "ies"} waiting · the next gives ${rate}` : "Pull them again to get a copy, or use a Mirror Shard from Boss mode.";
+    const wait = cons >= COPY_MAX ? "All six combined: a new copy is a coin at once." : held ? `${held} cop${held === 1 ? "y" : "ies"} waiting · the next gives ${rate}` : "Pull them again to get a copy, or use a Mirror Shard from Boss mode.";
     paint77(tb3Host, `<div class="p77-cp">${fig77(h)}
       <div class="p77-hex" role="img" aria-label="${cons} of ${COPY_MAX} copies combined${held ? `, ${held} waiting` : ""}">${hex}<p class="p77-hex-n"><b>${cons}</b><small>/ ${COPY_MAX}</small></p></div>
       <div class="p77-col">${name77(h, true)}
         <p class="p77-big">${cons ? `copy ${cons} of ${COPY_MAX} · +${copyPct(h, cons)}% HP, ATK and DEF` : "no copies combined yet"}</p>
         <p class="p77-note">${adm ? "Admin: every hero has all six copies." : wait}</p>
-        <div class="p77-acts"><button class="gm-btn p77-go" type="button" data-p77-combine="${h.id}"${held && cons < COPY_MAX && !adm ? "" : " disabled"}>${cons >= COPY_MAX ? "complete" : "combine"}</button>${adm ? "" : (() => { const n = copiesApi.mirrors(); return `<button class="gm-btn cp-mirror" type="button" data-p77-mirror="${h.id}"${n > 0 && cons + held < COPY_MAX ? "" : " disabled"}><img src="art/items/mirror-shard.webp" alt="" draggable="false"><span>use a Mirror Shard<small>${n} held · from Boss mode</small></span></button>`; })()}</div>
+        <div class="p77-acts"><button class="gm-btn p77-go" type="button" data-p77-combine="${h.id}"${held && cons < COPY_MAX && !adm ? "" : " disabled"}>${cons >= COPY_MAX ? "complete" : "combine"}</button>${(() => { const k = coinOf102(h); return !k || adm || cons >= COPY_MAX ? "" : `<button class="gm-btn gm-btn--ghost p77-coin" type="button" data-p77-coin="${h.id}"${held ? "" : " disabled"}>${coinIcon102(k)}<span>a copy → ${coinName102(k)}</span></button>`; })()}${adm ? "" : (() => { const n = copiesApi.mirrors(); return `<button class="gm-btn cp-mirror" type="button" data-p77-mirror="${h.id}"${n > 0 && cons + held < COPY_MAX ? "" : " disabled"}><img src="art/items/mirror-shard.webp" alt="" draggable="false"><span>use a Mirror Shard<small>${n} held · from Boss mode</small></span></button>`; })()}</div>
         <ol class="p77-ladder">${Array.from({ length: COPY_MAX }, (_, i) => rung(i)).join("")}</ol>
       </div>
       ${strip77(h.id, (x) => { const q = progOf(x.id), c = adm ? COPY_MAX : q.cons ?? 0, w = adm ? 0 : q.held ?? 0; return `${c}/${COPY_MAX}${w && c < COPY_MAX ? ` · +${w}` : ""}`; })}
@@ -31604,6 +32051,8 @@ const initGame = () => {
       renderItems();
       return;
     }
+    const pc102 = t.closest("[data-p77-coin]");
+    if (pc102) { copiesApi.toCoin(pc102.dataset.p77Coin).then((ok) => { if (ok) renderCopies(); }); return; }
     const cb = t.closest("[data-p77-combine], [data-p77-mirror]");
     if (cb) {
       const id = cb.dataset.p77Combine ?? cb.dataset.p77Mirror;
@@ -31921,7 +32370,7 @@ const initGame = () => {
     renderProfile();
     toast("Code redeemed");
   });
-  const renderProfile = () => {
+  const renderProfile0 = () => {
     const p = PLAYER.player, cleared = Object.keys(p.cleared).length;
     pfHost.innerHTML = `<div class="pf-me"><span class="gm-fc" style="width:64px;height:83px">${faceChip(leader)}</span><div><b>Founder</b><small>${isAdmin() ? "admin · everything maxed" : `player · ${ownedHeroines().length} hero${ownedHeroines().length === 1 ? "" : "es"}`}</small></div></div>
       <p class="gm-sub-h">mode</p>
@@ -31938,6 +32387,47 @@ const initGame = () => {
       ${pfConfirm ? `<div class="pf-confirm" role="alert"><p>Reset account: this deletes your Player heroes, gems, gold, items and stages, and you start again from the first hero. Admin is not touched.</p><button class="gm-btn pf-danger" type="button" data-pf-wipe>reset account</button><button class="gm-btn gm-btn--ghost" type="button" data-pf-keep>keep my account</button></div>`
         : '<p class="gm-sub-h">account</p><button class="gm-btn pf-danger" type="button" data-pf-reset>reset account</button><p class="pf-note">Starts your Player account again from zero, to try the game as a new player would.</p>'}`;
   };
+  /* ── round 102 · the Profile as the user picked it (lab 102, «A · Tessera»): one adventurer's card with your character whole, who
+   *  you are (leader, heroes, the story's bar, Change and Replay the prologue) and your run; under it Mode, Codes and Account. The page's
+   *  own pieces are moved into the frame after every drawing, so every button keeps its handler; your character comes back after a tap
+   *  too (before, a tap on Redeem code or the mode drew the page again without it). ── */
+  const pfLayout102 = () => {
+    const host = pfHost;
+    if (!host || host.querySelector(".p102")) return;
+    const one = (s, r = host) => r.querySelector(s);
+    const me = one(".pf-me"), ch = one(".pf64"), groups = {}, rest = [];
+    let cur = null;
+    for (const el of [...host.children]) {
+      if (el === me || el === ch) continue;
+      if (el.matches("p.gm-sub-h")) { cur = el.textContent.trim().toLowerCase(); groups[cur] = []; continue; }
+      if (el.matches(".pf-confirm")) { groups.account = [el]; cur = null; continue; }
+      if (cur) groups[cur].push(el); else rest.push(el);
+    }
+    const p = PLAYER.player, img = ch && one(".pf64-pic img", ch), ec = (ch && one(".pf64-pic", ch)?.style.getPropertyValue("--ec")) || "var(--accent)";
+    const name = (ch && one(".pf64-t b", ch)?.textContent) ?? one("b", me)?.textContent ?? "", sub = (ch && one(".pf64-t span", ch)?.textContent) ?? "";
+    const acts = ch ? [...ch.querySelectorAll(".gm-btn")] : [];
+    const chip = me && one(".gm-fc", me), leadName = (me && one(".face-chip-name", me)?.textContent) ?? "";
+    const heroes = Object.keys(p.roster ?? {}).length, cleared = Object.keys(p.cleared ?? {}).length, all = STORY.stages.length;
+    const sec = (cls, title, els) => { const s = document.createElement("section"); s.className = `p102-sec ${cls}`; s.innerHTML = `<h3>${title}</h3>`; for (const e of els ?? []) s.append(e); return s; };
+    const wrap = document.createElement("div");
+    wrap.className = "p102 p102-A";
+    wrap.style.setProperty("--ec", ec);
+    wrap.innerHTML = `<article class="p102-card${img ? "" : " is-nofig"}">${img ? `<div class="p102-fig"><img src="${img.getAttribute("src")}" alt="${esc64(name)}" draggable="false"></div>` : ""}
+      <div class="p102-id"><h2 class="p102-name">${esc64(name)}</h2><p class="p102-sub">${esc64(sub)}</p>
+        <div class="p102-facts"><div class="p102-lead"></div><div class="p102-fact"><small>Heroes</small><b>${heroes}</b></div>
+          <div class="p102-story"><span><small>Story</small><b>${cleared} / ${all}</b></span><i style="--p:${Math.round((100 * cleared) / Math.max(1, all))}%"></i></div></div>
+        <div class="p102-acts"></div></div><div class="p102-cardrun"></div></article><div class="p102-row"></div>`;
+    for (const b of acts) one(".p102-acts", wrap).append(b);
+    if (chip) one(".p102-lead", wrap).append(chip);
+    one(".p102-lead", wrap).insertAdjacentHTML("beforeend", `<span><small>Leader</small><b>${esc64(leadName)}</b></span>`);
+    one(".p102-cardrun", wrap).append(sec("p102-run", "Your run", groups["your player run"]));
+    one(".p102-row", wrap).append(sec("p102-mode", "Mode", [...(groups.mode ?? []), ...(groups.gestionale ?? [])]));
+    if (groups.codes) one(".p102-row", wrap).append(sec("p102-codes", "Codes", groups.codes));
+    one(".p102-row", wrap).append(sec("p102-acc", "Account", groups.account));
+    for (const e of rest) wrap.append(e);
+    host.replaceChildren(wrap);
+  };
+  const renderProfile = () => { renderProfile0(); try { paintPf64(); } catch { /* the page's first drawing, before your character's part is ready */ } pfLayout102(); };
   const stHost = $("[data-st-grid]", stage);
   let stPick = null;
   // round 69: the story's hooks into the page
@@ -32213,7 +32703,7 @@ const initGame = () => {
     cost: banCost,
     title: () => escB(curBan()?.name ?? "Starter banner"),
     rates: () => { const b = curBan(); return (b ? banRates(b) : PULL_RATES).map(([r, p]) => `<span><b class="tier-${RARITY_LEVEL[r]}"><span class="tier-text">${lrTxt(r)}</span></b>${+(p * 100).toFixed(1)}%</span>`).join("") + (b ? "" : '<span class="sm31-no">no UR · no LR</span>'); },
-    text: () => (curBan() ? banText(curBan()) : STARTER_UP67.length ? `${upText67(STARTER_UP67)} Every hero except UR and LR.` : "Every hero except UR and LR. A copy of a hero you have is kept for Copies, up to six; past that it burns into gold for the shop."),
+    text: () => (curBan() ? banText(curBan()) : STARTER_UP67.length ? `${upText67(STARTER_UP67)} Every hero except UR and LR.` : "Every hero except UR and LR. A copy of a hero you have waits in Copies: combine it, or turn it into a coin for the Coin Shop. With all six copies in, a copy is a coin at once."),
     whoFoot: () => { const b = curBan(); return !b ? `<p class="sm42-foot">Every 6th ×11 has ${sureSay86(null, sureHero92(STARTER_SURE86.hero, STARTER_SURE86.rar || "SSR", STARTER_SURE86.pct) ? [{ h: heroineById(STARTER_SURE86.hero) }] : starterUps67(STARTER_SURE86.rar || "SSR"), STARTER_SURE86.rar || "SSR", STARTER_SURE86.pct)}; in this banner the first one lets you choose it.</p>` : nh93(b) ? `<p class="sm42-foot">${rule93(b)}</p>` : banAt(b) === 1 ? `<p class="sm42-foot">Every ×11 has ${banSure86(b)}.</p>` : banAt(b) >= 2 ? `<p class="sm42-foot">Every ${ordOf(banAt(b))} ×11 has ${banSure86(b)}.</p>` : ""; },
     /** Round 42 · P1: who is in the banner, by rarity, each with her odds and what you hold of her (copies combined and waiting). */
     blank: () => { const b = curBan(); if (!b) return PULL_POOL("R").length ? null : { odds: PULL_RATES.find(([x]) => x === "R")?.[1] ?? 0, dust: DUST_PER_R }; const p = banRates(b).find(([x]) => x === "R")?.[1] ?? 0; return p && !banPool(b, "R").length ? { odds: p, dust: DUST_PER_R } : null; },
@@ -32252,9 +32742,8 @@ const initGame = () => {
         if (!r) { p.roster[h.id] = { lv: 1, xp: 0, stars: 0, cons: 0, held: 0 }; out.push({ h, isNew: true, gold: 0 }); continue; }
         // a copy is kept for Copies until she has six, counting the ones waiting; past that it burns into gold
         if ((r.cons ?? 0) + (r.held ?? 0) < COPY_MAX) { r.held = (r.held ?? 0) + 1; out.push({ h, isNew: false, gold: 0, copy: true }); continue; }
-        const gold = DUP_GOLD[h.rarity] ?? DUP_GOLD.SR;
-        p.gold = (p.gold ?? 0) + gold;
-        out.push({ h, isNew: false, gold });
+        const d102 = dupGive102(p, h);
+        out.push({ h, isNew: false, gold: d102.gold, coin: d102.coin });
       }
       if (n > 1 && B) (p.bpity ??= {})[B.key] = sure ? 0 : banDone(B) + 1;
       else if (n > 1) { p.sixth = sixthOf() >= STARTER_AT ? 0 : sixthOf() + 1; if (pick) starterOf().chose = pick; }
@@ -32383,7 +32872,7 @@ const initGame = () => {
       const h = heroineById(r.hero), had = p.roster[r.hero];
       if (!had) { p.roster[r.hero] = { lv: 1, xp: 0, stars: 0, cons: 0, held: 0 }; return `${h.name} joins you`; }
       if ((had.cons ?? 0) + (had.held ?? 0) < COPY_MAX) { had.held = (had.held ?? 0) + 1; return `${h.name}: a copy for her Copies`; }
-      const g = DUP_GOLD[h.rarity] ?? DUP_GOLD.SR; p.gold = (p.gold ?? 0) + g; return `${h.name}: +${g} gold`;
+      return `${h.name}: ${dupGive102(p, h).say}`;
     }
     return "";
   };
@@ -36100,7 +36589,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-08-2325";
+const BUILD = "2026-11-09-1202";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
