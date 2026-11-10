@@ -8048,6 +8048,28 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
   .r105-rest-t { font-size: 19px; }
 }
 
+/* ══ round 106 · the HP bars from map 4 on: the bar it stands in fills the plate, the next bar's colour waits under it, ×N on its name row ══ */
+.bt-foe .bt-hp2 { background: var(--under106, rgb(255 255 255 / 0.12)); }
+.bt-bar106 { flex: none; padding: 2px 5px 1px; font: 700 0.78em/1 var(--font-display); font-style: normal; letter-spacing: 0.02em; color: #fff;
+  background: rgb(6 8 10 / 0.72); box-shadow: 0 0 0 1px rgb(255 255 255 / 0.32); }
+.bt-bar106:empty { display: none; }
+/* the gold chests: GOLD under the lock, in gold */
+.ch8-seal.is-gold106 .it-stat { color: #ffd25a; letter-spacing: 0.06em; }
+.g106-pile { display: grid; justify-items: center; gap: 4px; pointer-events: none; }
+.g106-coin { display: grid; place-items: center; }
+.g106-coin svg { width: clamp(72px, 12vw, 112px); height: clamp(72px, 12vw, 112px); filter: drop-shadow(0 0 18px rgb(242 182 50 / 0.75)); }
+.g106-n { font: 700 clamp(34px, 6vw, 64px)/1 var(--font-display); color: #ffd25a; letter-spacing: 0.01em; white-space: nowrap;
+  text-shadow: 0 2px 0 #6b4200, 0 0 26px rgb(255 210 90 / 0.55); font-variant-numeric: tabular-nums; }
+/* the Database: the bars and the bite, at the top of the page Nemici */
+.g-arch.has-bal106 { grid-template-rows: auto auto minmax(0, 1fr); }
+.g106-bal { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 22px; padding: 12px 28px 14px; border-bottom: 1px solid var(--g-line); }
+.g106-bal-h { display: grid; gap: 3px; flex: 1 1 240px; min-width: 0; max-width: 420px; }
+.g106-bal-h b { font: 700 17px/1.1 var(--font-display); letter-spacing: 0.01em; }
+.g106-bal-h small { font: 500 12.5px/1.35 var(--font-sans); color: var(--g-muted); }
+.g106-bal-f { display: flex; flex-wrap: wrap; gap: 10px 12px; }
+.g106-bal-f .g-num { width: 132px; }
+@media (max-width: 760px) { .g106-bal { padding: 10px 14px 12px; } .g106-bal-f .g-num { width: calc(50% - 6px); } }
+
 </style>
 </head>
 <body>
@@ -16497,6 +16519,9 @@ const codeGive86 = (c) => {
   for (const [k, v] of Object.entries(c.items ?? {})) {
     const q = pnum(v, 0, 9999, 0);
     if (!q) continue;
+    // round 106: a gold chest opens as it comes: its gold, rolled in its range (the shop shows it open)
+    const g106 = goldKey106(k);
+    if (g106) { for (let i = 0; i < q; i += 1) { const n = goldRoll106(g106); p.gold = (p.gold ?? 0) + n; GOLD106.push({ r: g106, n }); got.push(`${g106} Gold Chest: +${nf(n)} gold`); } continue; }
     if (CODE_ITEMS86[k]) { p.items[k] = (p.items[k] ?? 0) + q; got.push(`${CODE_ITEMS86[k]} ×${q}`); continue; }
     const ch104 = chestKey104(k);
     if (ch104) { const bag = (p.bag ??= {}); for (let i = 0; i < q; i += 1) { const one = chestOpen104(ch104), line = `${chestName104(ch104.r)}: ${one.name} +${one.pct}%`; bag[one.id] = (bag[one.id] ?? 0) + 1; CHEST104.push({ k, r: ch104.r, s: ch104.s, it: one, line }); got.push(line); } continue; }
@@ -16583,7 +16608,7 @@ const tmark104 = (lv) => `<i class="tm104${lv >= 5 ? " is-max" : ""}" aria-hidde
 /* ── chests from the Database ── */
 const chestKey104 = (k) => { const m = /^chest-(N|R|SR|SSR|UR|LR)-(hp|atk|def|any)$/.exec(String(k)); return m ? { r: m[1], s: m[2] } : null; };
 const chestName104 = (r) => `${r} Chest`;
-const chestSay104 = (k) => { const c = chestKey104(k); return c ? `${chestName104(c.r)} (${c.s === "any" ? "any piece" : ITEM_STAT[c.s].label})` : null; };
+const chestSay104 = (k) => { const c = chestKey104(k); return c ? `${chestName104(c.r)} (${c.s === "any" ? "any piece" : ITEM_STAT[c.s].label})` : goldName106(k); };
 /** A chest as the shop draws them: a seal in its rarity's metal, the stat under its lock (any piece: «ANY»). */
 const seal104 = (r, s, name = chestName104(r)) => `<span class="it ch8-seal r-${r}" style="--sc:${ITEM_STAT[s]?.c ?? "#c9d3da"}"><span class="it-in"><i class="it-dots"></i><i class="it-top"></i><b class="ch8-lock"></b><b class="it-stat">${ITEM_STAT[s]?.label ?? "ANY"}</b><span class="it-name">${esc102(name)}</span></span></span>`;
 /** The chests the last buy opened, for the shop to show one after the other: { k, r, s, it, line }. */
@@ -16592,6 +16617,8 @@ const chestOpen104 = (c) => { const slots = ITEM_SLOTS.filter((x) => c.s === "an
 
 /** One piece (or one chest) alone in a ware: what it is, its %, its tempering. Null for anything else. */
 const pieceSay104 = (g = {}) => {
+  const s106 = say106(g);
+  if (s106) return s106;
   const keys = Object.keys(g.items ?? {});
   if (keys.length !== 1 || +g.items[keys[0]] !== 1 || (g.heroes ?? []).length || +g.gems || +g.gold) return null;
   const k = keys[0], c = chestKey104(k);
@@ -16603,6 +16630,49 @@ const pieceSay104 = (g = {}) => {
   if (!it) return null;
   const pct = ITEM_ROLL[it.rarity] && !it.special && !it.story ? `+${ITEM_ROLL[it.rarity].join("–")}%, rolled when you buy it` : `+${it.pct}%`;
   return `${it.rarity} ${ITEM_STAT[it.stat].label} ${it.n} · ${pct} · ${it.temper ? `tempered +${it.temper} of 5` : "not tempered (+0)"}`;
+};
+/* ══════════ Round 106 (2026-11-10) · the balance from map 4 on, the gold chests, what the Mirror Shard does ══════════
+ * The user: «Mettiamo, da mappa 4 in poi, prima lasci invariato: A · Barre di vita, C · Abilità uniche, E · Aumenta i danni che fanno
+ * i nemici di un 20% buono almeno». How many bars and how much harder: the Database, page Nemici (the pack's part bal106).
+ * «con i COIN R ed SR il player può comprare un nuovo oggetto ovvero la cassa di monete d'oro … Cassa R: da 50 a 500, SR: da 250 a 1000,
+ * SSR: da 500 a 5000»: three built-in wares of the Coin Shop (the Database changes their price and coin, or takes them off), and a
+ * chest the Database's own wares and bundles can give («goldchest-R|SR|SSR»).
+ * «il mirror shard non abbiamo detto al player cosa fa, fai in modo che nello shop venga specificato». */
+const BAL106 = { from: 3, bars: { common: 3, elite: 4, mini: 6, boss: 10 }, dmg: 20 };
+/** The Database's numbers (the map counts from 1 there, from 0 here); anything missing or odd keeps the game's own. */
+const bal106Read = (x) => {
+  const b = x && typeof x === "object" && !Array.isArray(x) ? x : {};
+  const n = (v, lo, hi, d) => { const k = Math.round(+v); return v == null || v === "" || !Number.isFinite(k) ? d : Math.min(hi, Math.max(lo, k)); };
+  BAL106.from = n(b.from, 1, 8, 4) - 1;
+  for (const [k, d] of [["common", 3], ["elite", 4], ["mini", 6], ["boss", 10]]) BAL106.bars[k] = n(b.bars?.[k], 1, 20, d);
+  BAL106.dmg = n(b.dmg, 0, 300, 20);
+};
+
+/* ── the gold chests ── */
+const GOLD_RANGE106 = { R: [50, 500], SR: [250, 1000], SSR: [500, 5000] };
+/** The Coin Shop's own three, as the game sells them when the Database says nothing. */
+const GOLD_BASE106 = { R: { cur: "coinB", price: 4 }, SR: { cur: "coinS", price: 5 }, SSR: { cur: "coinS", price: 20 } };
+const goldKey106 = (k) => /^goldchest-(R|SR|SSR)$/.exec(String(k))?.[1] ?? null;
+const goldName106 = (k) => { const r = goldKey106(k); return r ? `${r} Gold Chest` : null; };
+const goldSay106 = (r) => `${GOLD_RANGE106[r][0].toLocaleString("en-US")}–${GOLD_RANGE106[r][1].toLocaleString("en-US")} gold inside`;
+/** How much gold it holds: anywhere in its range, by tens. */
+const goldRoll106 = (r) => { const [lo, hi] = GOLD_RANGE106[r]; return lo + 10 * Math.floor(Math.random() * ((hi - lo) / 10 + 1)); };
+/** A gold chest as the shops draw it: the chests' own seal in its rarity's metal, GOLD under its lock. */
+const goldSeal106 = (r) => `<span class="it ch8-seal r-${r} is-gold106" style="--sc:#f2b632"><span class="it-in"><i class="it-dots"></i><i class="it-top"></i><b class="ch8-lock"></b><b class="it-stat">GOLD</b><span class="it-name">${r} Gold Chest</span></span></span>`;
+/** The gold chests the last buy opened, for the shop to show one after the other: { r, n }. */
+const GOLD106 = [];
+/** A built-in gold chest of the Coin Shop at the Database's price and coin (or the game's own), and whether it is on sale. */
+const goldWare106 = (r) => {
+  const b = (typeof SHOP102 !== "undefined" && SHOP102.base?.[`gold106-${r}`]) || {}, d = GOLD_BASE106[r], p = Math.round(+b.price);
+  return { r, price: p > 0 ? p : d.price, cur: COIN_KEYS102.includes(b.cur) ? b.cur : d.cur, off: !!b.off };
+};
+/** What a ware gives, said where the shop would only name it: what the Mirror Shard is for, what a gold chest holds. */
+const say106 = (g = {}) => {
+  const keys = Object.keys(g.items ?? {}).filter((k) => +g.items[k] > 0);
+  if (!keys.length || (g.heroes ?? []).length || +g.gems || +g.gold) return null;
+  if (keys.every((k) => k === "mirror")) return "A copy of the hero you choose: use it in that hero's file, under Copies. Copies make a hero stronger, with a bonus at 3 and at 6.";
+  if (keys.length === 1 && goldKey106(keys[0])) return `${goldSay106(goldKey106(keys[0]))} · it opens when you buy it`;
+  return null;
 };
 /* ── the shops as the Database sends them ── */
 /** base: the built-in wares' price and «off» (s, m, l, stam, chest-bronze/silver/gold, offer-bundle/lpair/chest); items: the
@@ -16724,6 +16794,8 @@ const packLate = (P) => {
   // round 102: the shops as the Database sends them, and the coins' names
   { const S = P.shop102 && typeof P.shop102 === "object" ? P.shop102 : {}; SHOP102.base = S.base && typeof S.base === "object" ? S.base : {}; SHOP102.items = Array.isArray(S.items) ? S.items.filter((x) => x && typeof x === "object" && x.id) : [];
     for (const k of COIN_KEYS102) { const nm = coinPick104(k, S.names?.[k]); COIN_NAMES102[k] = nm; CODE_ITEMS86[k] = nm; } }
+  // round 106: from which map the HP bars and the harder bite, and how much (the Database, page Nemici)
+  bal106Read(P.bal106);
   PACK_BANNERS = (P.banners ?? []).filter((b) => b && typeof b === "object" && b.key && b.key !== "starter");
   const st = (P.banners ?? []).find((b) => b.key === "starter");
   if (st) {
@@ -18368,7 +18440,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   };
   const stateChips = (list) => list.map(([k, n, label]) => `<span class="bt-state bt-state--${k}" title="${label}">${btIcon(k)}${n ? `<b>${n}</b>` : ""}</span>`).join("");
   const foeStates = (e) => {
-    const s = [];
+    const s = chips106(e);
     if (e.flame) s.push(["flame", e.flame, `Eternal Flame ×${e.flame}: deals ${Math.round((1 - Math.pow(0.65, e.flame)) * 100)}% less, takes ${35 * e.flame}% more. It never ends.`]);
     if (e.sword) s.push(["sword", e.sword, `Black Sword ×${e.sword}: takes ${(7.5 * e.sword).toFixed(1)}% more. It never ends.`]);
     if (e.burn) s.push(["burn", e.burn.n, `Burn ×${e.burn.n}: ${3 * e.burn.n}% of its max HP a turn, ${e.burn.t} turn${e.burn.t === 1 ? "" : "s"} left`]);
@@ -18427,7 +18499,8 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
       node.classList.toggle("is-phase62", !!e.phase62 && !e.dead);
       node.dataset.mech62 = e.dead ? "" : [e.charge62 && "charging", e.ward62 > 0 && `ward ${e.ward62} · ${STORY62.ELEM[e.wardBy]}`, e.phase62 && "phase 2"].filter(Boolean).join(" · ");
       node.classList.toggle("is-picking", F.picking?.step === "foe" && !e.dead);
-      paintHp(node, e.hp, e.max);
+      { const t106 = tag106(e); if (t106) node.dataset.mech62 = [node.dataset.mech62, t106].filter(Boolean).join(" · "); node.classList.toggle("is-charge62", !e.dead && (!!e.charge62 || !!e.wind106 || (kind106(e) === "guardX" && e.bell106 === 1) || e.core106 === 2)); }
+      paintHp106(node, e);
       paintKit(e, node);
       const states = foeStates(e);
       $("[data-states]", node).innerHTML = stateChips(states);
@@ -18855,7 +18928,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     d = hit101(m, e, d, parts, o);
     d = hit62(m, e, d, parts, o);
     d = hit65(m, e, o, hit43(m, e, o, d, parts), parts);
-    if (plated(e) && !o.rage89) { d *= 0.88; parts.push(["×0.88 Gilded Plating", ""]); }
+    d = hitMul106(e, d, parts);
     return { d, k, parts, atk };
   };
   const critChance = (m, e, o = {}) => {
@@ -19047,7 +19120,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     rows.push(["level", `${e.level}<small>${e.rarity}${e.boss ? " · boss" : ""}</small>`]);
     rows.push(["atk", `${fmt(e.atk)}<small>${e.weaken ? "weakened, deals 30% less · " : ""}${e.poison ? "poisoned, −9% · " : ""}${e.flame ? `${e.flame} Eternal Flame, deals ${Math.round((1 - Math.pow(0.65, e.flame)) * 100)}% less · ` : ""}${e.rage ? "enraged, +10%" : ""}</small>`]);
     rows.push(["def", `${fmt(foeDef(e))}<small>stops about ${Math.round((1 - btGuard(foeDef(e), F.team[0]?.lv ?? 1)) * 100)}% of your hits</small>`]);
-    rows.push(["hp", fmt(e.max)]);
+    rows.push(["hp", `${fmt(e.max)}${e.bars106 > 1 ? `<small>${e.bars106} bars of ${fmt(Math.round(e.max / e.bars106))} · a blow empties at most the bar it lands in</small>` : ""}`]);
     rows.push(["items", e.items?.length ? `${e.items.length}<small>${e.items.map((i) => `${i.name} +${i.pct}% ${ITEM_STAT[i.stat].label}`).join(" · ")}</small>` : "none<small>enemies wear items from Lv 10</small>"]);
     rows.push(["type", `${ATTRIBUTES[e.attr].label}<small>${typeLine(e.attr)}</small>`]);
     if (!e.regal) { kitUp(e); rows.push(["next card", `${e.next.ult ? "its ultimate" : e.next.r}<small>only the rarity shows</small>`]); rows.push(["orbs", `${e.orbs ?? 0} of 5<small>at five, ${deckOf(e).U}</small>`]); }
@@ -20004,6 +20077,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     const used = new Set();
     const pick = (t) => { if (!t.startsWith("?")) return t; const opts = t.slice(1).split(","), free = opts.filter((k) => !used.has(k)), k = btPick(free.length ? free : opts); used.add(k); return `${k}:${FOE_KINDS[k].faces[0].rarity}`; };
     F.foes = run.waves[F.wave].map(pick).map((t0) => { const t = t0.replace(/[!^]$/, ""), e = { uid: ++uid, ...spawnFoe(t, run.level) }; if (t0.endsWith("!")) { e.mini = true; e.max = Math.round(e.max * 2); e.atk = Math.round(e.atk * 1.5); } else if (t0.endsWith("^")) e.mini = true; if (run.statMul) { e.atk = Math.round(e.atk * run.statMul); e.def = Math.round(e.def * run.statMul); e.max = Math.round(e.max * run.statMul); } if (run.hpMul) e.max = Math.round(e.max * run.hpMul); if ((e.kind === "ashfang" || FOE_KINDS[e.kind]?.made === "ashfang") && fang76() && fang76Run(run)) { const k = fang76K(); e.max = Math.round(e.max * k); e.atk = Math.round(e.atk * k); e.def = Math.round(e.def * k); e.fang76 = fang76(); } if (run.back94) e.max = Math.max(1, Math.round(e.max / 2)); e.hp = e.max; return e; });
+    init106();
     // round 95: what the Tidal Shelf's places took from Nerelle, said as she comes in
     { const nz = F.foes.find((x) => x.court); const gone = nz ? ["light", "pier", "reg"].filter((k) => tide95on(k)) : []; if (gone.length) { logIt("state", `${nz.name}: the Tidal Shelf`, gone.map((k) => TIDE95_TXT[k]).join(" · ")); toast(`The Tidal Shelf: ${gone.map((k) => TIDE95_TXT[k]).join(", ")}`); } }
     // round 76: the broken Fangstones, said as Ashfang comes in
@@ -20170,6 +20244,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   const fell = (e, by = null) => {
     if (e.dead) return;
     if (g78Can() && e === g78Boss()) { e.hp = g78Thr(e); return; }
+    if (fall106(e, by)) return;
     e.dead = true;
     logIt("ko", `${e.name} falls`);
     foesRage();
@@ -20202,6 +20277,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
       logIt("you", `${F.acting ?? m.h.name} → ${e.name}`, "her court stands beside her: only area attacks reach her", "0");
       return { dmg: 0, killed: false, over: 0, crit: false };
     }
+    { const dz = dodge106(m, e); if (dz) return dz; }
     const r = hitMath(m, e, pct, o);
     let d = r.d;
     if (o.noCrit) d *= 1 + critOf(m) / 100; // Cleave
@@ -20213,9 +20289,10 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     // the log: every number that made the blow, in the order it was counted
     const x2 = (t) => (t.startsWith("×") ? `× ${t.slice(1)}` : t);
     logIt("you", `${F.acting ?? m.h.name} → ${e.name}`, [`${fmt(r.atk)} ${o.statLabel ? `ATK ${o.statLabel}` : "ATK"}`, `× ${pct}%${o.weakSpot ? " weak spot" : ""}`, ...r.parts.map(([t]) => x2(t)), `× ${btGuard(o.rage89 ? 0 : foeDef(e), m.lv).toFixed(2)} defence`, o.noCrit && `× ${(1 + critOf(m) / 100).toFixed(2)} Cleave`, crit && `× ${cm} crit`, `× ${dice.toFixed(2)} dice`, `= ${fmt(d)}`].filter(Boolean).join(" "), fmt(d) + (crit ? " crit" : ""));
-    const over = d - e.hp;
+    const over = d - e.hp, hp0106 = e.hp;
     e.hp = floor78(e, Math.max(0, e.hp - d));
     ward62(m, e);
+    post106(m, e, d, crit, hp0106 - e.hp);
     const p = foeAt(e);
     number(p.x, p.y, d, crit ? "is-crit" : r.k > 1 ? "is-weak" : r.k < 1 ? "is-resist" : "", crit ? (cm >= 3 ? `crit ×${+cm.toFixed(2)}` : "critical") : r.k > 1 ? "super effective" : r.k < 1 ? "resisted" : "");
     burst(p.x, p.y, attrColour(m.h.attr));
@@ -20746,7 +20823,315 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   /** The fight's great boss: in its last wave, the strongest of the bosses (Nerelle has two sirens beside her, bosses too). */
   const g78Boss = () => (F.wave === run.waves.length - 1 ? F.foes.filter((e) => e.boss && !e.dead).sort((a, b) => b.max - a.max)[0] ?? null : null);
   /** The story's beat always plays: until it has, nothing takes the boss past that share. */
-  const floor78 = (e, hp) => { if (hp <= g78Thr(e) && g78Can() && e === g78Boss()) { F.g78due = true; return g78Thr(e); } return hp; };
+  const floor78 = (e, hp) => { hp = bar106(e, hp); if (hp <= g78Thr(e) && g78Can() && e === g78Boss()) { F.g78due = true; return g78Thr(e); } return hp; };
+  /* ══════════ Round 106 (2026-11-10) · from map 4 on: HP bars and a harder bite; every enemy of the Gilded Host its own ability ══════════
+   * The user: «Mettiamo, da mappa 4 in poi, prima lasci invariato: A · Barre di vita, C · Abilità uniche, E · Aumenta i danni che fanno
+   * i nemici di un 20% buono almeno»; the guard Y «invece di metà danno fatto il player se ne prende un quarto, sennò si uccide da solo»;
+   * and Royal Guard X, Royal Guard Y and Altea go through the heroes' Evasion. The numbers: BAL106 (the Database, Nemici). */
+  const reg106 = () => {
+    if (run.kind !== "battle" || !run.stage) return -1;
+    const s = run.stage;
+    if (Number.isInteger(s.reg)) return s.reg;
+    const i = STORY.stages.indexOf(s);
+    return i >= 0 ? Math.floor(i / 25) : -1;
+  };
+  /** The kind an enemy was made from (a Database boss keeps its kind's ability). */
+  const kind106 = (e) => { const k = FOE_KINDS[e?.kind]?.made; return typeof k === "string" ? k : e?.kind ?? null; };
+  const is106 = (e, k) => !!e && !e.dead && kind106(e) === k;
+  /** Altea and her two guards: their blows go through Evasion. */
+  const ign106 = (e) => !!e && (e.regal || e.royal || ["altea", "guardX", "guardY"].includes(kind106(e)));
+  const AB106 = {
+    squire: { name: "Squire's Duty", say: "While she stands, the strongest enemy beside her takes 40% less from single-target blows." },
+    mask: { name: "Behind the Mask", say: "While the mask holds, no blow takes more than 25% of its HP. The third blow breaks it: from then on it attacks twice a turn, but takes 30% more." },
+    hawk: { name: "Updraft", say: "She dodges the first single-target blow of each turn and dives on whoever swung. Area attacks always hit her." },
+    sunmane: { name: "Noon Heat", say: "Every blow it takes is 1 Heat. At 4 it roars: 220% on every hero, and Blind for a turn." },
+    lancer: { name: "Clockwork Charge", say: "Every third turn she winds up, and the turn after she drives her lance at 400% into a hero and the one beside, through any taunt. Stun or freeze her while she winds up and the spring jams: she loses the next turn too." },
+    cog: { name: "Gear Plating", say: "A shield of gears worth 30% of its HP takes the blows first, and builds again every 3 turns. While it holds, no debuff sticks." },
+    sentinel: { name: "Rewind", say: "Once a fight, when another enemy falls, it turns the gears back and brings it up with half its HP." },
+    husk: { name: "Burning Core", say: "Its core grows each turn: ATK +15%. On its third turn it bursts, 300% on every hero, and falls. Felled before, the core bursts at 100%, unless the last blow is Dark." },
+    guardX: { name: "Noon Bell", say: "Its clock counts down 3 turns. At noon it strikes every hero at 260% and ends their buffs. Each crit on it turns the hand back a turn. Its blows go through Evasion." },
+    guardY: { name: "Weighing of the Heart", say: "A blow that takes more than 15% of its HP comes back: the striker takes a quarter of it, as Light. Its blows go through Evasion." },
+  };
+  const ab106 = (e) => AB106[kind106(e)] ?? null;
+  /** How many bars: the region's boss, a mini boss or a chapter's boss, an elite, everyone else. */
+  const barsOf106 = (e) => {
+    const b = BAL106.bars, i = STORY.stages.indexOf(run.stage);
+    if (e.regal || e.court || (e.boss && !e.royal && !e.mini && i >= 0 && i % 25 === 24)) return b.boss;
+    if (e.mini || e.boss || e.royal) return b.mini;
+    return e.elite ? b.elite : b.common;
+  };
+  /** A wave comes in: from the Database's map (4) on, its bars and its harder bite; anywhere, each enemy's own ability. */
+  const init106 = () => {
+    const on = reg106() >= BAL106.from;
+    for (const e of F.foes) {
+      const k = kind106(e);
+      if (on) {
+        e.bars106 = Math.max(1, barsOf106(e));
+        if (BAL106.dmg) e.atk = Math.round(e.atk * (1 + BAL106.dmg / 100));
+      }
+      if (k === "mask") { e.mask106 = 1; e.maskN106 = 0; }
+      if (k === "cog") { e.plate106 = Math.round(e.max * 0.3); e.cog106 = 0; }
+      if (k === "guardX") e.bell106 = 3;
+      if (k === "husk") { e.core106 = 0; e.atk0106 = e.atk; }
+      if (k === "sunmane") e.heat106 = 0;
+      if (k === "lancer") e.lc106 = 0;
+    }
+    if (on && F.foes.some((e) => e.bars106 > 1)) logIt("sys", "HP bars", `from map ${BAL106.from + 1} on: a blow empties at most the bar it lands in · enemies hit ${BAL106.dmg}% harder`);
+  };
+  /** What a loss of HP may take (every hit passes here, through floor78): the gear plating first, no more than 25% while the mask
+   *  holds, and no more than the bar it lands in. Heals go through as they are. */
+  const bar106 = (e, hp) => {
+    if (!e || !(hp < e.hp)) return hp;
+    let loss = e.hp - hp;
+    if (e.plate106 > 0) {
+      const s = Math.min(e.plate106, loss);
+      e.plate106 -= s;
+      loss -= s;
+      if (e.plate106 <= 0) { e.plate106 = 0; const p = foeAt(e); number(p.x, p.y - 34, "plating breaks", "is-crit"); logIt("foe", `${e.name}: Gear Plating`, "the plating breaks · it builds again every 3 turns"); }
+    }
+    if (e.mask106 === 1) loss = Math.min(loss, Math.ceil(e.max * 0.25));
+    let out = e.hp - loss;
+    if (e.bars106 > 1) {
+      const n = e.bars106;
+      let k = 1;
+      while (k < n && e.hp > Math.floor((k * e.max) / n)) k += 1;
+      out = Math.max(out, Math.floor(((k - 1) * e.max) / n));
+    }
+    return Math.max(0, out);
+  };
+  /** The bar an enemy stands in (1 is the last) and its edges. */
+  const barAt106 = (e) => {
+    const n = e.bars106 > 1 ? e.bars106 : 1;
+    let k = 1;
+    while (k < n && e.hp > Math.floor((k * e.max) / n)) k += 1;
+    return { n, k, lo: Math.floor(((k - 1) * e.max) / n), hi: Math.floor((k * e.max) / n) };
+  };
+  const BAR_COL106 = ["#3fd07a", "#2fc9d6", "#4a8dff", "#9a6bff", "#e05cd0", "#ff7a59", "#f2b632", "#c8e05a"];
+  /** Its HP on the plate: the number is the whole, the bar is the one it stands in, the colour under it is the next bar's. */
+  const paintHp106 = (node, e) => {
+    paintHp(node, e.hp, e.max);
+    const bar = $(".bt-hp2", node), row = $(".bt-pname-row", node);
+    let tag = $(".bt-bar106", node);
+    if (!(e.bars106 > 1)) { tag?.remove(); bar?.style.removeProperty("--under106"); return; }
+    const { k, lo, hi } = barAt106(e), f = Math.max(0, Math.min(1, (e.hp - lo) / Math.max(1, hi - lo)));
+    bar.style.setProperty("--p", `${(f * 100).toFixed(2)}%`);
+    bar.style.setProperty("--hpc", k === 1 ? hpColour(f) : BAR_COL106[(k - 1) % BAR_COL106.length]);
+    bar.style.setProperty("--under106", k > 1 ? (k === 2 ? hpColour(1) : BAR_COL106[(k - 2) % BAR_COL106.length]) : "rgb(255 255 255 / 0.12)");
+    if (!tag && row) { tag = document.createElement("i"); tag.className = "bt-bar106"; row.append(tag); }
+    if (tag) { tag.textContent = e.dead ? "" : `×${k}`; tag.title = `${k} of ${e.bars106} HP bars left`; }
+  };
+  /** Squire's Duty: the strongest enemy standing that is no squire, while a squire stands beside it. */
+  const ward106 = () => {
+    if (!F.foes.some((x) => is106(x, "squire"))) return null;
+    const rank = (x) => RARITIES.indexOf(x.rarity) * 1e12 + x.max;
+    return F.foes.filter((x) => !x.dead && kind106(x) !== "squire").sort((a, b) => rank(b) - rank(a))[0] ?? null;
+  };
+  /** On a hero's blow (inside hitMath): the squire's guard, the broken mask. */
+  const hitMul106 = (e, d, parts) => {
+    if (!F.aoeNow && ward106() === e) { d *= 0.6; parts.push(["×0.6 Squire's Duty", ""]); }
+    if (e.mask106 === 2) { d *= 1.3; parts.push(["×1.3 its mask is broken", "hot"]); }
+    return d;
+  };
+  /** An enemy's blow outside its turn (the hawk's dive, the scales, the core): its numbers as on its turn, or a set amount; the
+   *  hero's shields first. A hero who drops falls once the move is over, as from the lava. */
+  const blow106 = (e, m, pct, label, raw = null) => {
+    if (!m || m.ko || m.hp <= 0 || !F.team.includes(m)) return 0;
+    const i = F.team.indexOf(m), p = memAt(m);
+    if (m.evade > 0 && !ign106(e)) { number(p.cx, p.cy, "miss", "is-resist", "evasion"); logIt("foe", `${e.name}: ${label} → ${m.h.name}`, "Evasion: the blow misses", "miss"); return 0; }
+    let d = raw ?? Math.round(((foeHitMath(e, m).d * pct) / 100) * (0.9 + Math.random() * 0.2));
+    const black = Math.min(m.black ?? 0, d);
+    if (black) { m.black -= black; d -= black; }
+    const soaked = Math.min(m.shield ?? 0, d);
+    if (soaked) { m.shield -= soaked; d -= soaked; }
+    m.hp = Math.max(0, m.hp - d);
+    if (m.hp === 0 && reoHas(m, "immortal")) m.hp = 1;
+    number(p.cx, p.cy, d, "is-hurt", label.toLowerCase());
+    burst(p.cx, p.cy, attrColour(e.attr));
+    shake(memEl(i));
+    logIt("foe", `${e.name}: ${label} → ${m.h.name}`, raw != null ? "a quarter of the blow, through her defence" : `${pct}% ATK`, fmt(d));
+    if (m.hp === 0) F.lavaFall = e;
+    paintTeam();
+    return d;
+  };
+  /** Updraft: the first single-target blow of the turn misses the hawk, and she dives on whoever swung. */
+  const dodge106 = (m, e) => {
+    if (F.aoeNow || !is106(e, "hawk") || e.dodge106 === F.turn) return null;
+    e.dodge106 = F.turn;
+    const p = foeAt(e);
+    number(p.x, p.y, "dodged", "is-resist", "updraft");
+    logIt("foe", `${e.name}: Updraft`, `${m?.h?.name ?? "the blow"} misses: the first single-target blow of the turn`, "0");
+    if (m && F.team.includes(m) && !m.ko) blow106(e, m, 120, "Updraft dive");
+    paintFoes();
+    return { dmg: 0, killed: false, over: 0, crit: false };
+  };
+  /** After a hero's blow lands: the mask counts it, the mane heats, a crit turns the bell back, the scales weigh what it took. */
+  const post106 = (m, e, d, crit, lost) => {
+    if (!e) return;
+    const k = kind106(e), p = foeAt(e);
+    if (k === "mask" && e.mask106 === 1 && d > 0) {
+      e.maskN106 = (e.maskN106 ?? 0) + 1;
+      if (e.maskN106 >= 3) {
+        e.mask106 = 2;
+        e.hits = Math.max(2, e.hits ?? 1);
+        number(p.x, p.y - 34, "the mask breaks", "is-crit");
+        logIt("foe", `${e.name}: Behind the Mask`, "the mask breaks · it attacks twice a turn, and takes 30% more");
+        toast(`${e.name}'s mask breaks: it attacks twice a turn, but takes 30% more`);
+      }
+    }
+    if (k === "sunmane" && d > 0 && e.hp > 0) e.heat106 = Math.min(4, (e.heat106 ?? 0) + 1);
+    if (k === "guardX" && crit && e.hp > 0 && (e.bell106 ?? 3) < 3) {
+      e.bell106 = (e.bell106 ?? 3) + 1;
+      number(p.x, p.y - 34, "the hand turns back", "is-heal");
+      logIt("foe", `${e.name}: Noon Bell`, `a crit turns the hand back · noon in ${e.bell106} turn${e.bell106 === 1 ? "" : "s"}`);
+    }
+    if (k === "guardY" && lost > e.max * 0.15 && m && F.team.includes(m) && !m.ko) {
+      const back = Math.round((0.25 * lost * foeHitMath(e, m).d) / Math.max(1, e.atk));
+      if (back > 0) { logIt("foe", `${e.name}: Weighing of the Heart`, `${m.h.name}'s blow took ${Math.round((lost / e.max) * 100)}% of its HP: a quarter comes back`); blow106(e, m, 0, "Weighing of the Heart", back); }
+    }
+  };
+  /** A card of its own ability, played like any of its cards. */
+  const card106 = (name, pct, r, o = {}) => ({ r, name, pct, aoe: false, lvl: 0, fx: null, ...o });
+  /** The lancer's thrust: a hero, and the one beside (whoever taunts). */
+  const pair106 = () => {
+    const up = F.team.map((m, i) => ({ m, i })).filter(({ m }) => !m.ko);
+    if (!up.length) return [];
+    const a = btPick(up), j = up.indexOf(a), b = up[j + 1] ?? up[j - 1];
+    return b ? [a, b] : [a];
+  };
+  /** Before the turn's checks: a lancer winding up who is stopped jams her spring (the stop takes this turn, the jam the next). */
+  const jam106 = (e) => {
+    if (!e.wind106 || !(e.frozen > 0 || e.petrify > 0 || e.time > 0 || e.stun)) return;
+    e.wind106 = 0; e.jam106 = 1; e.lc106 = 0;
+    logIt("foe", `${e.name}: Clockwork Charge`, "stopped while winding up: the spring jams · she loses her next turn too");
+    toast(`${e.name}'s spring jams: she loses her next turn too`);
+  };
+  /** Its turn, before its card: true when its ability takes the turn (winding up, a jammed spring). It may swap the card it plays. */
+  const act106 = async (e) => {
+    const k = kind106(e), p = foeAt(e);
+    if (e.jam106 > 0) { e.jam106 -= 1; number(p.x, p.y, "jammed", "is-resist"); logIt("state", `${e.name}: the spring is jammed`, "it loses this turn"); paintFoes(); await hold(420); return true; }
+    if (k === "lancer") {
+      e.lc106 = (e.lc106 ?? 0) + 1;
+      if (e.lc106 % 3 === 2) {
+        e.wind106 = 1;
+        number(p.x, p.y, "winding up", "is-crit");
+        logIt("foe", `${e.name}: Clockwork Charge`, "she winds up · next turn 400% on a hero and the one beside · stun or freeze her to jam the spring");
+        toast(`${e.name} winds up: next turn she drives her lance through two heroes. Stun or freeze her to jam it!`);
+        paintFoes(); await hold(560);
+        return true;
+      }
+      if (e.wind106) { e.wind106 = 0; e.next = card106("Clockwork Charge", 400, "SR", { pick106: pair106 }); }
+    }
+    if (k === "sunmane" && (e.heat106 ?? 0) >= 4) {
+      e.heat106 = 0;
+      e.next = card106("Solar Roar", 220, "SR", { aoe: true, fx: "blind", lvl: 1, t: 1 });
+      await banner(`${e.name} roars`, "is-enemy");
+    }
+    if (k === "husk") {
+      e.core106 = (e.core106 ?? 0) + 1;
+      e.atk = Math.round((e.atk0106 ?? e.atk) * (1 + 0.15 * e.core106));
+      if (e.core106 >= 3) { e.boom106 = 1; e.next = card106("Burning Core", 300, "SSR", { aoe: true }); await banner(`${e.name}'s core bursts`, "is-enemy"); }
+      else { number(p.x, p.y - 34, `core ${e.core106} of 3`, "is-crit"); logIt("foe", `${e.name}: Burning Core`, `the core grows · ATK +${15 * e.core106}% · at 3 it bursts`); }
+    }
+    if (k === "guardX") {
+      e.bell106 = (e.bell106 ?? 3) - 1;
+      if (e.bell106 <= 0) { e.bell106 = 3; e.next = card106("Noon Bell", 260, "SSR", { aoe: true, strip106: true }); await banner("Noon strikes", "is-enemy"); }
+    }
+    if (k === "cog") {
+      e.cog106 = (e.cog106 ?? 0) + 1;
+      const full = Math.round(e.max * 0.3);
+      if (e.cog106 % 3 === 0 && (e.plate106 ?? 0) < full) { e.plate106 = full; number(p.x, p.y - 34, "plating rebuilt", "is-heal"); logIt("foe", `${e.name}: Gear Plating`, `the gears close again · ${fmt(full)} HP of plating`); }
+    }
+    paintFoes();
+    return false;
+  };
+  /** After its card: the bell ends the heroes' buffs, the core that burst falls with it. */
+  const after106 = async (e, card) => {
+    if (card?.strip106) {
+      let n = 0;
+      for (const m of F.team.filter((x) => !x.ko)) {
+        const keep = m.buffs.filter((b) => !(b.turns > 0) || b.hpUp || b.doom || b.kind === "passive");
+        n += m.buffs.length - keep.length + (m.evade > 0 ? 1 : 0);
+        m.buffs = keep;
+        m.evade = 0;
+      }
+      logIt("foe", `${e.name}: Noon Bell`, n ? `the heroes' buffs end (${n})` : "no buffs to end");
+      if (n) toast("Noon Bell: the heroes' buffs end");
+      paintTeam();
+    }
+    if (e.boom106 && !e.dead) { e.boomed106 = true; e.hp = 0; fell(e, null); paintFoes(); }
+  };
+  /** When an enemy would fall: Rewind brings it back (true: it does not fall), or its Burning Core bursts. */
+  const fall106 = (e, by) => {
+    const sen = F.foes.find((x) => x !== e && is106(x, "sentinel") && !x.rewound106);
+    if (sen && !e.boomed106) {
+      sen.rewound106 = true;
+      e.hp = Math.max(1, Math.round(e.max * 0.5));
+      const p = foeAt(e);
+      number(p.x, p.y, "rewind", "is-heal");
+      burst(p.x, p.y, "#7fe7ff");
+      logIt("foe", `${sen.name}: Rewind`, `the gears turn back · ${e.name} stands again with half its HP`);
+      toast(`${sen.name} turns the gears back: ${e.name} stands again with half its HP`);
+      paintFoes();
+      return true;
+    }
+    if (kind106(e) === "husk" && !e.boomed106) {
+      e.boomed106 = true;
+      const p = foeAt(e);
+      if (by?.h?.attr === "dark") { number(p.x, p.y - 34, "the core goes out", "is-resist"); logIt("foe", `${e.name}: Burning Core`, "felled by a Dark blow: the core goes out"); }
+      else { number(p.x, p.y - 34, "core burst", "is-crit"); logIt("foe", `${e.name}: Burning Core`, "it falls, and its core bursts at 100% on every hero"); for (const m of F.team.filter((x) => !x.ko)) blow106(e, m, 100, "Core burst"); }
+    }
+    return false;
+  };
+  /** Gear Plating: while it holds, the debuffs on the cog knight fall away (after each of your moves, and as the enemy turn begins). */
+  const CLEAN106 = { flame: 0, sword: 0, bruise: null, burn: null, bleed: 0, poison: 0, mark: 0, weaken: 0, stun: false, death: 0, time: 0, timeDef: 1, sink: 0, reoMark: 0, frozen: 0, petrify: 0, defDown: null, shade78: 0, vines101: 0 };
+  const clean106 = () => {
+    let any = false;
+    for (const e of F.foes) {
+      if (e.dead || !(e.plate106 > 0)) continue;
+      const had = Object.entries(CLEAN106).some(([k, v]) => e[k] != null && e[k] !== v && e[k] !== 0 && e[k] !== false) || e.hell78?.t > 0 || !!e.hpDown;
+      if (!had) continue;
+      Object.assign(e, CLEAN106);
+      if (e.hell78) e.hell78 = null;
+      if (e.hpDown) { e.max += e.hpDown.cut; e.hpDown = null; }
+      const p = foeAt(e);
+      number(p.x, p.y - 34, "the gears shake it off", "is-resist");
+      logIt("foe", `${e.name}: Gear Plating`, "while the plating holds, no debuff sticks");
+      any = true;
+    }
+    if (any) paintFoes();
+  };
+  /** What shows over its plate, beside the round 62 marks. */
+  const tag106 = (e) => {
+    if (e.dead) return "";
+    const k = kind106(e), out = [];
+    if (k === "mask") out.push(e.mask106 === 1 ? "masked" : "unmasked");
+    if (k === "sunmane" && e.heat106) out.push(`heat ${e.heat106}/4`);
+    if (k === "lancer" && e.wind106) out.push("winding up");
+    if (e.jam106) out.push("jammed");
+    if (k === "cog" && e.plate106 > 0) out.push("plating");
+    if (k === "husk" && e.core106) out.push(`core ${e.core106}/3`);
+    if (k === "guardX") out.push(`noon in ${e.bell106 ?? 3}`);
+    if (ward106() === e) out.push("guarded");
+    return out.join(" · ");
+  };
+  /** Its states, for the chips on the plate and its file. */
+  const chips106 = (e) => {
+    const s = [], k = kind106(e);
+    if (e.dead) return s;
+    if (ward106() === e) s.push(["shield", 0, "Squire's Duty: a Mane Squire guards it · single-target blows deal 40% less"]);
+    if (k === "mask") s.push(["shield", e.mask106 === 1 ? 3 - (e.maskN106 ?? 0) : 0, e.mask106 === 1 ? `Behind the Mask: no blow takes more than 25% of its HP · ${3 - (e.maskN106 ?? 0)} more blow${3 - (e.maskN106 ?? 0) === 1 ? "" : "s"} break it` : "Its mask is broken: it attacks twice a turn, and takes 30% more"]);
+    if (k === "hawk") s.push(["spiral", 0, e.dodge106 === F.turn ? "Updraft: she has dodged this turn" : "Updraft: the first single-target blow this turn misses her, and she dives"]);
+    if (k === "sunmane") s.push(["fire", e.heat106 ?? 0, `Noon Heat ${e.heat106 ?? 0} of 4: at 4 it roars on every hero`]);
+    if (k === "lancer" && e.wind106) s.push(["clock", 1, "Winding up: next turn 400% on a hero and the one beside · stun or freeze her to jam the spring"]);
+    if (e.jam106) s.push(["stun", e.jam106, "Jammed: it loses its next turn"]);
+    if (k === "cog" && e.plate106 > 0) s.push(["shield", 0, `Gear Plating: ${fmt(e.plate106)} HP of gears take the blows first · no debuff sticks`]);
+    if (k === "sentinel" && !e.rewound106) s.push(["clock", 0, "Rewind: once this fight, a fallen enemy comes back with half its HP"]);
+    if (k === "husk") s.push(["sun", e.core106 ?? 0, `Burning Core ${e.core106 ?? 0} of 3: ATK +${15 * (e.core106 ?? 0)}% · at 3 it bursts on every hero`]);
+    if (k === "guardX") s.push(["clock", e.bell106 ?? 3, `Noon Bell: noon in ${e.bell106 ?? 3} turn${(e.bell106 ?? 3) === 1 ? "" : "s"} · 260% on every hero and their buffs end · a crit turns the hand back`]);
+    if (k === "guardY") s.push(["eye", 0, "Weighing of the Heart: a blow over 15% of its HP comes back, a quarter of it"]);
+    if (ign106(e)) s.push(["crown", 0, "Royal aim: Evasion does not stop its blows"]);
+    return s;
+  };
   const g78Check = async () => {
     if (!g78Can()) return;
     const boss = g78Boss();
@@ -21450,7 +21835,7 @@ void main() {
     "Green Horde": { fx: "bleed", passive: ["Pack Hunt", "+8% ATK for each other goblin standing."], N: "Rusty Stab", R: "Dirty Trick", SR: "Ambush", SSR: "Horde Rush", U: "Goblin Warcry" },
     "Ember Brood": { fx: "burn", passive: ["Smoulder", "Each of its blows has a 25% chance to Burn: 4% of max HP a turn, 2 turns."], N: "Ember Sting", R: "Scorch", SR: "Firebrand", SSR: "Ash Storm", U: "Eruption" },
     "Drowned Court": { fx: "soak", passive: ["Undertow", "Heals 4% of its max HP when the enemy turn begins."], N: "Grasping Tide", R: "Brine Lash", SR: "Riptide", SSR: "Tidal Surge", U: "Maelstrom" },
-    "Gilded Host": { fx: "blind", passive: ["Gilded Plating", "Takes 12% less damage while another enemy stands."], N: "Gilt Jab", R: "Glare", SR: "Sun Lance", SSR: "Radiant Sweep", U: "Gilded Judgement" },
+    "Gilded Host": { fx: "blind", passive: null, N: "Gilt Jab", R: "Glare", SR: "Sun Lance", SSR: "Radiant Sweep", U: "Gilded Judgement" },
     other: { fx: "weak", passive: null, N: "Strike", R: "Heavy Strike", SR: "Crushing Blow", SSR: "Sweep", U: "Cataclysm" },
   };
   const deckOf = (e) => FOE_DECK[e.tribe] ?? FOE_DECK.other;
@@ -21484,7 +21869,7 @@ void main() {
   const foeHex = (e, m, card) => {
     if (!card?.fx || m.ko || m.hp <= 0) return;
     if (m.immune > 0 || noDebuff78(m)) { const p = memAt(m); number(p.cx, p.cy - 40, "immune", "is-resist"); return; }
-    const l = card.lvl, src = e.name, t = lasts(2);
+    const l = card.lvl, src = e.name, t = lasts(card.t ?? 2);
     if (card.fx === "bleed" || card.fx === "burn") {
       const v = card.fx === "burn" ? (l === 2 ? 0.06 : 0.04) : l === 2 ? 0.05 : 0.03, had = (m.dots ??= []).find((d) => d.k === card.fx);
       if (had) { had.v = Math.max(had.v, v); had.t = Math.max(had.t, t); had.src = src; }
@@ -21576,7 +21961,7 @@ void main() {
   /** How it fights, in its file: its tribe's deck, its passive, its ultimate. */
   const kitText = (e) => {
     const d = deckOf(e), fx = d.fx;
-    return `${d.passive ? `<b>${d.passive[0]}</b>: ${d.passive[1]} ` : ""}Each turn it plays one card; you see only its rarity. N ${d.N} 100% · R ${d.R} 130%, ${FX_SAY[fx](1).toLowerCase()} · SR ${d.SR} 170%, ${FX_SAY[fx](2).toLowerCase()} · SSR ${d.SSR} 120% on every hero, ${FX_SAY[fx](1).toLowerCase()}. Each turn it fills one orb, and one more whenever an enemy falls; at five it plays its ultimate, ${d.U}: ${e.boss || e.mini ? 320 : 240}% on every hero, ${FX_SAY[fx](2).toLowerCase()}.`;
+    return `${ab106(e) ? `<b>${ab106(e).name}</b>: ${ab106(e).say} ` : d.passive ? `<b>${d.passive[0]}</b>: ${d.passive[1]} ` : ""}Each turn it plays one card; you see only its rarity. N ${d.N} 100% · R ${d.R} 130%, ${FX_SAY[fx](1).toLowerCase()} · SR ${d.SR} 170%, ${FX_SAY[fx](2).toLowerCase()} · SSR ${d.SSR} 120% on every hero, ${FX_SAY[fx](1).toLowerCase()}. Each turn it fills one orb, and one more whenever an enemy falls; at five it plays its ultimate, ${d.U}: ${e.boss || e.mini ? 320 : 240}% on every hero, ${FX_SAY[fx](2).toLowerCase()}.`;
   };
   /* ══ round 65 · Crystal's crystals and her Diamond, Marea's Water Barrier ══ */
   const CRYS = ["X", "Y", "Z"];
@@ -22182,6 +22567,7 @@ void main() {
     await resolve(m, step.c, target, step);
     mark82();
     card101(m);
+    clean106();
     await lavaFalls();
     if (!step.c.ult && m.id === "rin") await pyre(m);
     if (!step.c.ult && m.id === "sadara") { // Encore: every ally +7% ATK and DEF for 3 turns, up to five stacks
@@ -22282,7 +22668,8 @@ void main() {
     ev78Start();
     if (!skip78) await banner("enemy turn", "is-enemy");
     logIt("sys", skip78 ? "the enemy reels: it does not attack this turn" : "enemy turn");
-    if (!skip78) { await rejuvTicks(); await foeTicks(); await heroTicks(); }
+    clean106();
+    if (!skip78) { await rejuvTicks(); await foeTicks(); await lavaFalls(); await heroTicks(); }
     if (F.team.every((m) => m.ko)) return finish(false);
     if (!skip78) { await courtTurn(); await royalTurn(); }
     // a wave the poisons finish leaves the next one to wait for your turn
@@ -22293,13 +22680,15 @@ void main() {
     }
     for (const e of skip78 ? [] : F.foes.filter((x) => !x.dead)) {
       if (!live) return;
+      jam106(e);
       if (e.frozen > 0) { logIt("state", `${e.name} is Frozen`, "it cannot act"); const p = foeAt(e); number(p.x, p.y, "frozen", "is-resist"); paintFoes(); await hold(380); continue; }
       if (e.petrify > 0) { logIt("state", `${e.name} is Petrified`, "it cannot act"); const p = foeAt(e); number(p.x, p.y, "petrified", "is-resist"); paintFoes(); await hold(380); continue; }
       if (e.time > 0) { logIt("state", `${e.name} is stopped in time`, "Time Lock: it cannot act"); const p = foeAt(e); number(p.x, p.y, "time lock", "is-resist"); paintFoes(); await hold(380); continue; }
       if (e.stun) { e.stun = false; if (e.charge62) { e.charge62 = 0; toast(`${e.name}'s charge breaks`); } logIt("state", `${e.name} is stunned`, "it loses its attack"); const p = foeAt(e); number(p.x, p.y, "stunned", "is-resist"); paintFoes(); await hold(380); continue; }
+      if (await act106(e)) continue;
       if (await mech62(e)) continue;
       kitUp(e);
-      const card = e.regal ? null : e.next, aoeList = card?.aoe || e.unleash62 ? F.team.map((x, k) => ({ m: x, i: k })).filter(({ m: x }) => !x.ko) : null;
+      const card = e.regal ? null : e.next, aoeList = card?.pick106 ? card.pick106() : card?.aoe || e.unleash62 ? F.team.map((x, k) => ({ m: x, i: k })).filter(({ m: x }) => !x.ko) : null;
       if (card) logIt("foe", `${e.name}: ${card.name}`, `${card.ult ? "its ultimate" : `${card.r} card`} · ${card.pct}% ATK${card.aoe ? " on every hero" : ""}${card.fx ? ` · ${FX_SAY[card.fx](card.lvl)}` : ""}`);
       if (card?.ult && aoeList?.length) await foeUltShow(e, card, aoeList[0].m);
       for (let blow = 0; blow < (aoeList ? aoeList.length : e.hits + (e.rage ? 1 : 0)); blow++) {
@@ -22323,7 +22712,7 @@ void main() {
         else if (!REDUCED) foeEl(e).animate([{ transform: "none" }, { transform: `translate(${(p.cx - ep.x) * 0.22}px, ${(p.cy - ep.y) * 0.22}px) scale(1.08)`, offset: 0.4 }, { transform: "none" }], { duration: 460, easing: "cubic-bezier(0.2, 0, 0, 1)" });
         await hold(sk ? 60 : 220);
         if (isReo(m) && m.taunt > 0) { await reoCounter(m, e, true); if (e.dead) { if (F.foes.every((x) => x.dead)) break; continue; } }
-        if (m.evade > 0) { logIt("foe", `${e.name} → ${m.h.name}`, "Evasion: the blow misses", "miss"); number(p.cx, p.cy, "miss", "is-resist", "evasion"); await hold(380); continue; }
+        if (m.evade > 0 && !ign106(e)) { logIt("foe", `${e.name} → ${m.h.name}`, "Evasion: the blow misses", "miss"); number(p.cx, p.cy, "miss", "is-resist", "evasion"); await hold(380); continue; }
         if (sk && m.id === "lilith") buff(m, { key: "spotless-atk", atk: 0.2, turns: 2, label: "Spotless", by: "lilith", kind: "passive" });
         const fm = foeHitMath(e, m), dice = 0.9 + Math.random() * 0.2;
         let d = Math.round(fm.d * dice);
@@ -22393,6 +22782,7 @@ void main() {
       }
       if (F.foes.every((x) => x.dead)) break;
       if (!e.regal) foeActed(e, card);
+      await after106(e, card);
       paintFoes();
       await regalMark(e);
     }
@@ -25909,6 +26299,7 @@ const GOLD_SHOP = (() => {
         else if (k === "stam94") out.push(POT64("m", "pot94"));
         else if (COIN_KEYS102.includes(k)) out.push(coinIcon102(k, "is-big"));
         else if (k === "mirror") out.push('<img class="sh102-img" src="art/items/mirror-shard.webp" alt="" draggable="false">');
+        else if (goldKey106(k)) out.push(goldSeal106(goldKey106(k)));
         else if (chestKey104(k)) { const c = chestKey104(k); out.push(seal104(c.r, c.s)); }
         else if (ITEM_BY_ID[k]) out.push(itemTile(ITEM_BY_ID[k]));
         // star dust, the stars and the Dragon Heart: the game's own four-point mark, in their colour
@@ -25938,7 +26329,7 @@ const GOLD_SHOP = (() => {
       return `<div class="sh102-purse">${COIN_KEYS102.map((k) => `<span class="sh102-coin">${coinIcon102(k)}<b>${isAdmin() ? "∞" : nf(PLAYER.player.items?.[k] ?? 0)}</b><small>${coinName102(k, 2)}</small></span>`).join("")}
         <p>Coins come from copies: turn one into a coin in a hero's Copies, and a hero pulled again with all six copies in is a coin at once. Each coin is its hero's rarity: R Coins from R heroes, SR Coins from SR heroes, and so on up to LR.</p></div>
         ${B.length ? `<div class="sh64-offer-row sh102-row">${B.map(bundle102).join("")}</div>` : ""}
-        ${W.length ? `<div class="sh64-grid sh102-grid">${W.map(ware102).join("")}</div>` : B.length ? "" : '<div class="sh64-empty"><b>The Coin Shop opens soon</b><p>Its first wares come with an update. Keep your coins: they wait for it.</p></div>'}`;
+        ${W.length || gold106On() ? `<div class="sh64-grid sh102-grid">${goldWares106()}${W.map(ware102).join("")}</div>` : B.length ? "" : '<div class="sh64-empty"><b>The Coin Shop opens soon</b><p>Its first wares come with an update. Keep your coins: they wait for it.</p></div>'}`;
     };
     /** The gold shop's own wares from the Database. */
     const waresTab102 = () => `<div class="sh64-grid sh102-grid">${shopItems102("gold", "ware").map(ware102).join("")}</div>`;
@@ -25946,11 +26337,14 @@ const GOLD_SHOP = (() => {
     const click102 = (t) => {
       const b = t.closest("[data-sh102]");
       if (!b) return false;
+      GOLD106.length = 0;
       const r = buy102(b.dataset.sh102);
       if (r.bad) { api.toast(r.bad); return true; }
       api.paintGems();
-      const ch104 = CHEST104.splice(0), rest104 = r.got.filter((g) => !ch104.some((o) => o.line === g));
-      if (rest104.length || !ch104.length) api.toast(`You got ${rest104.join(", ")}`);
+      const ch104 = CHEST104.splice(0), g106 = GOLD106.splice(0), rest104 = r.got.filter((g) => !ch104.some((o) => o.line === g) && !(g106.length && g.includes(" Gold Chest: +")));
+      if (rest104.length || (!ch104.length && !g106.length)) api.toast(`You got ${rest104.join(", ")}`);
+      // round 106: the gold chests open first; the piece chests of the same buy after them
+      if (g106.length) { const later = ch104.splice(0); openGold106(g106).then(() => { if (!later.length) return; const sl = (o) => ({ c: { id: o.k, name: chestName104(o.r), metal: o.r, price: 0, once: true }, pre: o }); q104.push(...later.slice(1).map(sl)); const f0 = sl(later[0]); openChest(f0.c, f0.pre); }); }
       paint64();
       if (ch104.length) {
         const seal = (o) => ({ c: { id: o.k, name: chestName104(o.r), metal: o.r, price: 0, once: true }, pre: o });
@@ -26177,8 +26571,95 @@ const GOLD_SHOP = (() => {
       });
     };
 
+    /* ── round 106 · the Coin Shop's gold chests: R, SR and SSR, bought with coins, opened at once ── */
+    const gold106On = () => ["R", "SR", "SSR"].some((r) => !goldWare106(r).off);
+    const goldWares106 = () => ["R", "SR", "SSR"].map(goldWare106).filter((w) => !w.off).map((w) => {
+      const short = !isAdmin() && (PLAYER.player.items?.[w.cur] ?? 0) < w.price;
+      return `<article class="sh64-ware sh102-ware is-gold106"><div class="sh64-ware-vis sh102-vis">${goldSeal106(w.r)}</div><b>${w.r} Gold Chest</b>
+        <small>${goldSay106(w.r)} · it opens when you buy it</small><span class="sh102-meta"></span>
+        <button type="button" class="sh64-buy sh102-buy" data-gold106="${w.r}" ${short ? "disabled" : ""}><span>open</span><span class="sh64-price sh102-price">${curIcon102(w.cur)}${isAdmin() ? "free" : nf(w.price)}</span></button></article>`;
+    }).join("");
+    let gold106Busy = false;
+    /** One chest: it falls, its lock turns, it splits, and its gold counts up from the bottom of its range. */
+    const goldShow106 = (one) => new Promise((done) => {
+      const r = one.r, n = one.n, lo = GOLD_RANGE106[r][0], hi = GOLD_RANGE106[r][1], seal = goldSeal106(r), step = ["R", "SR", "SSR"].indexOf(r);
+      const ov = document.createElement("div");
+      ov.className = "sh9-open g106-open";
+      ov.setAttribute("role", "dialog");
+      ov.setAttribute("aria-label", `${r} Gold Chest opens`);
+      ov.innerHTML = `<div class="sh9-gl"></div><div class="sh9-stage"><div class="sh9-seal">${seal}<i class="sh9-half is-l">${seal}</i><i class="sh9-half is-r">${seal}</i></div>
+        <div class="sh9-item g106-pile" style="--rc:#f2b632"><span class="g106-coin">${COIN()}</span><b class="g106-n">+${nf(lo)}</b></div></div>
+        <div class="sh9-res" hidden></div><p class="sh9-hint">tap to skip</p>`;
+      document.querySelector(".gm")?.append(ov);
+      (async () => {
+        const W = ov.clientWidth, H = ov.clientHeight, mid = { x: W / 2, y: H * 0.4 }, L = tone(r);
+        GLX?.reset();
+        CLOCK.setSpeed(1);
+        GLX?.attach($(".sh9-gl", ov));
+        let fast = false;
+        ov.addEventListener("click", () => { fast = true; });
+        const wait = async (ms) => { const end = performance.now() + ms; while (performance.now() < end && !fast) await nap(30); };
+        const sealEl = $(".sh9-seal", ov), lock = $(".sh9-seal > .it .ch8-lock", ov), pile = $(".g106-pile", ov), num = $(".g106-n", ov);
+        ov.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, fill: "both" });
+        // it falls and lands
+        sealEl.animate([{ transform: "translateY(-120vh) rotate(-12deg)", easing: "cubic-bezier(0.55, 0, 1, 0.45)" }, { transform: "translateY(0) rotate(0) scale(1.08, 0.9)", offset: 0.62, easing: "cubic-bezier(0, 0.55, 0.45, 1)" }, { transform: "translateY(-14px) scale(0.97, 1.04)", offset: 0.8 }, { transform: "none" }], { duration: 760, fill: "both", easing: "linear" });
+        await wait(470);
+        P.burst(L, mid.x, mid.y + 60, 24, { speed: [80, 260], life: [0.3, 0.6], size: [3, 7], a0: 180, a1: 360 });
+        await wait(320);
+        // the lock turns, and the gold's light leaks out
+        lock?.animate([{ transform: "translate(-50%, -50%) rotate(45deg)" }, { transform: "translate(-50%, -50%) rotate(765deg) scale(1.3)" }], { duration: 900, easing: "cubic-bezier(0.6, 0, 0.3, 1)", fill: "both" });
+        sealEl.animate([{ filter: "none" }, { filter: "drop-shadow(0 0 22px #f2b632) brightness(1.3)" }], { duration: 900, fill: "both" });
+        if (step >= 1) gRays(L, mid, 1300, { mode: 1, delay: 300 });
+        await wait(900);
+        // it splits, and the gold comes out
+        $(".sh9-seal > .it", ov).style.visibility = "hidden";
+        $(".sh9-half.is-l", ov).animate([{ transform: "none", opacity: 1 }, { transform: "translateX(-46vw) rotate(-24deg)", opacity: 0 }], { duration: 620, easing: "cubic-bezier(0.2, 0.7, 0.3, 1)", fill: "both" });
+        $(".sh9-half.is-r", ov).animate([{ transform: "none", opacity: 1 }, { transform: "translateX(46vw) rotate(24deg)", opacity: 0 }], { duration: 620, easing: "cubic-bezier(0.2, 0.7, 0.3, 1)", fill: "both" });
+        gBurst(L, mid, H * 0.3, 800, { mode: 1, hollow: 1 });
+        P.burst(L, mid.x, mid.y, 30 + 12 * step, { speed: [120, 420], life: [0.4, 0.9], size: [4, 10] });
+        pile.animate([{ transform: "translate(-50%, -50%) scale(0.2)", opacity: 0 }, { transform: "translate(-50%, -50%) scale(1.12)", opacity: 1, offset: 0.7 }, { transform: "translate(-50%, -50%) scale(1)", opacity: 1 }], { duration: 620, easing: SPRING, fill: "both" });
+        await wait(520);
+        // the gold counts up, from the bottom of its range to what it held
+        const t0 = performance.now(), dur = 900 + 450 * step;
+        while (!fast) { const t = Math.min(1, (performance.now() - t0) / dur), k = 1 - Math.pow(1 - t, 3); num.textContent = `+${nf(Math.round((lo + (n - lo) * k) / 10) * 10)}`; if (t >= 1) break; await nap(30); }
+        num.textContent = `+${nf(n)}`;
+        num.animate([{ transform: "scale(1.4)" }, { transform: "none" }], { duration: 320, easing: SPRING });
+        if (n >= lo + (hi - lo) * 0.8) { gRays(L, mid, 1200, { mode: 1 }); P.burst(L, mid.x, mid.y, 40, { speed: [200, 500], life: [0.4, 0.8] }); }
+        const res = $(".sh9-res", ov);
+        res.hidden = false;
+        res.innerHTML = `<p class="sh9-name"><b>+${nf(n)} gold</b><span>${r} Gold Chest · ${goldSay106(r)}${isAdmin() ? " · Admin: only for show" : ""}</span></p>
+          <div class="sh9-acts"><div><button type="button" class="sh9-btn" data-g106-ok>${isAdmin() ? "close" : "collect"}</button></div></div>`;
+        $(".sh9-hint", ov).hidden = true;
+        res.animate([{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], { duration: 420, easing: EXPO, fill: "both" });
+        const close = () => { ov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: "both" }).onfinish = () => ov.remove(); setTimeout(() => ov.remove(), 260); GLX?.reset(); done(); };
+        res.addEventListener("click", (ev) => { ev.stopPropagation(); if (ev.target.closest("[data-g106-ok]")) close(); });
+        $("[data-g106-ok]", res)?.focus();
+      })().catch(() => { ov.remove(); GLX?.reset(); done(); });
+    });
+    /** The chests a buy opened, one after the other; the shop paints again after the last. */
+    const openGold106 = async (list) => {
+      if (gold106Busy || !list?.length) return;
+      gold106Busy = true;
+      try { for (const one of list) await goldShow106(one); } finally { gold106Busy = false; api.paintGems(); paint64(); }
+    };
+    /** A built-in gold chest bought: its coins go, its gold comes, then it opens. Admin only watches it open. */
+    const goldBuy106 = (r) => {
+      const w = goldWare106(r);
+      if (w.off || gold106Busy) return;
+      if (isAdmin()) { openGold106([{ r, n: goldRoll106(r) }]); return; }
+      const p = PLAYER.player, have = p.items?.[w.cur] ?? 0;
+      if (have < w.price) { api.toast(`Not enough ${curName102(w.cur, 2)}: ${nf(w.price - have)} more needed.`); return; }
+      p.items[w.cur] = have - w.price;
+      GOLD106.length = 0;
+      codeGive86({ items: { [`goldchest-${r}`]: 1 } });
+      savePlayer();
+      api.paintGems();
+      paint64();
+      openGold106(GOLD106.splice(0));
+    };
     box.addEventListener("click", (e) => {
       const t = e.target;
+      { const g106 = t.closest("[data-gold106]"); if (g106) { if (!g106.disabled) goldBuy106(g106.dataset.gold106); return; } }
       if (click64(t)) return;
       const tb = t.closest("[data-sh-tab]");
       if (tb) { tab = tb.dataset.shTab; paint(); return; }
@@ -27811,7 +28292,7 @@ const gCard = (h, px, { big = false } = {}) => {
 
 /* ── the draft: everything changed here. It starts from what is online (so a new version keeps the old changes), lives on
  * this device (or, in the Database program, on its disk with backups), and goes to players only with "Manda online". ── */
-const PACK_PARTS = ["edits", "news", "bosses", "banners", "stages", "web", "reset", "modes", "app", "notes", "places", "smith", "people", "guest", "cards", "codes", "shop102"];
+const PACK_PARTS = ["edits", "news", "bosses", "banners", "stages", "web", "reset", "modes", "app", "notes", "places", "smith", "people", "guest", "cards", "codes", "shop102", "bal106"];
 /** In the Database program the Gestionale is the whole window, with no game behind it. */
 const GEST_ONLY = !!window.OREH_GEST_ONLY;
 const D = { edits: {}, news: [], log: [], bosses: [], banners: null, stages: {}, web: {}, version: 0, history: [], codes: [] };
@@ -28327,6 +28808,32 @@ const dragTrack = (trk, wrap) => {
     if (l < 0 || r > wrap.clientWidth) { v = 0; const to = clamp(-c.offsetLeft + wrap.clientWidth / 2 - c.offsetWidth / 2, max(), 0); anim(trk, [{ transform: `translate3d(${x}px,0,0)` }, { transform: `translate3d(${to}px,0,0)` }], 380, { fill: "none" }); set(to); }
   });
 };
+/* ══ round 106 · nel Database: le barre di vita e il danno dei nemici dalla mappa 4 in poi (in cima alla pagina Nemici, finisce in
+ *  D.bal106 e arriva ai giocatori con Manda online) e le casse di monete d'oro del Coin Shop (pagina Shop: prezzo, moneta, in vendita). ══ */
+const B106 = () => { const b = D.bal106 && typeof D.bal106 === "object" && !Array.isArray(D.bal106) ? D.bal106 : (D.bal106 = {}); if (!b.bars || typeof b.bars !== "object") b.bars = {}; return b; };
+const BAL_F106 = [["from", "Da mappa", 4, 1, 8, "", 1], ["bars.common", "Barre: comuni", 3, 1, 20, "", 1], ["bars.elite", "Barre: élite", 4, 1, 20, "", 1], ["bars.mini", "Barre: mini boss", 6, 1, 20, "", 1], ["bars.boss", "Barre: boss", 10, 1, 20, "", 1], ["dmg", "Danno dei nemici", 20, 0, 300, "%", 5]];
+const balGet106 = (k, d) => { const b = B106(), v = k.startsWith("bars.") ? b.bars[k.slice(5)] : b[k]; return v == null || v === "" || !Number.isFinite(+v) ? d : +v; };
+const balSay106 = () => `Dalla mappa ${balGet106("from", 4)}: barre ${balGet106("bars.common", 3)} ai comuni, ${balGet106("bars.elite", 4)} alle élite, ${balGet106("bars.mini", 6)} ai mini boss, ${balGet106("bars.boss", 10)} ai boss · danno dei nemici +${balGet106("dmg", 20)}%`;
+/** In cima alla pagina Nemici: da quale mappa le barre di vita e il danno in più, e quanti. */
+const bal106Box = (host) => {
+  const arch = qs(".g-arch", host), top = qs(".g-arch-top", host);
+  if (!arch || !top) return;
+  const box = mk("section", "g106-bal");
+  box.setAttribute("aria-label", "Bilanciamento dei nemici");
+  box.innerHTML = `<div class="g106-bal-h"><b data-t></b><small>Ogni nemico ha più barre di vita, e un colpo ne svuota al massimo una. I nemici fanno più danno. Le mappe prima restano com'erano.</small></div><div class="g106-bal-f" data-f></div>`;
+  const title = () => { qs("[data-t]", box).textContent = `Dalla mappa ${balGet106("from", 4)} in poi`; };
+  title();
+  const f = qs("[data-f]", box);
+  for (const [k, label, d, lo, hi, unit, step] of BAL_F106) {
+    const n = numField({ label, value: balGet106(k, d), min: lo, max: hi, step, unit, onInput: (v) => { const b = B106(); if (k.startsWith("bars.")) b.bars[k.slice(5)] = v; else b[k] = v; title(); change("Nemici", "bal106", balSay106(), n); } });
+    f.append(n);
+  }
+  top.after(box);
+  arch.classList.add("has-bal106");
+};
+/* ── le casse di monete d'oro del Coin Shop ── */
+const goldCur106 = (k) => { const c = S103().base[k]?.cur; return COIN_KEYS102.includes(c) ? c : GOLD_BASE106[k.slice(8)].cur; };
+const goldCard106 = (k) => { const r = k.slice(8), v = base103(k); return `<article class="sh64-ware sh102-ware is-gold106"><div class="sh64-ware-vis sh102-vis">${goldSeal106(r)}</div><b>${r} Gold Chest</b><small>${goldSay106(r)} · it opens when you buy it</small><span class="sh102-meta"></span>${buy103({ cur: goldCur106(k), price: v.price }, "open")}</article>`; };
 const viewArchive = (host, kind) => {
   host.innerHTML = `<div class="g-arch">
     <div class="g-arch-top"><h2 class="g-h2">${kind === "hero" ? "Personaggi" : "Nemici"}</h2><span class="g-count-l" data-n></span>
@@ -28335,6 +28842,7 @@ const viewArchive = (host, kind) => {
     <div class="g-rows" data-rows></div>
     <div class="g-file" data-file hidden></div>
   </div>`;
+  if (kind === "foe") bal106Box(host);
   const rowsEl = qs("[data-rows]", host), file = qs("[data-file]", host);
   let q = "", open = null;
   const rows = () => {
@@ -30869,9 +31377,10 @@ const SHOP_BASE_IT102 = [
   ["s", "Pozione S", "pozione"], ["m", "Pozione M", "pozione"], ["l", "Pozione L", "pozione"], ["stam", "Stamina Potion", "pozione"],
   ["chest-bronze", "Forziere di bronzo", "forziere"], ["chest-silver", "Forziere d'argento", "forziere"], ["chest-gold", "Forziere d'oro", "forziere"],
   ["offer-bundle", "Offerta del giorno: Trainer's bundle", "offerta"], ["offer-lpair", "Offerta del giorno: Potion L × 2", "offerta"], ["offer-chest", "Offerta del giorno: Golden chest −30%", "offerta"],
+  ["gold106-R", "Cassa di monete d'oro R", "cassa d'oro"], ["gold106-SR", "Cassa di monete d'oro SR", "cassa d'oro"], ["gold106-SSR", "Cassa di monete d'oro SSR", "cassa d'oro"],
 ];
 /** Il prezzo che il gioco ha già, per ognuna (quando il Database non ne mette uno suo). */
-const shopBasePrice102 = (k) => ({ s: SHOP_POTION_PRICE.s, m: SHOP_POTION_PRICE.m, l: SHOP_POTION_PRICE.l, stam: STAM94.price, "chest-bronze": 1500, "chest-silver": 3000, "chest-gold": 5000, "offer-bundle": 1500, "offer-lpair": 1200, "offer-chest": 3500 })[k];
+const shopBasePrice102 = (k) => ({ s: SHOP_POTION_PRICE.s, m: SHOP_POTION_PRICE.m, l: SHOP_POTION_PRICE.l, stam: STAM94.price, "chest-bronze": 1500, "chest-silver": 3000, "chest-gold": 5000, "offer-bundle": 1500, "offer-lpair": 1200, "offer-chest": 3500, "gold106-R": GOLD_BASE106.R.price, "gold106-SR": GOLD_BASE106.SR.price, "gold106-SSR": GOLD_BASE106.SSR.price })[k];
 const shopBaseWas102 = (k) => ({ "offer-bundle": 2000, "offer-lpair": 1600, "offer-chest": 5000 })[k];
 const CUR_IT102 = { gold: "Oro", gems: "Gemme", coinB: "Monete R", coinS: "Monete SR", coinG: "Monete SSR", coinU: "Monete UR", coinL: "Monete LR" };
 const PER_IT102 = { all: "in tutto", week: "a settimana", day: "al giorno" };
@@ -30894,6 +31403,7 @@ const icon103 = (k) => {
   if (k === "stam94") return POT64("m", "pot94");
   if (COIN_KEYS102.includes(k)) return coinIcon102(k, "is-big");
   if (k === "mirror") return '<img class="sh102-img" src="art/items/mirror-shard.webp" alt="" draggable="false">';
+  if (goldKey106(k)) return goldSeal106(goldKey106(k));
   if (chestKey104(k)) { const c = chestKey104(k); return seal104(c.r, c.s); }
   if (ITEM_BY_ID[k]) return itemTile(ITEM_BY_ID[k]);
   return `<span class="sh102-mat is-${esc(k)}"><i></i></span>`;
@@ -30922,6 +31432,7 @@ const seal103 = (c, stat = "atk") => `<span class="it ch8-seal r-${c.metal}" sty
 const OFFERS103 = { "offer-bundle": { tag: "Best value", gold: true, name: "Trainer's bundle", say: "Potions: 10 S, 4 M and 1 L", pots: ["s", "m", "l"] }, "offer-lpair": { tag: "Today only", name: "Potion L × 2", say: "7,000 XP in two bottles", pots: ["l", "l"] }, "offer-chest": { tag: "Once a day", name: "Golden chest −30%", say: "One piece of gear, SR or SSR", chest: "gold" } };
 const base103 = (k) => { const b = S103().base[k] ?? {}; return { k, price: b.price ?? shopBasePrice102(k), was: b.was ?? shopBaseWas102(k) ?? 0, off: !!b.off, kind: SHOP_BASE_IT102.find((r) => r[0] === k)[2], it: SHOP_BASE_IT102.find((r) => r[0] === k)[1] }; };
 const baseCard103 = (k) => {
+  if (k.startsWith("gold106-")) return goldCard106(k);
   const v = base103(k), x = { cur: "gold", price: v.price, was: v.was };
   if (["s", "m", "l"].includes(k)) return `<article class="sh64-ware is-pot is-${k}"><div class="sh64-ware-vis">${POT64(k, "is-big")}</div><b>${POTIONS[k].name}</b><small>+${en103(POTIONS[k].xp)} XP to one hero</small>${buy103(x)}</article>`;
   if (k === "stam") return `<article class="sh64-ware is-pot is-m"><div class="sh64-ware-vis">${POT64("m", "is-big pot94")}</div><b>Stamina Potion</b><small>+60 stamina</small>${buy103(x)}</article>`;
@@ -30929,7 +31440,7 @@ const baseCard103 = (k) => {
   const O = OFFERS103[k], vis = O.pots ? `<span class="sh64-pack">${O.pots.map((p) => POT64(p)).join("")}</span>` : seal103(SHOP_CHESTS.find((y) => y.id === O.chest));
   return `<article class="sh64-offer"><i class="sh64-ribbon${O.gold ? " is-gold" : ""}">${O.tag}</i><div class="sh64-offer-vis">${vis}</div><div class="sh64-offer-t"><b>${O.name}</b><small>${O.say}</small>${pct103(x) ? `<s>${COIN103()}${en103(v.was)}</s>` : ""}${buy103(x, O.chest ? "open" : "buy")}</div></article>`;
 };
-const BASESAY103 = { s: "1 Pozione S (+150 XP)", m: "1 Pozione M (+800 XP)", l: "1 Pozione L (+3.500 XP)", stam: "+60 stamina", "chest-bronze": "1 pezzo di equipaggiamento, da N a SR", "chest-silver": "1 pezzo di equipaggiamento, da R a SSR", "chest-gold": "1 pezzo di equipaggiamento, SR o SSR", "offer-bundle": "Pozioni: 10 S, 4 M e 1 L", "offer-lpair": "2 Pozioni L", "offer-chest": "Il forziere d'oro scontato" };
+const BASESAY103 = { s: "1 Pozione S (+150 XP)", m: "1 Pozione M (+800 XP)", l: "1 Pozione L (+3.500 XP)", stam: "+60 stamina", "chest-bronze": "1 pezzo di equipaggiamento, da N a SR", "chest-silver": "1 pezzo di equipaggiamento, da R a SSR", "chest-gold": "1 pezzo di equipaggiamento, SR o SSR", "offer-bundle": "Pozioni: 10 S, 4 M e 1 L", "offer-lpair": "2 Pozioni L", "offer-chest": "Il forziere d'oro scontato", "gold106-R": "da 50 a 500 oro, nel Coin Shop", "gold106-SR": "da 250 a 1.000 oro, nel Coin Shop", "gold106-SSR": "da 500 a 5.000 oro, nel Coin Shop" };
 const live103 = (x) => (x.off ? "Fermo" : x.until && Date.now() > Date.parse(x.until) ? "Scaduto" : "In vendita");
 const blank103 = (shop = "coin", kind = "ware") => ({ id: null, shop, kind, name: "", tag: "", give: { gems: 0, gold: 0, items: {}, heroes: [] }, cur: shop === "coin" ? "coinG" : "gold", price: shop === "coin" ? 1 : 1000, was: 0, limit: 0, per: "all", until: "" });
 const local103 = (iso) => (iso ? new Date(Date.parse(iso) - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : "");
@@ -30955,7 +31466,7 @@ const groups103 = (f, redraw) => {
   const give = () => {
     const g = grp("Cosa dà", "Scegli dalle quattro schede: oggetti, equipaggiamento (tutti i pezzi, con la loro tempra), casse (da N a LR) o eroi, anche mischiati in un bundle.");
     const I = f.give.items, H = f.give.heroes;
-    const gearIds = () => Object.keys(I).filter((k) => ITEM_BY_ID[k]), chestIds = () => Object.keys(I).filter((k) => chestKey104(k)), quickN = () => Object.keys(I).filter((k) => !ITEM_BY_ID[k] && !chestKey104(k)).length + (+f.give.gems ? 1 : 0) + (+f.give.gold ? 1 : 0);
+    const gearIds = () => Object.keys(I).filter((k) => ITEM_BY_ID[k]), chestIds = () => Object.keys(I).filter((k) => chestKey104(k) || goldKey106(k)), quickN = () => Object.keys(I).filter((k) => !ITEM_BY_ID[k] && !chestKey104(k) && !goldKey106(k)).length + (+f.give.gems ? 1 : 0) + (+f.give.gold ? 1 : 0);
     // the tab it opens on: the one that holds what this ware gives (a hero for sale opens on Eroi)
     f._tab ??= H.length && !quickN() && !gearIds().length && !chestIds().length ? "heroes" : gearIds().length && !quickN() && !H.length && !chestIds().length ? "gear" : chestIds().length && !quickN() && !H.length && !gearIds().length ? "chests" : "items";
     const bar = mk("div", "g-pick g103-big g103-gtabs"), body = mk("div", "g103-gbody"), sum = mk("div", "g103-chosen");
@@ -30981,8 +31492,8 @@ const groups103 = (f, redraw) => {
           ${row('<b class="g103-rsp">Speciali</b>', `<div class="g103-items">${[...SPECIAL_ITEMS, ...STORY_ITEMS76].map(one).join("")}</div>`)}</div>`;
       } else if (f._tab === "chests") {
         const one = (r, s) => tile(`chest-${r}-${s}`, chestName104(r), seal104(r, s), s === "any" ? "un pezzo qualsiasi dei sei" : `${ITEM_STAT[s].label}: ${ITEM_SLOTS.filter((x) => x.stat === s).map((x) => x.type).join(" o ")}`);
-        body.innerHTML = `<p class="g-note">${ic("check")}<span>Una cassa dà un pezzo della sua rarità, del tipo scelto (o uno qualsiasi), con il valore tirato a sorte. Il giocatore la apre appena la compra, come i forzieri dello Shop del gold.</span></p>
-          <div class="g103-rows">${[...ITEM_RARITIES].reverse().map((r) => row(tierG(r), `<div class="g103-items">${["hp", "atk", "def", "any"].map((s) => one(r, s)).join("")}</div>`)).join("")}</div>`;
+        body.innerHTML = `<p class="g-note">${ic("check")}<span>Una cassa dà un pezzo della sua rarità, del tipo scelto (o uno qualsiasi), con il valore tirato a sorte. Il giocatore la apre appena la compra, come i forzieri dello Shop del gold. Le casse d'oro, in cima, danno oro: da 50 a 500 la R, da 250 a 1.000 la SR, da 500 a 5.000 la SSR.</span></p>
+          <div class="g103-rows">${row('<b class="g103-rsp">Oro</b>', `<div class="g103-items">${["R", "SR", "SSR"].map((r) => tile(`goldchest-${r}`, `${r} Gold Chest`, goldSeal106(r), `da ${GOLD_RANGE106[r][0].toLocaleString("it-IT")} a ${GOLD_RANGE106[r][1].toLocaleString("it-IT")} oro`)).join("")}</div>`)}${[...ITEM_RARITIES].reverse().map((r) => row(tierG(r), `<div class="g103-items">${["hp", "atk", "def", "any"].map((s) => one(r, s)).join("")}</div>`)).join("")}</div>`;
       } else {
         body.innerHTML = `<p class="g-note">${ic("check")}<span>Chi lo compra riceve l'eroe; se ce l'ha già, una copia nelle sue Copies (con tutte e 6 le copie, la moneta della sua rarità).</span></p>
           <div class="g103-rows">${RARS.filter((r) => HEROINES.some((h) => h.rarity === r && !h.guest)).map((r) => row(tierG(r), `<div class="g103-heroes">${HEROINES.filter((h) => h.rarity === r && !h.guest).map((h) => `<button type="button" class="g103-hero" data-h="${h.id}" aria-pressed="${H.includes(h.id)}" aria-label="${esc(h.name)}"><span class="g103-hero-c" data-c="${h.id}"></span><b>${esc(h.name)}</b><i class="g103-hero-ok">${ic("check")}</i></button>`).join("")}</div>`)).join("")}</div>`;
@@ -31057,7 +31568,7 @@ const store103 = (f, from) => {
   return x;
 };
 const drop103 = (x, from) => { const L = S103().items, i = L.findIndex((y) => y.id === x.id); if (i < 0) return; L.splice(i, 1); change("Shop", `shop-item-${x.id}`, `Tolto dallo Shop: ${shopSay102(x)}`, from); toast(`${x.name || "L'articolo"} tolto dallo Shop.`); };
-const setBase103 = (k, put, from) => { const b = (S103().base[k] ??= {}); Object.assign(b, put); if (b.off === false) delete b.off; const v = base103(k); change("Shop", `shop-base-${k}`, `${v.it}: ${it103(v.price)} oro${v.kind === "offerta" ? `, prima ${it103(v.was)}` : ""}${v.off ? ", tolto dallo Shop" : ""}`, from); };
+const setBase103 = (k, put, from) => { const b = (S103().base[k] ??= {}); Object.assign(b, put); if (b.off === false) delete b.off; const v = base103(k); change("Shop", `shop-base-${k}`, `${v.it}: ${it103(v.price)} ${k.startsWith("gold106-") ? coinNm103(goldCur106(k)) : "oro"}${v.kind === "offerta" ? `, prima ${it103(v.was)}` : ""}${v.off ? ", tolto dallo Shop" : ""}`, from); };
 
 /* ── il modulo grande (come quello dei Boss): la carta a sinistra, i campi a destra ── */
 const toastAway103 = () => document.querySelector(".g54 [data-toast]")?.classList.remove("is-on");
@@ -31117,13 +31628,14 @@ const forgeBase103 = (page, k, done = () => {}) => {
   const draw = () => { slot.innerHTML = baseCard103(k); };
   const paint = () => {
     const w = base103(k), g = mk("section", "g103-grp");
-    g.innerHTML = `<h3>Prezzo in oro</h3>${w.kind === "offerta" ? '<p class="g-note">«Prima» è il prezzo barrato dell\'offerta del giorno.</p>' : ""}`;
+    g.innerHTML = `<h3>${k.startsWith("gold106-") ? "Prezzo in monete" : "Prezzo in oro"}</h3>${w.kind === "offerta" ? '<p class="g-note">«Prima» è il prezzo barrato dell\'offerta del giorno.</p>' : ""}`;
     const row = mk("div", "g103-two");
-    row.append(numField({ label: "Prezzo", value: w.price, min: 1, max: 9999999, step: 50, onInput: (n) => { setBase103(k, { price: n }, F); draw(); } }));
+    row.append(numField({ label: "Prezzo", value: w.price, min: 1, max: 9999999, step: k.startsWith("gold106-") ? 1 : 50, onInput: (n) => { setBase103(k, { price: n }, F); draw(); } }));
     if (w.kind === "offerta") row.append(numField({ label: "Prima (barrato)", value: w.was, min: 0, max: 9999999, step: 50, onInput: (n) => { setBase103(k, { was: n }, F); draw(); } }));
     const on = mk("section", "g103-grp");
     on.innerHTML = `<h3>Nello Shop</h3><label class="g-check g103-switch"><input type="checkbox" data-sell${w.off ? "" : " checked"}><span>In vendita</span></label><p class="g-note">Se la togli, nel gioco non c'è più finché non la rimetti.</p>`;
     g.append(row);
+    if (k.startsWith("gold106-")) { const cp = chipPick(CURS103.coin.map((c) => [c, `${curIcon102(c)} ${esc(coinNm103(c))}`]), goldCur106(k), (v) => { setBase103(k, { cur: v }, F); draw(); }, "g103-big"); cp.setAttribute("aria-label", "Con quale moneta si compra"); g.append(cp); }
     form.replaceChildren(g, on);
     draw();
   };
@@ -31169,6 +31681,7 @@ const viewShop103 = (page) => {
     const base = (k) => { const v = base103(k); return tile(baseCard103(k), `data-base="${k}" aria-label="Cambia ${esc(v.it)}"`, v.off, "Tolta dallo Shop"); };
     body.innerHTML = shop === "coin"
       ? shelf("Bundle", "In alto nel Coin Shop, con la loro etichetta", own103("coin", "bundle").map(own).join("") + add("bundle", "Nuovo bundle"), true)
+        + shelf("Casse di monete d'oro", "Nel Coin Shop, prima degli articoli: le mette il gioco. Qui ne cambi prezzo e moneta, o le togli", ["gold106-R", "gold106-SR", "gold106-SSR"].map(base).join(""))
         + shelf("Articoli", "La griglia del Coin Shop", own103("coin", "ware").map(own).join("") + add("ware", "Nuovo articolo"))
       : shelf("Offerte del giorno e bundle", "In alto nello Shop del gold", ["offer-bundle", "offer-lpair", "offer-chest"].map(base).join("") + own103("gold", "bundle").map(own).join("") + add("bundle", "Nuovo bundle"), true)
         + shelf("Articoli", "La scheda Wares: c'è solo se ne metti almeno uno", own103("gold", "ware").map(own).join("") + add("ware", "Nuovo articolo"))
@@ -36940,8 +37453,10 @@ const STORY66 = (() => {
   Object.assign(S66.BG, { lowtide: "art/story/lowtide.webp", "double-anchor": "art/story/double-anchor.webp", "room-seven": "art/story/room-seven.webp", "shelf-out105": "art/story/talk-tidal-shelf.webp" });
   // where they stand: Bartholomew on the market's dock, the lover on the inn's dock, Captain Nell behind her counter (the ledger in front of her)
   Object.assign(SPOT_OF, {
-    crier: { x: IN105.x(0.71), y: 0.85, h: 0.34, markAt: 0.06 },
-    love: { x: IN105.x(0.215), y: 0.985, h: 0.38, markAt: 0.06 },
+    // on the planks, never in the canal (round 106: the user saw the lover standing in the water outside the inn): the crier on the
+    // market's dock by the barrel, the lover on the inn's dock between the barrel and the posts, clear of the door
+    crier: { x: IN105.x(0.765), y: 0.79, h: 0.34, markAt: 0.06 },
+    love: { x: IN105.x(0.235), y: 0.815, h: 0.36, markAt: 0.06 },
     nell: { x: IN105.x(0.575), y: 0.77, h: 0.52, markAt: 0.06, clip: IN105.poly([[0, 0], [1, 0], [1, 0.555], [0.62, 0.555], [0.62, 0.5], [0.48, 0.5], [0.48, 0.555], [0, 0.555]]), top: 0.555 },
   });
   /** The place's name at the top while a talk takes you somewhere new (the tavern's inPlace): its name, its region, where Leave goes. */
@@ -37566,7 +38081,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-10-1647";
+const BUILD = "2026-11-10-2153";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
