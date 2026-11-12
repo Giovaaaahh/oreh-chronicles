@@ -8215,6 +8215,90 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
   mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent) !important;
 }
 
+/* ══ round 113 · the log-ins the Database makes: on the log-in page, a tile a day ══ */
+.lg113 { display: grid; gap: 18px; margin-top: 40px; }
+.gm-sub--m64 > [data-lg64]:has(> .lg113) { display: grid; align-content: center; }
+[data-lg64] > .lg113:first-child { margin-top: 0; }
+.lg113-head { display: grid; gap: 8px; justify-items: center; text-align: center; }
+.lg113-head h3 { margin: 0; font: 700 clamp(26px, 3.2vw, 46px)/0.95 var(--font-display); text-transform: uppercase; color: #fff; }
+.lg113-head p { margin: 0; color: #d9e2e8; font-size: 16px; }
+.lg113-head p span { color: #9fb0bb; }
+.lg113-grid { display: grid; grid-template-columns: repeat(var(--cols, 7), minmax(0, 200px)); justify-content: center; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.lg113-day { position: relative; display: grid; justify-items: center; align-content: start; gap: 6px; min-height: 150px; padding: 10px 8px 12px; text-align: center; background: #0d0f14; border: 1px solid #262a35; }
+.lg113-day small { font: 700 11px/1 var(--font-sans); letter-spacing: 0.12em; text-transform: uppercase; color: #b6c1c8; }
+.lg113-pic { display: grid; place-items: center; height: 60px; }
+.lg113-pic .pot64, .lg113-pic .sh102-img { width: 54px; height: 54px; object-fit: contain; }
+.lg113-pic .m64-ic { width: 34px; height: 34px; stroke-width: 1.5; }
+.lg113-pic .it { font-size: 12px; }
+.lg113-pic .sh102-mat { transform: scale(0.8); }
+.lg113-card { display: block; font-size: 4.2px; }
+.lg113-day b { font: 700 14px/1.15 var(--font-sans); color: #fff; }
+.lg113-more { font: 600 12px/1.25 var(--font-sans); color: #9fe9f0; }
+.lg113.is-short .lg113-day { min-height: clamp(170px, 28vh, 260px); align-content: center; gap: 10px; }
+.lg113.is-short .lg113-pic { height: 92px; }
+.lg113.is-short .lg113-pic .pot64, .lg113.is-short .lg113-pic .sh102-img { width: 84px; height: 84px; }
+.lg113.is-short .lg113-pic .m64-ic { width: 52px; height: 52px; }
+.lg113.is-short .lg113-pic .it { font-size: 16px; }
+.lg113.is-short .lg113-card { font-size: 6.4px; }
+.lg113.is-short .lg113-day b { font-size: 18px; }
+.lg113-day.is-big { border-color: rgb(255 201 60 / 0.55); background: radial-gradient(80% 60% at 50% 40%, rgb(255 207 63 / 0.14), #0d0f14 75%); }
+.lg113-day.is-got { opacity: 0.5; }
+.lg113-day.is-now { border-color: #02d2e3; box-shadow: 0 0 0 1px #02d2e3, 0 0 30px rgb(2 210 227 / 0.3); }
+.lg113-day .mi64-claim { margin-top: 2px; }
+.gm[data-device="phone"] .lg113-grid { grid-template-columns: repeat(var(--pcols, 4), minmax(0, 1fr)); gap: 6px; }
+.gm[data-device="phone"] .lg113.is-short .lg113-day { min-height: 150px; }
+.gm[data-device="phone"] .lg113.is-short .lg113-pic { height: 64px; }
+.gm[data-device="phone"] .lg113.is-short .lg113-pic .pot64, .gm[data-device="phone"] .lg113.is-short .lg113-pic .sh102-img { width: 58px; height: 58px; }
+.gm[data-device="phone"] .lg113.is-short .lg113-day b { font-size: 14px; }
+.gm[data-device="phone"] .lg113-day { min-height: 120px; padding: 8px 4px 10px; }
+.gm[data-device="phone"] .lg113-pic { height: 48px; }
+.gm[data-device="phone"] .lg113-pic .pot64, .gm[data-device="phone"] .lg113-pic .sh102-img { width: 44px; height: 44px; }
+.gm[data-device="phone"] .lg113-head h3 { font-size: 28px; }
+.gm[data-device="phone"] .lg113-day b { font-size: 12px; }
+
+/* the Database's page Log In */
+.g113-month { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: end; }
+.g113-or { display: flex; align-items: center; gap: 10px; margin: 14px 0; color: #8b98a3; font-size: 13px; }
+.g113-or::before, .g113-or::after { content: ""; flex: 1; height: 1px; background: rgb(255 255 255 / 0.1); }
+.g113-dates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.g113-on { margin: 4px 0 8px; }
+.g113-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.g113-day { display: grid; gap: 3px; align-content: start; min-height: 66px; padding: 6px 7px; text-align: left; color: #e7eef3; background: rgb(255 255 255 / 0.05); border: 1px solid rgb(255 255 255 / 0.08); cursor: pointer; }
+.g113-day:hover { background: rgb(255 255 255 / 0.09); }
+.g113-day b { font: 700 15px/1 "Oswald", sans-serif; }
+.g113-day small { display: -webkit-box; overflow: hidden; font-size: 11px; line-height: 1.25; color: #b9c6cf; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.g113-day.is-on { border-color: #02d2e3; background: rgb(2 210 227 / 0.12); }
+.g113-day.is-empty small { color: #ff9a9a; }
+.g113-dayact { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.g113-edit { display: grid; gap: 10px; margin: 6px 0; padding: 12px; border: 1px solid rgb(2 210 227 / 0.28); background: rgb(2 210 227 / 0.04); }
+.g113-row.is-open { box-shadow: inset 3px 0 0 #02d2e3; }
+.g113-row.is-on .g113-state { color: #7dffb0; }
+.g113-row.is-soon .g113-state { color: #8fd6ff; }
+.g113-row.is-over .g113-state, .g113-row.is-off .g113-state { color: #ff9a9a; }
+@media (max-width: 700px) { .g113-days { grid-template-columns: repeat(4, minmax(0, 1fr)); } .g113-month, .g113-dates { grid-template-columns: minmax(0, 1fr); } }
+
+/* ══ round 114 · dark water: his mirror on the back of a dark card (lab 113, card A), the cards turning over ══ */
+.bt-card.is-flip114 { perspective: 30em; }
+.bt-card.is-flip114 > .sc { backface-visibility: hidden; }
+.dk114 .sc-body { background: #02070b; }
+.dk114 .sc-face { background: linear-gradient(150deg, #f1f8fc 0%, #93a9b7 32%, #1f2f3b 58%, #d9e9f2 100%); }
+.dk114 .sc-body > :not(.sc-band) { pointer-events: none; }
+.dk114-art { position: absolute; inset: 0; background: url(art/m/enemies/challenge-reflection.webp) 50% 55% / 260% auto no-repeat; filter: grayscale(1) brightness(0.78) contrast(1.35); }
+.dk114-tint { position: absolute; inset: 0; background: #164a70; mix-blend-mode: color; }
+.dk114-vig { position: absolute; inset: 0; background: radial-gradient(70% 55% at 50% 40%, transparent 30%, rgb(2 9 16 / 0.82) 100%); }
+/* the question mark's own dot is cut away: his mirror under it is the dot */
+.dk114-q { position: absolute; left: 0; right: 0; top: 6.5%; z-index: 4; text-align: center; font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: 7.6em; line-height: 0.82; color: transparent;
+  background: linear-gradient(165deg, #ffffff 0%, #d5e8f2 36%, #6d8c9e 52%, #f4fbff 68%, #9cb6c5 100%); -webkit-background-clip: text; background-clip: text;
+  clip-path: inset(-20% -20% 25% -20%); filter: drop-shadow(0 0.03em 0.08em rgb(0 0 0 / 0.9)); }
+.dk114-sheen { position: absolute; inset: -20% -70%; z-index: 5; background: linear-gradient(105deg, transparent 43%, rgb(255 255 255 / 0.34) 50%, transparent 57%); mix-blend-mode: screen; transform: translateX(-70%);
+  animation: dk114-sheen 5.6s cubic-bezier(0.4, 0, 0.2, 1) infinite; animation-delay: calc(var(--i, 0) * -0.8s); }
+@keyframes dk114-sheen { 0%, 62% { transform: translateX(-70%); } 100% { transform: translateX(70%); } }
+.dk114-band small { color: rgb(220 240 255 / 0.78); }
+.bt-card[data-rank="d"] { --rc: #e4f4ff; --gl: 0.6em; }
+.pr112-mirror .pr112-card > .dk114 { display: block; }
+/* a dark card in the plan keeps the same cold silver */
+.bt-qslot.is-dark112::after { color: #eef7fc; background: radial-gradient(120% 90% at 50% 40%, #1d5378, #03111c 72%); box-shadow: inset 0 0 0 1px rgb(220 240 255 / 0.55); text-shadow: 0 0 0.3em rgb(160 210 240 / 0.8); }
+
 </style>
 </head>
 <body>
@@ -19449,6 +19533,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   };
   const openInsp = (c, { step = null, hero = null } = {}) => {
     hideTip();
+    if (c && pr112Dark(c)) { toast("Dark water: you see this card when it plays"); return; }
     const m = hero ?? (c && !c.wild ? memberOf(c.owner) : null);
     if (c?.wild) { toast("Wild: move it beside a card and it copies it"); return; }
     insp = { c: c ?? null, step, m, tab: c ? "card" : "hero" };
@@ -22677,7 +22762,7 @@ void main() {
     for (;;) {
       const i = F.hand.findIndex((c, k) => {
         const d = F.hand[k + 1];
-        return d && !c.ult && !d.ult && !c.wild && !d.wild && c.owner === d.owner && c.move === d.move && c.rank === d.rank && c.rank < 3;
+        return d && !pr112Dark(c) && !pr112Dark(d) && !c.ult && !d.ult && !c.wild && !d.wild && c.owner === d.owner && c.move === d.move && c.rank === d.rank && c.rank < 3;
       });
       if (i < 0) { roarBack(); return; }
       const a = F.hand[i], b = F.hand[i + 1], bn = cardEl(b);
@@ -22764,9 +22849,9 @@ void main() {
     if (!free) F.moves -= 1;
     const step = { c: { ...c }, target: F.foes[F.target]?.uid, free };
     const charmed = F.team.find((m) => m.id === c.owner && m.charm > 0);
-    if (charmed && !BT_SUPPORT.has(c.move) && F.foes.some((e) => !e.dead && (e.regal || e.royal))) toast(`${charmed.h.name} is charmed: her attacks cannot reach Altea or her guards`);
+    if (charmed && !pr112Dark(c) && !BT_SUPPORT.has(c.move) && F.foes.some((e) => !e.dead && (e.regal || e.royal))) toast(`${charmed.h.name} is charmed: her attacks cannot reach Altea or her guards`);
     F.plan.push(step);
-    if (!c.ult && node) addOrb(F.team.find((m) => m.id === c.owner), 1, within(node));
+    if (!c.ult && node) { if (pr112Dark(c)) step.orb114 = true; else addOrb(F.team.find((m) => m.id === c.owner), 1, within(node)); }
     paintTeam();
     paintCtrl();
     const slots = $$(".bt-qslot", el.q), dest = slots[F.plan.length - 1];
@@ -22786,6 +22871,7 @@ void main() {
     await merges();
     busy = false;
     const pick = !c.ult && BT_CARDS[c.move]?.pick;
+    if (pick && pr112Dark(c)) { step.ally = pr114Ally(c); arm(); return; }
     if (pick && alive().length > 1) { F.picking = { kind: pick, step: "ally", step$: step }; pickPrompt(); return; }
     if (pick) step.ally = alive()[0]?.id;
     arm();
@@ -22801,12 +22887,12 @@ void main() {
     F.moves -= 1;
     paintCtrl();
     if (c.wild) {
-      const ok = (x) => x && !x.wild && !x.ult && x.rank < 3;
+      const ok = (x) => x && !x.wild && !x.ult && x.rank < 3 && !pr112Dark(x);
       const model = ok(F.hand[to - 1]) ? F.hand[to - 1] : ok(F.hand[to + 1]) ? F.hand[to + 1] : null;
-      if (model) { Object.assign(c, { wild: false, owner: model.owner, move: model.move, rank: model.rank }); toast(`The wild copies ${model.move}`); }
+      if (model) { Object.assign(c, { wild: false, owner: model.owner, move: model.move, rank: model.rank }); toast(`The wild copies ${model.move}`); } else if ([F.hand[to - 1], F.hand[to + 1]].some((x) => x && pr112Dark(x))) toast("The wild cannot copy a dark card");
     }
     paintHand();
-    if (!c.wild) addOrb(F.team.find((m) => m.id === c.owner), 1, slot(to));
+    if (!c.wild && !pr112Dark(c)) addOrb(F.team.find((m) => m.id === c.owner), 1, slot(to));
     paintTeam();
     await hold(300);
     await merges();
@@ -22832,6 +22918,7 @@ void main() {
   /** One chosen card plays: who plays it, on what, its show, its rules and what follows it. */
   const playStep = async (step) => {
     paintQueue();
+    if (step.orb114) { step.orb114 = false; addOrb(F.team.find((m) => m.id === step.c.owner), 1); }
     const m = F.team.find((x) => x.id === step.c.owner && !x.ko);
     if (!m) return;
     if (m.overload) { const p = memAt(m); number(p.cx, p.cy, "overloaded", "is-resist"); await hold(420); return; }
@@ -22951,6 +23038,139 @@ void main() {
      to the end of your team). The ultimate is never played back; a crit on him cracks that turn's mirror; every Light hero lights a
      dark card a turn. Every fifth turn, said the turn before, Abyssal Echo plays your whole turn back at 50%. Normal: reflections
      ×1.5; Hard: also from Twilight Water, and the pressure is 3 turns. ══ */
+  /* ══ round 114 · dark water, as the user chose in lab 113 («A specchio e 1 Ventaglio usa quelli sono bellissimi»). The start of
+     your turn in Midnight Water and the Abyss: the cards you kept turn face down where they are, the draw comes face down, they
+     are gathered and fanned as the site's hero fan is, then dealt back in a new order; the dark ones are chosen while nobody sees
+     them, and every card but those turns face up. A dark card never fuses (it would tell what it is). A tap anywhere hurries it.
+     The back is his mirror: the cracked round mirror on his brow, from the user's picture, is the question mark's dot. ══ */
+  const PR114_RUN = new Set();
+  let pr114Rate = 1, pr114Busy = false;
+  const pr114Deep = () => !!F.pr112 && F.pr112.depth >= 3 && !!pr112Foe();
+  /** A card's place written as the hand writes it: its centre at x, y. */
+  const TT114 = (x, y, r = 0, s = 1) => `translate(${(x - 5 * g.fs).toFixed(1)}px, ${(y - 7 * g.fs).toFixed(1)}px) rotate(${r.toFixed(2)}deg) scale(${s.toFixed(3)})`;
+  /** One animation of the shuffle: hurried with the rest when you tap. */
+  const pr114A = (node, kf, opt = {}) => {
+    if (!node) return Promise.resolve();
+    const a = node.animate(kf, { fill: "both", ...opt });
+    a.playbackRate = pr114Rate;
+    PR114_RUN.add(a);
+    return a.finished.catch(() => {}).finally(() => PR114_RUN.delete(a));
+  };
+  const pr114Hold = (ms) => hold(Math.max(0, Math.round(ms / pr114Rate)));
+  host.addEventListener("pointerdown", () => { if (!pr114Busy || pr114Rate > 1) return; pr114Rate = 4; for (const a of PR114_RUN) a.updatePlaybackRate(4); }, true);
+  /** Every card where its slot says, its animations dropped (the end of the shuffle). */
+  const pr114Land = (order) => order.forEach((c, j) => {
+    const n = cardEl(c);
+    if (!n) return;
+    n.style.transition = "none";
+    n.style.transform = T(slot(j));
+    n.style.zIndex = String(j + 1);
+    n.style.setProperty("--i", String(j));
+    n.getAnimations().forEach((a) => { if (a.constructor === Animation) a.cancel(); });
+    n.getBoundingClientRect();
+    n.style.transition = "";
+  });
+  /** A new order for the hand: never the same as before (you could follow every card). */
+  const pr114Mix = (list) => {
+    const o = list.slice();
+    for (let i = o.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [o[i], o[j]] = [o[j], o[i]]; }
+    if (o.length > 1 && o.every((c, i) => c === list[i])) [o[0], o[1]] = [o[1], o[0]];
+    return o;
+  };
+  /** Turns a card over where it is: halfway, its face (or its back) is painted again. */
+  const pr114Flip = async (c, ms = 300) => {
+    const node = cardEl(c);
+    if (!node) return;
+    node.classList.add("is-flip114");
+    await pr114A(node.firstElementChild, [{ transform: "rotateY(0deg)" }, { transform: "rotateY(90deg)" }], { duration: ms / 2, easing: "cubic-bezier(0.7, 0, 0.84, 0)", fill: "forwards" });
+    paintCard(node, c);
+    await pr114A(node.firstElementChild, [{ transform: "rotateY(-90deg)" }, { transform: "rotateY(0deg)" }], { duration: ms / 2, easing: "cubic-bezier(0.16, 1, 0.3, 1)", fill: "none" });
+    node.classList.remove("is-flip114");
+  };
+  /** The shuffle (Ventaglio): they gather in a pile over the middle of the hand, open in a fan over it in their new order, close
+   *  (the right half under the left), and are dealt back one by one, as the site deals its row. */
+  const pr114Fan = async (before, order) => {
+    const n = before.length, a0 = slot(0), b0 = slot(Math.max(0, n - 1)), C = { x: (a0.x + b0.x) / 2, y: a0.y }, cw = 10 * g.fs, ch = 14 * g.fs;
+    const jit = before.map(() => ({ r: (Math.random() - 0.5) * 9, dy: (Math.random() - 0.5) * 0.04 * ch }));
+    const pile = (i) => TT114(C.x, C.y + jit[i].dy, jit[i].r, 1.02);
+    const fanAt = (k) => { const c0 = k - (n - 1) / 2; return TT114(C.x + c0 * 0.56 * cw, C.y - 0.36 * ch + Math.abs(c0) * 0.05 * ch, c0 * 7, 1.04); };
+    await Promise.all(before.map((c, i) => { const node = cardEl(c), p = slot(i); if (!node) return null; node.style.zIndex = String(10 + i);
+      return pr114A(node, [{ transform: TT114(p.x, p.y) }, { transform: pile(i) }], { duration: 380, delay: Math.abs(i - (n - 1) / 2) * 30, easing: PLATE_EASE }); }));
+    await Promise.all(order.map((c, k) => { const node = cardEl(c), i = before.indexOf(c); if (!node) return null; node.style.zIndex = String(20 + k);
+      return pr114A(node, [{ transform: pile(i) }, { transform: fanAt(k) }], { duration: 460, delay: k * 24, easing: "cubic-bezier(0.34, 1.56, 0.64, 1)" }); }));
+    await pr114Hold(140);
+    await Promise.all(order.map((c, k) => { const node = cardEl(c); if (!node) return null; node.style.zIndex = String(k >= n / 2 ? 20 + k - n : 20 + k);
+      return pr114A(node, [{ transform: fanAt(k) }, { transform: TT114(C.x, C.y, (k - (n - 1) / 2) * 1.4, 1.02) }], { duration: 300, delay: (n - 1 - k) * 16, easing: "cubic-bezier(0.7, 0, 0.84, 0)" }); }));
+    await Promise.all(order.map((c, j) => { const node = cardEl(c), p = slot(j); if (!node) return null;
+      return pr114Hold(j * 62).then(() => { node.style.zIndex = String(30 + j); return pr114A(node, [{ transform: TT114(C.x, C.y, (j - (n - 1) / 2) * 1.4, 1.02) }, { transform: TT114(p.x, p.y) }], { duration: 420, easing: PLATE_EASE }); }); }));
+    pr114Land(order);
+  };
+  /** The dark ones, chosen while every card is face down: two in Midnight Water, all but the ultimate and the wild in the Abyss;
+   *  each Light hero lights one. Returns the lit ones. */
+  const pr114Choose = () => {
+    const P = F.pr112, pool = F.hand.filter((c) => !c.ult && !c.wild), n = P.depth >= 4 ? pool.length : Math.min(2, pool.length);
+    P.cover = new Set([...pool].sort(() => Math.random() - 0.5).slice(0, n).map((c) => c.uid));
+    const lamps = F.team.filter((m) => !m.ko && m.h.attr === "light").length, dark = [...P.cover], lit = new Set();
+    for (let i = 0; i < lamps && dark.length; i++) { const u = dark.splice(Math.floor(Math.random() * dark.length), 1)[0]; P.cover.delete(u); lit.add(u); }
+    if (lit.size) { toast(`Your Light ${lamps === 1 ? "hero lights" : "heroes light"} ${lit.size} dark card${lit.size === 1 ? "" : "s"}`); logIt("buff", "Lanterns", `${lit.size} dark card${lit.size === 1 ? "" : "s"} lit by Light heroes`); }
+    return lit;
+  };
+  /** The water goes: every card but the dark ones turns face up, left to right; a card a lantern lit glows gold. */
+  const pr114Reveal = async (lit) => {
+    const show = F.hand.filter((c) => !pr112Dark(c));
+    await Promise.all(show.map((c, k) => pr114Hold(60 + k * 58).then(() => pr114Flip(c, 320)).then(() => {
+      if (lit.has(c.uid)) pr114A(cardEl(c), [{ filter: "drop-shadow(0 0 0 rgb(255 211 107 / 0))" }, { filter: "drop-shadow(0 0 1em rgb(255 211 107 / 0.95))", offset: 0.35 }, { filter: "drop-shadow(0 0 0 rgb(255 211 107 / 0))" }], { duration: 900, fill: "none" });
+    })));
+    for (const c of F.hand.filter(pr112Dark)) pr114A(cardEl(c)?.firstElementChild, [{ transform: "scale(1.06)" }, { transform: "none" }], { duration: 420, easing: "cubic-bezier(0.34, 1.56, 0.64, 1)", fill: "none" });
+  };
+  /** The rule of the draw, after the water: visible neighbours fuse, the hand fills to seven, and in the Abyss what comes now
+   *  comes face down. */
+  const pr114Fill = async () => {
+    await merges();
+    const standing = alive();
+    for (let tries = 0; tries < 12 && F.hand.length < BT_HAND && standing.length; tries++) {
+      while (F.hand.length < BT_HAND) { const m = btPick(standing), c = { uid: ++uid, owner: m.id, move: btPick(m.h.cards).name, rank: 1 }; F.hand.push(c); if (F.pr112.depth >= 4) F.pr112.cover.add(c.uid); }
+      paintHand({ stagger: true });
+      await hold(520);
+      await merges();
+    }
+  };
+  /** Your turn in Midnight Water or the Abyss. */
+  const pr114Turn = async () => {
+    const P = F.pr112;
+    pr114Busy = true;
+    pr114Rate = 1;
+    try {
+      F.veil114 = true;
+      const kept = F.hand.slice();
+      await Promise.all(kept.map((c, i) => pr114Hold(i * 45).then(() => (P.cover.has(c.uid) ? null : pr114Flip(c, 280)))));
+      P.cover = new Set();
+      await deal();
+      const before = F.hand.slice(), order = pr114Mix(before);
+      await pr114Fan(before, order);
+      F.hand = order;
+      const lit = pr114Choose();
+      F.veil114 = false;
+      await pr114Reveal(lit);
+      await pr114Fill();
+    } finally {
+      F.veil114 = false;
+      pr114Busy = false;
+      pr114Rate = 1;
+      paintHand();
+    }
+  };
+  /** The back of a dark card: the game's own card frame and band, his cracked mirror from the user's picture in cold silver, a
+   *  light that crosses it now and then; the question mark stands over the mirror, which is its dot. */
+  const pr114Back = () => '<span class="sc dk114" aria-hidden="true"><span class="sc-face"><span class="sc-body"><span class="dk114-art"></span><span class="dk114-tint"></span><span class="dk114-vig"></span><span class="dk114-sheen"></span><span class="dk114-q">?</span><span class="sc-band dk114-band"><b>Dark water</b><small>you see it when it plays</small></span></span></span></span>';
+  /** A dark card that wants an ally picks one by itself (asking would tell what it is): a heal goes to the weakest, the rest to the
+   *  strongest. */
+  const pr114Ally = (c) => {
+    const L = alive();
+    if (!L.length) return null;
+    const heal = (BT_CARDS[c.move]?.preview?.(c.rank)?.healHp ?? 0) > 0;
+    return (heal ? L.reduce((a, m) => (m.hp / m.max < a.hp / a.max ? m : a)) : L.reduce((a, m) => (atkOf(m) > atkOf(a) ? m : a))).id;
+  };
   const PR112_DEPTH = ["Surface", "Twilight Water", "Midnight Water", "The Abyss"];
   const pr112Foe = () => (F.pr112 ? F.foes.find((x) => x.uid === F.pr112.uid && !x.dead) ?? null : null);
   /** Arms him as he comes in (the wave he is in). */
@@ -22962,8 +23182,8 @@ void main() {
     if (e) logIt("state", `${e.name}: Mirror Surface`, `each turn he plays your last card back at you${F.pr112.mult > 1 ? ` at ${Math.round(F.pr112.mult * 100)}%` : ""} · the ultimate is never played back · a crit on him cracks the mirror${F.pr112.floor > 1 ? " · Hard: it starts in Twilight Water" : ""}`);
   };
   const pr112K = () => F.pr112.mult * (F.pr112.depth >= 2 ? 1.25 : 1);
-  const pr112Dark = (c) => !!c && !!F.pr112?.cover?.has(c.uid);
-  const pr112Back = () => '<span class="sc pr112-back" aria-hidden="true"><span class="pr112-water"></span><i></i><b>?</b><small>dark water</small></span>';
+  const pr112Dark = (c) => !!c && (!!F.veil114 || !!F.pr112?.cover?.has(c.uid));
+  const pr112Back = () => pr114Back();
   /** The depth his HP has reached: each new one is said, and the Abyss breaks the mirror. */
   const pr112Check = async () => {
     const P = F.pr112, e = pr112Foe();
@@ -23104,7 +23324,7 @@ void main() {
     const key = e.dead || P.depth >= 4 || !next ? "" : P.depth >= 3 ? "dark" : `${next.owner}|${next.move}|${next.rank}`;
     if (mir.dataset.key === key) return;
     mir.dataset.key = key;
-    mir.innerHTML = !key ? "" : key === "dark" ? pr112Back() : `<span class="pr112-card">${skillCard(cardH(next), next.move, { rank: next.rank })}</span>`;
+    mir.innerHTML = !key ? "" : key === "dark" ? `<span class="pr112-card">${pr112Back()}</span>` : `<span class="pr112-card">${skillCard(cardH(next), next.move, { rank: next.rank })}</span>`;
   };
   const pr112PaintNow = () => { const e = pr112Foe(); if (e) pr112Paint(e, foeEl(e)); };
   const enemyTurn = async () => {
@@ -23311,8 +23531,7 @@ void main() {
     paintTeam();
     paintCtrl();
     await banner("your turn", "is-you");
-    await deal();
-    pr112Cover();
+    if (pr114Deep()) await pr114Turn(); else { await deal(); pr112Cover(); }
     if (F.bedsideAgain) await bedside();
     await first89();
     F.phase = "plan";
@@ -23695,7 +23914,7 @@ void main() {
       host.addEventListener("pointerup", cancel);
       return;
     }
-    if (!node) return;
+    if (!node || event.button > 0) return;
     const c = F.hand.find((x) => String(x.uid) === node.dataset.card);
     if (!c) return;
     const p = local(event), at = slot(F.hand.indexOf(c));
@@ -29015,6 +29234,7 @@ const ICON = {
   rows: '<path d="M3.5 5H20.5 M3.5 12H20.5 M3.5 19H20.5"/>',
   reset: '<path d="M19.5 12A7.5 7.5 0 1 1 16.8 6.3 M17.6 2.6V6.8H13.4"/>',
   shop: '<path d="M4.5 8.5H19.5L18.3 20.5H5.7Z M8.5 8.5V7A3.5 3.5 0 0 1 15.5 7V8.5 M9 12.5V13 M15 12.5V13"/>',
+  calendar: '<path d="M4.5 6.5H19.5V19.5H4.5Z M4.5 10.5H19.5 M8.5 4V8 M15.5 4V8 M8 14H10 M14 14H16 M8 17H10"/>',
 };
 const ic = (k, cls = "") => `<svg class="g-ic${cls ? ` ${cls}` : ""}" viewBox="0 0 24 24" aria-hidden="true">${ICON[k] ?? ""}</svg>`;
 
@@ -29052,10 +29272,10 @@ const gCard = (h, px, { big = false } = {}) => {
 
 /* ── the draft: everything changed here. It starts from what is online (so a new version keeps the old changes), lives on
  * this device (or, in the Database program, on its disk with backups), and goes to players only with "Manda online". ── */
-const PACK_PARTS = ["edits", "news", "bosses", "banners", "stages", "web", "reset", "modes", "app", "notes", "places", "smith", "people", "guest", "cards", "codes", "shop102", "bal106", "challenge"];
+const PACK_PARTS = ["edits", "news", "bosses", "banners", "stages", "web", "reset", "modes", "app", "notes", "places", "smith", "people", "guest", "cards", "codes", "shop102", "bal106", "challenge", "login"];
 /** In the Database program the Gestionale is the whole window, with no game behind it. */
 const GEST_ONLY = !!window.OREH_GEST_ONLY;
-const D = { edits: {}, news: [], log: [], bosses: [], banners: null, stages: {}, web: {}, version: 0, history: [], codes: [] };
+const D = { edits: {}, news: [], log: [], bosses: [], banners: null, stages: {}, web: {}, version: 0, history: [], codes: [], login: [] };
 /** The Database program serves the draft from its own disk; anywhere else it is this browser's. */
 const DISK = location.port === "41730";
 /* The Database program stays open while its window keeps asking: a ping every 20 s (a hidden window still sends one a
@@ -32670,7 +32890,175 @@ const viewCodes86 = (host) => {
   paintList();
 };
 
-const TABS = [["heroes", "Personaggi", "heroes"], ["foes", "Nemici", "foes"], ["bosses", "Boss", "crown"], ["story", "Storia", "story"], ["summon", "Summon", "summon"], ["cards", "Carte", "image"], ["guest", "Apparizioni", "fire"], ["shop", "Shop", "shop"], ["codes", "Codici", "send"], ["launch", "Lancio", "reset"]];
+/* ══ round 113 · la pagina Log In del Database. Un Log In ha un nome (lo vedono i giocatori, in inglese), le date e un premio per
+ *  ogni giorno; il giocatore ne prende uno al giorno finché è attivo (un giorno saltato non si perde: il premio dopo resta lì).
+ *  «Crea il mese» fa con un tasto il Log In di un mese intero, un premio per ogni giorno, che poi cambi come vuoi. Tutto finisce in
+ *  D.login e arriva ai giocatori con «Manda online» (il pacchetto, parte login). ══ */
+const MESI113 = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
+const MONTHS113 = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const two113 = (n) => String(n).padStart(2, "0");
+const iso113 = (d) => `${d.getFullYear()}-${two113(d.getMonth() + 1)}-${two113(d.getDate())}`;
+const dayIt113 = (s) => { const [y, m, d] = String(s ?? "").split("-").map(Number); return y ? `${d} ${MESI113[m - 1]} ${y}` : "—"; };
+/** Un mese di premi: le prime sei sere poco, la settima di più; ogni settimana un po' meglio; l'ultimo giorno il più grande. */
+const lgPlan113 = (n) => Array.from({ length: n }, (_, i) => {
+  const d = i + 1, w = Math.min(3, Math.floor(i / 7));
+  if (d === n) return { gems: 100, items: { star: 1 } };
+  if (d % 7 === 0) return [{ gems: 50 }, { items: { mirror: 1 } }, { gems: 80 }, { items: { dshard: 1 } }][w];
+  return [null, { gold: 5000 + 1000 * w }, { gems: 10 + 5 * Math.floor(w / 2) }, { items: w < 2 ? { m: 2 + w } : { l: w - 1 } }, { gold: 8000 + 2000 * w }, { gems: 15 + 5 * Math.floor(w / 2) }, { items: { dust: 1500 + 500 * w } }][d % 7];
+});
+/** Il Log In di un mese (y, m da 0): dal primo all'ultimo giorno, un premio al giorno. */
+const lgMonth113 = (y, m) => { const n = new Date(y, m + 1, 0).getDate(); return { id: `lg${Date.now().toString(36)}`, kind: "month", name: `${MONTHS113[m]} ${y}`, from: `${y}-${two113(m + 1)}-01`, to: `${y}-${two113(m + 1)}-${two113(n)}`, days: lgPlan113(n) }; };
+const lgState113 = (L, today = iso113(new Date(Date.now() - 5 * 3600e3))) => (L.off ? ["off", "Spento"] : L.from && today < L.from ? ["soon", `Comincia il ${dayIt113(L.from)}`] : L.to && today > L.to ? ["over", "Finito"] : ["on", "Attivo adesso"]);
+const lgSayAll113 = (L) => { const t = { gems: 0, gold: 0, items: {}, heroes: [] }; for (const r of L.days ?? []) { t.gems += r.gems ?? 0; t.gold += r.gold ?? 0; for (const [k, n] of Object.entries(r.items ?? {})) t.items[k] = (t.items[k] ?? 0) + n; t.heroes.push(...(r.heroes ?? [])); } return codeSay86(t); };
+const viewLogin113 = (host) => {
+  let f = null, day = 0;
+  const now = new Date(), months = Array.from({ length: 13 }, (_, i) => { const d = new Date(now.getFullYear(), now.getMonth() + i, 1); return [d.getFullYear(), d.getMonth()]; });
+  let pick = 1;
+  host.innerHTML = `<div class="g86 g113">
+    <div class="g-pagehead"><div><h2 class="g-h2">Log In</h2><p class="g-hint">I premi di accesso. Ogni giorno in cui entra, il giocatore prende il premio del giorno dopo, finché il Log In è attivo: un giorno saltato non si perde. Crei un Log In con le sue date, oppure un mese intero con un tasto. Arrivano ai giocatori con «Manda online».</p></div></div>
+    <div class="g86-grid"><section class="g86-form" data-form></section><section class="g86-list"><p class="g-lnc-k">I tuoi Log In</p><div data-list></div></section></div></div>`;
+  const form = qs("[data-form]", host), list = qs("[data-list]", host);
+  const paintList = () => {
+    const L = D.login ?? [];
+    list.innerHTML = L.length ? L.map((x) => { const [k, t] = lgState113(x); return `<article class="g86-row g113-row is-${k}${f?.id === x.id ? " is-open" : ""}" data-id="${esc(x.id)}">
+        <div class="g86-row-t"><b class="g113-name">${esc(x.name || "Log In")}</b><small>${x.kind === "month" ? "Un mese intero" : "Fatto da te"} · ${x.days.length} giorni</small>
+          <p>Dal ${dayIt113(x.from)} al ${dayIt113(x.to)}</p><p class="g86-when g113-state">${t}</p></div>
+        <div class="g86-row-b"><button type="button" class="g-btn g-btn--ghost" data-edit>Cambia</button>
+          <label class="g-check"><input type="checkbox" data-on${x.off ? "" : " checked"}>Attivo</label><button type="button" class="g-btn g-btn--danger" data-del>${ic("trash")}<span>Elimina</span></button></div></article>`; }).join("")
+      : '<p class="g-empty">Ancora nessun Log In: crea il mese o un Log In tuo qui a fianco.</p>';
+  };
+  /** Senza un Log In aperto: il mese con un tasto, o uno nuovo da zero. */
+  const paintStart = () => {
+    form.innerHTML = `<p class="g-lnc-k">Crea</p>
+      <div class="g113-month"><label class="g-field"><span>Il mese</span><select data-month>${months.map(([y, m], i) => `<option value="${i}"${i === pick ? " selected" : ""}>${MESI113[m]} ${y}</option>`).join("")}</select></label>
+        <button type="button" class="g-cta" data-mk-month>${ic("plus")}<span>Crea il Log In del mese</span></button></div>
+      <p class="g-hint">Un premio per ogni giorno del mese: oro, gemme e pozioni nei giorni normali, di più ogni settimana, il più grande l'ultimo giorno. Poi lo cambi come vuoi.</p>
+      <div class="g113-or"><span>oppure</span></div>
+      <button type="button" class="g-btn" data-mk-new>${ic("plus")}<span>Nuovo Log In, fatto da te</span></button>
+      <p class="g-hint">Sette giorni da oggi, tutti vuoti: scegli tu le date, quanti giorni e cosa dà ognuno.</p>`;
+  };
+  const dayBtn = (r, i) => `<button type="button" class="g113-day${i === day ? " is-on" : ""}${!r.gems && !r.gold && !Object.keys(r.items ?? {}).length && !(r.heroes ?? []).length ? " is-empty" : ""}" data-day="${i}" aria-pressed="${i === day}"><b>${i + 1}</b><small>${esc(codeSay86(r))}</small></button>`;
+  /** Un Log In aperto: nome, date, attivo, i giorni; sotto, il giorno scelto. */
+  const paintForm = () => {
+    if (!f) { paintStart(); return; }
+    day = Math.min(day, f.days.length - 1);
+    const r = f.days[day];
+    form.innerHTML = `<p class="g-lnc-k">${(D.login ?? []).some((x) => x.id === f.id) ? "Cambia il Log In" : "Nuovo Log In"}</p>
+      <label class="g-field"><span>Il nome che vedono i giocatori (in inglese)</span><input type="text" data-name maxlength="40" spellcheck="false" value="${esc(f.name)}"></label>
+      <div class="g113-dates"><label class="g-field"><span>Dal</span><input type="date" data-from value="${esc(f.from)}"></label><label class="g-field"><span>Al (compreso)</span><input type="date" data-to value="${esc(f.to)}"></label></div>
+      <label class="g-check g113-on"><input type="checkbox" data-live${f.off ? "" : " checked"}>Attivo per i giocatori</label>
+      <div class="g-field"><span>I giorni: tocca un giorno per cambiare cosa dà</span><div class="g113-days" data-days>${f.days.map(dayBtn).join("")}</div>
+        <div class="g113-dayact"><button type="button" class="g-btn g-btn--ghost" data-add-day>${ic("plus")}<span>Aggiungi un giorno</span></button><button type="button" class="g-btn g-btn--ghost" data-rm-day${f.days.length < 2 ? " disabled" : ""}>${ic("minus")}<span>Togli l'ultimo</span></button></div></div>
+      <div class="g113-edit" data-edit-day><p class="g-lnc-k">Giorno ${day + 1}</p><div class="g-numgrid" data-nums></div>
+        <div class="g-field"><span>Oggetti</span><div class="g86-items" data-items></div><button type="button" class="g-btn g-btn--ghost g86-add" data-add-it>Aggiungi un oggetto</button></div>
+        <div class="g-field"><span>Eroi: chi entra quel giorno li riceve (se ce l'ha già, una copia)</span><div class="g-heropick" data-heroes></div></div>
+        <button type="button" class="g-btn g-btn--ghost" data-copy-all>Copia questo premio su tutti i giorni</button></div>
+      <p class="g86-sum" data-sum></p>
+      <div class="g86-btns"><button type="button" class="g-cta" data-save>${ic("check")}<span>Salva il Log In</span></button><button type="button" class="g-btn g-btn--ghost" data-close>Chiudi senza salvare</button></div>
+      <p class="g-note">${ic("send")}<span>Il Log In arriva ai giocatori con «Manda online».</span></p>`;
+    qs("[data-nums]", form).append(numField({ label: "Gemme", value: r.gems ?? 0, max: 999999, step: 5, onInput: (v) => { r.gems = v; dayTouch(); } }), numField({ label: "Oro", value: r.gold ?? 0, max: 99999999, step: 500, onInput: (v) => { r.gold = v; dayTouch(); } }));
+    paintItems();
+    const hp = qs("[data-heroes]", form);
+    hp.innerHTML = RARS.filter((x) => HEROINES.some((h) => h.rarity === x)).map((x) => `<div class="g-hp-r"><small>${tierG(x)}</small><div>${HEROINES.filter((h) => h.rarity === x).map((h) => `<button type="button" data-h="${h.id}" aria-pressed="${(r.heroes ?? []).includes(h.id)}" title="${esc(h.name)}"><span data-c></span><b>${esc(h.name)}</b></button>`).join("")}</div></div>`).join("");
+    for (const x of qsa("[data-h]", hp)) qs("[data-c]", x).append(gCard(HEROINES.find((h) => h.id === x.dataset.h), 44));
+    sum();
+  };
+  const rows = () => Object.entries(f.days[day].items ?? {}).map(([id, n]) => ({ id, n }));
+  const setRows = (L) => { const it = {}; for (const x of L) it[x.id] = (it[x.id] ?? 0) + x.n; f.days[day].items = it; };
+  let itemRows = [];
+  const paintItems = () => {
+    itemRows = rows();
+    const box = qs("[data-items]", form);
+    box.innerHTML = itemRows.map((x, i) => `<div class="g86-item" data-i="${i}"><select data-it aria-label="Oggetto">${codeOptions86()}</select><input type="number" data-q min="1" max="9999" value="${x.n}" aria-label="Quanti"><button type="button" class="g-iconbtn" data-rm aria-label="Togli">${ic("close")}</button></div>`).join("");
+    qsa("[data-i]", box).forEach((row, i) => { qs("select", row).value = itemRows[i].id; });
+  };
+  /** The chosen day's tile and the sum, after a change of what it gives. */
+  const dayTouch = () => { const b = qs(`[data-day="${day}"]`, form); if (b) b.outerHTML = dayBtn(f.days[day], day); sum(); };
+  const sum = () => { const s = qs("[data-sum]", form); if (s) s.textContent = `In tutto dà: ${lgSayAll113(f)}.`; };
+  const open = (x) => { f = JSON.parse(JSON.stringify(x)); day = 0; paintForm(); paintList(); form.scrollIntoView({ block: "start", behavior: "smooth" }); };
+  form.addEventListener("input", (ev) => {
+    const t = ev.target;
+    if (!f) { if (t.matches("[data-month]")) pick = +t.value; return; }
+    if (t.matches("[data-name]")) f.name = t.value;
+    if (t.matches("[data-from]")) f.from = t.value;
+    if (t.matches("[data-to]")) f.to = t.value;
+    if (t.matches("[data-q]")) { itemRows[+t.closest("[data-i]").dataset.i].n = clamp(Math.round(+t.value || 1), 1, 9999); setRows(itemRows); dayTouch(); }
+    if (t.matches("[data-it]")) { itemRows[+t.closest("[data-i]").dataset.i].id = t.value; setRows(itemRows); dayTouch(); }
+  });
+  form.addEventListener("change", (ev) => {
+    if (!f && ev.target.matches("[data-month]")) pick = +ev.target.value;
+    if (f && ev.target.matches("[data-live]")) f.off = !ev.target.checked;
+  });
+  form.addEventListener("click", (ev) => {
+    const t = ev.target;
+    if (t.closest("[data-mk-month]")) {
+      const [y, m] = months[pick], x = lgMonth113(y, m);
+      if ((D.login ?? []).some((o) => o.kind === "month" && o.from === x.from)) toast(`C'è già un Log In di ${MESI113[m]} ${y}: questo è un altro, guarda le date.`);
+      open(x);
+      toast(`${MESI113[m]} ${y}: ${x.days.length} giorni pronti. Cambia quello che vuoi, poi «Salva il Log In».`);
+      return;
+    }
+    if (t.closest("[data-mk-new]")) {
+      const a = new Date(Date.now() - 5 * 3600e3), b = new Date(a.getTime() + 6 * 864e5);
+      open({ id: `lg${Date.now().toString(36)}`, kind: "custom", name: "Log-in rewards", from: iso113(a), to: iso113(b), days: Array.from({ length: 7 }, () => ({})) });
+      return;
+    }
+    if (!f) return;
+    const db = t.closest("[data-day]");
+    if (db) { day = +db.dataset.day; paintForm(); qs("[data-edit-day]", form)?.scrollIntoView({ block: "nearest", behavior: "smooth" }); return; }
+    if (t.closest("[data-add-day]")) { f.days.push({}); day = f.days.length - 1; paintForm(); return; }
+    if (t.closest("[data-rm-day]")) { if (f.days.length > 1) { f.days.pop(); day = Math.min(day, f.days.length - 1); paintForm(); } return; }
+    if (t.closest("[data-add-it]")) { itemRows.push({ id: "m", n: 1 }); setRows(itemRows); paintItems(); dayTouch(); return; }
+    if (t.closest("[data-rm]")) { itemRows.splice(+t.closest("[data-i]").dataset.i, 1); setRows(itemRows); paintItems(); dayTouch(); return; }
+    const hb = t.closest("[data-h]");
+    if (hb) { const r = f.days[day], L = (r.heroes ??= []), i = L.indexOf(hb.dataset.h); if (i >= 0) L.splice(i, 1); else L.push(hb.dataset.h); if (!L.length) delete r.heroes; hb.setAttribute("aria-pressed", String(i < 0)); dayTouch(); return; }
+    if (t.closest("[data-copy-all]")) { const r = JSON.stringify(f.days[day]); f.days = f.days.map(() => JSON.parse(r)); paintForm(); toast(`Ora ogni giorno dà: ${codeSay86(f.days[0])}.`); return; }
+    if (t.closest("[data-close]")) { f = null; paintForm(); paintList(); return; }
+    if (t.closest("[data-save]")) {
+      if (!f.from || !f.to || f.to < f.from) { toast("Scegli le date: il giorno «Al» viene dopo il giorno «Dal»."); return; }
+      if (!f.name.trim()) { toast("Dai un nome al Log In: lo vedono i giocatori."); return; }
+      const empty = f.days.findIndex((r) => !r.gems && !r.gold && !Object.keys(r.items ?? {}).length && !(r.heroes ?? []).length);
+      if (empty >= 0) { day = empty; paintForm(); toast(`Il giorno ${empty + 1} non dà niente: scegli cosa dà.`); return; }
+      const clean = { id: f.id, kind: f.kind ?? "custom", name: f.name.trim(), from: f.from, to: f.to, ...(f.off ? { off: true } : {}),
+        days: f.days.map((r) => ({ ...(r.gems ? { gems: r.gems } : {}), ...(r.gold ? { gold: r.gold } : {}), ...(Object.keys(r.items ?? {}).length ? { items: r.items } : {}), ...((r.heroes ?? []).length ? { heroes: [...r.heroes] } : {}) })) };
+      const L = (D.login ??= []), i = L.findIndex((x) => x.id === clean.id);
+      if (i >= 0) L[i] = clean; else L.unshift(clean);
+      change("Log In", `login-${clean.id}`, `Log In ${clean.name}: dal ${dayIt113(clean.from)} al ${dayIt113(clean.to)}, ${clean.days.length} giorni`, t.closest("[data-save]"));
+      toast(`${clean.name} salvato nella bozza: arriva ai giocatori con «Manda online».`);
+      f = null;
+      paintForm();
+      paintList();
+    }
+  });
+  list.addEventListener("click", (ev) => {
+    const row = ev.target.closest("[data-id]");
+    if (!row) return;
+    const x = (D.login ?? []).find((o) => o.id === row.dataset.id);
+    if (!x) return;
+    if (ev.target.closest("[data-edit]")) { open(x); return; }
+    if (ev.target.closest("[data-del]")) {
+      if (row.dataset.sure !== "1") { row.dataset.sure = "1"; const b = ev.target.closest("[data-del]"); b.querySelector("span").textContent = "Sicuro? Tocca ancora"; setTimeout(() => { if (row.isConnected) { row.dataset.sure = ""; paintList(); } }, 4000); return; }
+      D.login = D.login.filter((o) => o !== x);
+      if (f?.id === x.id) { f = null; paintForm(); }
+      change("Log In", `login-${x.id}`, `Log In ${x.name}: eliminato`, ev.target.closest("[data-del]"));
+      paintList();
+      toast(`${x.name} eliminato.`);
+    }
+  });
+  list.addEventListener("change", (ev) => {
+    const on = ev.target.closest("[data-on]"), row = ev.target.closest("[data-id]");
+    if (!on || !row) return;
+    const x = (D.login ?? []).find((o) => o.id === row.dataset.id);
+    if (!x) return;
+    if (on.checked) delete x.off; else x.off = true;
+    if (f?.id === x.id) f.off = x.off;
+    change("Log In", `login-${x.id}`, `Log In ${x.name}: ${x.off ? "spento" : "acceso"}`, on);
+    paintList();
+  });
+  paintForm();
+  paintList();
+};
+const TABS = [["heroes", "Personaggi", "heroes"], ["foes", "Nemici", "foes"], ["bosses", "Boss", "crown"], ["story", "Storia", "story"], ["summon", "Summon", "summon"], ["cards", "Carte", "image"], ["guest", "Apparizioni", "fire"], ["shop", "Shop", "shop"], ["codes", "Codici", "send"], ["login", "Log In", "calendar"], ["launch", "Lancio", "reset"]];
 let unmount = null, page = null, onClose = null;
 const build = () => {
   const root = (G.root = mk("div", "g54"));
@@ -32706,7 +33094,7 @@ const build = () => {
     anim(page, [{ opacity: 0, transform: `translateX(${dir * 26}px)` }, { opacity: 1, transform: "none" }], 420, { delay: old ? 60 : 0 });
     const kind = tab === "heroes" ? "hero" : tab === "foes" ? "foe" : null;
     try {
-      unmount = kind ? viewArchive(page, kind) : tab === "bosses" ? viewBosses(page) : tab === "story" ? viewStory(page) : tab === "launch" ? viewLaunch(page) : tab === "shop" ? viewShop103(page) : tab === "codes" ? viewCodes86(page) : tab === "guest" ? viewGuest78(page) : tab === "cards" ? viewCards79(page) : viewSummon(page);
+      unmount = kind ? viewArchive(page, kind) : tab === "bosses" ? viewBosses(page) : tab === "story" ? viewStory(page) : tab === "launch" ? viewLaunch(page) : tab === "shop" ? viewShop103(page) : tab === "codes" ? viewCodes86(page) : tab === "login" ? viewLogin113(page) : tab === "guest" ? viewGuest78(page) : tab === "cards" ? viewCards79(page) : viewSummon(page);
     } catch (err) { console.error(err); page.innerHTML = `<p class="g-empty">Questa pagina non si è aperta: ${esc(err.message)}</p>`; }
     if (typeof unmount !== "function") unmount = null;
   };
@@ -34783,17 +35171,18 @@ const initGame = () => {
   const renderLogin64 = () => {
     const admin = isAdmin(), L = admin ? { n: 2, last: "" } : login64(), today = Math.min(L.n, 6), ready = admin || loginReady64(), k = heroineById(LOGIN_HERO64);
     const title = $(".gm-sub-title", loginHost.closest(".gm-sub"));
-    if (title) title.firstChild.textContent = `Seven days to ${k.name}`;
+    const more113 = lgOn113(), week113 = admin || L.n < 7;
+    if (title) title.firstChild.textContent = more113.length ? "Log-in rewards" : `Seven days to ${k.name}`;
     const state = (i) => (i < L.n ? "is-got" : i === today && ready && L.n < 7 ? "is-now" : "");
-    loginHost.innerHTML = `<div class="lg64-in">
-      <header class="lg64-head"><p>${L.n >= 7 ? `The week is done: ${k.name} is with you.` : ready ? `Day ${today + 1} of 7. Your reward for today is ready.` : `Day ${L.n} of 7 claimed. The next one opens in ${UNTIL64(NEXT_DAY64())}.`}</p></header>
+    loginHost.innerHTML = (week113 ? `<div class="lg64-in">
+      <header class="lg64-head">${more113.length ? `<h3>Seven days to ${k.name}</h3>` : ""}<p>${L.n >= 7 ? `The week is done: ${k.name} is with you.` : ready ? `Day ${today + 1} of 7. Your reward for today is ready.` : `Day ${L.n} of 7 claimed. The next one opens in ${UNTIL64(NEXT_DAY64())}.`}</p></header>
       <div class="lg64-road"><svg class="lg64-line" viewBox="0 0 100 20" preserveAspectRatio="none" aria-hidden="true"><path d="M1 13 C 18 3, 30 18, 50 10 S 78 3, 99 8"/></svg>
         ${LOGIN64.slice(0, 6).map((r, i) => `<div class="lg64-stop ${state(i)}" style="--x:${i}"><span class="lg64-r">${rwShow64(r)}</span><small>day ${i + 1}</small>
           ${i < L.n ? '<i class="lg64-tick">claimed</i>' : state(i) === "is-now" ? `<button type="button" class="mi64-claim" data-lg64-claim>claim</button>` : ""}</div>`).join("")}
         <div class="lg64-end ${state(6)}"><img src="${k.art}" alt="" draggable="false"><span class="lg64-end-t"><b>${k.name}</b><small>${k.rarity} · ${k.epithet} · day 7</small>
           ${L.n >= 7 ? '<i class="lg64-tick">with you</i>' : state(6) === "is-now" ? '<button type="button" class="mi64-claim" data-lg64-claim>claim</button>' : ""}</span></div>
       </div>
-      ${admin ? '<p class="mi64-note">Admin: this is what a Player sees on day 3. Rewards go to Players only.</p>' : ""}</div>`;
+      ${admin ? '<p class="mi64-note">Admin: this is what a Player sees on day 3. Rewards go to Players only.</p>' : ""}</div>` : "") + (more113.map(lgBlock113).join("") || (week113 ? "" : '<p class="gm-sub-lede">No log-in reward right now: the next one comes soon.</p>'));
   };
   const claimLogin64 = () => {
     if (isAdmin()) { toast("Admin: the log-in rewards are for Players."); return; }
@@ -34805,9 +35194,65 @@ const initGame = () => {
     const stop = L.n === 7 ? $(".lg64-end", loginHost) : $$(".lg64-stop", loginHost)[L.n - 1];
     stop?.animate([{ transform: "scale(1.12)", filter: "brightness(1.6)" }, { transform: "none", filter: "none" }], { duration: 520, easing: "cubic-bezier(0.34, 1.56, 0.64, 1)" });
   };
+  /* ══ round 113 · the log-ins the Database makes (the user: «Devo poter creare Log In nuovi e personalizzati ed in più devo anche
+     avere la funzione di creare una serie di Log In mensili per un mese con un tasto»). Each has its dates and a reward for each
+     day; while it runs a Player claims one a day, and a day missed is not lost: the next claim takes the next reward. The
+     Database writes them in the pack (part "login"); they show on the log-in page, under the first week while it lasts. ══ */
+  const LOGIN113 = () => (Array.isArray(PACK?.body?.login) ? PACK.body.login : []).filter((L) => L && typeof L.id === "string" && Array.isArray(L.days) && L.days.length);
+  const lgLive113 = (L, d = DAY64()) => !L.off && (!L.from || d >= L.from) && (!L.to || d <= L.to);
+  const lgSt113 = (L) => { const all = (PLAYER.player.login113 ??= {}); return (all[L.id] ??= { n: 0, last: "" }); };
+  const lgOn113 = () => LOGIN113().filter((L) => lgLive113(L));
+  const lgReady113 = (L) => !isAdmin() && !!PLAYER.player.started && lgLive113(L) && lgSt113(L).n < L.days.length && lgSt113(L).last !== DAY64();
+  const lgReadyAny113 = () => lgOn113().some(lgReady113);
+  /** The days it has left, today counted. */
+  const lgLeft113 = (L) => { if (!L.to) return null; const a = Date.parse(`${DAY64()}T12:00:00`), b = Date.parse(`${L.to}T12:00:00`); return Math.max(0, Math.round((b - a) / 864e5) + 1); };
+  const lgItem113 = (k) => CODE_ITEMS86[k] ?? chestSay104(k) ?? ITEM_BY_ID[k]?.name ?? k;
+  /** What a day gives, in a few words. */
+  const lgSay113 = (r) => [...(r?.heroes ?? []).map((id) => heroineById(id)?.name),
+    ...Object.entries(r?.items ?? {}).filter(([, n]) => pnum(n, 0, 9999, 0) > 0).map(([k, n]) => `${lgItem113(k)}${+n > 1 ? ` ×${nf64(n)}` : ""}`),
+    pnum(r?.gems, 0, 1e6, 0) ? `${nf64(r.gems)} gems` : "", pnum(r?.gold, 0, 1e8, 0) ? `${nf64(r.gold)} gold` : ""].filter(Boolean);
+  /** A day's picture: a hero as her card, an item as the shop draws it, else the gems or the gold. */
+  const lgPic113 = (r) => {
+    const h = (r?.heroes ?? []).map(heroineById).find(Boolean);
+    if (h) return `<span class="lg113-card">${makeCard(h, { label: false }).outerHTML}</span>`;
+    const k = Object.entries(r?.items ?? {}).find(([, n]) => pnum(n, 0, 9999, 0) > 0)?.[0];
+    if (k) return ["s", "m", "l"].includes(k) ? POT64(k) : k === "mirror" ? '<img class="sh102-img" src="art/items/mirror-shard.webp" alt="" draggable="false">'
+      : goldKey106(k) ? goldSeal106(goldKey106(k)) : chestKey104(k) ? seal104(chestKey104(k).r, chestKey104(k).s) : ITEM_BY_ID[k] ? itemTile(ITEM_BY_ID[k]) : `<span class="sh102-mat is-${esc102(k)}"><i></i></span>`;
+    return pnum(r?.gems, 0, 1e6, 0) ? GEM64() : COIN64();
+  };
+  /** A big day: a hero, a shard, a star, a chest, or fifty gems and more. */
+  const lgBig113 = (r) => !!(r?.heroes ?? []).length || pnum(r?.gems, 0, 1e6, 0) >= 50 || Object.keys(r?.items ?? {}).some((k) => ["mirror", "star", "rainbow", "zstar", "dshard", "dheart"].includes(k) || !!chestKey104(k) || !!goldKey106(k));
+  /** One log-in: its name, where you are, a tile a day. The Admin sees it as a Player does on the first day. */
+  const lgBlock113 = (L) => {
+    const admin = isAdmin(), st = admin ? { n: 0, last: "" } : lgSt113(L), ready = admin || lgReady113(L), N = L.days.length, left = lgLeft113(L);
+    const line = st.n >= N ? "Every reward claimed." : ready ? `Day ${st.n + 1} of ${N}: your reward for today is ready.` : `Day ${st.n} of ${N} claimed. The next one opens in ${UNTIL64(NEXT_DAY64())}.`;
+    const ends = left == null ? "" : left <= 1 ? "Ends today" : `Ends in ${left} days`;
+    return `<section class="lg113${N <= 7 ? " is-short" : ""}" data-lg113="${esc102(L.id)}" style="--cols:${Math.min(7, N)};--pcols:${Math.min(4, N)}">
+      <header class="lg113-head"><h3>${esc102(L.name || "Log-in")}</h3><p>${line}${ends ? ` <span>${ends}.</span>` : ""}</p></header>
+      <ol class="lg113-grid">${L.days.map((r, i) => {
+        const got = i < st.n, now = i === st.n && ready && st.n < N, say = lgSay113(r);
+        return `<li class="lg113-day${got ? " is-got" : ""}${now ? " is-now" : ""}${lgBig113(r) ? " is-big" : ""}" title="${esc102(say.join(" · "))}">
+          <small>day ${i + 1}</small><span class="lg113-pic">${lgPic113(r)}</span><b>${esc102(say[0] ?? "")}</b>${say.length > 1 ? `<span class="lg113-more">+ ${esc102(say.slice(1).join(" · "))}</span>` : ""}
+          ${got ? '<i class="lg64-tick">claimed</i>' : now ? `<button type="button" class="mi64-claim" data-lg113-claim="${esc102(L.id)}">claim</button>` : ""}</li>`;
+      }).join("")}</ol>
+      ${admin ? '<p class="mi64-note">Admin: this is what a Player sees on the first day. Rewards go to Players only.</p>' : ""}</section>`;
+  };
+  const claimLogin113 = (id) => {
+    if (isAdmin()) { toast("Admin: the log-in rewards are for Players."); return; }
+    const L = LOGIN113().find((x) => x.id === id);
+    if (!L || !lgReady113(L)) return;
+    const st = lgSt113(L), r = L.days[st.n];
+    st.n += 1;
+    st.last = DAY64();
+    const got = codeGive86(r);
+    toast(`${L.name || "Log-in"}, day ${st.n}: ${got.join(" · ") || "claimed"}`);
+    savePlayer(); paintGems(); renderLogin64(); paintBadges64();
+    const tile = $$(`[data-lg113="${CSS.escape(id)}"] .lg113-day`, loginHost)[st.n - 1];
+    tile?.animate([{ transform: "scale(1.1)", filter: "brightness(1.6)" }, { transform: "none", filter: "none" }], { duration: 520, easing: "cubic-bezier(0.34, 1.56, 0.64, 1)" });
+  };
   /** The log-in opens by itself once a day, the first time a Player reaches Home with a reward waiting. */
   let loginShown64 = "";
-  const loginAuto64 = () => { if (loginReady64() && loginShown64 !== DAY64()) { loginShown64 = DAY64(); location.hash = "#/play/login"; } };
+  const loginAuto64 = () => { if ((loginReady64() || lgReadyAny113()) && loginShown64 !== DAY64()) { loginShown64 = DAY64(); location.hash = "#/play/login"; } };
 
   /* ── your character (round 66, the user's rule): only who you are (man or woman) and your element (Fire, Water or
    *  Grass); your heart is only a man or a woman, never a fighter, so it has no element; then your name. Round 70: the
@@ -34875,7 +35320,7 @@ const initGame = () => {
     const mb = $("[data-mi64-badge]", stage), n = misReady64();
     if (mb) { mb.hidden = !n; mb.textContent = n; }
     const lb = $("[data-lg64-btn]", stage);
-    if (lb) { lb.hidden = !isAdmin() && login64().n >= 7; $(".gm-badge", lb).hidden = !loginReady64(); }
+    if (lb) { const on113 = lgOn113().length; lb.hidden = !isAdmin() && login64().n >= 7 && !on113; $(".gm-badge", lb).hidden = !loginReady64() && !lgReadyAny113(); if (lb.childNodes[1]?.nodeType === 3) lb.childNodes[1].nodeValue = on113 ? "log-in" : "7 days"; }
   };
   TRACK64.on = () => { paintBadges64(); if (current === "missions") renderMis64(); };
   const MENU64 = { missions: renderMis64, login: renderLogin64, create: renderCreate64 };
@@ -34886,6 +35331,8 @@ const initGame = () => {
     if (mc) { const [key, id] = mc.dataset.mi64Claim.split(":"); claimMis64(key, id); return; }
     const pt = t.closest("[data-mi64-pt]");
     if (pt && !pt.disabled) { claimPts64(+pt.dataset.mi64Pt); return; }
+    const lc113 = t.closest("[data-lg113-claim]");
+    if (lc113) { claimLogin113(lc113.dataset.lg113Claim); return; }
     if (t.closest("[data-lg64-claim]")) { claimLogin64(); return; }
     if (!C64) return;
     const sx = t.closest("[data-cr64-sex]");
@@ -40115,7 +40562,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-12-1843";
+const BUILD = "2026-11-12-2010";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
