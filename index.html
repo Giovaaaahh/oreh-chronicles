@@ -8133,6 +8133,15 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
 .sm25-tools button[hidden] { display: none; }
 .r110-hid b { color: var(--rc, #fff); }
 
+/* round 111: the shut button past the seven stars reads as a note, not a broken button */
+.evo42[data-evo111-shut] { opacity: 0.78; white-space: normal; }
+/* round 111: on a phone the buttons past the seven stars (a Z Star, the super awakening, or the shut one) get their own full row under
+   the hero, so they never squeeze the hero's level into a column of single words */
+@media (max-width: 560px) {
+  .tb3-row:has(> .evo42) { grid-template-columns: auto minmax(0, 1fr); }
+  .tb3-row > .evo42 { grid-column: 1 / -1; justify-content: center; }
+}
+
 </style>
 </head>
 <body>
@@ -14753,11 +14762,22 @@ const LOADOUT = (() => { try { return JSON.parse(localStorage.getItem(GEAR_KEY))
  * materials without end. Player: one SR of three to start, 30 gems, Lv 1 and
  * no gear; everything earned is saved and kept while you visit Admin. */
 const PLAYER_KEY = "oreh-ai-player";
-const LV_MAX = 200, STAR_MAX = 7;
+const LV_MAX = 100, STAR_MAX = 7;
 /** Round 42 · a heroine stops at Lv 100 until she evolves; then she goes on from 101 to 200 and her rarity rises one step. */
 const LV_EVO = 100, NEXT_RARITY = { N: "R", R: "SR", SR: "SSR", SSR: "UR", UR: "LR", LR: "Z" };
 /** Super awakening, after the evolution: ★1 HP, ★2 ATK, ★3 DEF, +30% each, one Z Star a star. */
 const SA_MAX = 3, SA_UP = 0.3, SA_STAT = ["hp", "atk", "def"], DUST_ZSTAR = 10000;
+/** Round 111 (the user, 12 Nov): «Quando batti un super boss, si sblocca la possibilità di potenziare, non potenzia a gratis. Anche il
+ * salto di rarità NON è gratis ma costa. Ok togliamo i livelli 101 200, ma quando c'è il salto di rarità i personaggi tornano a
+ * livello 1 (il livello massimo da circa il 20% di stats in più)». So: each of the three Z Stars (one a stat) opens when its super
+ * boss of the world after the story falls, and still costs a Z Star; the super awakening (the rarity jump) opens when the King of
+ * the World falls, and still costs a Black Dragon Heart; after it a hero is Lv 1 again, as strong as at Lv 100 before, and 20%
+ * stronger at Lv 100. A hero's Z Stars are `zs`, a bit a stat (HP 1, ATK 2, DEF 4), taken in any order. */
+const EVO_UP = 0.2, ZS_BOSS = { hp: "The Rootdeep", atk: "The Hollow Star", def: "The Drowned Cathedral" };
+const zsHas = (p, k) => (((p?.zs ?? 0) >> SA_STAT.indexOf(k)) & 1) === 1;
+const zsCount = (p) => SA_STAT.filter((k) => zsHas(p, k)).length;
+/** Whether a Player has beaten that boss of the world ({ hp, atk, def, king } in player.boss111); the Admin has them all. */
+const boss111 = (k) => isAdmin() || !!PLAYER.player.boss111?.[k];
 /** Round 48 · the super awakening (Lv 100 → 101, rarity up) takes a Black Dragon Heart, forged from 10 shards: a mini-boss
  * drops 1, a map boss 3, twice as many on the first win. */
 const HEART_SHARDS = 10, SHARD_MINI = 1, SHARD_BOSS = 3;
@@ -14801,6 +14821,17 @@ const PLAYER = (() => {
 })();
 const savePlayer = () => { try { localStorage.setItem(PLAYER_KEY, JSON.stringify(PLAYER)); } catch { /* it lasts this visit */ } };
 const isAdmin = () => PLAYER.mode === "admin";
+/* round 111: a hero super awakened under the old rules, at Lv 101–200, is that level less 100 now (as strong as before at its
+   Lv 100, and rising to +20%); the Z Stars counted in order (HP, then ATK, then DEF) become their bits */
+{
+  let moved = false;
+  for (const r of Object.values(PLAYER.player.roster ?? {})) {
+    if (!r) continue;
+    if (r.evo && r.lv > LV_EVO) { r.lv = Math.max(1, r.lv - LV_EVO); r.xp = 0; moved = true; }
+    if (r.sa != null) { if (r.zs == null) r.zs = (1 << Math.min(SA_MAX, r.sa)) - 1; delete r.sa; moved = true; }
+  }
+  if (moved) savePlayer();
+}
 /** Round 61 · the enemies a Player has met in a fight, for the Archive. */
 const metFoes = (list) => {
   if (isAdmin()) return;
@@ -14839,7 +14870,7 @@ const showEvos = (on = evosShown) => {
 const owned = (id) => (isAdmin() ? !!heroineById(id) : !!PLAYER.player.roster[id]);
 const ownedHeroines = () => HEROINES.filter((h) => owned(h.id));
 /** Her level, experience and stars in the mode you are playing. */
-const progOf = (id) => (isAdmin() ? (ADMIN_EVO[id] ? { lv: LV_MAX, xp: 0, stars: STAR_MAX, cons: COPY_MAX, evo: 1, sa: SA_MAX } : { lv: LV_EVO, xp: 0, stars: STAR_MAX, cons: COPY_MAX, evo: 0, sa: 0 }) : PLAYER.player.roster[id] ?? { lv: 1, xp: 0, stars: 0 });
+const progOf = (id) => (isAdmin() ? (ADMIN_EVO[id] ? { lv: LV_MAX, xp: 0, stars: STAR_MAX, cons: COPY_MAX, evo: 1, zs: 7 } : { lv: LV_EVO, xp: 0, stars: STAR_MAX, cons: COPY_MAX, evo: 0, zs: 0 }) : PLAYER.player.roster[id] ?? { lv: 1, xp: 0, stars: 0 });
 /** The team you take into a fight: up to three on the field and one on the bench, all yours. */
 const lineup = () => {
   const t = isAdmin() ? PLAYER.admin : PLAYER.player;
@@ -14861,14 +14892,14 @@ const addXp = (id, amount) => {
   if (r.lv >= top) r.xp = 0;
   return ups;
 };
-const lvStat = (h, k, lv) => { const a = h.lv1?.[k] ?? 0, b = h.lv100?.[k] ?? a; return lv <= LV_EVO ? a + ((b - a) * (lv - 1)) / 99 : k === "crit" ? b : b * (1 + (2 * (lv - LV_EVO)) / LV_EVO); };
+const lvStat = (h, k, lv, evo = 0) => { const a = h.lv1?.[k] ?? 0, b = h.lv100?.[k] ?? a, L = Math.min(lv, LV_EVO); return evo ? (k === "crit" ? b : b * (1 + (EVO_UP * (L - 1)) / 99)) : a + ((b - a) * (L - 1)) / 99; };
 /** Her own stats at her level, raised by her stars. */
 /** Round 43 · the stat a hero's 3rd and 6th copy may add (Dalila, Iris, Albert, Ektor). */
 const copyStat = (h, n) => (n >= 3 ? h.copies?.c3?.stat ?? 0 : 0) + (n >= 6 ? h.copies?.c6?.stat ?? 0 : 0);
 const baseStats = (h, prog = progOf(h.id)) => {
   const up = 1 + AWAKEN[prog.stars] + ((COPY_RATE[h.rarity] ?? 0) * (prog.cons ?? 0)) / 100 + copyStat(h, prog.cons ?? 0);
-  const sa = (k) => 1 + ((prog.sa ?? 0) > SA_STAT.indexOf(k) ? SA_UP : 0);
-  return { atk: Math.round(lvStat(h, "atk", prog.lv) * up * sa("atk") * (h.id === "johta" && (prog.cons ?? 0) >= 6 ? 1.5 : 1)), def: Math.round(lvStat(h, "def", prog.lv) * up * sa("def")), hp: Math.round(lvStat(h, "hp", prog.lv) * up * sa("hp")), crit: Math.round((lvStat(h, "crit", prog.lv) + AWAKEN_CRIT[prog.stars]) * 10) / 10 };
+  const sa = (k) => 1 + (zsHas(prog, k) ? SA_UP : 0), ev = prog.evo ? 1 : 0;
+  return { atk: Math.round(lvStat(h, "atk", prog.lv, ev) * up * sa("atk") * (h.id === "johta" && (prog.cons ?? 0) >= 6 ? 1.5 : 1)), def: Math.round(lvStat(h, "def", prog.lv, ev) * up * sa("def")), hp: Math.round(lvStat(h, "hp", prog.lv, ev) * up * sa("hp")), crit: Math.round((lvStat(h, "crit", prog.lv, ev) + AWAKEN_CRIT[prog.stars]) * 10) / 10 };
 };
 const saveGear = () => { if (isAdmin()) { try { localStorage.setItem(GEAR_KEY, JSON.stringify(LOADOUT)); } catch { /* the gear lasts this visit */ } } else savePlayer(); };
 /** Admin wears the demo armoury; a Player starts with nothing on (the relic is hers to switch on). */
@@ -15135,7 +15166,7 @@ const STORY_REGIONS = [
     places: ["Broken Road", "Fallen Banners", "Iron Ford", "Blood Garden", "Crown Bridge", "Shattered Hall", "Ember Crypt", "Sword Field", "Throne Stair", "King's Well", "Ash Court", "Red Gallery", "Oath Gate", "Silent Choir", "Chain Hall", "Last Light", "Dusk Tower", "Grave Crown", "Final Stair", "Throne Steps"] },
 ];
 /** Round 42 · the level of a stage: each map runs from the last map's cap to its own, so a new map never starts weak. */
-const STORY_CAPS = [25, 50, 75, 100, 125, 150, 175, 200];
+const STORY_CAPS = [25, 50, 75, 100, 100, 100, 100, 100]; // round 111: maps 5–8 stay at Lv 100, harder by their bars and abilities
 const stageLevel = (i) => { const r = Math.floor(i / 25), j = i % 25, a = r ? STORY_CAPS[r - 1] : 1, b = STORY_CAPS[r]; return Math.round(a + ((b - a) * j) / 24); };
 /** How many regions have their own enemies (round 28: Goblin Hollow, Crimson Reach, Tidal Shelf, Gilded Steppe); the rest of the road waits for them. */
 const STORY_OPEN = 4;
@@ -16515,18 +16546,20 @@ const openNow = () => STORY_WEB.flatMap((w) => w.nodes.map((_, n) => [w.r, n])).
  * Admin has none. A heroine already above a cap keeps her level; she only stops rising.
  */
 // round 42 (the user's caps, map by map): level, stars, super awakening
-const SOFT_CAPS = [[25, 1, 0], [50, 3, 0], [75, 6, 0], [100, 7, 0], [125, 7, 0], [150, 7, 1], [175, 7, 2], [200, 7, 3], [200, 7, 3]];
+// round 111: Lv 100 and seven stars, from the third map's boss on, is the most there is
+const SOFT_CAPS = [[25, 1, 0], [50, 3, 0], [75, 6, 0], [100, 7, 0], [100, 7, 0], [100, 7, 0], [100, 7, 0], [100, 7, 0], [100, 7, 0]];
 const regionsBeaten = () => { let k = 0; while (k < 8 && (STORY_WEB[k]?.nodes?.[STORY_WEB[k].boss] ? nodeDone(k, STORY_WEB[k].boss) : starsOf()[STORY.stages[k * 25 + 24].id] != null)) k++; return k; };
 const softCap = () => {
   if (isAdmin()) return { lv: LV_MAX, stars: STAR_MAX, sa: SA_MAX, boss: null };
   const k = regionsBeaten(), [lv, stars, sa] = SOFT_CAPS[k];
-  return { lv, stars, sa, boss: k < 8 ? STORY.stages[k * 25 + 24] : null, region: STORY_REGIONS[Math.min(k, 7)] };
+  const up = SOFT_CAPS.slice(k + 1).some((c) => c[0] > lv || c[1] > stars);
+  return { lv, stars, sa, boss: k < 8 && up ? STORY.stages[k * 25 + 24] : null, region: STORY_REGIONS[Math.min(k, 7)] };
 };
 /** The level cap; for a heroine, also Lv 100 until she evolves. */
 const lvTop = (id) => { const c = softCap().lv; if (!id || isAdmin()) return c; return Math.min(c, PLAYER.player.roster[id]?.evo ? LV_MAX : LV_EVO); };
 const starTop = () => softCap().stars, saTop = () => softCap().sa ?? 0;
 /** What the cap is and what lifts it, in a few words. */
-const capSays = () => { const c = softCap(); return c.boss ? `Lv ${c.lv}, ${c.stars} star${c.stars === 1 ? "" : "s"}${c.lv > LV_EVO ? ` and ${c.sa} Z Star${c.sa === 1 ? "" : "s"}` : ""} until you beat ${c.boss.name}` : "no cap"; };
+const capSays = () => { const c = softCap(); return c.boss ? `Lv ${c.lv}, ${c.stars} star${c.stars === 1 ? "" : "s"} until you beat ${c.boss.name}` : `Lv ${LV_MAX} and ${STAR_MAX} stars, the most there is`; };
 /** Boss mode: two bosses, the only place that gives awakening shards. */
 const BOSSES = [
   { id: "shade", name: "The Shade of Blackmire", token: "shade:UR", shards: [1, 2], gems: 3, note: "Dark: it hits every other type 10% harder. Light and it hit each other ×1.5." },
@@ -32612,8 +32645,8 @@ const initGame = () => {
     const where = `${w.layer === "sky" ? "in the sky above" : "deep under"} ${w.under}`;
     let body;
     if (w.kind === "region") body = `${head(`after the story · ${w.attr}`, w.name, "one of the 16 new regions")}<p class="w44-txt">When the story ends the map opens wide: 24 regions instead of 8, and the whole world is yours to walk. ${w.name} is one of the new ones.</p>${w.hidden.map((h) => `<p class="t72-meta r110-hid">Hidden here, ${h.layer === "sky" ? "high in the sky above it" : "deep under it"}: <b>${h.name}</b>${h.boss === "king" ? ", where the King of the World waits" : h.boss ? `, the lair of a super boss (${h.boss})` : ""}.</p>`).join("")}`;
-    else if (w.boss === "king") body = `${head(`hidden · ${where}`, w.name, "the King of the World")}<p class="w44-txt">The King of the World sits at the top of the world tree. He shows himself only after the three super bosses have fallen. Beat him and the rarity awakening opens: a hero jumps to the next rarity, SSR to UR.</p>`;
-    else if (w.boss) body = `${head(`hidden · ${where}`, w.name, `super boss · ${w.boss}`)}<p class="w44-txt">One of the world's three super bosses waits here. Beat it and the ${w.boss} awakening is yours: +30% ${w.boss}.</p><p class="t72-meta">When all three have fallen, the King of the World shows himself.</p>`;
+    else if (w.boss === "king") body = `${head(`hidden · ${where}`, w.name, "the King of the World")}<p class="w44-txt">The King of the World sits at the top of the world tree. He shows himself only after the three super bosses have fallen. Beat him and the super awakening opens: for a Black Dragon Heart a hero jumps to the next rarity (SSR to UR), back to Lv 1, and is 20% stronger at Lv 100.</p>`;
+    else if (w.boss) body = `${head(`hidden · ${where}`, w.name, `super boss · ${w.boss}`)}<p class="w44-txt">One of the world's three super bosses waits here. Beat it and the ${w.boss} Z Star opens: then any hero at Lv 100 with seven stars can take +30% ${w.boss}, for a Z Star.</p><p class="t72-meta">When all three have fallen, the King of the World shows himself.</p>`;
     else body = `${head(`hidden · ${where}`, w.name, "no boss")}<p class="w44-txt">Monks above the clouds. No boss lives here: they keep the old records of the world, and of its King.</p>`;
     NODE89.last = null;
     sheetBox(`${body}<p class="sm25-note">Admin preview: players see this land when the story ends.</p>`, w.name, w.c);
@@ -32915,7 +32948,7 @@ const initGame = () => {
       <p class="lv1-note">${p.lv >= lvTop(h.id) ? (lvTop(h.id) < LV_MAX ? "at the cap" : "max level") : `${p.xp} / ${need} XP to Lv ${p.lv + 1}`}</p>
       <div class="lv1-stars" data-s1>${forged(p.stars)}</div>
       <p class="lv1-note">awakening: +${Math.round(AWAKEN[p.stars] * 100)}% every stat · +${AWAKEN_CRIT[p.stars]}% crit${p.stars < STAR_MAX ? ` · next star +${Math.round((AWAKEN[p.stars + 1] - AWAKEN[p.stars]) * 100)}%` : ""}</p>
-      ${p.evo ? `<div class="lv1-stars">${saRow(p.sa ?? 0)}</div><p class="lv1-note">Z Star: ${SA_STAT.map((k, i) => `${k.toUpperCase()} ${(p.sa ?? 0) > i ? "+30%" : "—"}`).join(" · ")}</p>` : ""}
+      ${p.zs || p.evo ? `<div class="lv1-stars">${saRow(p.zs ?? 0)}</div><p class="lv1-note">Z Star: ${SA_STAT.map((k) => `${k.toUpperCase()} ${zsHas(p, k) ? "+30%" : "—"}`).join(" · ")}${p.evo ? ` · super awakened: +${Math.round(EVO_UP * 100)}% at Lv 100` : ""}</p>` : ""}
       ${isAdmin() ? `<p class="lv1-note">Admin: free, both ways, to test the super awakening. Switch to Player in your profile to train and awaken.</p><div class="lv1-acts">${evoAct(h, p, "gm")}</div>`
         : `<div class="lv1-acts"><button class="gm-btn" type="button" data-gm-train${p.lv >= lvTop(h.id) ? " disabled" : ""}>train</button>
           ${evoAct(h, p, "gm") ?? ""}<button class="gm-btn gm-btn--gold" type="button" data-gm-awaken${p.stars >= starTop() ? " disabled" : ""}${p.stars >= STAR_MAX ? " hidden" : ""}>${p.stars >= starTop() ? (starTop() < STAR_MAX ? "stars at the cap" : "fully awakened") : `awaken · 1 ${next}`}</button></div>
@@ -32925,20 +32958,22 @@ const initGame = () => {
   };
   /** Round 31 · the forge: what you hold, and a star (100 dust) or a rainbow star (250) at a tap. */
   /** Round 42 · the three super-awakening stars, each with its stat. */
-  const saRow = (n) => `<span class="sa42" role="img" aria-label="${n} of 3 Z Stars">${SA_STAT.map((k, i) => `<i class="${i < n ? "is-on" : ""}"><b>${k.toUpperCase()}</b></i>`).join("")}</span>`;
-  /** What she can do next past the stars: evolve, then super awaken. */
+  const saRow = (m) => `<span class="sa42" role="img" aria-label="${zsCount({ zs: m })} of 3 Z Stars">${SA_STAT.map((k) => `<i class="${zsHas({ zs: m }, k) ? "is-on" : ""}"><b>${k.toUpperCase()}</b></i>`).join("")}</span>`;
+  const zRow111 = (p) => (p.zs || p.evo ? saRow(p.zs ?? 0) : "");
+  /** What she can do past the seven stars (round 111): a Z Star for each stat whose super boss has fallen (a Z Star each), the super
+   *  awakening once the King of the World has fallen (a Black Dragon Heart); before that, one shut button says when they open. */
   const evoAct = (h, p, data) => {
     const from = baseRarity(h), to = NEXT_RARITY[from] ?? from;
     if (isAdmin()) return p.evo
       ? `<button class="gm-btn evo42 is-back" type="button" data-${data}-aevo="${h.id}">back to ${from} · Lv 100</button>`
       : `<button class="gm-btn gm-btn--gold evo42" type="button" data-${data}-aevo="${h.id}">super awaken · ${from} → ${to} · free</button>`;
     if (p.stars < STAR_MAX) return null;
-    if (!p.evo) {
-      const ready = p.lv >= LV_EVO, open = softCap().lv > LV_EVO, heart = (PLAYER.player.items.dheart ?? 0) > 0;
-      return `<button class="gm-btn gm-btn--gold evo42 is-heart" type="button" data-${data}-evolve="${h.id}"${ready && open ? "" : " disabled"}>${!open ? `super awaken after ${softCap().boss?.name ?? "the 4th map's boss"}` : !ready ? "super awaken at Lv 100" : `super awaken · ${from} → ${to} · ${heart ? "1 Black Dragon Heart" : "needs a Black Dragon Heart"}`}</button>`;
-    }
-    const n = p.sa ?? 0;
-    return `<button class="gm-btn gm-btn--gold evo42" type="button" data-${data}-sa="${h.id}"${n < saTop() ? "" : " disabled"}>${n >= SA_MAX ? "all 3 Z Stars" : n >= saTop() ? "Z Star at the cap" : `Z Star · ${SA_STAT[n].toUpperCase()} +30% · 1 Z Star`}</button>`;
+    const it = PLAYER.player.items, ready = p.lv >= LV_EVO || !!p.evo, out = [];
+    for (const k of SA_STAT) if (!zsHas(p, k) && boss111(k)) out.push(`<button class="gm-btn gm-btn--gold evo42" type="button" data-${data}-sa="${h.id}:${k}"${ready ? "" : " disabled"}>${ready ? `Z Star · ${k.toUpperCase()} +30% · ${(it.zstar ?? 0) > 0 ? "1 Z Star" : "needs a Z Star"}` : `Z Star ${k.toUpperCase()} at Lv 100`}</button>`);
+    if (!p.evo && boss111("king")) out.push(`<button class="gm-btn gm-btn--gold evo42 is-heart" type="button" data-${data}-evolve="${h.id}"${ready ? "" : " disabled"}>${ready ? `super awaken · ${from} → ${to} · ${(it.dheart ?? 0) > 0 ? "1 Black Dragon Heart" : "needs a Black Dragon Heart"}` : "super awaken at Lv 100"}</button>`);
+    if (out.length) return out.join("");
+    if (p.evo && zsCount(p) >= SA_MAX) return `<button class="gm-btn evo42" type="button" disabled>all 3 Z Stars</button>`;
+    return `<button class="gm-btn evo42 is-heart" type="button" data-evo111-shut disabled>${p.evo ? "more Z Stars after the story" : "Z Stars, super awaken: after the story"}</button>`;
   };
   /** The Admin super awakens a hero for free, or brings her back to her own rarity at Lv 100. */
   const adminEvo = (id, on = !ADMIN_EVO[id]) => {
@@ -32951,28 +32986,30 @@ const initGame = () => {
     const r = PLAYER.player.roster[id], h = heroineById(id);
     if (!r || r.evo || r.stars < STAR_MAX) return false;
     if (r.lv < LV_EVO) { toast(`${h.name} can be super awakened at Lv 100.`); return false; }
-    if (softCap().lv <= LV_EVO) { toast(`The super awakening opens when you beat ${softCap().boss?.name ?? "the 4th map's boss"}.`); return false; }
+    if (!boss111("king")) { toast("The super awakening opens when you beat the King of the World, after the story."); return false; }
     const it = PLAYER.player.items;
     if (!((it.dheart ?? 0) > 0)) { toast(`You need a Black Dragon Heart: forge one from ${HEART_SHARDS} Dragon Heart shards. Mini-bosses and map bosses drop them.`); return false; }
     it.dheart -= 1;
     const was = baseRarity(h);
     r.evo = 1;
-    r.lv = LV_EVO + 1;
+    r.lv = 1;
     r.xp = 0;
     savePlayer();
     showEvos();
-    toast(`${h.name} is super awakened: ${was} → ${NEXT_RARITY[was]}, Lv 101. ${h.gender === "m" ? "He" : "She"} grows on to Lv 200.`);
+    toast(`${h.name} is super awakened: ${was} → ${NEXT_RARITY[was]}. Back to Lv 1, as strong as before; at Lv 100 ${h.gender === "m" ? "he" : "she"} is ${Math.round(EVO_UP * 100)}% stronger.`);
     return true;
   };
-  const applySA = (id) => {
-    const r = PLAYER.player.roster[id], h = heroineById(id), it = PLAYER.player.items, n = r?.sa ?? 0;
-    if (!r?.evo || n >= SA_MAX) return false;
-    if (n >= saTop()) { toast(`Z Star stops at ${saTop()} for now: ${capSays()}`); return false; }
+  /** Round 111: one Z Star, on the stat you pick, once its super boss has fallen. */
+  const applySA = (id, k) => {
+    const r = PLAYER.player.roster[id], h = heroineById(id), it = PLAYER.player.items;
+    if (!r || r.stars < STAR_MAX || !SA_STAT.includes(k) || zsHas(r, k)) return false;
+    if (r.lv < LV_EVO && !r.evo) { toast(`${h.name} can take a Z Star at Lv 100.`); return false; }
+    if (!boss111(k)) { toast(`The ${k.toUpperCase()} Z Star opens when you beat the super boss of ${ZS_BOSS[k]}, after the story.`); return false; }
     if (!((it.zstar ?? 0) > 0)) { toast(`You need a Z Star: forge one from ${fmt(DUST_ZSTAR)} star dust.`); return false; }
     it.zstar -= 1;
-    r.sa = n + 1;
+    r.zs = (r.zs ?? 0) | (1 << SA_STAT.indexOf(k));
     savePlayer();
-    toast(`${h.name}: Z Star ${r.sa} of 3, ${SA_STAT[n].toUpperCase()} +30%`);
+    toast(`${h.name}: Z Star ${k.toUpperCase()}, +30% ${k.toUpperCase()}`);
     return true;
   };
   /** The card lights up gold where she changed. */
@@ -32981,7 +33018,7 @@ const initGame = () => {
     const it = PLAYER.player.items, d = it.dust ?? 0;
     return `<div class="sd-forge"><p class="sd-have"><span class="sd-dust"><i></i><b>${fmt(d)}</b> star dust</span><span class="sd-st"><i></i><b>${it.star ?? 0}</b> star${(it.star ?? 0) === 1 ? "" : "s"}</span><span class="sd-st is-rb"><i></i><b>${it.rainbow ?? 0}</b> rainbow</span><span class="sd-st is-z"><i></i><b>${it.zstar ?? 0}</b> Z Star</span><span class="sd-st is-shard"><i></i><b>${it.dshard ?? 0}</b> Dragon Heart shard${(it.dshard ?? 0) === 1 ? "" : "s"}</span><span class="sd-st is-heart"><i></i><b>${it.dheart ?? 0}</b> Black Dragon Heart${(it.dheart ?? 0) === 1 ? "" : "s"}</span></p>
       <div class="sd-acts"><button class="gm-btn" type="button" data-gm-forge="star"${d < DUST_STAR ? " disabled" : ""}>forge a star · ${DUST_STAR}</button><button class="gm-btn gm-btn--gold" type="button" data-gm-forge="rainbow"${d < DUST_RAINBOW ? " disabled" : ""}>forge a rainbow star · ${DUST_RAINBOW}</button><button class="gm-btn gm-btn--gold evo42" type="button" data-gm-forge="zstar"${d < DUST_ZSTAR ? " disabled" : ""}>forge a Z Star · ${fmt(DUST_ZSTAR)}</button><button class="gm-btn gm-btn--gold evo42 is-heart" type="button" data-gm-forge="dheart"${(it.dshard ?? 0) < HEART_SHARDS ? " disabled" : ""}>forge a Black Dragon Heart · ${HEART_SHARDS} shards</button></div>
-      <p class="lv1-note">Every enemy that falls drops dust: N 5, R 10, SR 25, SSR 50, UR and LR 100. A star awakens a hero by one; the 7th star takes a rainbow star; a Black Dragon Heart (${HEART_SHARDS} shards: mini-bosses drop ${SHARD_MINI}, map bosses ${SHARD_BOSS}, twice on the first win) super awakens a hero at Lv 100 with 7 stars; then each Z Star adds HP, ATK, DEF +30%.</p></div>`;
+      <p class="lv1-note">Every enemy that falls drops dust: N 5, R 10, SR 25, SSR 50, UR and LR 100. A star awakens a hero by one; the 7th star takes a rainbow star; after the story, each of the world's three super bosses opens a Z Star (HP, ATK or DEF +30% for a hero at Lv 100 with 7 stars), and the King of the World opens the super awakening: a Black Dragon Heart (${HEART_SHARDS} shards: mini-bosses drop ${SHARD_MINI}, map bosses ${SHARD_BOSS}, twice on the first win) takes a hero to the next rarity, back to Lv 1 and 20% stronger at Lv 100.</p></div>`;
   };
   const forge = (kind) => {
     if (kind === "dheart") {
@@ -32990,7 +33027,7 @@ const initGame = () => {
       it.dshard -= HEART_SHARDS;
       it.dheart = (it.dheart ?? 0) + 1;
       savePlayer();
-      toast("A Black Dragon Heart is forged: it super awakens a hero at Lv 100 with 7 stars");
+      toast("A Black Dragon Heart is forged: once the King of the World has fallen, it super awakens a hero at Lv 100 with 7 stars");
       return true;
     }
     const it = PLAYER.player.items, cost = kind === "zstar" ? DUST_ZSTAR : kind === "rainbow" ? DUST_RAINBOW : DUST_STAR;
@@ -32998,7 +33035,7 @@ const initGame = () => {
     it.dust -= cost;
     it[kind] = (it[kind] ?? 0) + 1;
     savePlayer();
-    toast(kind === "zstar" ? "A Z Star is forged: it super awakens an evolved hero" : kind === "rainbow" ? "A rainbow star is forged: it awakens a hero to the 7th star" : "A star is forged: it awakens a hero by one");
+    toast(kind === "zstar" ? "A Z Star is forged: +30% to one stat of a hero, once that stat's super boss has fallen" : kind === "rainbow" ? "A rainbow star is forged: it awakens a hero to the 7th star" : "A star is forged: it awakens a hero by one");
     return true;
   };
   /* Training: choose potions, see the level before you confirm; "fill" picks them for the highest level reachable */
@@ -33142,14 +33179,14 @@ const initGame = () => {
       : evoAct(h, p, "tb") ?? `<button class="gm-btn gm-btn--gold" type="button" data-tb-awaken="${h.id}"${p.stars >= starTop() ? " disabled" : ""}>${p.stars >= starTop() ? (starTop() < STAR_MAX ? "stars at the cap" : "fully awakened") : `awaken · 1 ${STAR_WORD[starNeed(p.stars)]}`}</button>`;
     const info = tr
       ? `<small>Lv ${p.lv} / ${lvTop(h.id)}${p.lv < lvTop(h.id) ? ` · ${p.xp} / ${need} XP` : ""}</small><div class="lv1-xp"><i style="width:${p.lv >= lvTop(h.id) ? 100 : Math.round((p.xp / need) * 100)}%"></i></div>`
-      : `<div class="lv1-stars" data-s1-of="${h.id}">${forged(p.stars)}${p.evo ? saRow(p.sa ?? 0) : ""}</div><small>Lv ${p.lv} · +${Math.round(AWAKEN[p.stars] * 100)}% every stat · +${AWAKEN_CRIT[p.stars]}% crit${p.evo ? ` · ${baseRarity(h)} → ${h.rarity}` : ""}</small>`;
+      : `<div class="lv1-stars" data-s1-of="${h.id}">${forged(p.stars)}${zRow111(p)}</div><small>Lv ${p.lv} · +${Math.round(AWAKEN[p.stars] * 100)}% every stat · +${AWAKEN_CRIT[p.stars]}% crit${p.evo ? ` · ${baseRarity(h)} → ${h.rarity}` : ""}</small>`;
     return `<div class="tb3-row${open ? " is-open" : ""}"><button class="tb3-c" type="button" data-tb-info="${h.id}" aria-label="Everything about ${h.name}">${makeCard(h, { label: false }).outerHTML}</button>
       <div class="tb3-who"><b>${h.name}</b>${info}</div>${act}${open ? trainPanel(h) : ""}</div>`;
   };
   const renderGrow = () => {
     if (pc77()) return grow77();
     const p = PLAYER.player;
-    const bank = isAdmin() ? (tb.tab === "training" ? "Admin: heroes are at Lv 100 with 7 stars, or Lv 200 once super awakened. Switch to Player in your profile to train." : `Admin: super awaken any hero for free (Lv 200, rarity up, 3 Z Stars), or bring her back to test. <span class="tb48-all"><button class="gm-btn gm-btn--gold evo42" type="button" data-tb-aevo-all="1">super awaken everyone</button><button class="gm-btn evo42 is-back" type="button" data-tb-aevo-all="0">everyone back</button></span>`)
+    const bank = isAdmin() ? (tb.tab === "training" ? "Admin: heroes are at Lv 100 with 7 stars; super awakened, a rarity up and 20% stronger at Lv 100. Switch to Player in your profile to train." : `Admin: super awaken any hero for free (rarity up, +20% at Lv 100, 3 Z Stars), or bring her back to test. <span class="tb48-all"><button class="gm-btn gm-btn--gold evo42" type="button" data-tb-aevo-all="1">super awaken everyone</button><button class="gm-btn evo42 is-back" type="button" data-tb-aevo-all="0">everyone back</button></span>`)
       : tb.tab === "training" ? `you have <b>${p.items.s}</b> Potion S · <b>${p.items.m}</b> Potion M · <b>${p.items.l}</b> Potion L · the cap: <b>${capSays()}</b>`
         : `the cap: <b>${capSays()}</b>`;
     tb3Host.innerHTML = `<p class="tb3-bank">${bank}</p>${!isAdmin() && tb.tab !== "training" ? forgeHTML() : ""}${sortBar85()}<div class="tb3-list">${ownedSorted85().map(growRow).join("")}</div>`;
@@ -33246,7 +33283,7 @@ const initGame = () => {
     const now = statsOf(h, lineupIds()), then = after.lv !== p.lv ? with77(h.id, { lv: after.lv, xp: after.xp }, () => statsOf(h, lineupIds())) : now;
     const pots = trainItems.map(([k, name, c]) => `<div class="p77-pot" style="--c:${c}">${POT64(k)}<span><b>${name}</b><small>${fmt(POTIONS[k].xp)} XP · you have ${haveOf(k, h.id)}</small></span>
       <div class="tr-step"><button type="button" data-tg-step="${k}:-1" aria-label="One ${name} less"${use[k] ? "" : " disabled"}>−</button><b>${use[k]}</b><button type="button" data-tg-step="${k}:1" aria-label="One ${name} more"${use[k] < haveOf(k, h.id) && after.lv < top ? "" : " disabled"}>+</button></div></div>`).join("");
-    const say = adm ? "Admin: heroes are at Lv 100 with 7 stars, or Lv 200 once super awakened. Switch to Player in your profile to train."
+    const say = adm ? "Admin: heroes are at Lv 100 with 7 stars; super awakened, a rarity up and 20% stronger at Lv 100. Switch to Player in your profile to train."
       : capped ? (top < LV_MAX ? `${h.name} is at the cap: ${capSays()}.` : `${h.name} is at the highest level.`) : "";
     return `<div class="p77-two">${fig77(h)}
       <div class="p77-col"><div class="p77-main">${name77(h, true)}
@@ -33268,16 +33305,16 @@ const initGame = () => {
     const act = evoAct(h, p, "tb") ?? (adm ? "" : `<button class="gm-btn gm-btn--gold p77-go" type="button" data-tb-awaken="${h.id}"${n >= top ? " disabled" : ""}>${n >= top ? (top < STAR_MAX ? "stars at the cap" : "fully awakened") : `awaken · 1 ${STAR_WORD[starNeed(n)]}`}</button>`);
     const col = (title, s, foot, cls = "", was = null) => `<div class="p77-vs-c${cls}"><h3>${title}</h3>${stats77(s, "is-col", was)}<small>${foot}</small></div>`;
     const right = then ? col(`${next} star${next === 1 ? "" : "s"} · +${Math.round((AWAKEN[next] - AWAKEN[n]) * 100)}%`, then, `+${Math.round(AWAKEN[next] * 100)}% every stat · +${AWAKEN_CRIT[next]}% crit`, " is-up", now)
-      : `<div class="p77-vs-c is-done"><h3>${n >= STAR_MAX ? "all seven stars" : "the next star"}</h3><p class="p77-note">${adm ? "The Admin's heroes have all seven stars." : n >= STAR_MAX ? (p.evo ? "Super awakened: the Z Stars raise HP, ATK and DEF 30% each." : "Super awakening comes next: Lv 100, seven stars and a Black Dragon Heart.") : ""}</p></div>`;
-    const admin = adm ? `<p class="p77-say">Admin: super awaken any hero for free (Lv 200, rarity up, 3 Z Stars), or bring them back to test.</p><span class="tb48-all"><button class="gm-btn gm-btn--gold evo42" type="button" data-tb-aevo-all="1">super awaken everyone</button><button class="gm-btn evo42 is-back" type="button" data-tb-aevo-all="0">everyone back</button></span>` : "";
+      : `<div class="p77-vs-c is-done"><h3>${n >= STAR_MAX ? "all seven stars" : "the next star"}</h3><p class="p77-note">${adm ? "The Admin's heroes have all seven stars." : n >= STAR_MAX ? (p.evo ? "Super awakened: back to Lv 1 as strong as before, and 20% stronger at Lv 100. Each Z Star raises HP, ATK or DEF 30%." : "After the story, three super bosses open the Z Stars (HP, ATK or DEF +30%, a Z Star each), then the King of the World opens the super awakening (a Black Dragon Heart: the next rarity, Lv 1 again, +20% at Lv 100).") : ""}</p></div>`;
+    const admin = adm ? `<p class="p77-say">Admin: super awaken any hero for free (rarity up, +20% at Lv 100, 3 Z Stars), or bring them back to test.</p><span class="tb48-all"><button class="gm-btn gm-btn--gold evo42" type="button" data-tb-aevo-all="1">super awaken everyone</button><button class="gm-btn evo42 is-back" type="button" data-tb-aevo-all="0">everyone back</button></span>` : "";
     return `<div class="p77-two">${fig77(h)}
       <div class="p77-col"><div class="p77-main">${name77(h, true)}
-        <div class="lv1-stars p77-stars" data-s1-of="${h.id}">${forged(n)}${p.evo ? saRow(p.sa ?? 0) : ""}</div>
+        <div class="lv1-stars p77-stars" data-s1-of="${h.id}">${forged(n)}${zRow111(p)}</div>
         <div class="p77-vs">${col(`now · ${n} star${n === 1 ? "" : "s"}`, now, `+${Math.round(AWAKEN[n] * 100)}% every stat · +${AWAKEN_CRIT[n]}% crit`)}${right}</div>
         <div class="p77-acts">${act}</div>
         ${admin || forgeHTML()}
         <p class="p77-cap">the cap: <b>${capSays()}</b></p></div>
-        ${strip77(h.id, (x) => { const q = progOf(x.id); return `${q.stars}★${q.evo ? ` · Z${q.sa ?? 0}` : ""}`; })}
+        ${strip77(h.id, (x) => { const q = progOf(x.id); return `${q.stars}★${q.zs ? ` · Z${zsCount(q)}` : ""}`; })}
       </div></div>`;
   };
   const grow77 = () => {
@@ -33379,7 +33416,7 @@ const initGame = () => {
             <button class="gm-btn gm-btn--ghost td-lead" type="button" data-gm-lead="${h.id}"${leader.id === h.id ? " disabled" : ""}>${leader.id === h.id ? "your leader" : "set as leader"}</button></div>
           <div class="p77-flv"><p class="lv1-lv">Lv <b>${p.lv}</b><small> / ${top}</small></p>
             <div class="p77-flv-x"><div class="lv1-xp" aria-hidden="true"><i style="width:${p.lv >= top ? 100 : Math.round((p.xp / XP_NEED(p.lv)) * 100)}%"></i></div><small>${p.lv >= top ? (top < LV_MAX ? "at the cap" : "max level") : `${fmt(p.xp)} / ${fmt(XP_NEED(p.lv))} XP to Lv ${p.lv + 1}`}</small></div>
-            <div class="lv1-stars" data-s1>${forged(p.stars)}${p.evo ? saRow(p.sa ?? 0) : ""}</div>${acts}</div>
+            <div class="lv1-stars" data-s1>${forged(p.stars)}${zRow111(p)}</div>${acts}</div>
           <dl class="td-stats p77-fstats">${["atk", "def", "hp"].map(statCell).join("")}<div><dt>crit</dt><dd>${s.crit}%</dd><small>at lv ${p.lv}${p.stars ? ` · +${AWAKEN_CRIT[p.stars]}% stars` : ""}</small></div></dl>
           ${s.relic && s.allies.length ? `<p class="td-note">${h.relic.name}: +${25 * s.allies.length}% from ${s.allies.map((a) => a.name).join(", ")} (${h.relic.boost.join(" / ")}) in the team.</p>` : ""}
           <div class="p77-fj-2">
@@ -34968,7 +35005,7 @@ const initGame = () => {
     if (ae) { const id = ae.dataset.tbAevo; adminEvo(id); renderGrow(); evoFlash($(`[data-tb-info="${id}"]`, tb3Host)); toast(`${heroineById(id).name}: ${heroineById(id).rarity}, Lv ${progOf(id).lv}`); return; }
     if (aa) { const on = aa.dataset.tbAevoAll === "1"; for (const h of ownedHeroines()) adminEvo(h.id, on); renderGrow(); toast(on ? "Everyone is super awakened (admin)" : "Everyone is back to their own rarity, Lv 100"); return; }
     const ev = t.closest("[data-tb-evolve]"), sa = t.closest("[data-tb-sa]");
-    if (ev || sa) { const id = (ev ?? sa).dataset[ev ? "tbEvolve" : "tbSa"]; if (!(ev ? applyEvolve(id) : applySA(id))) return; renderGrow(); evoFlash($(`[data-tb-info="${id}"]`, tb3Host)); return; }
+    if (ev || sa) { const [id, zk] = (ev ?? sa).dataset[ev ? "tbEvolve" : "tbSa"].split(":"); if (!(ev ? applyEvolve(id) : applySA(id, zk))) return; renderGrow(); evoFlash($(`[data-tb-info="${id}"]`, tb3Host)); return; }
     const aw = t.closest("[data-tb-awaken]");
     if (aw) { const id = aw.dataset.tbAwaken; if (!applyAwaken(id)) return; renderGrow(); starLand($(`[data-s1-of="${id}"]`, tb3Host), progOf(id).stars); return; }
     const io = t.closest("[data-bm-io]");
@@ -35061,7 +35098,7 @@ const initGame = () => {
     }
     if (t.closest("[data-gm-aevo]")) { adminEvo(fileId); renderFile(); evoFlash($(".td-card, [data-td-card]", fileHost)); toast(`${heroineById(fileId).name}: ${heroineById(fileId).rarity}, Lv ${progOf(fileId).lv}`); return; }
     const gev = t.closest("[data-gm-evolve]"), gsa = t.closest("[data-gm-sa]");
-    if (gev || gsa) { if (!(gev ? applyEvolve(fileId) : applySA(fileId))) return; renderFile(); evoFlash($(".td-card, [data-td-card]", fileHost)); return; }
+    if (gev || gsa) { if (!(gev ? applyEvolve(fileId) : applySA(fileId, gsa.dataset.gmSa.split(":")[1]))) return; renderFile(); evoFlash($(".td-card, [data-td-card]", fileHost)); return; }
     if (t.closest("[data-gm-awaken]")) {
       if (!applyAwaken(fileId)) return;
       renderFile();
@@ -39664,7 +39701,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-12-1238";
+const BUILD = "2026-11-12-1329";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
