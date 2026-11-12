@@ -16150,6 +16150,8 @@ const NOON107_TODO = { barque: "Its mirrors are still to set: 30 gems wait there
 const NOON107_AT = { barque: ["barque107", 79, "The Temple of the Sun Barque", ["sunmane:SR", "squire:R", "hawk:SR"]], moon: ["moon107", 84, "The Temple of the Hidden Moon", ["mask:SR", "squire:R", "hawk:SR"]], sphinx: ["sphinx107", 89, "The Sleepless Sphinx", ["lancer:SR", "squire:R", "mask:SR"]] };
 const noonStage107 = (key) => { const [, i, name, wave] = NOON107_AT[key] ?? NOON107_AT.barque; return { id: `noon107-${key}`, town69: true, name, reg: 3, level: STORY.stages[i]?.level ?? 80, waves: [wave] }; };
 /** This account's Gilded Steppe story (story107's save().noon107), for the map's talks: read here, one mark at a time. */
+/** Altea's ward on the 20-5 sheet (the user wants it found, not told): what it does to your blows, and where the answer is. */
+const WARD_HINT107 = "<b>Ward</b> Most of every blow slides off her. In Noonfall, the old night watchman knows how every night ends; the altar of her sister's temple says it too.";
 const noonAcct107 = () => { const p = isAdmin() ? PLAYER.admin : PLAYER.player; return p?.s69?.noon107 ?? {}; };
 const noonMet107 = () => !!noonAcct107().met;
 const noonJoined107 = () => !!noonAcct107().joined;
@@ -16716,13 +16718,13 @@ const pieceSay104 = (g = {}) => {
  * SSR: da 500 a 5000»: three built-in wares of the Coin Shop (the Database changes their price and coin, or takes them off), and a
  * chest the Database's own wares and bundles can give («goldchest-R|SR|SSR»).
  * «il mirror shard non abbiamo detto al player cosa fa, fai in modo che nello shop venga specificato». */
-const BAL106 = { from: 3, bars: { common: 3, elite: 4, mini: 6, boss: 10 }, dmg: 20 };
+const BAL106 = { from: 3, bars: { common: 3, elite: 4, mini: 6, boss: 7 }, dmg: 20 };
 /** The Database's numbers (the map counts from 1 there, from 0 here); anything missing or odd keeps the game's own. */
 const bal106Read = (x) => {
   const b = x && typeof x === "object" && !Array.isArray(x) ? x : {};
   const n = (v, lo, hi, d) => { const k = Math.round(+v); return v == null || v === "" || !Number.isFinite(k) ? d : Math.min(hi, Math.max(lo, k)); };
   BAL106.from = n(b.from, 1, 8, 4) - 1;
-  for (const [k, d] of [["common", 3], ["elite", 4], ["mini", 6], ["boss", 10]]) BAL106.bars[k] = n(b.bars?.[k], 1, 20, d);
+  for (const [k, d] of [["common", 3], ["elite", 4], ["mini", 6], ["boss", 7]]) BAL106.bars[k] = n(b.bars?.[k], 1, 20, d);
   BAL106.dmg = n(b.dmg, 0, 300, 20);
 };
 
@@ -17948,7 +17950,7 @@ const STORY62 = (() => {
     const r = ruleOf(i), mc = mechOf(i), got = store().g[s.id] ?? [false, false], won = starsOf()[s.id] != null;
     const boss = mc && s.waves.at(-1).map((t) => t.split(":")[0]).filter((k) => FOE_KINDS[k]?.boss && k !== "king");
     const attr = boss?.length ? [].concat(FOE_KINDS[boss[0]].attr)[0] : STORY_REGIONS[s.reg].attr;
-    const powers = mc && !(s.waves.at(-1).some((t) => t.startsWith("king:"))) ? mechSay(mc, attr) : [];
+    const powers = mc && !(s.waves.at(-1).some((t) => t.startsWith("king:"))) ? mechSay(mc, attr).map((t) => (i === 99 && t.startsWith("<b>Ward</b>") ? WARD_HINT107 : t)) : [];
     const star = (on, text) => `<li class="${on ? "is-on" : ""}"><i aria-hidden="true"></i><span>${text}</span></li>`;
     return `${r ? `<p class="sm62-rule"><b>${ruleName(r, STORY_REGIONS[s.reg].attr)}</b> ${ruleSay(r, STORY_REGIONS[s.reg].attr)}</p>` : ""}
       ${powers.map((t) => `<p class="sm62-power">${t}</p>`).join("")}
@@ -28936,9 +28938,9 @@ const dragTrack = (trk, wrap) => {
 /* ══ round 106 · nel Database: le barre di vita e il danno dei nemici dalla mappa 4 in poi (in cima alla pagina Nemici, finisce in
  *  D.bal106 e arriva ai giocatori con Manda online) e le casse di monete d'oro del Coin Shop (pagina Shop: prezzo, moneta, in vendita). ══ */
 const B106 = () => { const b = D.bal106 && typeof D.bal106 === "object" && !Array.isArray(D.bal106) ? D.bal106 : (D.bal106 = {}); if (!b.bars || typeof b.bars !== "object") b.bars = {}; return b; };
-const BAL_F106 = [["from", "Da mappa", 4, 1, 8, "", 1], ["bars.common", "Barre: comuni", 3, 1, 20, "", 1], ["bars.elite", "Barre: élite", 4, 1, 20, "", 1], ["bars.mini", "Barre: mini boss", 6, 1, 20, "", 1], ["bars.boss", "Barre: boss", 10, 1, 20, "", 1], ["dmg", "Danno dei nemici", 20, 0, 300, "%", 5]];
+const BAL_F106 = [["from", "Da mappa", 4, 1, 8, "", 1], ["bars.common", "Barre: comuni", 3, 1, 20, "", 1], ["bars.elite", "Barre: élite", 4, 1, 20, "", 1], ["bars.mini", "Barre: mini boss", 6, 1, 20, "", 1], ["bars.boss", "Barre: boss", 7, 1, 20, "", 1], ["dmg", "Danno dei nemici", 20, 0, 300, "%", 5]];
 const balGet106 = (k, d) => { const b = B106(), v = k.startsWith("bars.") ? b.bars[k.slice(5)] : b[k]; return v == null || v === "" || !Number.isFinite(+v) ? d : +v; };
-const balSay106 = () => `Dalla mappa ${balGet106("from", 4)}: barre ${balGet106("bars.common", 3)} ai comuni, ${balGet106("bars.elite", 4)} alle élite, ${balGet106("bars.mini", 6)} ai mini boss, ${balGet106("bars.boss", 10)} ai boss · danno dei nemici +${balGet106("dmg", 20)}%`;
+const balSay106 = () => `Dalla mappa ${balGet106("from", 4)}: barre ${balGet106("bars.common", 3)} ai comuni, ${balGet106("bars.elite", 4)} alle élite, ${balGet106("bars.mini", 6)} ai mini boss, ${balGet106("bars.boss", 7)} ai boss · danno dei nemici +${balGet106("dmg", 20)}%`;
 /** In cima alla pagina Nemici: da quale mappa le barre di vita e il danno in più, e quanti. */
 const bal106Box = (host) => {
   const arch = qs(".g-arch", host), top = qs(".g-arch-top", host);
@@ -38085,6 +38087,9 @@ const STORY66 = (() => {
    *  sphinx, miss: {}, sundial, oasis, dusk, page113 }. ═══════════ */
   const IN107 = onPic(1672 / 941);
   const box107 = (x0, y0, x1, y1) => IN107.poly([[x0, y1], [x0, y0], [x1, y0], [x1, y1]]);
+  /** Someone standing behind something (a rail, an altar: clip + top) is tapped only where they show. talkTo runs a standing
+   *  person's tap area down to their feet, and it would cover the spots in front of them (Night asleep on the altar hid its words). */
+  const talkTop107 = (p, run) => { const t = talkTo(p, run); return p.top == null ? t : { ...t, poly: t.poly.map(([x, y]) => [x, Math.min(y, p.top)]) }; };
   /** What this account has done on the Gilded Steppe: read here, written only by the story. */
   const noonOf107 = () => save().noon107 ?? {};
   const noonSet107 = () => (save().noon107 ??= {});
@@ -38284,7 +38289,7 @@ const STORY66 = (() => {
     lanterns: { name: "The lantern market", verb: "Look", poly: box107(0, 0.52, 0.17, 0.78) },
     oasis: { name: "The oasis", verb: "Look", poly: box107(0.69, 0.63, 0.8, 0.74) },
     dates: { name: "Barrels of dates", verb: "Look", poly: box107(0.86, 0.8, 1, 1) },
-    sundial: { name: "The sundial", verb: "Look", poly: box107(0.47, 0.25, 0.69, 0.78) },
+    sundial: { name: "The sundial", verb: "Look", poly: IN107.poly([[0.43, 0.8], [0.43, 0.64], [0.455, 0.22], [0.49, 0.22], [0.665, 0.61], [0.73, 0.63], [0.73, 0.8]]) },
     sign: { name: "The cardboard sign", verb: "Read", poly: box107(0.33, 0.83, 0.4, 0.96) },
     inn: { name: "The Borrowed Night", verb: "Enter", poly: box107(0.86, 0.5, 0.95, 0.76) },
   };
@@ -38359,12 +38364,18 @@ const STORY66 = (() => {
     }
     await say107(S, "kasim", ["Ninety-one days of noon, friend. A night watchman with no night to watch.", "The lantern stays unlit. When the night comes back, I want to be the one who lights the first lamp.", "Mind the sun. It has opinions."][(save().seen?.["kasim-d-107"] ?? 0) % 3], { mood: null });
     once("kasim-d-107");
-    const a = await S.choose([{ t: "Why carry an unlit lantern?", tag: "Curious" }, { t: "What happened to the night?", tag: "Curious" }, { t: "Get some sleep, old man.", tag: "Lazy" }]);
-    if (a === 0) await say107(S, "kasim", "Fifty years I lit this lantern at dusk. Ninety-one days ago, dusk stopped coming. A watchman without his lantern is just an old man who can't sleep.", { mood: null });
+    const queen = !altea107();
+    const a = await S.choose([{ t: "Why carry an unlit lantern?", tag: "Curious" }, { t: "What happened to the night?", tag: "Curious" }, ...(queen ? [{ t: "Any advice about the queen?", tag: "Curious" }] : []), { t: "Get some sleep, old man.", tag: "Lazy" }]);
+    if (queen && a === 2) {
+      // Altea's ward, as a night watchman knows it: a night never ends at once; the dawn knocks three times
+      await say107(S, "kasim", "Advice? I am a night watchman, friend. I know only one thing, and I know it well: a night never ends all at once.", { mood: null });
+      await say107(S, "kasim", "The dawn has to knock three times. Grey, then rose, then gold. Only then does the dark let go of the sky.", { mood: null });
+      await say107(S, "kasim", "Our queen hid from the night. Now they say she wears it. …Funny, how that works.", { mood: null });
+    } else if (a === 0) await say107(S, "kasim", "Fifty years I lit this lantern at dusk. Ninety-one days ago, dusk stopped coming. A watchman without his lantern is just an old man who can't sleep.", { mood: null });
     else if (a === 1) {
       await say107(S, "kasim", "The Herald came to our queen, Altea, and the queen asked for a day without end. The sun stopped where it stood.", { mood: null });
       await say107(S, "kasim", "The night went into a jar, they say, in the temple of the moon. And the Sphinx on the road can't sleep a wink. Neither can anyone else.", { mood: null });
-    } else await say107(S, "kasim", "Sleep? At noon? I tried. I counted sheep. The sheep got sunburnt.", { mood: null });
+    } else if (a === (queen ? 3 : 2)) await say107(S, "kasim", "Sleep? At noon? I tried. I counted sheep. The sheep got sunburnt.", { mood: null });
     S.stand(town107People());
   };
   /** Badulan in Noonfall: at his umbrella before he comes with you (scene 4), by the closed umbrella after (scene 12). */
@@ -38805,7 +38816,7 @@ const STORY66 = (() => {
       S.stand(barquePeople107());
       S.spots(BARQUE107_SPOTS());
     } },
-    talkTo(barquePeople107()[0], TWELVE107),
+    talkTop107(barquePeople107()[0], TWELVE107),
     talkTo(barquePeople107()[1], SEKHRA107),
   ];
   const barque107 = () => { DRY = false; fromAvatar(); return S66.play(async (S) => {
@@ -38959,10 +38970,28 @@ const STORY66 = (() => {
         await say107(S, "ishara", "From the jar. She says you smell of ice and fear.", { mood: null });
         await say107(S, "badulan", "That's my cologne. Ice and Fear, by Badulan. Forty bucks a bottle.", { mood: null });
       }
-    } else if (noonOf107().moon) await say107(S, "ishara", altea107() ? "The sun has set, and the Night has gone up to the sky where she belongs. She still comes down to sleep on the altar. Habit." : "She sleeps on the altar now, and purrs at the moon. When the sun moves, she will follow it down.", { mood: null });
+    } else if (noonOf107().moon) {
+      await say107(S, "ishara", altea107() ? "The sun has set, and the Night has gone up to the sky where she belongs. She still comes down to sleep on the altar. Habit." : "She sleeps on the altar now, and purrs at the moon. When the sun moves, she will follow it down.", { mood: null });
+      // before Altea: her sister points you at the altar's words
+      if (!altea107()) await say107(S, "ishara", "My sister was afraid of the night. Now she hides inside it, like a child under a blanket. Read the altar before you go to her.", { mood: "sad" });
+    }
     else await say107(S, "ishara", ["The middle screen turns alone. The two outer screens drag it along. Set the outer ones first, then the middle.", "A head with two ears. A long, proud back. A tail curled round the paws. Like the cats on the walls.", "Do not hurry. Fear makes the shadows lie."][(save().seen?.["ishara-h-107"] ?? 0) % 3], { mood: null });
     once("ishara-h-107");
     S.stand(moonPeople107());
+  };
+  /** The altar's words: Altea's ward, told as the temple tells it. She wears the night (her ward, Dark), most of each blow slides off
+   *  (60% less), every element is swallowed (only Light breaks it), what every night runs from (the light) knocking three times (three
+   *  Light blows) leaves her bare and dazed (the ward breaks, she reels for a turn). If the Database ever changes her element, change this. */
+  const altar107 = async (S) => {
+    S.mode("box");
+    await narr107(S, "Words carved into the front of the altar, under the crescent. The sand has kept them sharp.");
+    await narr107(S, "THE QUEEN WHO FEARED THE NIGHT NOW WEARS IT FOR A CLOAK. MOST OF EVERY BLOW SLIDES OFF IT.");
+    await narr107(S, "FIRE SINKS INTO IT. WATER AND THORNS ARE SWALLOWED. THE NIGHT'S OWN CHILDREN ARE WELCOMED HOME.");
+    await narr107(S, "ONLY WHAT EVERY NIGHT RUNS FROM CAN TEAR THE CLOAK. LET IT KNOCK THREE TIMES, AND THE QUEEN STANDS BARE, AND DAZED.");
+    if (once("altar-107")) {
+      await say107(S, "me", "What every night runs from… Hm.");
+      if (joined107()) await say107(S, "badulan", "Riddles again. I'm sixty, bro, I don't do riddles, I do math. Three knocks. That's the math.", { mood: null });
+    }
   };
   const NIGHT107_TALK = async (S) => { S.mode("box"); await say107(S, "night107", ["Mrrrow.", "Prrrrr.", "Mew?"][(save().seen?.["night-107"] ?? 0) % 3]); once("night-107"); await narr107(S, "Night blinks at you, very slowly. Among cats, that means: you'll do."); };
   const MOONT107 = {
@@ -38974,7 +39003,8 @@ const STORY66 = (() => {
   };
   const MOON107_SPOTS = () => [
     ...Object.entries(MOONT107).map(([k, o]) => ({ id: `hm-${k}`, name: o.name, verb: o.verb, poly: o.poly, run: async (S) => { S.mode("box"); await narr107(S, o.line); } })),
-    { id: "hm-jar", name: noonOf107().moon ? "The broken jar" : "The jade jar", verb: "Look", poly: box107(0.56, 0.38, 0.66, 0.57), run: async (S) => { S.mode("box"); await narr107(S, noonOf107().moon ? "The jade jar, its gold seal cracked open. Empty, and a little scratched on the inside." : "A big jade jar sealed with gold wax. Something inside it purrs. When you put your ear to it, it purrs louder."); } },
+    { id: "hm-altar", name: "The words on the altar", verb: "Read", poly: box107(0.53, 0.62, 0.72, 0.72), run: async (S) => { await altar107(S); } },
+    { id: "hm-jar", name: noonOf107().moon ? "The broken jar" : "The jade jar", verb: "Look", poly: noonOf107().moon ? box107(0.565, 0.38, 0.655, 0.44) : box107(0.56, 0.38, 0.66, 0.57), run: async (S) => { S.mode("box"); await narr107(S, noonOf107().moon ? "The jade jar, its gold seal cracked open. Empty, and a little scratched on the inside." : "A big jade jar sealed with gold wax. Something inside it purrs. When you put your ear to it, it purrs louder."); } },
     { id: "hm-screens", name: noonOf107().moon ? "The three screens" : "The screens and the lamp", verb: noonOf107().moon ? "Look" : "Turn them", poly: box107(0.26, 0.38, 0.48, 0.85), run: async (S) => {
       if (noonOf107().moon) { S.mode("box"); await narr107(S, "The three screens stand still around the lamp. On the moon, the shadow of a sitting cat, keeping watch."); return; }
       if ((noonOf107().miss?.moon ?? 0) >= 3) { await ambush107(S, "moon", "The stone cats are still down from their pedestals, and they have not calmed down."); return; }
@@ -38984,7 +39014,8 @@ const STORY66 = (() => {
       S.spots(MOON107_SPOTS());
     } },
     talkTo(moonPeople107()[0], ISHARA107),
-    ...(noonOf107().moon ? [talkTo(moonPeople107()[1], NIGHT107_TALK)] : []),
+    // Night sleeps on the altar: only the part of her above it is hers to tap, so the words carved on its front stay readable
+    ...(noonOf107().moon ? [talkTop107(moonPeople107()[1], NIGHT107_TALK)] : []),
   ];
   const moon107 = () => { DRY = false; fromAvatar(); return S66.play(async (S) => {
     await S.bg("moon107", { how: "fade", ms: 420 });
@@ -39312,7 +39343,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-11-2039";
+const BUILD = "2026-11-12-0854";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
