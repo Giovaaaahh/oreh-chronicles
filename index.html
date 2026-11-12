@@ -8299,6 +8299,8 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
 /* a dark card in the plan keeps the same cold silver */
 .bt-qslot.is-dark112::after { color: #eef7fc; background: radial-gradient(120% 90% at 50% 40%, #1d5378, #03111c 72%); box-shadow: inset 0 0 0 1px rgb(220 240 255 / 0.55); text-shadow: 0 0 0.3em rgb(160 210 240 / 0.8); }
 
+/* ══ round 115 · The Pale Reflection never misses under 60% of his HP: no styles of its own (his chip uses the game's eye) ══ */
+
 </style>
 </head>
 <body>
@@ -16734,7 +16736,7 @@ FOE_KINDS.reflection = { name: "The Pale Reflection", tribe: "The Still Water", 
   faces: [{ art: FOE_ART("challenge-reflection"), focus: [0.51, 0.56], rarity: "UR" }],
   pics112: { 1: { art: FOE_ART("challenge-reflection-skill-1"), focus: [0.49, 0.52] }, 2: { art: FOE_ART("challenge-reflection-skill-2"), focus: [0.2, 0.45] } } };
 BOSSES.push({ id: "reflection", name: "The Pale Reflection", token: "reflection:UR", shards: [4, 6], gems: 10, level: 100,
-  note: "A mirror of still water: each turn he plays your last card back at you. Break one of his four bars and you sink deeper, until the mirror breaks in the dark." });
+  note: "A mirror of still water: each turn he plays your last card back at you. Break one of his four bars and you sink deeper, until the mirror breaks in the dark. Under 60% of his HP his blows always land: Evasion and dodges do not stop them." });
 const CH112 = { diff: "normal" };
 const CH112_DIFF = [["easy", "Easy"], ["normal", "Normal"], ["hard", "Hard"]];
 /** What a difficulty does to a boss's numbers (Normal is the boss as the Database has it). */
@@ -21203,7 +21205,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   const kind106 = (e) => { const k = FOE_KINDS[e?.kind]?.made; return typeof k === "string" ? k : e?.kind ?? null; };
   const is106 = (e, k) => !!e && !e.dead && kind106(e) === k;
   /** Altea and her two guards: their blows go through Evasion. */
-  const ign106 = (e) => !!e && (e.regal || e.royal || ["altea", "guardX", "guardY"].includes(kind106(e)));
+  const ign106 = (e) => !!e && (e.regal || e.royal || ["altea", "guardX", "guardY"].includes(kind106(e)) || (e.kind === "reflection" && !e.dead && e.hp <= e.max * 0.6));
   const AB106 = {
     squire: { name: "Squire's Duty", say: "While she stands, the strongest enemy beside her takes 40% less from single-target blows." },
     mask: { name: "Behind the Mask", say: "While the mask holds, no blow takes more than 25% of its HP. The third blow breaks it: from then on it attacks twice a turn, but takes 30% more." },
@@ -21493,7 +21495,8 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     if (k === "husk") s.push(["sun", e.core106 ?? 0, `Burning Core ${e.core106 ?? 0} of 3: ATK +${15 * (e.core106 ?? 0)}% · at 3 it bursts on every hero`]);
     if (k === "guardX") s.push(["clock", e.bell106 ?? 3, `Noon Bell: noon in ${e.bell106 ?? 3} turn${(e.bell106 ?? 3) === 1 ? "" : "s"} · 260% on every hero and their buffs end · a crit turns the hand back`]);
     if (k === "guardY") s.push(["eye", 0, "Weighing of the Heart: a blow over 15% of its HP comes back, a quarter of it"]);
-    if (ign106(e)) s.push(["crown", 0, "Royal aim: Evasion does not stop its blows"]);
+    if (e.kind === "reflection" && ign106(e)) s.push(["eye", 0, "Never misses: under 60% of his HP his blows always land · Evasion and dodges do not stop them"]);
+    else if (ign106(e)) s.push(["crown", 0, "Royal aim: Evasion does not stop its blows"]);
     return s;
   };
   const g78Check = async () => {
@@ -23188,6 +23191,13 @@ void main() {
   const pr112Check = async () => {
     const P = F.pr112, e = pr112Foe();
     if (!P || !e) return;
+    if (!P.sure115 && e.hp <= e.max * 0.6) {
+      P.sure115 = true;
+      logIt("state", `${e.name}: Never misses`, "under 60% of his HP his blows always land: Evasion and dodges no longer stop them");
+      paintFoes();
+      await banner("never misses", "is-enemy");
+      toast(`${e.name} is under 60% HP: his blows can no longer be dodged`);
+    }
     const d = Math.max(P.floor, Math.min(4, 1 + Math.floor((1 - e.hp / e.max) * 4)));
     while (P.depth < d) {
       P.depth += 1;
@@ -23206,7 +23216,7 @@ void main() {
     const i = F.team.indexOf(m);
     if (!m || m.ko || i < 0) return;
     const p = memPos(i);
-    if (m.evade > 0) { number(p.cx, p.cy, "miss", "is-resist", "evasion"); logIt("foe", `${e.name} → ${m.h.name}`, `${label}: Evasion, it misses`, "miss"); await hold(260); return; }
+    if (m.evade > 0 && !ign106(e)) { number(p.cx, p.cy, "miss", "is-resist", "evasion"); logIt("foe", `${e.name} → ${m.h.name}`, `${label}: Evasion, it misses`, "miss"); await hold(260); return; }
     let d = Math.round(foeHitMath(e, m).d * (0.9 + Math.random() * 0.2) * (pct / 100) * k);
     const black = Math.min(m.black ?? 0, d); m.black -= black; d -= black;
     const soaked = Math.min(m.shield ?? 0, d); m.shield -= soaked; d -= soaked;
@@ -40562,7 +40572,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-12-2010";
+const BUILD = "2026-11-12-2035";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
