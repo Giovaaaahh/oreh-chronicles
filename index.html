@@ -8301,6 +8301,15 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
 
 /* ══ round 115 · The Pale Reflection never misses under 60% of his HP: no styles of its own (his chip uses the game's eye) ══ */
 
+/* ══ round 116 · a dark card chosen keeps his mirror back in the plan; Frostspine's cold; its numbers in the Database ══ */
+/* the back is the card itself now: the old «?» cover over a face goes */
+.bt-qslot.is-dark112::after { content: none; }
+.bt-num.is-cold116 { color: #a8e1ff; font-size: 22px; text-shadow: 0 0 0.35em rgb(110 190 255 / 0.85), 0 2px 0 rgb(0 18 36 / 0.9); }
+.bt.bt .bt-num.is-cold116 { font-size: calc(40px * var(--k77)); color: #a8e1ff; }
+.sm62-power.is-cold116 b { color: #9fdcff; }
+/* the Database: Frostspine's row under the bars */
+.g116-frost { flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 22px; padding-top: 12px; border-top: 1px dashed var(--g-line); }
+
 </style>
 </head>
 <body>
@@ -16868,7 +16877,9 @@ const COIN_NAMES102 = { coinB: "Bronze Coin", coinS: "Silver Coin", coinG: "Gold
 const COIN_TINT102 = { coinB: "#d58b4c", coinS: "#d3dce2", coinG: "#f2b632" };
 Object.assign(CODE_ITEMS86, COIN_NAMES102, { stam94: "Stamina Potion" });
 const esc102 = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
-const coinOf102 = (h) => (h ? COIN_OF102[baseRarity(h)] ?? null : null);
+/** Round 116: the rarity a hero has reached in this mode: a super awakened SR is an SSR, and its copies are SSR Coins (past LR, Z: the LR Coin). */
+const rarNow116 = (h) => { const b = baseRarity(h); return (isAdmin() ? ADMIN_EVO[h.id] : PLAYER.player.roster[h.id]?.evo) ? NEXT_RARITY[b] ?? b : b; };
+const coinOf102 = (h) => { if (!h) return null; const r = rarNow116(h); return COIN_OF102[r] ?? (r === "Z" ? "coinL" : null); };
 const coinName102 = (k, n = 1) => `${COIN_NAMES102[k] ?? k}${n === 1 ? "" : "s"}`;
 const coinIcon102 = (k, cls = "") => { const r = COIN_RAR104[k] ?? "SSR"; return `<span class="c102 c104 tier-${RARITY_LEVEL[r]} ${cls}" data-r="${r}" style="--cc:${COIN_TINT102[k] ?? "#f2b632"}" aria-hidden="true"><i class="c104-m"></i><b class="c104-t">${r}</b></span>`; };
 /** A copy with no room left in Copies: a coin of the hero's rarity, else gold as before. Says what it gave. */
@@ -16952,6 +16963,16 @@ const pieceSay104 = (g = {}) => {
  * chest the Database's own wares and bundles can give («goldchest-R|SR|SSR»).
  * «il mirror shard non abbiamo detto al player cosa fa, fai in modo che nello shop venga specificato». */
 const BAL106 = { from: 3, bars: { common: 3, elite: 4, mini: 6, boss: 7 }, dmg: 20 };
+/* ══════════ Round 116 (2026-11-13) · the 5th map, Frostspine: no HP bars, a harder bite, the cold ══════════
+ * The user: «In questa mappa le barre di vita non ci sono, dobbiamo trovare un altro modo per rendere il gioco "avvincente" ma senza
+ * limitare i danni che può fare il player. Aumenta del 50% l'attacco dei nemici base di questa area … mettiamo una passiva in questa
+ * zona, se non hai almeno un personaggio fuoco in campo subisci ogni tuo inizio turno il 10% di danno da freddo come danno
+ * ambientale». So in Frostspine (map 5, region 4) no enemy has HP bars; its common enemies hit `base`% harder (the others as from
+ * map 4 on, BAL106.dmg); at the start of each of your turns, with no Fire hero standing on the field, every hero there loses `cold`%
+ * of their max HP: DEF, shields and Evasion do not stop it. The numbers: the Database, page Nemici (the pack's bal106, its «frost»). */
+const BAL116 = { map: 4, base: 50, cold: 10 };
+/** The cold on a Frostspine stage's sheet. */
+const coldSay116 = () => `<p class="sm62-power is-cold116"><b>The cold</b> Without a Fire hero on the field, every hero loses ${BAL116.cold}% of their max HP at the start of each of your turns.</p>`;
 /** The Database's numbers (the map counts from 1 there, from 0 here); anything missing or odd keeps the game's own. */
 const bal106Read = (x) => {
   const b = x && typeof x === "object" && !Array.isArray(x) ? x : {};
@@ -16959,6 +16980,10 @@ const bal106Read = (x) => {
   BAL106.from = n(b.from, 1, 8, 4) - 1;
   for (const [k, d] of [["common", 3], ["elite", 4], ["mini", 6], ["boss", 7]]) BAL106.bars[k] = n(b.bars?.[k], 1, 20, d);
   BAL106.dmg = n(b.dmg, 0, 300, 20);
+  // round 116: Frostspine's own two
+  const fr116 = b.frost && typeof b.frost === "object" && !Array.isArray(b.frost) ? b.frost : {};
+  BAL116.base = n(fr116.base, 0, 300, 50);
+  BAL116.cold = n(fr116.cold, 0, 50, 10);
 };
 
 /* ── the gold chests ── */
@@ -18186,7 +18211,7 @@ const STORY62 = (() => {
     const powers = mc && !(s.waves.at(-1).some((t) => t.startsWith("king:"))) ? mechSay(mc, attr).map((t) => (i === 99 && t.startsWith("<b>Ward</b>") ? WARD_HINT107 : t)) : [];
     const star = (on, text) => `<li class="${on ? "is-on" : ""}"><i aria-hidden="true"></i><span>${text}</span></li>`;
     return `${r ? `<p class="sm62-rule"><b>${ruleName(r, STORY_REGIONS[s.reg].attr)}</b> ${ruleSay(r, STORY_REGIONS[s.reg].attr)}</p>` : ""}
-      ${powers.map((t) => `<p class="sm62-power">${t}</p>`).join("")}
+      ${powers.map((t) => `<p class="sm62-power">${t}</p>`).join("")}${s.reg === BAL116.map ? coldSay116() : ""}
       <ul class="sm62-goals" aria-label="Stars">${star(won, "Win the fight")}${goalsOf(i).map((g, k) => star(got[k], goalSay(g, i))).join("")}</ul>`;
   };
   /** The goals at the end of a fight: the ones met this time, and the ones met before. */
@@ -19163,6 +19188,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     el.q.innerHTML = Array.from({ length: slots }, (_, i) => {
       const p = F.plan[i];
       if (!p) return '<span class="bt-qslot"></span>';
+      if (pr112Dark(p.c)) return `<span class="bt-qslot is-full is-dark112" data-qi="${i}" aria-label="A dark card: you see it when it plays">${pr112Back()}</span>`;
       const h = cardH(p.c);
       return `<span class="bt-qslot is-full${p.c.owner === "rin" && talentOn(F.team.find((m) => m.id === "rin")) ? " is-ablaze" : (p.c.owner === "oreh" || p.c.owner === "stranger") && assaultOn(F.team.find(isOreh)) ? " is-assault78" : p.c.owner === "johta" && flameOn82(F.team.find(isJohta)) ? " is-flame82" : ""}" data-qi="${i}">${skillCard(h, p.c.move, { rank: p.c.rank, ult: p.c.ult, trueForm: isTrue({ id: p.c.owner }), flame: p.c.owner === "johta" && flameOn82(F.team.find(isJohta)) })}</span>`;
     }).join("");
@@ -21219,6 +21245,38 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     guardY: { name: "Weighing of the Heart", say: "A blow that takes more than 15% of its HP comes back: the striker takes a quarter of it, as Light. Its blows go through Evasion." },
   };
   const ab106 = (e) => AB106[kind106(e)] ?? null;
+  /* ══ round 116 · Frostspine (map 5): no HP bars, its common enemies bite harder, and the cold (BAL116, the Database's numbers) ══ */
+  const frost116 = () => reg106() === BAL116.map;
+  /** A common enemy: no boss of any kind, no mini boss, no royal, no elite. */
+  const common116 = (e) => !!e && !(e.regal || e.court || e.boss || e.mini || e.royal || e.elite);
+  /** The cold, at the start of each of your turns (the user: «se non hai almeno un personaggio fuoco in campo subisci ogni tuo inizio
+   *  turno il 10% di danno da freddo come danno ambientale»): with no Fire hero standing on the field, every hero there loses
+   *  BAL116.cold % of their max HP; DEF, shields and Evasion do not stop it, and it can knock a hero out. True if the team fell. */
+  const cold116 = async () => {
+    if (!frost116() || !(BAL116.cold > 0)) return false;
+    const team = F.team.filter((m) => !m.ko);
+    if (!team.length) return false;
+    const fire = team.find((m) => [].concat(m.h.attr).includes("fire"));
+    if (fire) {
+      if (F.warm116 !== run) { F.warm116 = run; logIt("state", "Frostspine: the cold", `${fire.h.name} is Fire: the cold does not bite`); toast(`${fire.h.name} keeps the cold away: a Fire hero is on the field`); }
+      return false;
+    }
+    F.warm116 = null;
+    // said once a fight (F lives on from fight to fight: the run tells them apart)
+    if (F.cold116 !== run) { F.cold116 = run; await banner("the cold", "is-enemy"); toast(`No Fire hero on the field: the cold takes ${BAL116.cold}% of every hero's HP at the start of each of your turns`); }
+    for (const m of team.filter((x) => !untouched78(x, ""))) {
+      if (m.ko) continue;
+      const p = memAt(m), i = F.team.indexOf(m), dmg = Math.max(1, Math.round((m.max * BAL116.cold) / 100));
+      m.hp = Math.max(0, m.hp - dmg);
+      number(p.cx, p.cy, dmg, "is-cold116", "cold");
+      logIt("foe", `${m.h.name} takes the cold`, `${BAL116.cold}% of ${pron(m).her} max HP · no Fire hero on the field`, fmt(dmg));
+      if (m.hp === 0) { paintTeam(); await knockOut(i); }
+    }
+    paintTeam();
+    await hold(420);
+    if (F.team.every((m) => m.ko)) { finish(false); return true; }
+    return false;
+  };
   /** How many bars: the region's boss, a mini boss or a chapter's boss, an elite, everyone else. */
   const barsOf106 = (e) => {
     const b = BAL106.bars, i = STORY.stages.indexOf(run.stage);
@@ -21231,7 +21289,11 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     const on = reg106() >= BAL106.from;
     for (const e of F.foes) {
       const k = kind106(e);
-      if (on) {
+      if (frost116()) {
+        e.bars106 = 1;
+        const up = common116(e) ? BAL116.base : on ? BAL106.dmg : 0;
+        if (up) e.atk = Math.round(e.atk * (1 + up / 100));
+      } else if (on) {
         e.bars106 = Math.max(1, barsOf106(e));
         if (BAL106.dmg) e.atk = Math.round(e.atk * (1 + BAL106.dmg / 100));
       }
@@ -21243,6 +21305,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
       if (k === "lancer") e.lc106 = 0;
     }
     if (on && F.foes.some((e) => e.bars106 > 1)) logIt("sys", "HP bars", `from map ${BAL106.from + 1} on: a blow empties at most the bar it lands in · enemies hit ${BAL106.dmg}% harder`);
+    if (frost116() && F.wave === 0) logIt("sys", "Frostspine", `no HP bars · common enemies hit ${BAL116.base}% harder · with no Fire hero on the field, the cold takes ${BAL116.cold}% of every hero's HP at the start of each of your turns`);
   };
   /** What a loss of HP may take (every hit passes here, through floor78): the gear plating first, no more than 25% while the mask
    *  holds, and no more than the bar it lands in. Heals go through as they are. */
@@ -23541,6 +23604,7 @@ void main() {
     paintTeam();
     paintCtrl();
     await banner("your turn", "is-you");
+    if (await cold116()) return;
     if (pr114Deep()) await pr114Turn(); else { await deal(); pr112Cover(); }
     if (F.bedsideAgain) await bedside();
     await first89();
@@ -24183,6 +24247,7 @@ void main() {
     paulTurn();
     turn65();
     turn101();
+    if (await cold116()) { busy = false; return; }
     await deal();
     await announce62();
     await bedside();
@@ -29804,6 +29869,22 @@ const B106 = () => { const b = D.bal106 && typeof D.bal106 === "object" && !Arra
 const BAL_F106 = [["from", "Da mappa", 4, 1, 8, "", 1], ["bars.common", "Barre: comuni", 3, 1, 20, "", 1], ["bars.elite", "Barre: élite", 4, 1, 20, "", 1], ["bars.mini", "Barre: mini boss", 6, 1, 20, "", 1], ["bars.boss", "Barre: boss", 7, 1, 20, "", 1], ["dmg", "Danno dei nemici", 20, 0, 300, "%", 5]];
 const balGet106 = (k, d) => { const b = B106(), v = k.startsWith("bars.") ? b.bars[k.slice(5)] : b[k]; return v == null || v === "" || !Number.isFinite(+v) ? d : +v; };
 const balSay106 = () => `Dalla mappa ${balGet106("from", 4)}: barre ${balGet106("bars.common", 3)} ai comuni, ${balGet106("bars.elite", 4)} alle élite, ${balGet106("bars.mini", 6)} ai mini boss, ${balGet106("bars.boss", 7)} ai boss · danno dei nemici +${balGet106("dmg", 20)}%`;
+/* ══ round 116 · nel Database, pagina Nemici: la mappa 5 (Frostspine) senza barre di vita, l'attacco in più dei suoi nemici base e il
+ *  freddo quando in campo non c'è un eroe Fuoco (in D.bal106.frost, arriva ai giocatori con Manda online) ══ */
+const FROST_F116 = [["base", "Nemici base: attacco", 50, 0, 300, "%", 5], ["cold", "Freddo senza Fuoco", 10, 0, 50, "%", 1]];
+const frostGet116 = (k, d) => { const v = B106().frost?.[k]; return v == null || v === "" || !Number.isFinite(+v) ? d : +v; };
+const frostSay116 = () => `Frostspine: nemici base +${frostGet116("base", 50)}% di attacco · senza un eroe Fuoco in campo il freddo toglie il ${frostGet116("cold", 10)}% degli HP a ogni inizio turno`;
+/** Sotto le barre: i due numeri di Frostspine. */
+const frostBox116 = () => {
+  const fr = mk("div", "g116-frost");
+  fr.innerHTML = `<div class="g106-bal-h"><b>Mappa 5 · Frostspine</b><small>Qui niente barre di vita. I nemici base fanno più danno degli altri, e senza un eroe Fuoco in campo il freddo toglie a ogni eroe una parte dei suoi HP all'inizio di ogni turno del giocatore.</small></div><div class="g106-bal-f" data-f116></div>`;
+  const f = qs("[data-f116]", fr);
+  for (const [k, label, d, lo, hi, unit, step] of FROST_F116) {
+    const n = numField({ label, value: frostGet116(k, d), min: lo, max: hi, step, unit, onInput: (v) => { const b = B106(); b.frost = { ...(b.frost && typeof b.frost === "object" ? b.frost : {}), [k]: v }; change("Nemici", "bal116", frostSay116(), n); } });
+    f.append(n);
+  }
+  return fr;
+};
 /** In cima alla pagina Nemici: da quale mappa le barre di vita e il danno in più, e quanti. */
 const bal106Box = (host) => {
   const arch = qs(".g-arch", host), top = qs(".g-arch-top", host);
@@ -29818,6 +29899,7 @@ const bal106Box = (host) => {
     const n = numField({ label, value: balGet106(k, d), min: lo, max: hi, step, unit, onInput: (v) => { const b = B106(); if (k.startsWith("bars.")) b.bars[k.slice(5)] = v; else b[k] = v; title(); change("Nemici", "bal106", balSay106(), n); } });
     f.append(n);
   }
+  box.append(frostBox116());
   top.after(box);
   arch.classList.add("has-bal106");
 };
@@ -40572,7 +40654,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-12-2035";
+const BUILD = "2026-11-13-0832";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
