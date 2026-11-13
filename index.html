@@ -18549,7 +18549,7 @@ const FIELD62 = (() => {
     const W = host.clientWidth, H = host.clientHeight;
     if (!W || !H) return;
     if (g.hz) {
-      const c83 = sideOf(run), r83 = run.kind === "battle" ? run.stage?.reg : null, pic83 = { 0: "goblin-hollow", 1: "crimson-reach", 2: "tidal-shelf", 3: "gilded-steppe" }[r83];
+      const c83 = sideOf(run), r83 = run.kind === "battle" ? run.stage?.reg : null, pic83 = { 0: "goblin-hollow", 1: "crimson-reach", 2: "tidal-shelf", 3: "gilded-steppe", 4: "frostspine" }[r83];
       const L83 = mk("div", `bf62 bf83${g.pc ? " is-pc" : " is-phone"}`);
       L83.innerHTML = `<div class="bf83-top" style="height:${g.line}px;--c:${c83.c};--d:${c83.d}">${pic83 ? `<img src="art/story/talk-${pic83}.webp" alt="" draggable="false">` : ""}</div><div class="bf83-strip" style="top:${g.line}px;height:${g.strip}px"></div><div class="bf83-low" style="top:${g.line2}px"></div>`;
       bg.append(L83);
@@ -42346,7 +42346,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-13-2252";
+const BUILD = "2026-11-13-2301";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
