@@ -8310,6 +8310,29 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
 /* the Database: Frostspine's row under the bars */
 .g116-frost { flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 22px; padding-top: 12px; border-top: 1px dashed var(--g-line); }
 
+/* ══ round 117 · Frostspine's ice: frozen cards in the hand, enemies turned to ice statues ══ */
+/* a frozen card: the card under a glaze of ice, with the card's own cut corner, and a tag */
+.bt-card.is-ice117 > .sc { filter: saturate(0.4) brightness(0.88) contrast(1.06); }
+.bt-card.is-ice117::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 1.3em), calc(100% - 1.3em) 100%, 0 100%);
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgb(236 248 255 / 0.62), transparent 62%),
+    radial-gradient(90% 50% at 85% 100%, rgb(214 240 255 / 0.4), transparent 70%),
+    linear-gradient(162deg, rgb(206 236 255 / 0.32), rgb(120 186 232 / 0.16) 46%, rgb(226 245 255 / 0.42)),
+    repeating-linear-gradient(118deg, rgb(255 255 255 / 0.14) 0 0.07em, transparent 0.07em 0.95em),
+    repeating-linear-gradient(32deg, rgb(255 255 255 / 0.09) 0 0.05em, transparent 0.05em 1.35em);
+  box-shadow: inset 0 0 0 0.13em rgb(222 245 255 / 0.9), inset 0 0 1.3em rgb(160 214 250 / 0.6);
+  mix-blend-mode: screen; }
+.bt-card.is-ice117::before { content: "frozen"; position: absolute; left: 50%; top: 0.55em; z-index: 4; translate: -50% 0; padding: 0.2em 0.6em 0.16em; pointer-events: none;
+  font: 700 1.15em/1 var(--font-display); letter-spacing: 0.06em; text-transform: uppercase; color: #06233a;
+  background: linear-gradient(180deg, #f4fbff, #bfe6ff); box-shadow: 0 0.1em 0.5em rgb(0 20 40 / 0.55); }
+.bt-card.is-ice117 { cursor: not-allowed; }
+/* an ice statue: the enemy's own picture, frozen solid */
+.bt-foe.is-statue117 img.card-art-img, .bt-foe.is-statue117 .bt-cardbox .card { filter: grayscale(1) sepia(0.22) hue-rotate(168deg) saturate(2.4) brightness(1.2) contrast(1.12) drop-shadow(0 0 0.45em rgb(150 215 255 / 0.65)); transition: filter 520ms cubic-bezier(0.2, 0, 0, 1); }
+.bt-foe.is-statue117 .bt-steam { display: none; }
+.bt-state--ice { color: #bfe9ff; }
+@media (prefers-reduced-motion: reduce) { .bt-foe.is-statue117 img.card-art-img { transition: none; } }
+
 </style>
 </head>
 <body>
@@ -16970,9 +16993,11 @@ const BAL106 = { from: 3, bars: { common: 3, elite: 4, mini: 6, boss: 7 }, dmg: 
  * ambientale». So in Frostspine (map 5, region 4) no enemy has HP bars; its common enemies hit `base`% harder (the others as from
  * map 4 on, BAL106.dmg); at the start of each of your turns, with no Fire hero standing on the field, every hero there loses `cold`%
  * of their max HP: DEF, shields and Evasion do not stop it. The numbers: the Database, page Nemici (the pack's bal106, its «frost»). */
-const BAL116 = { map: 4, base: 50, cold: 10 };
+const BAL116 = { map: 4, base: 50, cold: 10, ice: 1, iceCold: 2, rise: 2, riseHp: 50 };
 /** The cold on a Frostspine stage's sheet. */
-const coldSay116 = () => `<p class="sm62-power is-cold116"><b>The cold</b> Without a Fire hero on the field, every hero loses ${BAL116.cold}% of their max HP at the start of each of your turns.</p>`;
+const coldSay116 = () => `<p class="sm62-power is-cold116"><b>The cold</b> Without a Fire hero on the field, every hero loses ${BAL116.cold}% of their max HP at the start of each of your turns.</p>`
+  + (BAL116.ice || BAL116.iceCold ? `<p class="sm62-power is-cold116"><b>Frozen cards</b> At the start of your turn the cold freezes ${BAL116.ice === 1 ? "a card" : `${BAL116.ice} cards`} in your hand, ${BAL116.iceCold} with no Fire hero on the field: they cannot be played that turn. A Fire card played thaws them.</p>` : "")
+  + (BAL116.rise ? `<p class="sm62-power is-cold116"><b>Ice statues</b> An enemy felled by no Fire blow turns to ice and rises ${BAL116.rise} turn${BAL116.rise === 1 ? "" : "s"} later with ${BAL116.riseHp}% of its HP, unless a blow breaks it first. Bosses and mini bosses never do.</p>` : "");
 /** The Database's numbers (the map counts from 1 there, from 0 here); anything missing or odd keeps the game's own. */
 const bal106Read = (x) => {
   const b = x && typeof x === "object" && !Array.isArray(x) ? x : {};
@@ -16984,6 +17009,11 @@ const bal106Read = (x) => {
   const fr116 = b.frost && typeof b.frost === "object" && !Array.isArray(b.frost) ? b.frost : {};
   BAL116.base = n(fr116.base, 0, 300, 50);
   BAL116.cold = n(fr116.cold, 0, 50, 10);
+  // round 117: the frozen cards and the ice statues
+  BAL116.ice = n(fr116.ice, 0, 3, 1);
+  BAL116.iceCold = n(fr116.iceCold, 0, 4, 2);
+  BAL116.rise = n(fr116.rise, 0, 5, 2);
+  BAL116.riseHp = n(fr116.riseHp, 10, 100, 50);
 };
 
 /* ── the gold chests ── */
@@ -17355,6 +17385,7 @@ BT_STATE_ICON.charm = '<path d="M12 20.5C12 20.5 4 15.6 4 9.6A4.1 4.1 0 0 1 12 7
 BT_STATE_ICON.aim = '<path d="M12 4A8 8 0 1 1 11.99 4 M12 8.5A3.5 3.5 0 1 1 11.99 8.5 M12 1V5 M12 19V23 M1 12H5 M19 12H23"/>';
 BT_STATE_ICON.sun = '<path d="M12 7.5A4.5 4.5 0 1 1 11.99 7.5 M12 1.5V4.5 M12 19.5V22.5 M1.5 12H4.5 M19.5 12H22.5 M4.6 4.6L6.7 6.7 M17.3 17.3L19.4 19.4 M4.6 19.4L6.7 17.3 M17.3 6.7L19.4 4.6"/>';
 BT_STATE_ICON.stone = '<path d="M5 19L8 7L14 4L19 9L18 18Z M8 7L13 11L19 9 M13 11L12 19"/>';
+BT_STATE_ICON.ice = '<path d="M12 2.5V21.5 M3.8 7.25L20.2 16.75 M3.8 16.75L20.2 7.25 M9.6 4.2L12 6.6L14.4 4.2 M9.6 19.8L12 17.4L14.4 19.8 M4.3 10.4L7.6 11.3L6.7 8 M19.7 13.6L16.4 12.7L17.3 16 M4.3 13.6L7.6 12.7L6.7 16 M19.7 10.4L16.4 11.3L17.3 8"/>';
 BT_STATE_ICON.ice = '<path d="M12 2V22 M3.3 7L20.7 17 M3.3 17L20.7 7 M9.5 3.5L12 6L14.5 3.5 M9.5 20.5L12 18L14.5 20.5"/>';
 const btIcon = (k) => `<svg viewBox="0 0 24 24" aria-hidden="true">${BT_STATE_ICON[k]}</svg>`;
 /** Cards that look after the team rather than hit. */
@@ -18825,6 +18856,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   const stateChips = (list) => list.map(([k, n, label]) => `<span class="bt-state bt-state--${k}" title="${label}">${btIcon(k)}${n ? `<b>${n}</b>` : ""}</span>`).join("");
   const foeStates = (e) => {
     const s = chips106(e);
+    if (e.statue117 > 0 && !e.dead) return s;
     if (e.flame) s.push(["flame", e.flame, `Eternal Flame ×${e.flame}: deals ${Math.round((1 - Math.pow(0.65, e.flame)) * 100)}% less, takes ${35 * e.flame}% more. It never ends.`]);
     if (e.sword) s.push(["sword", e.sword, `Black Sword ×${e.sword}: takes ${(7.5 * e.sword).toFixed(1)}% more. It never ends.`]);
     if (e.burn) s.push(["burn", e.burn.n, `Burn ×${e.burn.n}: ${3 * e.burn.n}% of its max HP a turn, ${e.burn.t} turn${e.burn.t === 1 ? "" : "s"} left`]);
@@ -18887,6 +18919,8 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
       paintHp106(node, e);
       paintKit(e, node);
       pr112Paint(e, node);
+      node.classList.toggle("is-statue117", e.statue117 > 0 && !e.dead);
+      if (e.statue117 > 0 && !e.dead) node.dataset.mech62 = `ice statue · rises in ${e.statue117}`;
       const states = foeStates(e);
       $("[data-states]", node).innerHTML = stateChips(states);
       node.setAttribute("aria-label", `${e.name}, level ${e.level}, ${e.rarity}, ${ATTRIBUTES[e.attr].label}, ${fmt(e.hp)} HP${states.length ? `, ${states.map((s) => s[2]).join(", ")}` : ""}${e.rage ? ", enraged" : ""}. Tap to target, hold for its file.`);
@@ -19197,13 +19231,15 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   };
   const paintCard = (node, c) => {
     const tf = c.owner === "tachibana" && !!F.trueForm, fl82 = c.owner === "johta" && flameOn82(F.team.find(isJohta));
-    const key = `${c.owner}|${c.move}|${c.rank}|${!!c.ult}|${!!c.wild}|${tf}|${!!c.free}|${c.ver ?? ""}|${memberOf(c.owner)?.form ?? ""}|${fl82}|${pr112Dark(c)}`;
+    const key = `${c.owner}|${c.move}|${c.rank}|${!!c.ult}|${!!c.wild}|${tf}|${!!c.free}|${c.ver ?? ""}|${memberOf(c.owner)?.form ?? ""}|${fl82}|${pr112Dark(c)}|${ice117(c)}`;
     if (node.dataset.key === key) return;
     node.dataset.key = key;
     node.dataset.rank = pr112Dark(c) ? "d" : c.wild ? "w" : c.ult ? "u" : String(c.rank);
+    node.classList.toggle("is-ice117", ice117(c));
     const h = c.wild ? null : cardH(c);
     node.innerHTML = pr112Dark(c) ? pr112Back() : c.wild ? skillCard(null, "", { wild: true }) : skillCard(h, c.move, { rank: c.rank, ult: c.ult, trueForm: tf, flame: fl82 }) + (c.free ? '<span class="bt-free">free</span>' : "");
     node.setAttribute("aria-label", pr112Dark(c) ? "A dark card: you see it when it plays. Tap to choose it." : c.wild ? "Wild card: move it beside a card to copy it" : `${c.move}${c.ult ? ", ultimate" : `, rank ${BT_NUM[c.rank]}`}, ${h.name}: ${effectOf(h, c.move, c.ult)} Tap to choose, drag to move, hold for its file.`);
+    if (ice117(c)) node.setAttribute("aria-label", `Frozen this turn: ${node.getAttribute("aria-label")} A Fire card thaws it.`);
   };
   /** Cards sit in fixed slots from the left; each breathes in the colour of its rank (R1). */
   const paintHand = ({ order = F.hand, skip = null, stagger = false, instant = false } = {}) => {
@@ -20636,6 +20672,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     if (e.dead) return;
     if (g78Can() && e === g78Boss()) { e.hp = g78Thr(e); return; }
     if (fall106(e, by)) return;
+    if (statue117(e, by)) return;
     e.dead = true;
     logIt("ko", `${e.name} falls`);
     foesRage();
@@ -21247,6 +21284,86 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   const ab106 = (e) => AB106[kind106(e)] ?? null;
   /* ══ round 116 · Frostspine (map 5): no HP bars, its common enemies bite harder, and the cold (BAL116, the Database's numbers) ══ */
   const frost116 = () => reg106() === BAL116.map;
+  /* ══ round 117 · Frostspine's ice (the user, 13 Nov: «Facciamo sia statue di ghiaccio che carte congelate») ══
+   *  · frozen cards: at the start of your turn the cold freezes BAL116.ice cards of your hand (BAL116.iceCold with no Fire hero on the
+   *    field): they cannot be chosen, moved, copied by the wild or fused that turn. A Fire hero's card chosen thaws them all. The mark
+   *    is the turn it froze on, kept on the card, so «reset» brings the ice back with the hand and the next turn starts clean;
+   *  · ice statues: a common or elite enemy felled by no Fire blow turns to ice instead of falling: it does not act, it keeps the wave
+   *    going, and BAL116.rise enemy turns later it rises with BAL116.riseHp % of its HP; any blow on it (one card, or an area) breaks
+   *    it for good, and only then it falls (its chest, its dust). Bosses and mini bosses never turn to ice. */
+  const ice117 = (c) => !!c && c.ice117 === F.turn && frost116();
+  const isFire117 = (m) => !!m && [].concat(m.h?.attr).includes("fire");
+  /** A frozen card tapped or dragged: it stays, and says why. */
+  const iceNo117 = (c) => {
+    toast("Frozen this turn: play a Fire card to thaw it");
+    const node = cardEl(c);
+    if (node && !REDUCED) node.querySelector(".sc")?.animate([{ translate: "0 0" }, { translate: "-0.35em 0" }, { translate: "0.35em 0" }, { translate: "-0.2em 0" }, { translate: "0 0" }], { duration: 320, easing: "ease-out" });
+  };
+  /** A Fire hero's card chosen: every frozen card thaws. */
+  const thaw117 = (c) => {
+    if (!frost116() || !F.hand.some(ice117) || !isFire117(F.team.find((m) => m.id === c.owner))) return;
+    const n = F.hand.filter(ice117).length;
+    for (const x of F.hand) if (ice117(x)) x.ice117 = 0;
+    logIt("buff", `${c.move} thaws the hand`, `${n} frozen card${n === 1 ? "" : "s"} can be played again`);
+    toast(`The fire thaws your frozen card${n === 1 ? "" : "s"}`);
+  };
+  /** The start of your turn, once the hand is dealt: the cold freezes its cards. */
+  const freeze117 = async () => {
+    if (!frost116()) return;
+    const fire = alive().some(isFire117), n = fire ? BAL116.ice : BAL116.iceCold;
+    const pool = F.hand.filter((c) => !c.ult && !c.wild);
+    if (!(n > 0) || !pool.length) return;
+    for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+    const pick = pool.slice(0, n);
+    for (const c of pick) c.ice117 = F.turn;
+    paintHand();
+    if (!REDUCED) for (const c of pick) { const node = cardEl(c); if (node) { node.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 520, easing: "cubic-bezier(0.2, 0, 0, 1)", pseudoElement: "::after" }); node.querySelector(".sc")?.animate([{ filter: "brightness(2.2) saturate(0.2)" }, { filter: "none" }], { duration: 520, easing: "cubic-bezier(0.2, 0, 0, 1)" }); } }
+    logIt("state", `The cold freezes ${pick.length === 1 ? "a card" : `${pick.length} cards`}`, `${pick.map((c) => c.move).join(", ")} · not this turn · ${fire ? "a Fire card thaws them" : "no Fire hero on the field: one more freezes"}`);
+    if (F.ice117said !== run) { F.ice117said = run; toast(`The cold freezes ${pick.length === 1 ? "a card" : `${pick.length} cards`} in your hand: play a Fire card to thaw ${pick.length === 1 ? "it" : "them"}`); }
+    await hold(420);
+  };
+  /** An enemy falls: a statue breaks for good (false: the fall goes on); a common or elite enemy felled by no Fire blow turns to
+   *  ice (true: it does not fall yet). */
+  const statue117 = (e, by) => {
+    const p = foeAt(e);
+    if (e.statue117 > 0) {
+      e.statue117 = 0;
+      number(p.x, p.y, "shattered", "is-cold116");
+      logIt("you", `${e.name}: the ice statue breaks`, "it falls for good");
+      return false;
+    }
+    if (!frost116() || !(BAL116.rise > 0) || e.regal || e.court || e.boss || e.mini || e.royal || isFire117(by)) return false;
+    e.statue117 = BAL116.rise;
+    // 1 HP: the checks that follow the blow that felled it («0 HP: it falls») must not break it at once; the next blow does
+    e.hp = 1;
+    // frozen solid: what it carried goes with the cold
+    Object.assign(e, { rage: false, charge62: 0, wind106: 0, stun: false, frozen: 0, petrify: 0, time: 0, poison: 0, bleed: 0, burn: null, bruise: null, mark: 0, weaken: 0 });
+    shards(p.x, p.y, "#cfeeff", 12, p.w ?? 100);
+    number(p.x, p.y, "ice statue", "is-cold116");
+    logIt("foe", `${e.name} turns to ice`, `it rises in ${BAL116.rise} turn${BAL116.rise === 1 ? "" : "s"} with ${BAL116.riseHp}% of its HP · one blow breaks it · a Fire blow leaves no statue`);
+    if (F.statue117said !== run) { F.statue117said = run; toast(`${e.name} turns to ice: break the statue with a blow, or it rises in ${BAL116.rise} turn${BAL116.rise === 1 ? "" : "s"}`); }
+    paintFoes();
+    return true;
+  };
+  /** The end of the enemy turn: the statues count down, and rise. */
+  const rise117 = async () => {
+    const up = [];
+    for (const e of F.foes) {
+      if (e.dead || !(e.statue117 > 0)) continue;
+      e.statue117 -= 1;
+      if (e.statue117 > 0) continue;
+      e.hp = Math.max(1, Math.round((e.max * BAL116.riseHp) / 100));
+      up.push(e);
+    }
+    paintFoes();
+    for (const e of up) {
+      const p = foeAt(e);
+      shards(p.x, p.y, "#cfeeff", 14, p.w ?? 100);
+      number(p.x, p.y, "rises", "is-crit");
+      logIt("foe", `${e.name} breaks out of the ice`, `it rises with ${BAL116.riseHp}% of its HP`);
+    }
+    if (up.length) { toast(`${up.map((e) => e.name).join(", ")} ${up.length === 1 ? "breaks" : "break"} out of the ice`); await hold(520); }
+  };
   /** A common enemy: no boss of any kind, no mini boss, no royal, no elite. */
   const common116 = (e) => !!e && !(e.regal || e.court || e.boss || e.mini || e.royal || e.elite);
   /** The cold, at the start of each of your turns (the user: «se non hai almeno un personaggio fuoco in campo subisci ogni tuo inizio
@@ -21547,6 +21664,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   const chips106 = (e) => {
     const s = [], k = kind106(e);
     if (e.dead) return s;
+    if (e.statue117 > 0) { s.push(["ice", e.statue117, `Ice statue: it rises in ${e.statue117} turn${e.statue117 === 1 ? "" : "s"} with ${BAL116.riseHp}% of its HP · one blow breaks it`]); return s; }
     if (ward106() === e) s.push(["shield", 0, "Squire's Duty: a Mane Squire guards it · single-target blows deal 40% less"]);
     if (k === "mask") s.push(["shield", e.mask106 === 1 ? 3 - (e.maskN106 ?? 0) : 0, e.mask106 === 1 ? `Behind the Mask: no blow takes more than 25% of its HP · ${3 - (e.maskN106 ?? 0)} more blow${3 - (e.maskN106 ?? 0) === 1 ? "" : "s"} break it` : "Its mask is broken: it attacks twice a turn, and takes 30% more"]);
     if (k === "hawk") s.push(["spiral", 0, e.dodge106 === F.turn ? "Updraft: she has dodged this turn" : "Updraft: the first single-target blow this turn misses her, and she dives"]);
@@ -22828,7 +22946,7 @@ void main() {
     for (;;) {
       const i = F.hand.findIndex((c, k) => {
         const d = F.hand[k + 1];
-        return d && !pr112Dark(c) && !pr112Dark(d) && !c.ult && !d.ult && !c.wild && !d.wild && c.owner === d.owner && c.move === d.move && c.rank === d.rank && c.rank < 3;
+        return d && !pr112Dark(c) && !pr112Dark(d) && !ice117(c) && !ice117(d) && !c.ult && !d.ult && !c.wild && !d.wild && c.owner === d.owner && c.move === d.move && c.rank === d.rank && c.rank < 3;
       });
       if (i < 0) { roarBack(); return; }
       const a = F.hand[i], b = F.hand[i + 1], bn = cardEl(b);
@@ -22900,6 +23018,7 @@ void main() {
     if (busy || F.phase !== "plan" || !F.hand.includes(c)) return;
     if (F.picking) { toast(F.picking.step === "ally" ? "Choose an ally first" : "Choose the enemy first"); return; }
     if (c.wild) { toast("Move the wild beside a card to copy it"); return; }
+    if (ice117(c)) { iceNo117(c); return; }
     const free = !!c.free;
     if (!free && F.moves < 1) { toast("No moves left: fight, or reset the turn"); return; }
     if (!F.foes[F.target] || F.foes[F.target].dead || guarded(F.foes[F.target])) F.target = pickTarget();
@@ -22917,6 +23036,7 @@ void main() {
     const charmed = F.team.find((m) => m.id === c.owner && m.charm > 0);
     if (charmed && !pr112Dark(c) && !BT_SUPPORT.has(c.move) && F.foes.some((e) => !e.dead && (e.regal || e.royal))) toast(`${charmed.h.name} is charmed: her attacks cannot reach Altea or her guards`);
     F.plan.push(step);
+    thaw117(c);
     if (!c.ult && node) { if (pr112Dark(c)) step.orb114 = true; else addOrb(F.team.find((m) => m.id === c.owner), 1, within(node)); }
     paintTeam();
     paintCtrl();
@@ -22946,6 +23066,7 @@ void main() {
   const move = async (c, to) => {
     const from = F.hand.indexOf(c);
     if (from === to) { paintHand(); return; }
+    if (ice117(c)) { paintHand(); iceNo117(c); return; }
     busy = true;
     touch();
     F.hand.splice(from, 1);
@@ -22953,9 +23074,9 @@ void main() {
     F.moves -= 1;
     paintCtrl();
     if (c.wild) {
-      const ok = (x) => x && !x.wild && !x.ult && x.rank < 3 && !pr112Dark(x);
+      const ok = (x) => x && !x.wild && !x.ult && x.rank < 3 && !pr112Dark(x) && !ice117(x);
       const model = ok(F.hand[to - 1]) ? F.hand[to - 1] : ok(F.hand[to + 1]) ? F.hand[to + 1] : null;
-      if (model) { Object.assign(c, { wild: false, owner: model.owner, move: model.move, rank: model.rank }); toast(`The wild copies ${model.move}`); } else if ([F.hand[to - 1], F.hand[to + 1]].some((x) => x && pr112Dark(x))) toast("The wild cannot copy a dark card");
+      if (model) { Object.assign(c, { wild: false, owner: model.owner, move: model.move, rank: model.rank }); toast(`The wild copies ${model.move}`); } else if ([F.hand[to - 1], F.hand[to + 1]].some((x) => x && pr112Dark(x))) toast("The wild cannot copy a dark card"); else if ([F.hand[to - 1], F.hand[to + 1]].some((x) => x && ice117(x))) toast("The wild cannot copy a frozen card");
     }
     paintHand();
     if (!c.wild && !pr112Dark(c)) addOrb(F.team.find((m) => m.id === c.owner), 1, slot(to));
@@ -23415,12 +23536,13 @@ void main() {
     if (!skip78) { await courtTurn(); await royalTurn(); }
     // a wave the poisons finish leaves the next one to wait for your turn
     if (F.foes.every((e) => e.dead)) { if (await nextWave()) return; return newTurn(); }
-    for (const e of skip78 ? [] : F.foes.filter((x) => !x.dead && x.rageChance)) {
+    for (const e of skip78 ? [] : F.foes.filter((x) => !x.dead && !(x.statue117 > 0) && x.rageChance)) {
       e.rage = Math.random() < e.rageChance;
       if (e.rage) { logIt("foe", `${e.name} flies into a rage`, `${e.hits + 1} attacks this turn, ${Math.round(e.ragePower * 100)}% harder`); paintFoes(); toast(`${e.name} flies into a rage: ${e.hits > 1 ? `${e.hits + 1} attacks` : "two attacks"}, ${Math.round(e.ragePower * 100)}% harder`); shake(foeEl(e), true); await hold(700); }
     }
     for (const e of skip78 ? [] : F.foes.filter((x) => !x.dead)) {
       if (!live) return;
+      if (e.statue117 > 0) continue;
       jam106(e);
       if (e.frozen > 0) { logIt("state", `${e.name} is Frozen`, "it cannot act"); const p = foeAt(e); number(p.x, p.y, "frozen", "is-resist"); paintFoes(); await hold(380); continue; }
       if (e.petrify > 0) { logIt("state", `${e.name} is Petrified`, "it cannot act"); const p = foeAt(e); number(p.x, p.y, "petrified", "is-resist"); paintFoes(); await hold(380); continue; }
@@ -23576,6 +23698,7 @@ void main() {
     if (F.queen && --F.queen.turns <= 0) F.queen = null;
     if (F.guard && --F.guard.turns <= 0) F.guard = null;
     if (F.requiem > 0) F.requiem -= 1;
+    await rise117();
     for (const m of doomed) { const i = F.team.indexOf(m); if (i < 0 || m.ko) continue; logIt("ko", `${m.h.name}: Ceaseless Life ends`, "she falls again"); m.hp = 0; await knockOut(i); }
     paintFoes();
     paintTeam();
@@ -23606,6 +23729,7 @@ void main() {
     await banner("your turn", "is-you");
     if (await cold116()) return;
     if (pr114Deep()) await pr114Turn(); else { await deal(); pr112Cover(); }
+    await freeze117();
     if (F.bedsideAgain) await bedside();
     await first89();
     F.phase = "plan";
@@ -23955,7 +24079,7 @@ void main() {
     if (aim >= 0 && aim !== F.target) { F.target = aim; paintFoes(); paintQueue(); }
     const big = Math.max(1, ...alive().map((m) => atkOf(m))) * 3;
     // the cards worth most, as many as the moves left; what helps the team goes first, so the blows that follow get it
-    const worth = F.hand.filter((c) => !c.wild && c.auto85 !== F.turn && (c.free || F.moves > 0)).map((c) => ({ c, v: autoWorth85(c, big) })).filter((x) => x.v > 0).sort((a, b) => b.v - a.v);
+    const worth = F.hand.filter((c) => !c.wild && !ice117(c) && c.auto85 !== F.turn && (c.free || F.moves > 0)).map((c) => ({ c, v: autoWorth85(c, big) })).filter((x) => x.v > 0).sort((a, b) => b.v - a.v);
     const free = worth.filter((x) => x.c.free), paid = worth.filter((x) => !x.c.free).slice(0, F.moves), pick = [...free, ...paid];
     const next = pick.find((x) => !x.c.ult && BT_SUPPORT.has(x.c.move)) ?? pick[0];
     if (next) { next.c.auto85 = F.turn; guard(choose(next.c)); return; }
@@ -24249,6 +24373,7 @@ void main() {
     turn101();
     if (await cold116()) { busy = false; return; }
     await deal();
+    await freeze117();
     await announce62();
     await bedside();
     await first89();
@@ -29871,13 +29996,13 @@ const balGet106 = (k, d) => { const b = B106(), v = k.startsWith("bars.") ? b.ba
 const balSay106 = () => `Dalla mappa ${balGet106("from", 4)}: barre ${balGet106("bars.common", 3)} ai comuni, ${balGet106("bars.elite", 4)} alle élite, ${balGet106("bars.mini", 6)} ai mini boss, ${balGet106("bars.boss", 7)} ai boss · danno dei nemici +${balGet106("dmg", 20)}%`;
 /* ══ round 116 · nel Database, pagina Nemici: la mappa 5 (Frostspine) senza barre di vita, l'attacco in più dei suoi nemici base e il
  *  freddo quando in campo non c'è un eroe Fuoco (in D.bal106.frost, arriva ai giocatori con Manda online) ══ */
-const FROST_F116 = [["base", "Nemici base: attacco", 50, 0, 300, "%", 5], ["cold", "Freddo senza Fuoco", 10, 0, 50, "%", 1]];
+const FROST_F116 = [["base", "Nemici base: attacco", 50, 0, 300, "%", 5], ["cold", "Freddo senza Fuoco", 10, 0, 50, "%", 1], ["ice", "Carte gelate", 1, 0, 3, "", 1], ["iceCold", "Gelate senza Fuoco", 2, 0, 4, "", 1], ["rise", "Statue: turni", 2, 0, 5, "", 1], ["riseHp", "Statue: vita", 50, 10, 100, "%", 5]];
 const frostGet116 = (k, d) => { const v = B106().frost?.[k]; return v == null || v === "" || !Number.isFinite(+v) ? d : +v; };
-const frostSay116 = () => `Frostspine: nemici base +${frostGet116("base", 50)}% di attacco · senza un eroe Fuoco in campo il freddo toglie il ${frostGet116("cold", 10)}% degli HP a ogni inizio turno`;
+const frostSay116 = () => `Frostspine: nemici base +${frostGet116("base", 50)}% di attacco · senza un eroe Fuoco in campo il freddo toglie il ${frostGet116("cold", 10)}% degli HP a ogni inizio turno · carte gelate ${frostGet116("ice", 1)} (${frostGet116("iceCold", 2)} senza Fuoco) · ${frostGet116("rise", 2) ? `statue che si rialzano dopo ${frostGet116("rise", 2)} turni con il ${frostGet116("riseHp", 50)}% degli HP` : "niente statue"}`;
 /** Sotto le barre: i due numeri di Frostspine. */
 const frostBox116 = () => {
   const fr = mk("div", "g116-frost");
-  fr.innerHTML = `<div class="g106-bal-h"><b>Mappa 5 · Frostspine</b><small>Qui niente barre di vita. I nemici base fanno più danno degli altri, e senza un eroe Fuoco in campo il freddo toglie a ogni eroe una parte dei suoi HP all'inizio di ogni turno del giocatore.</small></div><div class="g106-bal-f" data-f116></div>`;
+  fr.innerHTML = `<div class="g106-bal-h"><b>Mappa 5 · Frostspine</b><small>Qui niente barre di vita. I nemici base fanno più danno degli altri, e senza un eroe Fuoco in campo il freddo toglie a ogni eroe una parte dei suoi HP all'inizio di ogni turno del giocatore. A ogni turno il freddo congela delle carte della mano: una carta Fuoco giocata le scongela. Un nemico abbattuto senza un colpo Fuoco diventa una statua di ghiaccio e si rialza dopo qualche turno, se nessuno la rompe; i boss e i mini boss no. «Statue: turni» a 0 toglie le statue.</small></div><div class="g106-bal-f" data-f116></div>`;
   const f = qs("[data-f116]", fr);
   for (const [k, label, d, lo, hi, unit, step] of FROST_F116) {
     const n = numField({ label, value: frostGet116(k, d), min: lo, max: hi, step, unit, onInput: (v) => { const b = B106(); b.frost = { ...(b.frost && typeof b.frost === "object" ? b.frost : {}), [k]: v }; change("Nemici", "bal116", frostSay116(), n); } });
@@ -40654,7 +40779,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-13-0832";
+const BUILD = "2026-11-13-0853";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
