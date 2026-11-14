@@ -8493,6 +8493,216 @@ html[data-s66] .gm *, html[data-s66] .gm *::before, html[data-s66] .gm *::after 
 .tm120-ch { margin: 14px 0 12px; }
 @media (prefers-reduced-motion: reduce) { .tm120-tab, .tm120-pick button[data-tm120-pick] { transition: none; } }
 
+/* ══ round 121 · the talent's glow on the battle figure (glow121.js; lab 120 «bagliore»'s five ways, each hero's chosen in the
+   Database's page Bagliori, else E · shock waves for everyone, the user's pick). Everything sits in the hero's figure
+   box (.bt-cardbox, its font-size the figure's height / 14), behind the picture (.g121) and over it (.g121-over). Every light
+   made from the picture is a canvas drawn once, in a holder exactly over the picture's own box (.g121-b) whose still mask fades
+   it out before the box's four edges (the same numbers as BOX_FADE in glow121.js), so no light follows the picture's straight
+   cut, not even one that moves. Only opacity and transform ever move. The game ignores «reduced motion» in fights, as here. ══ */
+.g121 { position: absolute; inset: 0; display: block; pointer-events: none; }
+.g121-b { position: absolute; display: block;
+  --fx: linear-gradient(to right, transparent 0, rgb(0 0 0 / 0.156) 3%, rgb(0 0 0 / 0.5) 6%, rgb(0 0 0 / 0.844) 9%, #000 12%, #000 88%, rgb(0 0 0 / 0.844) 91%, rgb(0 0 0 / 0.5) 94%, rgb(0 0 0 / 0.156) 97%, transparent 100%);
+  --fy: linear-gradient(to bottom, transparent 0, rgb(0 0 0 / 0.156) 2.5%, rgb(0 0 0 / 0.5) 5%, rgb(0 0 0 / 0.844) 7.5%, #000 10%, #000 93%, rgb(0 0 0 / 0.844) 94.75%, rgb(0 0 0 / 0.5) 96.5%, rgb(0 0 0 / 0.156) 98.25%, transparent 100%);
+  -webkit-mask-image: var(--fx), var(--fy); mask-image: var(--fx), var(--fy); -webkit-mask-composite: source-in; mask-composite: intersect; }
+.g121-w, .g121-l { position: absolute; inset: 0; display: block; }
+.g121-c { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; }
+/* over the figure, the cover of its dark specks: clear but where a dark speck lies inside the light, there the light's own
+   colour; «lighten» keeps the brighter of the two, so a black speck takes the light round it and never reads as a dot */
+.g121-cover .g121-b { mix-blend-mode: lighten; }
+
+/* every start: the light closes onto the body from a little bigger */
+@keyframes g121-in { from { opacity: 0; scale: 1.06; } to { opacity: 1; scale: 1; } }
+.g121-w { transform-origin: 50% 100%; animation: g121-in 360ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+/* every loop breathes between --lo and 1; Reo's fury shakes the light, never his plate */
+@keyframes g121-breathe { from { opacity: var(--lo, 0.55); } to { opacity: 1; } }
+@keyframes g121-shake { 0%, 100% { translate: 0.03em -0.02em; } 50% { translate: -0.03em 0.025em; } }
+.g121-l { animation: g121-breathe var(--bd, 2.2s) ease-in-out infinite alternate; }
+.g121-l.g121-shake { animation: g121-breathe var(--bd, 2.2s) ease-in-out infinite alternate, g121-shake 120ms steps(1, end) infinite; }
+@keyframes g121-spin { to { rotate: 360deg; } }
+@keyframes g121-spin-back { to { rotate: -360deg; } }
+
+/* B · flames that rise: the light pushed a little upward, tongues of flame that stand on the outline and rise a little as they
+   fade (three layers in turn), and once at the start a pillar of light from the ground */
+.g121-B .g121-bglow { --lo: 0.78; --bd: 1.4s; }
+.g121-B .g121-bfls { --lo: 1; }
+@keyframes g121-rise { 0% { opacity: 0; translate: 0 0.12em; } 22% { opacity: 0.95; } 62% { opacity: 0.6; } 100% { opacity: 0; translate: 0 -0.45em; } }
+.g121-fl { opacity: 0; transform-origin: 50% 100%; animation: g121-rise 1.5s linear infinite; animation-delay: var(--dl, 0s); }
+.g121-fl.g121-k1 { --dl: -0.5s; }
+.g121-fl.g121-k2 { --dl: -1s; }
+@keyframes g121-pillar { 0% { opacity: 1; scale: 0.4 0; } 30% { opacity: 1; scale: 1 1; } 100% { opacity: 0; scale: 1.5 1.05; } }
+.g121-pillar { position: absolute; display: block; left: calc(50% - 2.4em); width: 4.8em; top: -6em; bottom: 0; opacity: 0; mix-blend-mode: screen; transform-origin: 50% 100%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--t1) 90%, #fff), color-mix(in srgb, var(--t2) 70%, transparent) 38%, color-mix(in srgb, var(--t3) 30%, transparent) 70%, transparent);
+  animation: g121-pillar 950ms cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+
+/* C · energy line: the old card's lit border, now a line on the outline, a soft light behind it, and a comet that runs round
+   (its window turns, the bright line inside turns back as fast, so only the bright stretch travels) */
+.g121-C .g121-cglow { --lo: 0.7; --bd: 2s; }
+.g121-C .g121-cline { --lo: 0.78; --bd: 2s; }
+.g121-comet { position: absolute; display: block; animation: g121-spin 2.4s linear infinite;
+  -webkit-mask-image: conic-gradient(from 0deg, transparent 0deg 228deg, rgb(0 0 0 / 0.12) 268deg, rgb(0 0 0 / 0.5) 318deg, #000 350deg, transparent 356deg);
+  mask-image: conic-gradient(from 0deg, transparent 0deg 228deg, rgb(0 0 0 / 0.12) 268deg, rgb(0 0 0 / 0.5) 318deg, #000 350deg, transparent 356deg); }
+.g121-comet > .g121-cring { position: absolute; display: block; animation: g121-spin-back 2.4s linear infinite; }
+
+/* D · backlight: a sun behind the head, rays turning very slowly both ways, the light round the body strongest near the head,
+   and a rim lit on the outline's own edge (screened over the picture: the holder, since its mask makes it a group) */
+.g121-D .g121-dglow { --lo: 0.7; --bd: 3.2s; }
+.g121-D .g121-drim { --lo: 0.72; --bd: 2.6s; }
+.g121-D.g121-over .g121-b { mix-blend-mode: screen; }
+@keyframes g121-sun-in { from { opacity: 0; scale: 0.6; } to { opacity: 1; scale: 1; } }
+@keyframes g121-sun { from { opacity: 0.72; scale: 0.95; } to { opacity: 1; scale: 1.05; } }
+.g121-sun { position: absolute; display: block; width: 0; height: 0; mix-blend-mode: screen; animation: g121-sun-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.g121-sun > i { position: absolute; display: block; border-radius: 50%; }
+.g121-rays { left: -8em; top: -8em; width: 16em; height: 16em; animation: g121-spin 36s linear infinite; animation-delay: -9s;
+  -webkit-mask-image: radial-gradient(closest-side, #000 6%, rgb(0 0 0 / 0.55) 38%, transparent 72%); mask-image: radial-gradient(closest-side, #000 6%, rgb(0 0 0 / 0.55) 38%, transparent 72%); }
+.g121-rays.g121-r1 { background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--t2) 62%, transparent) 0deg 5deg, transparent 5deg 16deg); }
+.g121-rays.g121-r2 { background: repeating-conic-gradient(from 7deg, color-mix(in srgb, var(--t1) 40%, transparent) 0deg 2.5deg, transparent 2.5deg 11deg); animation-name: g121-spin-back; animation-duration: 54s; }
+.g121-core { left: -3.6em; top: -3.6em; width: 7.2em; height: 7.2em; animation: g121-sun 3.2s ease-in-out infinite alternate;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--t1) 80%, #fff), color-mix(in srgb, var(--t2) 55%, transparent) 42%, transparent); }
+/* D for Reo Buio and Clea: an eclipse, its corona round a black disc */
+@keyframes g121-fade-in { from { opacity: 0; } to { opacity: 1; } }
+.g121-eclw { position: absolute; display: block; width: 0; height: 0; animation: g121-fade-in 700ms ease-out both; }
+.g121-eclw > i { position: absolute; display: block; border-radius: 50%; }
+.g121-D.g121-ecl .g121-core { background: radial-gradient(closest-side, transparent 38%, #fff 41%, color-mix(in srgb, var(--t2) 92%, #fff) 44%, color-mix(in srgb, var(--t2) 62%, transparent) 54%, color-mix(in srgb, var(--t2) 20%, transparent) 70%, transparent 86%); }
+.g121-disc { left: -1.52em; top: -1.52em; width: 3.04em; height: 3.04em; background: radial-gradient(closest-side, #050307 92%, transparent); }
+
+/* A · neon halo: a white-hot thread right on the outline, then the hero's colour, wider and softer, breathing (Clea's reads black) */
+.g121-A .g121-aglow { --lo: 0.55; --bd: 2.2s; }
+
+/* E · shock waves: a faint steady rim, and copies of the outline in light that leave from the feet and widen, one every 0.6 s
+   (Reo's faster); at the start one big wave */
+.g121-E .g121-erim { --lo: 1; }
+.g121-E .g121-b { mix-blend-mode: screen; }
+@keyframes g121-echo { 0% { opacity: 0; scale: 1; } 12% { opacity: 0.85; } 100% { opacity: 0; scale: 1.14; } }
+@keyframes g121-shock { 0% { opacity: 0.95; scale: 1; } 100% { opacity: 0; scale: 1.4; } }
+.g121-ge { opacity: 0; mix-blend-mode: screen; transform-origin: 50% 100%; --ed: 1.8s; animation: g121-echo var(--ed) cubic-bezier(0.22, 0.61, 0.36, 1) infinite; animation-delay: var(--dl, 0s); }
+.g121-E.g121-reo .g121-ge { --ed: 1.2s; }
+.g121-ge.g121-k1 { --dl: calc(var(--ed) / -3); }
+.g121-ge.g121-k2 { --dl: calc(var(--ed) / -1.5); }
+.g121-ge.g121-shake { animation: g121-echo var(--ed) cubic-bezier(0.22, 0.61, 0.36, 1) infinite, g121-shake 120ms steps(1, end) infinite; animation-delay: var(--dl, 0s), 0s; }
+.g121-ge.g121-shock { animation: g121-shock 560ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* the sun is behind the hero, never over the plate: the plate stands above it */
+.bt.is-hz .bt-mem.g121-D > .bt-plate2 { z-index: 3; }
+.bt.is-hz:not(.is-pc) .bt-mem.g121-D > .bt-plate2 { position: relative; }
+
+/* the talents' old lights, gone where the glow is on: the box's shadow (Rin's, and Reo's purple rectangle with its trembling),
+   the figure's coloured shadow; the acting hero's, the aimed one's, the charmed one's and the overloaded one's outlines stay */
+.bt.is-stage .bt-mem.g121-on:is(.is-vow, .is-elfury) { box-shadow: none; }
+.bt.is-stage .bt-mem.g121-on.is-elfury:not(.is-picking) { animation: none; }
+.bt.is-stage .bt-mem.g121-on.is-elfury.is-picking { animation: bt-pickme 0.9s ease-in-out infinite alternate; }
+.bt.is-stage .bt-mem.g121-on .bt-cardbox { filter: none; }
+.bt.is-stage .bt-mem.g121-on.is-acting .bt-cardbox { filter: drop-shadow(0 0 0.8em var(--attr)); }
+.bt.is-stage .bt-mem.g121-on.is-aimed .bt-cardbox { filter: drop-shadow(0 0 10px rgb(255 60 40 / 0.75)); }
+.bt.is-stage .bt-mem.g121-on.is-charmed .bt-cardbox { filter: drop-shadow(0 0 10px rgb(255 122 217 / 0.85)) saturate(1.15); }
+.bt.is-stage .bt-mem.g121-on[data-tone="violet"] .bt-cardbox { filter: drop-shadow(0 0 0.6em #b57cff); }
+
+/* ══ round 121 · the Database on a phone, page Nemici: the enemies' rules at the top (round 106's bars, round 116's Frostspine)
+   grew taller than a phone's screen, and that part of the page does not scroll (only the list under it does), so «Statue: turni»
+   and «Statue: vita» could not be reached (controllo.cjs: «cut by .g-page»). On a narrow screen the rules' box scrolls by
+   itself, up to a little under half the screen; the list keeps the rest. A PC's page is as it was. ══ */
+@media (max-width: 760px) {
+  .g-arch.has-bal106 .g106-bal { max-height: 46vh; max-height: 46dvh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+}
+
+/* ══ round 121 · the Database's page Bagliori (r121-glowdb.reps): the talent heroes on the left, the figure with the game's own
+   glow in the middle (all six choices side by side, or one large), the six choices with their words on the right. Every column
+   fills the window's height (the user: no half-empty pages); on a narrow window the columns stack and the page scrolls. ══ */
+.g121p { position: absolute; inset: 0; display: grid; grid-template-columns: 300px minmax(0, 1fr) 400px; }
+
+/* the heroes */
+.g121p-who { min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 14px; padding: 22px 14px 16px 20px; border-right: 1px solid var(--g-line); }
+.g121p-lead { margin-top: 10px; font-size: 13.5px; line-height: 1.45; color: var(--g-muted); max-width: 34ch; }
+.g121p-list { min-height: 0; overflow: auto; display: grid; grid-auto-rows: minmax(64px, 1fr); gap: 6px; scrollbar-width: thin; }
+.g54 .g121p-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px 12px 8px 8px; border: 1px solid var(--g-line); background: var(--g-plate); text-align: left; transition: background-color 0.15s, border-color 0.15s; }
+.g54 .g121p-row:hover { background: var(--g-raise); border-color: var(--g-line2); }
+.g54 .g121p-row[aria-selected="true"] { border-color: var(--g-acc); background: var(--g-acc-soft); }
+.g121p-face { position: relative; width: clamp(46px, 6.6vh, 88px); aspect-ratio: 1; overflow: hidden; background: #050608; border-bottom: 2px solid var(--attr, var(--g-line2)); }
+.g121p-face img { position: absolute; display: block; max-width: none; pointer-events: none; }
+.g121p-face > b { position: absolute; inset: 0; display: grid; place-items: center; font: 600 22px/1 var(--font-display); }
+.g121p-rt { min-width: 0; }
+.g121p-rt b { display: block; font: 600 18px/1.1 var(--font-display); text-transform: uppercase; letter-spacing: 0.01em; }
+.g121p-rt small { display: block; margin-top: 3px; font-size: 12.5px; line-height: 1.3; color: var(--g-faint); }
+.g121p-row > i { min-width: 30px; height: 30px; padding: 0 7px; display: grid; place-items: center; font: 600 16px/1 var(--font-display); font-style: normal; color: var(--g-acc-ink); background: var(--g-acc); }
+.g121p-row > i.is-off { background: var(--g-hi); color: var(--g-faint); }
+.g121p-note { display: flex; gap: 8px; align-items: flex-start; font-size: 12.5px; line-height: 1.4; color: var(--g-faint); }
+.g121p-note .g-ic { width: 15px; height: 15px; margin-top: 2px; }
+
+/* the figures */
+.g121p-mid { min-width: 0; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.g121p-bar { display: flex; align-items: center; gap: 16px; padding: 12px 20px; border-bottom: 1px solid var(--g-line); }
+.g54 .g121p-seg button[aria-pressed="true"] { border-color: var(--g-acc); color: var(--g-acc); background: var(--g-acc-soft); position: relative; z-index: 1; }
+.g121p-now { flex: 1; min-width: 0; font: 600 20px/1.1 var(--font-display); text-transform: uppercase; letter-spacing: 0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.g121p-stage { position: relative; min-width: 0; min-height: 0; overflow: hidden; padding: 16px 20px 0; background: radial-gradient(120% 90% at 50% 100%, #123038 0%, #0b1418 38%, #070a0f 72%); }
+.g121p-stage.is-all { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 14px 16px 16px; }
+.g54 .g121p-cell { position: relative; min-width: 0; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 4px; padding: 10px 10px 0; border: 1px solid var(--g-line); background: rgb(7 10 15 / 0.35); text-align: left; overflow: hidden; transition: border-color 0.15s, background-color 0.15s; }
+.g54 .g121p-cell:hover { border-color: var(--g-line2); background: rgb(20 23 32 / 0.45); }
+.g54 .g121p-cell[aria-pressed="true"] { border-color: var(--g-acc); background: rgb(2 210 227 / 0.06); }
+.g121p-cl { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; font: 600 15px/1.1 var(--font-display); text-transform: uppercase; letter-spacing: 0.01em; color: var(--g-muted); }
+.g121p-cl > b { flex: none; width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid var(--g-line2); color: var(--g-text); }
+.g121p-cell[aria-pressed="true"] .g121p-cl { color: var(--g-text); }
+.g121p-cell[aria-pressed="true"] .g121p-cl > b { background: var(--g-acc); color: var(--g-acc-ink); border-color: var(--g-acc); }
+.g121p-cl > em { margin-left: auto; font: 600 12px/1 var(--font-sans); font-style: normal; text-transform: none; letter-spacing: 0; color: var(--g-acc); }
+/* where a figure stands: what reaches its edges (a sun's rays, a pillar of light) fades there, never cut by a straight line */
+.g121p-fit { position: relative; display: block; min-width: 0; min-height: 0; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 9%), linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 9%), linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+  -webkit-mask-composite: source-in; mask-composite: intersect; }
+.g121p-one { position: absolute; inset: 16px 20px 0; }
+.g121p-one > .g121p-fit { position: absolute; inset: 0; }
+.g121p-fig { position: absolute; left: 50%; bottom: 0; translate: -50% 0; }
+
+/* the choices */
+.g121p-panel { min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; border-left: 1px solid var(--g-line); background: var(--g-plate); }
+.g121p-title { display: grid; gap: 4px; padding: 22px 18px 16px; border-bottom: 1px solid var(--g-line); }
+.g121p-title small { font-size: 12.5px; color: var(--g-faint); }
+.g121p-title b { font: 600 30px/1.05 var(--font-display); text-transform: uppercase; letter-spacing: 0.005em; }
+.g121p-body { min-height: 0; overflow: auto; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 12px; padding: 16px; scrollbar-width: thin; }
+.g121p-ways { min-height: 0; display: grid; grid-auto-rows: minmax(68px, 1fr); gap: 8px; }
+.g54 .g121p-way { display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: center; gap: 14px; padding: 10px 14px; border: 1px solid var(--g-line); background: var(--g-raise); text-align: left; transition: border-color 0.15s, background-color 0.15s; }
+.g54 .g121p-way:hover { border-color: var(--g-line2); background: var(--g-hi); }
+.g54 .g121p-way[aria-checked="true"] { border-color: var(--g-acc); background: var(--g-acc-soft); }
+.g121p-way > b { width: 48px; height: 48px; display: grid; place-items: center; font: 600 24px/1 var(--font-display); border: 1px solid var(--g-line2); color: var(--g-text); }
+.g121p-way[aria-checked="true"] > b { background: var(--g-acc); color: var(--g-acc-ink); border-color: var(--g-acc); }
+.g121p-way strong { display: block; font: 600 17px/1.15 var(--font-display); text-transform: uppercase; letter-spacing: 0.01em; }
+.g121p-way small { display: block; margin-top: 3px; font-size: 13px; line-height: 1.35; color: var(--g-muted); }
+.g121p-mix { font-size: 13px; line-height: 1.4; color: var(--g-faint); }
+.g121p-foot { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--g-line); }
+
+/* twelve tabs now: on a window narrower than their words need (with «Bozza in prova» and «Manda online» beside them) the tabs
+   show their icons and only the open one keeps its word, so none slides under «Manda online» (it did at 1600 px); at the user's
+   2540 px every word shows, and under 1181 px every tab is an icon, as before */
+@media (min-width: 1181px) and (max-width: 2200px) {
+  .g-tabs [role="tab"] span { display: none; }
+  .g-tabs [role="tab"][aria-selected="true"] span { display: inline; }
+}
+/* a middle-sized window: the panel narrower */
+@media (max-width: 1500px) {
+  .g121p { grid-template-columns: 250px minmax(0, 1fr) 340px; }
+}
+/* a narrow window or a phone: one column, the page scrolls to its last button */
+@media (max-width: 1100px) {
+  .g121p { position: static; display: block; }
+  .g-page:has(.g121p) { overflow: auto; }
+  .g121p-who { display: block; padding: 16px 14px 8px; border: 0; }
+  .g121p-lead { max-width: none; }
+  .g121p-list { display: flex; gap: 6px; overflow-x: auto; margin-top: 12px; padding-bottom: 6px; }
+  .g54 .g121p-row { flex: none; width: 210px; }
+  .g121p-face { width: 52px; }
+  .g121p-note { margin-top: 8px; }
+  .g121p-mid { display: block; border-top: 1px solid var(--g-line); }
+  .g121p-bar { flex-wrap: wrap; gap: 10px; padding: 10px 14px; }
+  .g121p-now { flex-basis: 100%; order: -1; }
+  .g121p-stage { height: 70vh; height: 70dvh; min-height: 440px; padding: 12px 12px 0; }
+  .g121p-one { inset: 12px 12px 0; }
+  .g121p-stage.is-all { height: auto; min-height: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: 330px; padding: 12px 12px 14px; }
+  .g121p-cl { gap: 8px; font-size: 13px; }
+  .g121p-cl > b { width: 24px; height: 24px; }
+  .g121p-panel { display: block; border: 0; border-top: 1px solid var(--g-line); }
+  .g121p-body { overflow: visible; display: block; }
+  .g121p-ways { grid-auto-rows: auto; }
+  .g121p-mix { margin-top: 12px; }
+}
+
 </style>
 </head>
 <body>
@@ -19379,6 +19589,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     for (const m of F.team) m.shown = null;
     paintTeam();
     placeKnight();
+    glowAhead121();
   };
   /** Swaps the picture on her card (the talent, the overload, the True form) with a flash of her state's colour. */
   const swapArt = (node, m, want) => {
@@ -19527,6 +19738,54 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     p.style.top = `${Math.max(8, y)}px`;
   };
   const hideSig = (force = true) => { if (!force && sigPinned) return; sigPinned = false; const p = $(".bt-sigpop", host); if (p) p.hidden = true; };
+  /** Round 121: the talent's glow on the hero's figure (GLOW121: the way the Database chose, else E · shock waves, the user's
+   *  pick): which look a hero has right now.
+   *  Reo's Elemental Fury (gold in Luce, violet in Buio), Oreh's Assault Mode, Tachibana's True form, Johta's Flame of Rebellion
+   *  (and Rekindle's moment), Rin's Vow of Embers, Clea's Sword Harvest. */
+  const glowLook121 = (m) => {
+    if (!m || m.ko) return null;
+    if (furyOn(m)) return m.form === "luce" ? "reo-luce" : "reo-buio";
+    if (assaultOn(m)) return "oreh";
+    if (isTrue(m)) return "tachibana";
+    if (m.id === "johta" && (flameOn82(m) || talentOn(m))) return "johta";
+    if ((m.id === "rin" || m.id === "clea") && talentOn(m)) return m.id;
+    return null;
+  };
+  /** The picture's box in the figure's box, as figStyle83 sets it (rounded as its style is, so a look drawn ahead is the one used). */
+  const figGeom121 = (src, boxW, boxH) => {
+    const b = box83(src), k = Math.min(boxH / (b.b - b.t), (boxW * ART_ASPECT) / (b.r - b.l)), ih = k, iw = ih / ART_ASPECT, vw = (b.r - b.l) * iw, vh = (b.b - b.t) * ih;
+    const r = (v) => +v.toFixed(1);
+    return { left: r((boxW - vw) / 2 - b.l * iw), top: r(boxH - vh - b.t * ih), iw: r(iw), ih: r(ih) };
+  };
+  /** Lights or puts out a hero's glow, in the way the Database chose (the pack's glow121; none for «off»), else the user's mix:
+   *  drawn again only when the look, the way, the picture or its size changes. A talent lit with no glow still loses the old box. */
+  const glow121 = (node, m) => {
+    const box = $(".bt-cardbox", node), img = box && $(":scope > .fig83 .card-art-img", box);
+    if (!img) return;
+    const look = glowLook121(m), way = look ? GLOW121.wayOf(look) : "off", src = img.getAttribute("src"), st = img.style;
+    const sig = look ? `${look}|${way}|${src}|${st.width}|${st.height}|${st.left}|${st.top}` : "";
+    node.classList.toggle("g121-on", !!look);
+    node.classList.toggle("g121-D", !!look && way === "D");
+    if ((box.dataset.g121 ?? "") === sig) return;
+    box.dataset.g121 = sig;
+    GLOW121.clear(box);
+    if (!look || way === "off") return;
+    const fs = parseFloat(box.style.fontSize) || box.offsetHeight / 14;
+    GLOW121.paint(box, { look, way, src, left: parseFloat(st.left), top: parseFloat(st.top), iw: parseFloat(st.width), ih: parseFloat(st.height), bw: box.offsetWidth, bh: box.offsetHeight, fs, focus: artFor(m)?.focus ?? m.h.focus ?? [0.55, 0.25] });
+  };
+  /** When a fight opens: each hero's look drawn ahead in idle time, on the picture the hero will show while it burns. */
+  const glowAhead121 = () => {
+    F.team.forEach((m, i) => {
+      const h = m.h, look = m.id === "reo" ? (m.form === "luce" ? "reo-luce" : "reo-buio") : GLOW121.LOOK[m.id] ? m.id : null;
+      if (!look || m.ko || (m.id === "reo" && !isReo(m)) || GLOW121.wayOf(look) === "off") return;
+      const p = memPos(i), swapped = m.id === "tachibana" ? h.trueArt : (m.id === "rin" || m.id === "clea") ? h.talentArt : null, src = swapped ?? picOf83(h);
+      if (!src) return;
+      const focus = m.id === "tachibana" ? h.trueFocus : swapped ? h.talentFocus : h.focus;
+      // (a picture swapped in is fitted to the box's whole pixels, as swapArt fits it: offsetWidth, offsetHeight)
+      const bw = swapped ? Math.round(p.fw) : p.fw, bh = swapped ? Math.round(p.h) : p.h;
+      GLOW121.prepare({ look, src, ...figGeom121(src, bw, bh), bw, bh, fs: p.fs, focus: focus ?? [0.55, 0.25] });
+    });
+  };
   const paintTeam = () => {
     F.team.forEach((m, i) => {
       const node = memEl(i);
@@ -19556,6 +19815,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
       node.classList.toggle("is-fury", m.fury > 0);
       node.classList.toggle("is-picking", F.picking?.step === "ally" && !m.ko);
       swapArt(node, m, m.ko ? null : artFor(m));
+      glow121(node, m);
       paintHp(node, m.hp, m.max);
       $$(".bt-orbs i", node).forEach((o, k) => o.classList.toggle("on", k < m.orbs));
       $(".bt-orbs", node).classList.toggle("is-full", m.orbs >= 5);
@@ -22760,7 +23020,6 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     banner("Elemental Fury", "is-fury");
     number(p.cx, p.cy - 40, "+500% · all stats", "is-heal");
     paintTeam();
-    furyAura.start(m);
     if (!REDUCED) memEl(F.team.indexOf(m))?.animate([{ transform: "scale(1)" }, { transform: "scale(1.12)", offset: 0.3 }, { transform: "scale(1)" }], { duration: 640, easing: "cubic-bezier(0.34, 1.56, 0.64, 1)" });
   };
   /**
@@ -30544,7 +30803,8 @@ const gCard = (h, px, { big = false } = {}) => {
 
 /* ── the draft: everything changed here. It starts from what is online (so a new version keeps the old changes), lives on
  * this device (or, in the Database program, on its disk with backups), and goes to players only with "Manda online". ── */
-const PACK_PARTS = ["edits", "news", "bosses", "banners", "stages", "web", "reset", "modes", "app", "notes", "places", "smith", "people", "guest", "cards", "codes", "shop102", "bal106", "challenge", "login"];
+// round 121: glow121, the talent's glow chosen for each hero (the page Bagliori)
+const PACK_PARTS = ["edits", "news", "bosses", "banners", "stages", "web", "reset", "modes", "app", "notes", "places", "smith", "people", "guest", "cards", "codes", "shop102", "bal106", "challenge", "login", "glow121"];
 /** In the Database program the Gestionale is the whole window, with no game behind it. */
 const GEST_ONLY = !!window.OREH_GEST_ONLY;
 const D = { edits: {}, news: [], log: [], bosses: [], banners: null, stages: {}, web: {}, version: 0, history: [], codes: [], login: [] };
@@ -34347,7 +34607,146 @@ const viewLogin113 = (host) => {
   paintForm();
   paintList();
 };
-const TABS = [["heroes", "Personaggi", "heroes"], ["foes", "Nemici", "foes"], ["bosses", "Boss", "crown"], ["story", "Storia", "story"], ["summon", "Summon", "summon"], ["cards", "Carte", "image"], ["guest", "Apparizioni", "fire"], ["shop", "Shop", "shop"], ["codes", "Codici", "send"], ["login", "Log In", "calendar"], ["launch", "Lancio", "reset"]];
+/* ══ round 121 · pagina Bagliori: il bagliore del talento sulla figura in lotta, per ogni eroe che ha un talento. L'utente, il 14
+ *  novembre: «Devi darmi un anteprima dove IO possa interagire con ogni effetto e dirti quale mettere. Inoltre rendi l'effetto
+ *  modificabile in qualsiasi momento da Database cosi se voglio posso cambiare idea.» La figura è quella della lotta e il bagliore
+ *  è quello vero del gioco (GLOW121), che si muove; la scelta va nella bozza (glow121) e ai giocatori con «Manda online». Senza
+ *  una scelta il gioco usa E · Onde d'urto per tutti (GLOW121.LOOK; l'utente, la sera del 14 novembre: «usiamo E Onde d'urto che
+ *  è il meno peggio»). ══ */
+const GLOW_WAYS121 = {
+  A: ["Alone al neon", "Un filo di luce sul contorno e un alone del suo colore che respira."],
+  B: ["Fiamme che salgono", "Lingue di fuoco nel suo colore salgono dal contorno, più alte su testa e spalle."],
+  C: ["Linea d'energia", "Il bordo luminoso della vecchia carta, ora sul contorno, con una cometa che lo percorre."],
+  D: ["Controluce", "Un sole, o un'eclissi, dietro la testa e una luce sui bordi della figura."],
+  E: ["Onde d'urto", "Sagome di luce partono dai piedi e si allargano, come onde di potere."],
+  off: ["Spento", "Nessun bagliore: la figura resta com'è anche col talento acceso."],
+};
+const GLOW_ORDER121 = ["A", "B", "C", "D", "E", "off"];
+/** Gli eroi con un talento, ognuno con la figura che ha in lotta mentre il talento è acceso. */
+const glowWho121 = () => {
+  const h = (id) => heroineById(id) ?? null, pic = (id) => CARD_LOOK79[`${id}|#card`]?.pic ?? h(id)?.art;
+  const reo = h("reo");
+  return [
+    reo && { look: "reo-buio", name: "Reo", form: "Buio", talent: "Elemental Fury", art: "art/reo-buio.webp", focus: [0.55, 0.3], face: { ...reo, art: "art/reo-buio.webp", focus: [0.55, 0.3] } },
+    reo && { look: "reo-luce", name: "Reo", form: "Luce", talent: "Elemental Fury", art: "art/reo-luce.webp", focus: [0.58, 0.36], face: { ...reo, art: "art/reo-luce.webp", focus: [0.58, 0.36] } },
+    h("oreh") && { look: "oreh", name: "Oreh", talent: "Assault Mode", art: pic("oreh"), focus: h("oreh").focus, face: h("oreh") },
+    h("rin") && { look: "rin", name: "Rin", talent: "Vow of Embers", art: h("rin").talentArt ?? pic("rin"), focus: h("rin").talentFocus ?? h("rin").focus, face: h("rin") },
+    h("johta") && { look: "johta", name: "Johta", talent: "Flame of Rebellion", art: pic("johta"), focus: h("johta").focus, face: h("johta") },
+    h("clea") && { look: "clea", name: "Clea", talent: "Sword Harvest", art: h("clea").talentArt ?? pic("clea"), focus: h("clea").talentFocus ?? h("clea").focus, face: h("clea") },
+    h("tachibana") && { look: "tachibana", name: "Tachibana", talent: "True form", art: h("tachibana").trueArt ?? pic("tachibana"), focus: h("tachibana").trueFocus ?? h("tachibana").focus, face: h("tachibana") },
+  ].filter((x) => x && x.art && GLOW121.LOOK[x.look]);
+};
+const viewGlow121 = (host) => {
+  if (!D.glow121 || typeof D.glow121 !== "object" || Array.isArray(D.glow121)) D.glow121 = {};
+  const WHO = glowWho121(), ui = store.get("glow121", {});
+  if (!WHO.length) { host.innerHTML = '<p class="g-empty">Nessun eroe con un talento.</p>'; return null; }
+  let cur = WHO.find((x) => x.look === ui.look) ?? WHO[0], mode = ui.mode === "one" ? "one" : "all";
+  const keep = () => store.set("glow121", { look: cur.look, mode });
+  const wayNow = (look) => { const v = D.glow121[look]; return v === "off" || GLOW121.WAYS.includes(v) ? v : GLOW121.LOOK[look].o; };
+  const name = (x) => `${x.name}${x.form ? ` ${x.form}` : ""}`;
+  const say = (w) => (w === "off" ? "nessun bagliore" : `${w} · ${GLOW_WAYS121[w][0]}`);
+  const tag = (w) => (w === "off" ? "—" : w);
+  host.innerHTML = `<div class="g121p">
+    <aside class="g121p-who">
+      <div class="g121p-head"><h2 class="g-h2">Bagliori</h2><p class="g121p-lead">La luce del talento acceso, sulla figura in lotta. Scegli un eroe, poi il suo bagliore: lo vedi qui com'è nel gioco.</p></div>
+      <div class="g121p-list" data-list role="listbox" aria-label="Gli eroi con un talento"></div>
+      <p class="g121p-note">${ic("send")}<span>La scelta arriva ai giocatori con «Manda online».</span></p>
+    </aside>
+    <section class="g121p-mid">
+      <div class="g121p-bar">
+        <div class="g-seg g121p-seg" role="group" aria-label="Quanti bagliori vedere"><button type="button" class="g-btn g-btn--sm" data-mode="all">Tutti e sei</button><button type="button" class="g-btn g-btn--sm" data-mode="one">Solo il suo, grande</button></div>
+        <b class="g121p-now" data-now></b>
+        <button type="button" class="g-btn g-btn--sm g-btn--ghost" data-again title="Rivedi l'accensione del talento">${ic("reset")}<span>Riaccendi</span></button>
+      </div>
+      <div class="g121p-stage" data-stage></div>
+    </section>
+    <aside class="g121p-panel">
+      <div class="g121p-title"><small data-sub></small><b data-name></b></div>
+      <div class="g121p-body"><div class="g121p-ways" data-ways role="radiogroup" aria-label="Il bagliore"></div><p class="g121p-mix" data-mix></p></div>
+      <div class="g121p-foot"><button type="button" class="g-btn g-btn--ghost" data-reset>${ic("undo")}<span>Come nel gioco</span></button><button type="button" class="g-btn g-btn--ghost" data-resetall>${ic("rows")}<span>Tutti come nel gioco</span></button></div>
+    </aside>
+  </div>`;
+  const list = qs("[data-list]", host), stage = qs("[data-stage]", host), ways = qs("[data-ways]", host);
+  const face = (x) => { const f = bustFrame(x.face); return f ? `<img src="${x.face.art}" alt="" draggable="false" style="left:${f.x}%;top:${f.y}%;width:${f.w}%">` : `<b>${esc(x.name[0])}</b>`; };
+  const paintList = () => {
+    list.innerHTML = WHO.map((x) => { const w = wayNow(x.look); return `<button type="button" class="g121p-row" role="option" aria-selected="${x === cur}" data-look="${x.look}"><span class="g121p-face" style="--attr:${attrColour(x.face.attr)}">${face(x)}</span><span class="g121p-rt"><b>${esc(name(x))}</b><small>${esc(x.talent)}</small></span><i class="${w === "off" ? "is-off" : ""}" title="${esc(say(w))}">${tag(w)}</i></button>`; }).join("");
+  };
+  /** One figure fitted in its place, as tall as it can be, with the game's own glow in way `way`. */
+  const figIn = (fitEl, x, way) => {
+    const r = fitEl.getBoundingClientRect();
+    if (r.width < 24 || r.height < 24) return;
+    // (inside the soft fade of its place: 9% at the top, 7% at each side)
+    const ratio = GLOW121.figure(x.art, 100, 100).ratio, H = Math.floor(Math.min(r.height * 0.91, (r.width * 0.86) / ratio)), W = Math.floor(H * ratio);
+    const g = GLOW121.figure(x.art, W, H), fs = H / 14, box = mk("div", "g121p-fig");
+    box.style.cssText = `width:${W}px;height:${H}px;font-size:${fs.toFixed(2)}px`;
+    box.innerHTML = `<span class="fig83"><img class="card-art-img" src="${x.art}" alt="" draggable="false" style="left:${g.left}px;top:${g.top}px;width:${g.iw}px;height:${g.ih}px;${g.mask}"></span>`;
+    fitEl.replaceChildren(box);
+    if (way !== "off") GLOW121.paint(box, { look: x.look, way, src: x.art, left: g.left, top: g.top, iw: g.iw, ih: g.ih, bw: W, bh: H, fs, focus: x.focus ?? [0.55, 0.25] });
+  };
+  let size0 = "";
+  const paintStage = () => {
+    const w = wayNow(cur.look);
+    stage.classList.toggle("is-all", mode === "all");
+    stage.innerHTML = mode === "all"
+      ? GLOW_ORDER121.map((k) => `<button type="button" class="g121p-cell" data-way="${k}" aria-pressed="${k === w}" aria-label="${esc(name(cur))}: ${esc(say(k))}"><span class="g121p-cl"><b>${tag(k)}</b><span>${GLOW_WAYS121[k][0]}</span>${k === w ? "<em>scelto</em>" : ""}</span><span class="g121p-fit"></span></button>`).join("")
+      : `<div class="g121p-one"><span class="g121p-fit"></span></div>`;
+    requestAnimationFrame(() => {
+      if (!stage.isConnected) return;
+      const R = stage.getBoundingClientRect(); size0 = `${Math.round(R.width)}x${Math.round(R.height)}`;
+      if (mode === "all") qsa(".g121p-cell", stage).forEach((c) => figIn(qs(".g121p-fit", c), cur, c.dataset.way));
+      else figIn(qs(".g121p-fit", stage), cur, w);
+    });
+  };
+  const paintPanel = () => {
+    const w = wayNow(cur.look), d = GLOW121.LOOK[cur.look].o;
+    qs("[data-name]", host).textContent = name(cur);
+    qs("[data-sub]", host).textContent = `Talento: ${cur.talent}`;
+    qs("[data-now]", host).textContent = `${name(cur)} · ${say(w)}`;
+    ways.innerHTML = GLOW_ORDER121.map((k) => `<button type="button" class="g121p-way" role="radio" aria-checked="${k === w}" data-way="${k}"><b>${tag(k)}</b><span><strong>${GLOW_WAYS121[k][0]}</strong><small>${GLOW_WAYS121[k][1]}</small></span></button>`).join("");
+    qs("[data-mix]", host).textContent = `Senza una scelta qui, il gioco gli dà ${say(d)}: la tua scelta del 14 novembre.`;
+    for (const b of qsa("[data-mode]", host)) b.setAttribute("aria-pressed", String(b.dataset.mode === mode));
+    qs("[data-reset]", host).setAttribute("aria-disabled", String(!(cur.look in D.glow121)));
+    qs("[data-resetall]", host).setAttribute("aria-disabled", String(!Object.keys(D.glow121).length));
+  };
+  const paintAll = () => { paintList(); paintPanel(); paintStage(); keep(); };
+  const pick = (way, from) => {
+    if (way === wayNow(cur.look) && cur.look in D.glow121) return;
+    D.glow121[cur.look] = way;
+    change("Bagliori", `glow-${cur.look}`, `${name(cur)}: ${say(way)}`, from);
+    paintAll();
+  };
+  host.addEventListener("click", (ev) => {
+    const t = ev.target;
+    const row = t.closest("[data-look]");
+    if (row) { cur = WHO.find((x) => x.look === row.dataset.look) ?? cur; paintAll(); return; }
+    const w = t.closest("[data-way]");
+    if (w) { pick(w.dataset.way, w); return; }
+    const m = t.closest("[data-mode]");
+    if (m) { if (m.dataset.mode !== mode) { mode = m.dataset.mode; paintAll(); } return; }
+    if (t.closest("[data-again]")) { paintStage(); return; }
+    const r1 = t.closest("[data-reset]");
+    if (r1) { if (cur.look in D.glow121) { delete D.glow121[cur.look]; change("Bagliori", `glow-${cur.look}`, `${name(cur)}: come nel gioco (${say(GLOW121.LOOK[cur.look].o)})`, r1); paintAll(); } return; }
+    const ra = t.closest("[data-resetall]");
+    if (ra && Object.keys(D.glow121).length) { D.glow121 = {}; for (const x of WHO) { const i = D.log.findIndex((l) => l.key === `glow-${x.look}`); if (i >= 0) D.log.splice(i, 1); } change("Bagliori", "glow-all", "Tutti i bagliori come nel gioco", ra); paintAll(); }
+  });
+  // the list answers the arrows too, as the other pages' lists
+  list.addEventListener("keydown", (ev) => {
+    if (ev.key !== "ArrowDown" && ev.key !== "ArrowUp") return;
+    ev.preventDefault();
+    const i = WHO.indexOf(cur), n = WHO[(i + (ev.key === "ArrowDown" ? 1 : WHO.length - 1)) % WHO.length];
+    cur = n; paintAll(); qs(`[data-look="${n.look}"]`, list)?.focus();
+  });
+  let rt = 0;
+  const ro = new ResizeObserver(() => {
+    clearTimeout(rt);
+    rt = setTimeout(() => { if (!stage.isConnected) return; const R = stage.getBoundingClientRect(), s = `${Math.round(R.width)}x${Math.round(R.height)}`; if (s !== size0) paintStage(); }, 180);
+  });
+  ro.observe(stage);
+  paintAll();
+  anim(qs(".g121p", host), [{ opacity: 0 }, { opacity: 1 }], 280);
+  return () => { ro.disconnect(); clearTimeout(rt); };
+};
+const TABS = [["heroes", "Personaggi", "heroes"], ["foes", "Nemici", "foes"], ["bosses", "Boss", "crown"], ["story", "Storia", "story"], ["summon", "Summon", "summon"], ["cards", "Carte", "image"], ["glow", "Bagliori", "star"], ["guest", "Apparizioni", "fire"], ["shop", "Shop", "shop"], ["codes", "Codici", "send"], ["login", "Log In", "calendar"], ["launch", "Lancio", "reset"]];
 let unmount = null, page = null, onClose = null;
 const build = () => {
   const root = (G.root = mk("div", "g54"));
@@ -34383,7 +34782,7 @@ const build = () => {
     anim(page, [{ opacity: 0, transform: `translateX(${dir * 26}px)` }, { opacity: 1, transform: "none" }], 420, { delay: old ? 60 : 0 });
     const kind = tab === "heroes" ? "hero" : tab === "foes" ? "foe" : null;
     try {
-      unmount = kind ? viewArchive(page, kind) : tab === "bosses" ? viewBosses(page) : tab === "story" ? viewStory(page) : tab === "launch" ? viewLaunch(page) : tab === "shop" ? viewShop103(page) : tab === "codes" ? viewCodes86(page) : tab === "login" ? viewLogin113(page) : tab === "guest" ? viewGuest78(page) : tab === "cards" ? viewCards79(page) : viewSummon(page);
+      unmount = kind ? viewArchive(page, kind) : tab === "bosses" ? viewBosses(page) : tab === "story" ? viewStory(page) : tab === "launch" ? viewLaunch(page) : tab === "shop" ? viewShop103(page) : tab === "codes" ? viewCodes86(page) : tab === "login" ? viewLogin113(page) : tab === "guest" ? viewGuest78(page) : tab === "cards" ? viewCards79(page) : tab === "glow" ? viewGlow121(page) : viewSummon(page);
     } catch (err) { console.error(err); page.innerHTML = `<p class="g-empty">Questa pagina non si è aperta: ${esc(err.message)}</p>`; }
     if (typeof unmount !== "function") unmount = null;
   };
@@ -36623,7 +37022,8 @@ const initGame = () => {
    *  the roster cannot tell, a code or a Database log-in can give her too). From then on the week is gone for them, on the page and
    *  on the Home's button; the Admin always sees it, as a preview. kaoriNow120: on the day she is claimed the week stays on screen,
    *  her tile lit, until the Player leaves the page. */
-  const kaoriTaken120 = () => login64().n >= LOGIN64.length;
+  // round 121: the week is over once the 7 days are claimed, or as soon as Kaori is in the roster, however she came there
+  const kaoriTaken120 = () => login64().n >= LOGIN64.length || !!PLAYER.player.roster?.[LOGIN_HERO64];
   let kaoriNow120 = false;
   const loginReady64 = () => !isAdmin() && PLAYER.player.started && !kaoriTaken120() && login64().last !== DAY64();
   const loginHost = $("[data-lg64]", stage);
@@ -43039,13 +43439,559 @@ document.addEventListener("click", (ev) => {
   ev.target.closest(".sm25-sheet")?.remove();
   location.hash = "#/play/battle/warcamp";
 });
+/* Round 121 (2026-11-14) · the talent's glow on the battle figure, not on a box. The user, with a screenshot of Reo's talent
+ * lit as a purple rectangle in fight 21-5: «nota gli effetti di Reo, sono sbagliati. Visto che non abbiamo più le carte, quel
+ * bordo che si illumina fallo sulla sua figura. Fai lo stesso per tutti gli altri personaggi che hanno un talento». Of lab 120's
+ * five ways, the user wants each hero's to be chosen from the Database at any time: every way (A–E, or none) is here, the pack's
+ * glow121 says which one each hero has, and with no word from the Database every hero has E · shock waves (the user, the same
+ * evening: «usiamo E Onde d'urto che è il meno peggio»).
+ * The engine is lab 120's (anteprime/scelte120/bagliore/bagliore.js, copied by strumenti/glow121-estrai.cjs, which also writes the
+ * game's side below): it only draws, never reads a picture's pixels (the PC app opens the game as a file, where a picture cannot be
+ * read). Every light is made once per picture, size, look and way (glow121's own cache), in idle time when a fight opens (prepare),
+ * and laid in the hero's figure box (.bt-cardbox) as canvases that only change opacity and transform. r121-glow.css draws them;
+ * r121-glow.reps calls paint/clear from the battle's paintTeam; r121-glowdb is the Database's page «Bagliori». */
+const GLOW121 = (() => {
+  "use strict";
+  const px = (v) => `${(Math.round(v * 10) / 10).toFixed(1)}px`;
+
+  const hexRgb = (hex) => { const n = parseInt(hex.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  /** Two colours mixed, `t` of the way from a to b. */
+  const mix = (a, b, t) => { const p = hexRgb(a), q = hexRgb(b); return `#${p.map((v, i) => Math.round(v + (q[i] - v) * t).toString(16).padStart(2, "0")).join("")}`; };
+  /** A repeatable random run (mulberry32): the same flames every time the page opens. */
+  const rng = (seed) => () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+
+  /* ══════════ the light stays inside the picture's own box ══════════
+   * Where the picture cuts the figure (Reo's ring at the top and at the sides, an arm cut by the frame) its edge is a straight
+   * line, and a light that followed it would draw the cut. So every light made from the figure is drawn in a canvas exactly as
+   * big as the picture's box, and fades out before each of the box's four edges whatever ART_EDGES64 says: inside the canvas
+   * first (BOX_FADE, before any blur, so no blur carries a cut inwards), then again as a still mask on the layer that holds the
+   * canvases (.gb in bagliore.css, the same numbers), so a light that moves (B's flames rising, E's waves widening) fades there
+   * too. Past the box there is no light made from the figure at all. */
+  const BOX_FADE = { l: 0.12, r: 0.12, t: 0.1, b: 0.07 }; // a share of the box's width (the sides) and height (top, bottom)
+  const SMOOTH = [[0, 0], [0.25, 0.156], [0.5, 0.5], [0.75, 0.844], [1, 1]]; // smoothstep, as gradient stops
+
+  /* ══════════ the canvas kit: it only draws, never reads (a file page cannot read its pictures) ══════════ */
+  const canvasOf = (w, h) => { const c = document.createElement("canvas"); c.width = Math.max(1, Math.ceil(w)); c.height = Math.max(1, Math.ceil(h)); return c; };
+  const ctxOf = (c) => c.getContext("2d");
+  const HAS_FILTER = (() => { try { const x = document.createElement("canvas").getContext("2d"); if (!x || !("filter" in x)) return false; x.filter = "blur(2px)"; return x.filter === "blur(2px)"; } catch { return false; } })();
+  /** A soft copy: the canvas filter where there is one, else a shadow thrown from off the canvas (the copy itself lands outside,
+   *  and the shadow comes back in one colour: `tone`, for a copy whose colours matter). */
+  const blurred = (src, sigma, tone = "#fff") => {
+    const c = canvasOf(src.width, src.height), x = ctxOf(c);
+    if (sigma < 0.3) { x.drawImage(src, 0, 0); return c; }
+    if (HAS_FILTER) { x.filter = `blur(${sigma.toFixed(2)}px)`; x.drawImage(src, 0, 0); x.filter = "none"; return c; }
+    const off = src.width + sigma * 8 + 64;
+    x.shadowColor = tone; x.shadowBlur = sigma * 2; x.shadowOffsetX = off; x.drawImage(src, -off, 0);
+    return c;
+  };
+  /** The same shape in one colour. */
+  const tinted = (src, color, a = 1) => {
+    const c = canvasOf(src.width, src.height), x = ctxOf(c);
+    x.drawImage(src, 0, 0); x.globalCompositeOperation = "source-in"; x.globalAlpha = a; x.fillStyle = color; x.fillRect(0, 0, c.width, c.height);
+    x.globalAlpha = 1; x.globalCompositeOperation = "source-over";
+    return c;
+  };
+  /** Layers drawn one over the other: [canvas, opacity, mode]. Its drawing state is set back afterwards: a keep() or a hollow()
+   *  done on it later would otherwise take only the last layer's opacity (a light kept in its box at 0.45, a hollow 90% deep). */
+  const stack = (list) => {
+    const c = canvasOf(list[0][0].width, list[0][0].height), x = ctxOf(c);
+    for (const [src, a = 1, mode = "source-over"] of list) { x.globalAlpha = a; x.globalCompositeOperation = mode; x.drawImage(src, 0, 0); }
+    x.globalAlpha = 1; x.globalCompositeOperation = "source-over";
+    return c;
+  };
+  const copy = (src) => { const c = canvasOf(src.width, src.height); ctxOf(c).drawImage(src, 0, 0); return c; };
+  /** The same canvas drawn `dx`, `dy` further. */
+  const moved = (src, dx, dy) => { const c = canvasOf(src.width, src.height); ctxOf(c).drawImage(src, dx, dy); return c; };
+  /** A piece of a canvas, w × h from (sx, sy). */
+  const crop = (src, sx, sy, w, h) => { const c = canvasOf(w, h); ctxOf(c).drawImage(src, -sx, -sy); return c; };
+  /** A canvas all of one colour. */
+  const filled = (w, h, color) => { const c = canvasOf(w, h), x = ctxOf(c); x.fillStyle = color; x.fillRect(0, 0, c.width, c.height); return c; };
+  /** Everything of the canvas that is not the shape. */
+  const inverse = (S) => { const c = filled(S.width, S.height, "#fff"), x = ctxOf(c); x.globalCompositeOperation = "destination-out"; x.drawImage(S, 0, 0); return c; };
+  /** Takes a shape out of a canvas (a glow loses the body, so only what lies outside it is left). */
+  const hollow = (c, S) => { const x = ctxOf(c); x.save(); x.globalCompositeOperation = "destination-out"; x.drawImage(S, 0, 0); x.restore(); return c; };
+  /** Keeps a canvas only where `M` is (its alpha times M's). */
+  const keep = (c, M) => { const x = ctxOf(c); x.save(); x.globalCompositeOperation = "destination-in"; x.drawImage(M, 0, 0); x.restore(); return c; };
+  /** Fades a canvas away from a point (the sun behind the head): full inside r0, `a1` at r1 and past it. */
+  const falloff = (c, p, r0, r1, a1) => {
+    const x = ctxOf(c), g = x.createRadialGradient(p.x, p.y, r0, p.x, p.y, r1);
+    g.addColorStop(0, "rgba(0,0,0,1)"); g.addColorStop(1, `rgba(0,0,0,${a1})`);
+    x.save(); x.globalCompositeOperation = "destination-in"; x.fillStyle = g; x.fillRect(0, 0, c.width, c.height); x.restore();
+    return c;
+  };
+  /** Alpha times k, a white shape staying white: one copy, then more laid on with "lighter", the last one in part. */
+  const gain = (src, k) => {
+    const c = canvasOf(src.width, src.height), x = ctxOf(c);
+    x.globalAlpha = Math.min(1, k); x.drawImage(src, 0, 0);
+    x.globalCompositeOperation = "lighter";
+    for (let left = k - 1; left > 0.002; left -= 1) { x.globalAlpha = Math.min(1, left); x.drawImage(src, 0, 0); }
+    x.globalAlpha = 1; x.globalCompositeOperation = "source-over";
+    return c;
+  };
+  /** A hard edge out of a soft one, by drawing alone: alpha is scaled so that `at` lands on 0.618, then a → 2a² − a⁴ (the
+   *  canvas kept by itself, then laid over itself) pushes every value away from 0.618, to 0 or to 1. */
+  const threshold = (src, at, n = 6) => {
+    const c = gain(src, 0.618 / at), x = ctxOf(c), t = canvasOf(c.width, c.height), tx = ctxOf(t);
+    tx.globalCompositeOperation = "copy";
+    for (let i = 0; i < n; i++) {
+      tx.drawImage(c, 0, 0); x.globalCompositeOperation = "destination-in"; x.drawImage(t, 0, 0);
+      tx.drawImage(c, 0, 0); x.globalCompositeOperation = "source-over"; x.drawImage(t, 0, 0);
+    }
+    return c;
+  };
+  /** The shape grown by `r` all round (itself and its copies on a circle). */
+  const dilate = (S, r, n = 12) => {
+    const c = copy(S), x = ctxOf(c);
+    for (let k = 0; k < n; k++) { const a = (k / n) * Math.PI * 2; x.drawImage(S, Math.cos(a) * r, Math.sin(a) * r); }
+    return c;
+  };
+  /** The shape eaten `d` in from every side, where past the canvas counts as full: the picture's cut is not an edge of the
+   *  figure, so nothing is eaten along it (no rim can follow it). */
+  const erodeIn = (S, d) => {
+    const p = Math.ceil(d) + 2, P = canvasOf(S.width + 2 * p, S.height + 2 * p), q = ctxOf(P);
+    q.fillStyle = "#fff"; q.fillRect(0, 0, P.width, P.height); q.clearRect(p, p, S.width, S.height); q.drawImage(S, p, p);
+    const c = copy(P), x = ctxOf(c);
+    x.globalCompositeOperation = "destination-in";
+    for (let k = 0; k < 8; k++) { const a = (k / 8) * Math.PI * 2; x.drawImage(P, Math.cos(a) * d, Math.sin(a) * d); }
+    return moved(c, -p, -p);
+  };
+  /** The shape eaten n pixels in, one pixel at a time (each step looks at the 8 neighbours, every other step at the 4 straight
+   *  ones, so the eaten edge is an octagon): a thin wall is never stepped over, as a wide step could. */
+  const erodeSteps = (S, n) => {
+    let a = copy(S);
+    for (let i = 0; i < n; i++) {
+      const b = copy(a), x = ctxOf(b);
+      x.globalCompositeOperation = "destination-in";
+      for (const [dx, dy] of i % 2 ? [[1, 0], [-1, 0], [0, 1], [0, -1]] : [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]) x.drawImage(a, dx, dy);
+      a = b;
+    }
+    return a;
+  };
+  /** Grows `seed` a step at a time, never out of `within`: a part of `within` the seed touches comes back whole (Reo's crown
+   *  points, a hand, a halo joined to the head), a part it never reaches stays out (a speck, a spark). */
+  const regrow = (seed, within, step, times) => {
+    let a = seed, b = canvasOf(seed.width, seed.height);
+    for (let i = 0; i < times; i++) {
+      const x = ctxOf(b);
+      x.globalCompositeOperation = "copy"; x.drawImage(a, 0, 0);
+      x.globalCompositeOperation = "source-over";
+      for (let k = 0; k < 8; k++) { const t = (k / 8) * Math.PI * 2; x.drawImage(a, Math.cos(t) * step, Math.sin(t) * step); }
+      x.globalCompositeOperation = "destination-in"; x.drawImage(within, 0, 0);
+      x.globalCompositeOperation = "source-over";
+      [a, b] = [b, a];
+    }
+    return a;
+  };
+  /** The empty space round and inside the shape S, sorted by how it is reached (past the canvas counts as empty).
+   *  Open: what is reached from past the picture's box, or from a wide empty area (the hollow of Reo's ring), through passages
+   *  wider than 2·rs (it grows inside the empty space eaten by rs, then widens by rs back to the shape's own edges). So a gap
+   *  is open all along or not at all, and no light ever ends in the middle of a gap on an edge the picture does not have: no
+   *  block of light between Tachibana's arm and her body, no cap in the crack between two of Rin's locks.
+   *  Shut: the rest. A hole in painted flames (Johta), a pocket behind a narrow neck (the tip of Rin's lock by her hip), the
+   *  openings of Reo's crown, the narrow end of a crack. Every outline, line and flame goes round it, so none draws a ring or a
+   *  dot in it. Dark: how much of what is shut stays unlit. A small pocket the open space reaches through a narrow mouth (the
+   *  round notch in Oreh's curl of fire, R from the open space at most) takes the glow's own light, so it never reads as a black
+   *  dot in the glow; a hole with no mouth (in Johta's painted flames) or a long gap (between Tachibana's arm and her body)
+   *  stays as dark as the picture has it, the light of the open space only reaching a little way in (`leak`). */
+  const topo = (S, em) => {
+    const w = S.width, h = S.height, rs = Math.max(1, Math.round(0.18 * em)), sb = 0.5 * em, p = Math.ceil(1.6 * sb) + rs + 2;
+    const I = filled(w + 2 * p, h + 2 * p, "#fff"), ix = ctxOf(I);
+    ix.globalCompositeOperation = "destination-out"; ix.drawImage(S, p, p);
+    const room = erodeSteps(I, rs), st = Math.max(1, 1.5 * rs);
+    const seeds = keep(threshold(blurred(I, sb), 0.75, 9), room);
+    const open = crop(threshold(keep(dilate(threshold(regrow(seeds, room, st, Math.ceil((4.5 * em) / st)), 0.4), rs + 0.5, 16), I), 0.5), p, p, w, h);
+    const solid = inverse(open), shut = hollow(copy(solid), S), R = Math.max(3, Math.round(0.5 * em));
+    // what is shut and reached from the open space within R (through empty space only), and what is shut with any part past R
+    const near = threshold(flood4(open, inverse(S), R), 0.5), big = threshold(flood4(hollow(copy(shut), near), shut, R + 2), 0.5);
+    const leak = gain(blurred(open, 0.24 * em), 2);
+    // (dark reaches a pixel and a half under the art round it, so no thread of light is left along the art's soft edge)
+    return { solid, shut, dark: dilate(hollow(hollow(copy(shut), hollow(copy(shut), big)), leak), 1.5, 8) };
+  };
+  /** Grows `seed` one pixel at a time to its 4 neighbours, never out of `within`: it goes round a wall one pixel thin,
+   *  never across it (a diagonal step could slip between two of its pixels). */
+  const flood4 = (seed, within, n) => {
+    let a = keep(copy(seed), within);
+    for (let i = 0; i < n; i++) {
+      const b = copy(a), x = ctxOf(b);
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) x.drawImage(a, dx, dy);
+      x.globalCompositeOperation = "destination-in"; x.drawImage(within, 0, 0);
+      a = b;
+    }
+    return a;
+  };
+  /** BOX_FADE as a canvas: nothing at the box's edges, everything a little way in, a smooth ramp between. */
+  const boxFade = (w, h) => {
+    const c = canvasOf(w, h), x = ctxOf(c);
+    const ramp = (g, a, z) => { for (const [o, v] of SMOOTH) g.addColorStop(o * a, `rgba(0,0,0,${v})`); for (const [o, v] of [...SMOOTH].reverse()) g.addColorStop(1 - o * z, `rgba(0,0,0,${v})`); };
+    const across = x.createLinearGradient(0, 0, w, 0), down = x.createLinearGradient(0, 0, 0, h);
+    ramp(across, BOX_FADE.l, BOX_FADE.r); ramp(down, BOX_FADE.t, BOX_FADE.b);
+    x.fillStyle = across; x.fillRect(0, 0, w, h);
+    x.globalCompositeOperation = "destination-in"; x.fillStyle = down; x.fillRect(0, 0, w, h);
+    return c;
+  };
+  /** Fades what lies just under a part of the body that hangs over it: the body moved down a little at a time and taken out,
+   *  less and less the further it moved. */
+  const below = (c, body, D, n, w) => {
+    const x = ctxOf(c);
+    x.save(); x.globalCompositeOperation = "destination-out";
+    for (let i = 1; i <= n; i++) { x.globalAlpha = w * (1 - (i - 1) / n); x.drawImage(body, 0, (i / n) * D); }
+    x.restore();
+    return c;
+  };
+
+  /** How far from bright the picture is, as grey: white where the art is black (or where there is none), dark where it is
+   *  bright. Drawn over black (so a speck only partly covering its pixel still counts as black, not as grey), its colour taken
+   *  out (its lightness kept), turned negative, then multiplied by itself twice, so only dark art counts fully and a red spark
+   *  or a white glint hardly at all. Its pixels are never read: it only multiplies another canvas. */
+  const darkness = (im, w, h) => {
+    const c = filled(w, h, "#000"), x = ctxOf(c);
+    x.drawImage(im, 0, 0, w, h);
+    x.globalCompositeOperation = "saturation"; x.fillStyle = "#808080"; x.fillRect(0, 0, w, h);
+    x.globalCompositeOperation = "difference"; x.fillStyle = "#fff"; x.fillRect(0, 0, w, h);
+    for (let i = 0; i < 2; i++) { const t = copy(c); x.globalCompositeOperation = "multiply"; x.drawImage(t, 0, 0); }
+    return c;
+  };
+
+  /* ══════════ what every light of one picture is made from (once per picture and size, shared by the five ways) ══════════
+   * whole: the picture's shape (drawn, then filled white: its colours are never looked at). kept: that shape with no specks.
+   * What is too small to stand on its own is dropped (a speck, a spark, a thread of smoke or lightning apart from the body: no
+   * dots); what is joined to it comes back whole, grown a small step at a time, so a speck beside a lock of hair is never
+   * joined to it, at any size. solid: kept with what is shut in it (topo), its edge softened by half a pixel (a hard edge would
+   * break a thin line into dashes): every outline, line, rim and flame is found on it. body: solid and whole, what a line is
+   * taken out of. glowBody: whole and the dark part of what is shut, what a broad light is taken out of. specks: what was
+   * dropped, a pixel wider. dark4: how dark the art is (darkness). box: the fade before the picture's edges. broad: the solid
+   * rounded off, the shape the flames stand on (an aura follows the body, not every spike of hair). */
+  const BASES = new Map();
+  const baseOf = (im, url, w, h, em) => {
+    const id = `${url}|${w}|${h}`;
+    if (BASES.has(id)) return BASES.get(id);
+    const whole = canvasOf(w, h), x = ctxOf(whole);
+    x.drawImage(im, 0, 0, w, h); x.globalCompositeOperation = "source-in"; x.fillStyle = "#fff"; x.fillRect(0, 0, w, h);
+    const hard = threshold(whole, 0.5);
+    // what stands on its own: thick enough that its own blur is over half (a speck's never is), then all it is joined to
+    // (a hard threshold: the growing turns any faint leftover into a whole speck again)
+    const seed = keep(threshold(blurred(hard, 0.25 * em), 0.5, 9), hard), st = Math.max(0.75, 0.05 * em);
+    const kept = threshold(regrow(seed, hard, st, Math.ceil((2.5 * em) / st)), 0.3);
+    const T = topo(kept, em);
+    const solid = blurred(T.solid, Math.max(0.5, Math.min(0.7, 0.02 * em)));
+    // (from the soft shape, not the hard one: a speck smaller than a pixel is still a dark dot in the light)
+    const specks = hollow(dilate(dilate(threshold(hollow(copy(whole), dilate(kept, 1, 8)), 0.2), 1.2, 8), 1.2, 8), dilate(kept, 1, 8));
+    // the notches, bays and cracks of the shape, up to 2·rc wide at their mouth (wider than the narrowest open gap, so a bay
+    // that is open but has a narrow mouth gets no ring of line either): the shape closed by rc, less itself
+    const rc = 0.3 * em, concave = gain(blurred(hollow(erodeIn(dilate(solid, rc, 16), rc), solid), Math.max(0.6, 0.04 * em)), 1.6);
+    const b = { whole, hard, kept, solid, shut: T.shut, concave, body: stack([[solid, 1], [whole, 1]]), glowBody: stack([[T.dark, 1], [whole, 1]]), dark: T.dark, specks,
+      dark4: darkness(im, w, h), box: boxFade(w, h), broad: threshold(blurred(solid, 0.3 * em), 0.5), em };
+    BASES.set(id, b);
+    if (BASES.size > 4) BASES.delete(BASES.keys().next().value); // a few sizes kept (a resize or a new hero makes new ones)
+    return b;
+  };
+  /** A line made from the figure, ready: out of the body (none in what is shut) and out of the shape's notches and cracks (it
+   *  fades as it goes in, never curls into a ring or turns back in a crack), faded before the box's edges. */
+  const fit = (c, B) => keep(hollow(hollow(c, B.body), B.concave), B.box);
+  /** A broad light made from the figure, ready: out of the art and of what stays dark of what is shut, faded before the box. */
+  const fitGlow = (c, B) => keep(hollow(c, B.glowBody), B.box);
+  /** A broad light's layer: the shape blurred by sg em, as strong as `k` times its blur outside the shape and, inside it (a
+   *  notch, a pocket, a gap that is shut), never stronger than at the shape's own edge, so what is shut and near the glow takes
+   *  the glow's own light and no brighter one. [canvas, alpha] for stack(). */
+  const layer = (B, sg, k, dy = 0) => {
+    const c = k <= 2 ? gain(blurred(B.solid, sg * B.em), 2) : gain(blurred(B.solid, sg * B.em), k);
+    return [dy ? moved(c, 0, -dy * B.em) : c, k <= 2 ? k / 2 : 1];
+  };
+
+  /* ══════════ the five lights ══════════
+   * Each returns { light, raw }: light is what its canvas shows (broad light out of glowBody, lines out of body, faded before
+   * the box), raw the broad light before anything is taken out of it (what coverOf lays over a speck). */
+  /** Layers of the shape's own glow, tinted: [sg, k, colour, alpha, dy] each (see layer). */
+  const glowOf = (B, list) => stack(list.map(([sg, k, color, a, dy = 0]) => { const [c, ka] = layer(B, sg, k, dy); return [tinted(c, color), a * ka]; }));
+  /** A thin thread of light right on the outline (a line: none in what is shut). */
+  const threadOf = (B, sg, k, color, dy = 0) => tinted(moved(gain(blurred(B.solid, sg * B.em), k), 0, -dy * B.em), color);
+  /** A · a white-hot thread right on the outline, then the hero's colour, wider and softer (round 87's Aura on the figure);
+   *  Clea's deepest shadow is the outermost, so her aura reads black. */
+  const neon = (B, T, dark) => {
+    const broad = glowOf(B, dark
+      ? [[0.7, 1.3, T[2], 1], [0.5, 1.2, T[2], 0.9], [0.38, 1.2, T[1], 0.85], [0.13, 1.5, T[1], 1]]
+      : [[0.8, 1.2, T[2], 0.7], [0.35, 1.3, T[1], 0.9], [0.12, 1.5, T[1], 1]]);
+    return { light: stack([[fitGlow(copy(broad), B), 1], [fit(threadOf(B, 0.035, 1.8, T[0]), B), 1]]), raw: keep(broad, B.box) };
+  };
+  /** B · the light under the flames: the figure's glow, close to the outline and pushed a little upward (lab 26's G2, on the
+   *  body). It only warms the edge: the flames are the show. */
+  const rising = (B, T) => {
+    const broad = glowOf(B, [[0.55, 1.1, T[2], 0.55, 0.3], [0.25, 1.3, T[1], 0.7, 0.12]]);
+    return { light: stack([[fitGlow(copy(broad), B), 1], [fit(threadOf(B, 0.08, 1.6, T[0], 0.03), B), 0.8]]), raw: keep(broad, B.box) };
+  };
+  /** B · one layer of flames: separate tongues of fire, each standing on an edge of the outline that faces up (head,
+   *  shoulders, arms, the hollow of Reo's ring beside his head), swelling a little over its foot, then thinning with hollow
+   *  sides into a long tip that curls, from the hot core at its foot to the deep colour at its tip, with a brighter heart low
+   *  down. The picture is never read, so a tongue is built from the outline itself: the strip just above the edge, column by
+   *  column across the tongue's width, drawn higher and higher. Every column falls on whole pixels (no mesh of fractional
+   *  slices on a phone), its two edge columns drawn as much as the tongue covers them (smooth sides, no steps), and the tongues
+   *  are laid one over another, not added (added, crowded ones turned into white bars). Along the steep sides there are no
+   *  tongues, only the light under them: tongues there, tried three ways, read as feathers, columns or ribs. Lower on the body
+   *  they are weaker; under a part that hangs close over them (the ring over Reo's crown) weak and short. */
+  const flames = (B, T, seed) => {
+    const em = B.em, w = B.solid.width, h = B.solid.height, rnd = rng(seed);
+    // the fire's own ramp, foot to tip: a core tinted toward the glow (a white core only reads as a blob), the glow, then
+    // toward the deep colour (still a colour: Reo Buio's and Clea's near-black deep colours would leave tongues without tips)
+    const P = [mix(T[0], T[1], 0.1), mix(T[0], T[1], 0.45), T[1], mix(T[1], T[2], 0.22), mix(T[1], T[2], 0.42)];
+    const k = Math.max(2, Math.round(0.08 * em)), step = Math.max(1, Math.round(0.45 * k)), s = Math.round(0.7 * k);
+    // the feet: a strip just outside every edge of the broad shape that faces (dx, dy): the shape moved that way, less itself,
+    // kept where it also lies a little to each side (so only where the edge really faces that way), weaker lower down and
+    // under an overhang
+    const feetOf = (dx, dy) => {
+      const strip = canvasOf(w, h), q = ctxOf(strip);
+      q.drawImage(B.broad, dx * k, dy * k); q.globalCompositeOperation = "destination-out"; q.drawImage(B.broad, 0, 0);
+      const f = copy(strip), x = ctxOf(f);
+      x.globalCompositeOperation = "destination-in"; x.drawImage(strip, -dy * s, dx * s); x.drawImage(strip, dy * s, -dx * s);
+      const lower = x.createLinearGradient(0, 0, 0, h);
+      lower.addColorStop(0, "rgba(0,0,0,1)"); lower.addColorStop(0.45, "rgba(0,0,0,0.85)"); lower.addColorStop(1, "rgba(0,0,0,0.35)");
+      x.fillStyle = lower; x.fillRect(0, 0, w, h);
+      return keep(below(f, B.body, 1.4 * em, 7, 0.8), B.box);
+    };
+    const out = canvasOf(w, h), o = ctxOf(out);
+    // a tongue's half-width along it, t from foot (0) to tip (1): it swells a little over its foot, then thins with hollow
+    // sides into a long tip, its edge rippling a little (`rip`), as a tongue of fire does
+    const tongue = (t, rip) => (t < 0.22 ? 0.8 + 0.2 * Math.sin((Math.PI * t) / 0.44) : Math.pow((1 - t) / 0.78, 1.5)) * (1 + rip * Math.sin(t * 19));
+    const lit = (t) => Math.min(1, 0.6 + t / 0.15) * Math.pow(1 - t, 0.35); // how strong: full a little over the foot
+    const heart = (t) => (t < 0.4 ? Math.sin((Math.PI * t) / 0.4) : 0); // the brighter heart, low in the tongue
+    const shade = (t) => { const f = Math.min(P.length - 1.001, t * (P.length - 1)), i = Math.floor(f); return [i, f - i]; };
+    const wiggle = (amp, ph, turns, t) => amp * Math.sin(ph + Math.PI * 2 * turns * t) * Math.pow(t, 1.2); // the curl, more at the tip
+    // over the edges that face up: columns of the feet, drawn y higher. The columns fall on whole pixels (no mesh of
+    // fractional slices on a phone) and the two edge columns are drawn as much as the tongue covers them (smooth sides)
+    const upF = feetOf(0, -1), up = P.map((c) => tinted(upF, c));
+    const col = (i, c, half, y, a) => {
+      if (half < 0.3 || a < 0.01) return;
+      const l = c - half, r = c + half, yy = -Math.round(y), L = Math.ceil(l), R = Math.floor(r), src = up[i];
+      const one = (x0, x1, al) => { x0 = Math.max(0, x0); x1 = Math.min(w, x1); if (x1 > x0 && al > 0.004) { o.globalAlpha = Math.min(1, al); o.drawImage(src, x0, 0, x1 - x0, h, x0, yy, x1 - x0, h); } };
+      if (R < L) { one(Math.floor(l), Math.floor(l) + 1, a * (r - l)); return; }
+      one(L, R, a);
+      one(L - 1, L, a * (L - l));
+      one(R, R + 1, a * (r - R));
+    };
+    for (let x = rnd() * 0.3 * em; x < w; x += (0.36 + rnd() * 0.3) * em) {
+      const tall = rnd() < 0.35, H = (tall ? 1.4 + rnd() * 0.9 : 0.5 + rnd() * 0.8) * em, wd = (0.1 + rnd() * 0.08) * em * (tall ? 1.15 : 1);
+      const lean = (rnd() - 0.5) * 0.4, amp = (0.07 + rnd() * 0.12) * em * (tall ? 1.4 : 1), ph = rnd() * Math.PI * 2, turns = 0.5 + rnd() * 0.8, rip = 0.05 + rnd() * 0.07;
+      for (let y = 0; y < H; y += step) {
+        const t = y / H, half = wd * tongue(t, rip), c = x + lean * y + wiggle(amp, ph, turns, t), a = 0.95 * lit(t), [i, u] = shade(t);
+        col(i, c, half, y, a);
+        if (u > 0.03) col(i + 1, c, half, y, a * u);
+        if (heart(t) > 0.03) col(0, c, 0.4 * half, y, 0.55 * heart(t));
+      }
+    }
+    o.globalAlpha = 1;
+    const fire = keep(hollow(below(out, B.body, 0.45 * em, 5, 0.5), B.glowBody), B.box);
+    // the tongues, softened by half a pixel, over a soft light of themselves in the glow colour
+    // (added, so a tongue glows over its own light)
+    return stack([[tinted(blurred(fire, 0.09 * em), T[1]), 0.45], [blurred(fire, 0.5), 1, "lighter"]]);
+  };
+  /** E · the steady rim: the light of the outline, faint. */
+  const outline = (B, T, a) => {
+    const broad = glowOf(B, [[0.45, 1.2, T[2], 0.4 * a], [0.2, 1.4, T[1], 0.85 * a]]);
+    return { light: stack([[fitGlow(copy(broad), B), 1], [fit(threadOf(B, 0.05, 1.9, T[0]), B), a]]), raw: keep(broad, B.box) };
+  };
+  /** E · what every wave is made of: a thin line on the outline, glowing on both sides of it (a copy lit only outside its
+   *  shape would read as a dark ghost of the figure once it grows), faded before the box's edges before any blur. */
+  const wave = (B, T, r) => {
+    const line = fit(dilate(B.solid, r, r > 3 ? 16 : 12), B), em = B.em;
+    return keep(stack([[tinted(gain(blurred(line, 0.35 * em), 2.6), T[2]), 0.5], [tinted(gain(blurred(line, 0.13 * em), 2.2), T[1]), 0.9], [tinted(gain(blurred(line, 0.03 * em), 1.4), T[0]), 1]]), B.box);
+  };
+
+  /* ══════════ round 121: in the game ══════════ */
+  /** The five ways, by the lab's letters; «off» is none. */
+  const WAYS = ["A", "B", "C", "D", "E"];
+  /** Who glows and how: o, the way when the Database says nothing (the user, 14 Nov 2026 evening, after trying the five: «per i
+   *  bagliori fanno tutti pena ma usiamo E Onde d'urto che è il meno peggio», so E for everyone); the colours (core · glow · deep,
+   *  lab 120's); dark, Clea's black line and black aura; shake, the shaking light of Reo's fury; reo, his waves come faster (E);
+   *  sun, what stands behind the face in D (an eclipse for Reo Buio and Clea, as in the lab). */
+  const LOOK = {
+    "reo-buio": { o: "E", t: ["#ecdcff", "#b884ff", "#3d0f7a"], shake: true, reo: true, sun: "eclipse" },
+    "reo-luce": { o: "E", t: ["#fffbe6", "#ffd76a", "#ff7a1a"], shake: true, reo: true },
+    oreh: { o: "E", t: ["#fff0b8", "#ffc83d", "#ff9d00"] },
+    rin: { o: "E", t: ["#ffd0a0", "#ff3d1f", "#e8173a"] },
+    johta: { o: "E", t: ["#ffd9a8", "#ff8a1f", "#ff6a00"] },
+    clea: { o: "E", t: ["#ecdcff", "#7a4bd6", "#08001a"], dark: true, sun: "eclipse" },
+    tachibana: { o: "E", t: ["#ffffff", "#ffe08a", "#f2b632"] },
+  };
+  /** The way a look has now: the Database's (the pack's glow121; «off» for none), else the user's pick above. */
+  const wayOf = (look) => {
+    const g = typeof PACK !== "undefined" && PACK?.body?.glow121 && typeof PACK.body.glow121 === "object" ? PACK.body.glow121 : null, v = g?.[look];
+    return v === "off" ? "off" : WAYS.includes(v) ? v : LOOK[look]?.o ?? "off";
+  };
+  /** A figure as the fight draws it (figStyle83), for a page with no fight (the Database's): the picture's box in a box of
+   *  boxW × boxH (what the picture shows fills it), and its own fade where the picture cuts it (7% at a side, 3% at the top). */
+  const figure = (src, boxW, boxH) => {
+    const full = String(src ?? "").replace(/^.*?(art\/)/, "$1").replace("art/s/", "art/").replace("art/m/", "art/");
+    const b = ART_BOX83[full] ?? { l: 0.05, r: 0.95, t: 0, b: 1 }, e = ART_EDGES64[full] ?? { l: 0, r: 0, t: 0 };
+    const k = Math.min(boxH / (b.b - b.t), (boxW * ART_ASPECT) / (b.r - b.l)), ih = k, iw = ih / ART_ASPECT, vw = (b.r - b.l) * iw, vh = (b.b - b.t) * ih;
+    const L = e.l > 0.04 ? 7 : 0, R = e.r > 0.04 ? 7 : 0, T = e.t > 0.04 ? 3 : 0, g2 = (dir, a, z) => (a || z ? `linear-gradient(${dir}, transparent 0, #000 ${a}%, #000 ${100 - z}%, transparent 100%)` : "");
+    const across = g2("to right", L, R), down = g2("to bottom", T, 0), mask = [across, down].filter(Boolean).join(",");
+    const r1 = (v) => +v.toFixed(1);
+    return { left: r1((boxW - vw) / 2 - b.l * iw), top: r1(boxH - vh - b.t * ih), iw: r1(iw), ih: r1(ih), ratio: (b.r - b.l) / ART_ASPECT / (b.b - b.t),
+      mask: mask ? `-webkit-mask-image:${mask};mask-image:${mask};${across && down ? "-webkit-mask-composite:source-in;mask-composite:intersect;" : ""}` : "" };
+  };
+  /** What hides a dark speck of the picture inside the light (lab 120's coverOf): the light as it looks over black, only on the
+   *  specks and only as much as the art there is dark, laid over the figure with «lighten» (a black speck takes the light round
+   *  it, a bright spark stays as it is). Clear everywhere else, where the lab's was opaque black over the field's colour: in the
+   *  game the figure's box may have a filter of its own (the acting hero's outline), and inside it an opaque cover turns black. */
+  const coverOf = (G, B) => {
+    const c = filled(G.width, G.height, "#000"), x = ctxOf(c);
+    x.drawImage(hollow(copy(G), B.dark), 0, 0); // (none where what is shut stays dark: the light under it is none there either)
+    x.globalCompositeOperation = "multiply"; x.drawImage(B.dark4, 0, 0);
+    x.globalCompositeOperation = "destination-in"; x.drawImage(B.specks, 0, 0);
+    return c;
+  };
+  /** A look's canvases for one picture at one size (lab 120's drawGlow). j: the way, the picture's box in the figure's box (left,
+   *  top, iw, ih, in CSS pixels), its canvas (cw × ch, k canvas pixels to a CSS pixel), fs (the figure's height / 14), em (fs in
+   *  canvas pixels), focus (where the face is, as shares of the picture). */
+  const draw = (im, j) => {
+    const L = LOOK[j.look], T = L.t, dark = !!L.dark, way = j.way;
+    const B = baseOf(im, j.src, j.cw, j.ch, j.em), em = B.em, s = B.solid, out = {};
+    if (way === "A") {
+      const n = neon(B, T, dark);
+      out.halo = n.light;
+      out.cover = coverOf(n.raw, B);
+    } else if (way === "B") {
+      const up = rising(B, T), fl = [0, 1, 2].map((k) => flames(B, T, 11 + k * 7919));
+      out.up = up.light;
+      fl.forEach((c, k) => (out[`fl${k}`] = c));
+      // (the cover takes the light under the flames and, softened, the flames' own light as it is on average)
+      out.cover = coverOf(stack([[up.raw, 1], ...fl.map((c) => [blurred(c, 0.2 * em), 0.25])]), B);
+    } else if (way === "C") {
+      // the line: the solid shape grown a little, the body taken out, faded before the edges before any blur is made of it
+      const r = Math.min(3.5, Math.max(1.5, 0.07 * j.fs)) * j.k, ring = fit(dilate(s, r, r > 3 ? 16 : 12), B);
+      // behind: a soft light in the glow colour, and a wide one in the deep colour (black-violet for Clea, with more of her
+      // violet: her black line alone hardly shows on her dark picture)
+      const halo = stack([[tinted(blurred(ring, 0.8 * em), T[2]), dark ? 0.95 : 0.6], [tinted(gain(blurred(ring, 0.28 * em), dark ? 1.5 : 1), T[1]), 0.95]]);
+      out.halo = keep(hollow(copy(halo), B.body), B.box);
+      out.cover = coverOf(hollow(halo, B.shut), B);
+      // over: the line itself, near-white (black for Clea) on a thin glow of its colour; the comet's line, white
+      out.ring = stack([[tinted(blurred(ring, 0.06 * em), T[1]), 0.9], [tinted(ring, dark ? "#07030f" : T[0]), 1]]);
+      out.cring = stack([[tinted(blurred(ring, 0.18 * em), dark ? T[0] : T[1]), 1], [tinted(ring, "#ffffff"), 1]]);
+    } else if (way === "D") {
+      const sun = { x: j.focus[0] * j.cw, y: (j.focus[1] + 0.03) * j.ch };
+      // the rim: a band just inside the outline, on the picture only, brightest near the light (nothing is eaten along a cut),
+      // none along a notch or a crack (it would curl round them as a line would)
+      const rim = copy(s), rw = Math.max(1.2, 0.13 * j.fs) * j.k;
+      hollow(hollow(rim, erodeIn(s, rw)), dilate(B.concave, rw, 12));
+      keep(falloff(keep(rim, B.kept), sun, 2 * em, 10 * em, 0.22), B.box);
+      out.edge = stack([[tinted(blurred(rim, 0.07 * em), T[1]), 0.85], [tinted(rim, T[0]), 1]]);
+      // the light behind: the shape blurred, out of the art, strongest round the head
+      const halo = keep(falloff(glowOf(B, [[1.1, 1, T[2], dark ? 0.75 : 0.53], [0.45, 1, T[1], 0.68]]), sun, 3 * em, 13 * em, 0.35), B.box);
+      out.halo = fitGlow(copy(halo), B);
+      out.cover = coverOf(halo, B);
+    } else {
+      const o = outline(B, T, 0.45);
+      out.line = o.light;
+      out.cover = coverOf(o.raw, B);
+      // every wave is the same copy of the outline's line; the copies grow and fade inside the holder's still fade
+      out.wave = wave(B, T, Math.min(3, Math.max(1.2, 0.06 * j.fs)) * j.k);
+    }
+    return out;
+  };
+
+  /** The layers in the figure's box (.bt-cardbox, its font-size the figure's height / 14): what goes behind the picture and what
+   *  over it. The lights made from the picture sit in a holder exactly over the picture's own box (.g121-b), whose still mask
+   *  fades them out before its four edges, so no light ever follows the picture's straight cut; D's sun and B's pillar at the
+   *  start are not made from the picture and stand outside it. */
+  const parts = (j, L) => {
+    const way = j.way, hold = `left:${px(j.left)};top:${px(j.top)};width:${px(j.iw)};height:${px(j.ih)}`;
+    const cv = (cls) => `<canvas class="g121-c ${cls}" width="${j.cw}" height="${j.ch}"></canvas>`;
+    const sh = L.shake ? " g121-shake" : "", cls = `g121 g121-${way}${L.reo ? " g121-reo" : ""}`;
+    const tag = (extra, free, lights) => `<span class="${cls}${extra}" aria-hidden="true" style="--t1:${L.t[0]};--t2:${L.t[1]};--t3:${L.t[2]}">${free}<span class="g121-b" style="${hold}">${lights}</span></span>`;
+    // over the figure: what hides the picture's dark specks inside the light, breathing with the light it copies
+    const cover = (gl) => tag(" g121-over g121-cover", "", `<span class="g121-w"><span class="g121-l ${gl}">${cv("g121-cv")}</span></span>`);
+    if (way === "A") return { under: tag("", "", `<span class="g121-w"><span class="g121-l g121-aglow${sh}">${cv("g121-halo")}</span></span>`), over: cover("g121-aglow") };
+    if (way === "B") return {
+      under: tag("", `<i class="g121-pillar"></i>`, `<span class="g121-w"><span class="g121-l g121-bglow${sh}">${cv("g121-up")}</span></span><span class="g121-w"><span class="g121-l g121-bfls${sh}">${cv("g121-fl g121-k0")}${cv("g121-fl g121-k1")}${cv("g121-fl g121-k2")}</span></span>`),
+      over: cover("g121-bglow"),
+    };
+    if (way === "C") {
+      // the comet turns round a point at the middle of the figure: its window turns, the line inside turns back as fast and
+      // stays still, so only the bright stretch travels
+      const cx = j.bw / 2 - j.left, cy = j.bh * 0.45 - j.top;
+      const R = 2 * Math.max(Math.hypot(cx, cy), Math.hypot(j.iw - cx, cy), Math.hypot(cx, j.ih - cy), Math.hypot(j.iw - cx, j.ih - cy)), wx = cx - R / 2, wy = cy - R / 2;
+      return {
+        under: tag("", "", `<span class="g121-w"><span class="g121-l g121-cglow">${cv("g121-halo")}</span></span>`),
+        over: cover("g121-cglow") + tag(" g121-over", "", `<span class="g121-w"><span class="g121-l g121-cline${sh}">${cv("g121-ring")}</span></span><span class="g121-w"><span class="g121-comet" style="left:${px(wx)};top:${px(wy)};width:${px(R)};height:${px(R)}"><canvas class="g121-cring" width="${j.cw}" height="${j.ch}" style="left:${px(-wx)};top:${px(-wy)};width:${px(j.iw)};height:${px(j.ih)};transform-origin:${px(cx)} ${px(cy)}"></canvas></span></span>`),
+      };
+    }
+    if (way === "D") {
+      // the light stands behind the face (the picture's focus), a little lower: the head hides its heart; Reo Buio and Clea have
+      // an eclipse, its black disc over the sun's core
+      const sx = j.left + j.focus[0] * j.iw, sy = j.top + (j.focus[1] + 0.03) * j.ih, ecl = L.sun === "eclipse";
+      return {
+        under: tag(ecl ? " g121-ecl" : "", `<span class="g121-sun" style="left:${px(sx)};top:${px(sy)}"><i class="g121-rays g121-r1"></i><i class="g121-rays g121-r2"></i><i class="g121-core"></i></span>${ecl ? `<span class="g121-eclw" style="left:${px(sx)};top:${px(sy)}"><i class="g121-disc"></i></span>` : ""}`, `<span class="g121-w"><span class="g121-l g121-dglow">${cv("g121-halo")}</span></span>`),
+        over: cover("g121-dglow") + tag(" g121-over", "", `<span class="g121-w"><span class="g121-l g121-drim${sh}">${cv("g121-edge")}</span></span>`),
+      };
+    }
+    // E: a faint steady rim, and copies of the outline in light that leave from the feet and widen; at the start one big wave
+    return {
+      under: tag("", "", `<span class="g121-w"><span class="g121-l g121-erim${sh}">${cv("g121-line")}</span></span>${["k0", "k1", "k2", "shock"].map((q) => cv(`g121-ge g121-${q}${q === "shock" ? "" : sh}`)).join("")}`),
+      over: cover("g121-erim"),
+    };
+  };
+  const put = (c, src) => { if (!c || !src) return; c.width = src.width; c.height = src.height; ctxOf(c).drawImage(src, 0, 0); };
+  /** The layers in, round the figure (.fig83): behind it and over it, the drawn canvases copied in. */
+  const mount = (box, j, out) => {
+    const L = LOOK[j.look], fig = box.querySelector(":scope > .fig83");
+    if (!L || !fig) return;
+    const P = parts(j, L);
+    fig.insertAdjacentHTML("beforebegin", P.under);
+    fig.insertAdjacentHTML("afterend", P.over);
+    const one = (sel) => box.querySelector(`:scope > .g121 ${sel}`), all = (sel) => box.querySelectorAll(`:scope > .g121 ${sel}`);
+    put(one(".g121-cv"), out.cover);
+    if (j.way === "A") put(one(".g121-halo"), out.halo);
+    else if (j.way === "B") { put(one(".g121-up"), out.up); all(".g121-fl").forEach((c, k) => put(c, out[`fl${k}`])); }
+    else if (j.way === "C") { put(one(".g121-halo"), out.halo); put(one(".g121-ring"), out.ring); put(one(".g121-cring"), out.cring); }
+    else if (j.way === "D") { put(one(".g121-halo"), out.halo); put(one(".g121-edge"), out.edge); }
+    else { put(one(".g121-line"), out.line); all(".g121-ge").forEach((c) => put(c, out.wave)); }
+  };
+
+  /* pictures, each loaded once; the drawn looks, the last few kept (a resize or another picture makes new ones) */
+  const IMGS = new Map(), DONE = new Map();
+  const loadImg = (src) => {
+    if (!IMGS.has(src)) IMGS.set(src, new Promise((res, rej) => { const im = new Image(); im.decoding = "async"; im.onload = () => res(im); im.onerror = () => rej(new Error(`glow121: no picture ${src}`)); im.src = src; }));
+    return IMGS.get(src);
+  };
+  /** j with its way and its canvas: as dense as the screen, two at most (a phone stays sharp, a PC draws no more than it shows). */
+  const sized = (j) => {
+    const way = j.way ?? wayOf(j.look), dpr = Math.min(window.devicePixelRatio || 1, 2), cw = Math.max(1, Math.round(j.iw * dpr)), ch = Math.max(1, Math.round(j.ih * dpr)), k = cw / j.iw;
+    return { ...j, way, cw, ch, k, em: j.fs * k };
+  };
+  const keyOf = (j) => `${j.look}|${j.way}|${j.src}|${j.cw}|${j.ch}`;
+  /** The look drawn (a promise, shared): after a short wait, so the frame that turned it on (the banner, the numbers) is shown first. */
+  const made = (j) => {
+    const id = keyOf(j);
+    if (!DONE.has(id)) {
+      DONE.set(id, loadImg(j.src).then((im) => new Promise((r) => setTimeout(r, 40)).then(() => draw(im, j))));
+      if (DONE.size > 12) DONE.delete(DONE.keys().next().value);
+    }
+    return DONE.get(id);
+  };
+  /** Lights a figure: j = { look, way (else the Database's, else the mix), src, left, top, iw, ih, bw, bh, fs, focus }. A newer
+   *  paint or a clear wins over one still drawing; the way «off» lights nothing. */
+  const paint = (box, j0) => {
+    const j = sized(j0), token = {};
+    box._g121 = token;
+    if (j.way === "off" || !LOOK[j.look]) return;
+    made(j).then((out) => { if (box._g121 === token && box.isConnected) mount(box, j, out); }).catch(() => {});
+  };
+  const clear = (box) => { box._g121 = null; box.querySelectorAll(":scope > .g121").forEach((n) => n.remove()); };
+  /** Draws a look ahead, when the page has nothing else to do (a fight just opened): lit later, it shows at once. */
+  const prepare = (j0) => {
+    const j = sized(j0);
+    if (j.way === "off" || !LOOK[j.look] || DONE.has(keyOf(j))) return;
+    const go = () => made(j).catch(() => {});
+    if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 3000 }); else setTimeout(go, 400);
+  };
+  return { LOOK, WAYS, wayOf, figure, paint, clear, prepare };
+})();
 initGame();
 bindAnchors();
 /* ── round 59 · a new version: when the Admin asks every game to update (the pack's `app`, from the Gestionale's Lancio
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-14-1550";
+const BUILD = "2026-11-14-2138";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
