@@ -8374,6 +8374,125 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
 }
 @media (prefers-reduced-motion: reduce) { .r119-vein i, .r119-walker { transition: none; } }
 
+/* ── round 120 · the talents' light on the figures, several teams, the Log In's scroll cue ── */
+
+/* ── round 120 · perf (the user, 14 Nov: «Il gioco nella nuova parte di mappa lagga abbastanza, soprattutto nei luoghi», «Fai un controllo
+ *  per ottimizzare tutto»): what nobody can see rests, and the look stays the same (the blocks are in r120-perf.reps) ── */
+/* a scene of S66 (a place, a talk, the prologue) covers the whole window, above the game (z-index 85 over the game's 70): the game's own
+ * CSS animations under it hold still, as under a fight (round 60), and go on from there when it closes. html[data-s66] is S66's flag: it
+ * is not set while the scene lets the game show through (.s66.is-over), and the scene's own layer is not inside .gm, so nothing of it is
+ * held. The animations the scripts run (el.animate) are not touched */
+html[data-s66] .gm *, html[data-s66] .gm *::before, html[data-s66] .gm *::after { animation-play-state: paused !important; }
+/* a fight's aim brackets pulse only on the hero they mark: on the others they stand at opacity 0 and pulsed all the same. Held, not
+ * taken away, so a mark that goes fades out where it stood, and the next one pulses on from there */
+.bt-mem:not(.is-aimed) .bt-aim { animation-play-state: paused; }
+/* the Dragon's Mouth: the walker glides by a transform (glide120 in r120-perf.reps), no longer by left and top */
+.r119-walker { transition: none; }
+
+/* ── round 120 · stamina: the stamina's sheet keeps the fight that asked («Enough for this fight», «fight now · N stamina»), its
+   countdown runs; the Ember Vein's and Ignara's fight buttons say what the fight costs ── */
+.st94-ok { margin: 6px 0; color: #9be7b0; font-weight: 600; }
+.st94-go { width: 100%; margin: 4px 0 12px; justify-content: space-between; }
+.st94-go small { font-size: 12px; opacity: 0.8; }
+/* «fight now» appearing in an open sheet (a refill, a point back): it rises in once */
+.st94-go.is-in120 { animation: st94-in120 300ms cubic-bezier(0.2, 0, 0, 1) both; }
+@keyframes st94-in120 { from { opacity: 0; transform: translateY(8px); } }
+.st94-sheet [data-st94-next] { font-variant-numeric: tabular-nums; }
+/* the cost under the label, so a long label never wraps in the middle */
+.dp66-go small.st120-cost { display: block; margin-top: 5px; font: 600 12px/1 var(--font-display); letter-spacing: 0.08em; opacity: 0.75; }
+.gm-btn.st120-two { flex-direction: column; align-items: flex-start; justify-content: center; gap: 3px; padding-block: 8px; text-align: left; }
+.gm-btn.st120-two small { font: 500 12px/1.1 var(--font-display); letter-spacing: 0.06em; opacity: 0.8; }
+
+/* ══ round 120 · the Log In: a later log-in with a reward waiting says so over the nav until you reach it (the user: «fai capire che
+   per ritirarlo si deve scorrere in giù (se ce ne sono 2 attivi come quello di Kaori e quello del mese)») ══ */
+/* The cue sticks to the foot of the page while its log-in is out of sight. A sticky inset counts from the page's content box (as
+   .sm42-sheet's header, top: -10px, and .g-pub-cta, bottom: -24px, already use it), and the page's foot padding is the nav's room
+   + 28px on phone (.gm-sub) and + 40px on PC (104px + 40px, the nav's top being 18px + 74px up): -12px puts the cue 16px over the
+   phone's nav, -34px 18px over the PC's. It rides anywhere in the log-ins' grid (a grid item sticks within the whole grid, as that
+   header does). Once you reach it, it settles as that log-in's divider. */
+.lg120-cue { position: sticky; bottom: -12px; z-index: 20; justify-self: center; display: flex; align-items: center; justify-content: center; gap: 10px; width: min(100%, 440px); margin-top: 32px; padding: 11px 18px 11px 14px;
+  border: 1px solid #02d2e3; background: rgb(6 9 13 / 0.94); color: #d9e2e8; font: 600 14px/1.25 var(--font-sans); text-align: left; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.55), 0 0 22px rgb(2 210 227 / 0.22); transition: background-color 160ms, box-shadow 160ms, transform 150ms; }
+.gm[data-device="pc"] .lg120-cue { bottom: -34px; }
+.lg120-cue b { margin-right: 2px; font: 700 15px/1 var(--font-display); letter-spacing: 0.05em; text-transform: uppercase; color: #fff; }
+.lg120-cue:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.lg120-cue:focus-visible, .lg120-cue:active { background: rgb(8 26 32 / 0.96); box-shadow: 0 10px 30px rgb(0 0 0 / 0.55), 0 0 30px rgb(2 210 227 / 0.42); }
+@media (hover: hover) { .lg120-cue:hover { background: rgb(8 26 32 / 0.96); box-shadow: 0 10px 30px rgb(0 0 0 / 0.55), 0 0 30px rgb(2 210 227 / 0.42); } }
+.lg120-cue:active { transform: scale(0.98); }
+/* the game's arrow turned down, bobbing gently */
+.lg120-down { width: 18px; height: 18px; flex: none; rotate: 90deg; color: #02d2e3; stroke-width: 2; animation: lg120-bob 1.6s ease-in-out infinite; }
+@keyframes lg120-bob { 50% { translate: 0 3px; } }
+@media (prefers-reduced-motion: reduce) { .lg120-down { animation: none; } }
+.lg120-cue + .lg113 { margin-top: 14px; }
+/* Kaori's tile, seen only on the day she is claimed (the week then stays until the page is left): lit, she is with you */
+.lg64-end.is-got { opacity: 1; box-shadow: 0 0 0 2px #ffc93c, 0 0 46px rgb(255 201 60 / 0.4); }
+
+/* ── round 120 · several teams: the rail of team tabs on the Team page (PC: its own row over the stage, the roster beside both;
+ *    phone: a sideways strip over the field, the actions under it), and the chips that put another team in use (over a team's
+ *    HP in the map's sheets and the story's panel, and on the Challenge page) ── */
+.tm120 { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; min-width: 0; }
+.tm120-strip { display: flex; gap: 8px; min-width: 0; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; padding: 1px 1px 2px; scrollbar-width: thin; scrollbar-color: #2a2f3b transparent; }
+.tm120-tabs { flex: none; display: flex; gap: 8px; }
+.tm120-tab { flex: none; display: grid; grid-template-columns: auto auto; align-items: center; justify-content: start; gap: 6px 10px; min-height: 60px; padding: 8px 14px 8px 12px; border: 1px solid var(--border-on-dark); background: var(--raw-color-ink-900); color: var(--foreground-on-dark-muted); text-align: left; cursor: pointer;
+  --cut: 10px; clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%); transition: border-color 180ms, background-color 180ms; }
+.tm120-tab b { min-width: 0; max-width: 18ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 15px/1.1 var(--font-display); letter-spacing: 0.06em; text-transform: uppercase; color: #fff; }
+.tm120-tab[aria-selected="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--raw-color-ink-900)); }
+.tm120-tab.is-in-use { box-shadow: inset 3px 0 0 var(--accent); }
+/* the corner is cut, so the focus ring is drawn inside the tab */
+.tm120-tab:focus-visible { outline: 2px solid #fff; outline-offset: -5px; }
+@media (hover: hover) { .tm120-tab:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border-on-dark)); } }
+.tm120-tag { justify-self: start; padding: 3px 6px; font: 700 10px/1 var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--surface-black); background: var(--accent); }
+.tm120-fs { grid-column: 1 / -1; display: flex; gap: 3px; }
+.tm120-f { position: relative; flex: none; width: 26px; height: 34px; overflow: hidden; background: rgb(255 255 255 / 0.05); }
+.tm120-f.is-bench { margin-left: 6px; }
+/* the bench's gold (as on the field), a line over the face's own picture */
+.tm120-f.is-bench::after { content: ""; position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; height: 2px; background: rgb(242 182 50 / 0.85); }
+.tm120-f.is-empty { background: none; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.14); }
+.tm120-f.is-bench.is-empty { box-shadow: inset 0 0 0 1px rgb(242 182 50 / 0.4); }
+.tm120-f .face-chip { position: absolute; inset: 0; width: 100%; height: 100%; filter: none; }
+.tm120-f .face-chip-name { display: none; }
+.tm120-new { grid-template-columns: auto; justify-items: center; align-content: center; gap: 4px; padding-inline: 16px; border-style: dashed; }
+.tm120-new b { font: 700 26px/0.9 var(--font-display); color: var(--accent); }
+.tm120-new small { font: 700 12px/1 var(--font-display); letter-spacing: 0.06em; text-transform: uppercase; }
+/* the team shown: what it can do (use it, rename, copy, delete), or its name being typed */
+.tm120-bar, .tm120-rn { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; margin-left: auto; }
+.tm120-bar .gm-btn, .tm120-rn .gm-btn { margin: 0; min-height: 40px; padding: 0 14px; font-size: 14px; }
+.tm120-inuse { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding-right: 6px; font: 700 13px/1 var(--font-display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.tm120-inuse::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+.tm120-name { width: 15em; max-width: 100%; min-height: 40px; padding: 0 12px; border: 1px solid var(--accent); border-radius: 0; background: var(--raw-color-ink-900); color: #fff; font: 700 16px/1 var(--font-display); letter-spacing: 0.04em; text-transform: uppercase; }
+.tm120-name::placeholder { color: var(--foreground-on-dark-muted); }
+.tm120-name:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* PC: the rail takes the stage's row 1 and the stage row 2, the roster stands beside both (explicit places: the rail is
+   .p77-team's first child, and auto placement would push the stage into the roster's column) */
+.p77-team { grid-template-rows: auto minmax(0, 1fr); row-gap: 14px; }
+.p77-team > .tm120 { grid-area: 1 / 1; align-self: start; }
+.p77-team > .p77-stage { grid-area: 2 / 1; }
+.p77-team > .p77-side { grid-area: 1 / 2 / 3 / 3; }
+/* a team kept aside: the stage's floor loses its cyan light, which stands under the team that fights */
+.tm120.is-stored + .p77-stage { background: radial-gradient(64% 36% at 50% 100%, rgb(255 255 255 / 0.05), transparent 72%); }
+/* phone: the tabs scroll sideways over the field, the actions on their own line under them */
+.tb2 > .tm120 { margin-bottom: 16px; }
+.tb2 > .tm120 .tm120-strip { flex: 1 1 100%; scroll-snap-type: x proximity; scrollbar-width: none; }
+.tb2 > .tm120 .tm120-strip::-webkit-scrollbar { display: none; }
+.tb2 > .tm120 .tm120-tab { min-height: 52px; padding: 6px 10px; gap: 5px 8px; scroll-snap-align: start; }
+.tb2 > .tm120 .tm120-tab:not(.tm120-new) b { font-size: 14px; }
+.tb2 > .tm120 .tm120-new { padding-inline: 14px; }
+.tb2 > .tm120 .tm120-f { width: 20px; height: 26px; }
+.tb2 > .tm120 :is(.tm120-bar, .tm120-rn) { flex: 1 1 100%; margin-left: 0; }
+.tb2 > .tm120 :is(.tm120-bar, .tm120-rn) .gm-btn { padding: 0 12px; font-size: 13px; }
+.tb2 > .tm120 .tm120-name { flex: 1 1 150px; width: auto; }
+/* the chips: the story's panel styles every button in it (.gm-ch button), so these name their own look whole */
+.tm120-pick { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; }
+.tm120-pick > small { margin-right: 2px; font: 700 11px/1 var(--font-display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--foreground-on-dark-muted); }
+.tm120-pick button[data-tm120-pick] { display: block; max-width: 100%; min-height: 36px; padding: 0 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;
+  font-size: 12px; font-weight: 700; line-height: 34px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--foreground-on-dark-muted); background: var(--raw-color-ink-900); border: 1px solid var(--border-on-dark); clip-path: none; transition: border-color 160ms, color 160ms; }
+.tm120-pick button[data-tm120-pick][aria-checked="true"] { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--raw-color-ink-900)); }
+.tm120-pick button[data-tm120-pick]:disabled { opacity: 0.4; cursor: not-allowed; }
+.tm120-pick button[data-tm120-pick]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (hover: hover) { .tm120-pick button[data-tm120-pick]:not(:disabled):hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border-on-dark)); } }
+.tm120-ch { margin: 14px 0 12px; }
+@media (prefers-reduced-motion: reduce) { .tm120-tab, .tm120-pick button[data-tm120-pick] { transition: none; } }
+
 </style>
 </head>
 <body>
@@ -10402,14 +10521,71 @@ const field = (x, y, t) => {
   return f * 0.5 + 0.5;
 };
 
+/* ── round 120 (perf; the user, 14 Nov: «Il gioco nella nuova parte di mappa lagga abbastanza, soprattutto nei luoghi», «Fai un
+ *  controllo per ottimizzare tutto») · the game's backdrop lines (.gm-lines) were drawn 30-40 times a second over the whole window,
+ *  under whatever covered them (strumenti/lag120.cjs: the shared ticker in every screen, the places' and the fights' too). This says
+ *  what of them can be seen right now, and initContours draws only that, the same as before:
+ *   0         nothing: a scene of S66 covers the window (html[data-s66]);
+ *   { ring }  a rim 14 px wide: a fight fills the window, opaque and still (its shakes move it 10 px at most, and while one runs the
+ *             lines are all drawn);
+ *   { band }  the top, down to where a screen's fade turns opaque: a screen fills the window, opaque and still, and its mask fades it
+ *             in under the HUD (the lines show only through that fade: 58 px, 84 px on a PC, more under a phone's notch);
+ *   Infinity  all of them: the Home, the phone's column in a wider window, a screen coming in (PHONE_KIT holds it clear, then it
+ *             slides in), a fight shaking, a mask of another shape, anything not sure.
+ *  What can uncover more of them (a scene closing, another screen, the device, the stage's size) draws them again at once (`again`). ── */
+const gmLines120 = (page, again) => {
+  const html = document.documentElement, stage = page.querySelector("[data-gm-stage]");
+  // a fade's opaque end, as the browser gives it back: "58px", or a sum of pixels under a phone's notch ("calc(47px + 58px)")
+  const FADE = /^linear-gradient\((?:to bottom, |180deg, )?rgba\(0, 0, 0, 0\) [^,]+, rgb\(0, 0, 0\) ([^,]+)\)$/;
+  const px = (s) => {
+    const sum = /^calc\((.*)\)$/.exec(s)?.[1] ?? s;
+    return /^\s*\d+(?:\.\d+)?px(?:\s*[+-]\s*\d+(?:\.\d+)?px)*\s*$/.test(sum) ? sum.replace(/\s+/g, "").split(/(?=[+-])/).reduce((n, x) => n + parseFloat(x), 0) : NaN;
+  };
+  // an element as big as the stage through which nothing of what lies under it shows (bar its mask): its style, else null
+  const solid = (el) => {
+    if (el.offsetLeft > 0 || el.offsetTop > 0 || el.offsetWidth < stage.offsetWidth || el.offsetHeight < stage.offsetHeight) return null;
+    const cs = getComputedStyle(el);
+    const still = cs.opacity === "1" && cs.visibility === "visible" && cs.transform === "none" && cs.translate === "none" && cs.scale === "none" && cs.rotate === "none";
+    return still && cs.filter === "none" && cs.clipPath === "none" && cs.mixBlendMode === "normal" && /^rgb\(/.test(cs.backgroundColor) ? cs : null;
+  };
+  const maskOf = (cs) => [cs.maskImage, cs.webkitMaskImage].find((m) => m && m !== "none") ?? "none";
+  addEventListener("uncover120", again);
+  new MutationObserver(again).observe(page, { attributes: true, attributeFilter: ["data-where", "data-device"] });
+  if (stage) new ResizeObserver(again).observe(stage);
+  return () => {
+    if (html.hasAttribute("data-s66")) return 0;
+    if (!stage || stage.offsetWidth < page.offsetWidth || stage.offsetHeight < page.offsetHeight) return Infinity;
+    const bt = stage.querySelector("[data-bt]");
+    if (bt && !bt.hidden) { const cs = solid(bt); return cs && maskOf(cs) === "none" ? { ring: 14 } : Infinity; }
+    const sub = stage.querySelector("[data-gm-sub]:not([hidden])"), cs = sub && solid(sub);
+    if (!cs) return Infinity;
+    const m = FADE.exec(maskOf(cs)), end = m ? px(m[1]) : NaN;
+    return end >= 0 ? { band: end + 2 } : Infinity;
+  };
+};
+// a fight's own lines (.bt-lines, behind the fight that has no battlefield picture): none under a scene of S66, all of them elsewhere
+const btLines120 = (again) => {
+  addEventListener("uncover120", again);
+  return () => (document.documentElement.hasAttribute("data-s66") ? 0 : Infinity);
+};
+
 const initContours = (canvas, token, owner) => {
   const context = canvas.getContext("2d");
   // `token` is a colour token, or a function returning the colour of the moment (the game's leader).
   const colour = typeof token === "function" ? null : tokenColour(token);
   const start = performance.now();
   let values = null;
+  // round 120 (perf): what of the lines can be seen (0 none, Infinity all, else a rim or a top band). The game's backdrop asks
+  // gmLines120, a fight's own lines btLines120; the site's sections draw whole, as before. `again` draws them at once when something
+  // uncovers more of them; canvas._view120 is for the tests (strumenti/round120-test.cjs)
+  let loop = null, seen = null;
+  const again = () => { if (loop?.isRunning()) draw(); };
+  const view = REDUCED ? null : canvas.matches("[data-gm-lines]") ? gmLines120(owner, again) : canvas.matches(".bt-lines") ? btLines120(again) : null;
+  if (view) canvas._view120 = view;
 
   const draw = (now = performance.now()) => {
+    const v = view ? view() : Infinity;
+    if (!v) return; // nothing of them shows: the canvas keeps what it had, and nothing is worked out
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     fitCanvas(canvas, ratio);
     const width = canvas.clientWidth;
@@ -10424,13 +10600,29 @@ const initContours = (canvas, token, owner) => {
     const stepX = width / cols, stepY = height / rows, aspect = width / height;
     const size = (cols + 1) * (rows + 1);
     if (!values || values.length !== size) values = new Float32Array(size);
-    for (let j = 0; j <= rows; j += 1) for (let i = 0; i <= cols; i += 1) {
+    const point = (i, j) => {
       const nx = ((i / cols) * 2 - 1) * aspect * LINE_SCALE; // NDC, framed the way the hero frames it
       const ny = ((j / rows) * 2 - 1) * LINE_SCALE;
       const qx = nx + Math.sin(ny * 0.8 + t * 0.7) * WAVE_AMOUNT;
       const qy = ny + Math.cos(nx * 0.7 - t * 0.6) * WAVE_AMOUNT;
-      values[j * (cols + 1) + i] = field(qx, qy, t) * LINE_COUNT;
-    }
+      return field(qx, qy, t) * LINE_COUNT;
+    };
+    // round 120 (perf): all of them as before, every point first; a part (a rim, a top band) works out only the points of the cells it
+    // draws, each the first time one of them asks for it, kept in the same Float32Array: a line comes out exactly where the whole field
+    // puts it
+    const all = v === Infinity;
+    if (all) { for (let j = 0; j <= rows; j += 1) for (let i = 0; i <= cols; i += 1) values[j * (cols + 1) + i] = point(i, j); }
+    else if (!seen || seen.length !== size) seen = new Uint8Array(size);
+    else seen.fill(0);
+    const at = (i, j) => {
+      const k = j * (cols + 1) + i;
+      if (!all && !seen[k]) { seen[k] = 1; values[k] = point(i, j); }
+      return values[k];
+    };
+    // the cells left out, each with a margin so that no stroke that shows is cut short: under the band, the rows below its end; in the
+    // rim, the cells wholly inside it
+    const R = v.ring, jEnd = v.band != null ? Math.min(rows, Math.ceil(v.band / stepY)) : rows;
+    const inner = R != null ? (i, j) => i * stepX >= R && (i + 1) * stepX <= width - R && j * stepY >= R && (j + 1) * stepY <= height - R : null;
     context.strokeStyle = colour ?? token();
     context.lineWidth = 1;
     context.globalAlpha = LINE_OPACITY;
@@ -10440,9 +10632,10 @@ const initContours = (canvas, token, owner) => {
       context.lineTo(q[0], q[1]);
     };
     for (let level = 0.5; level < LINE_COUNT; level += 1) // halfway between integers, like the shader
-      for (let j = 0; j < rows; j += 1) for (let i = 0; i < cols; i += 1) {
-        const a = values[j * (cols + 1) + i], b = values[j * (cols + 1) + i + 1];
-        const c = values[(j + 1) * (cols + 1) + i + 1], d = values[(j + 1) * (cols + 1) + i];
+      for (let j = 0; j < jEnd; j += 1) for (let i = 0; i < cols; i += 1) {
+        if (inner && inner(i, j)) continue;
+        const a = at(i, j), b = at(i + 1, j);
+        const c = at(i + 1, j + 1), d = at(i, j + 1);
         const index = (a > level ? 8 : 0) | (b > level ? 4 : 0) | (c > level ? 2 : 0) | (d > level ? 1 : 0);
         if (index === 0 || index === 15) continue;
         const x0 = i * stepX, y0 = j * stepY;
@@ -10469,7 +10662,7 @@ const initContours = (canvas, token, owner) => {
     draw();
     new ResizeObserver(() => draw()).observe(canvas);
   } else {
-    loopInView(owner, draw, () => 24);
+    loop = loopInView(owner, draw, () => 24);
   }
 };
 
@@ -15113,6 +15306,97 @@ const lineup = () => {
 };
 const lineupIds = () => { const l = lineup(); return [...l.team, l.bench].filter(Boolean); };
 const setLineup = (team, bench) => { const t = isAdmin() ? PLAYER.admin : PLAYER.player; t.team = [0, 1, 2].map((i) => team[i] ?? null); t.bench = bench ?? null; savePlayer(); };
+/* ══ round 120 · several teams, one in use ════════════════════════════════════════════════════════════════════════════════
+ *  The user: «implementami la funzione di creare dal menù team più squadre (ovviamente ne posso usare una alla volta ed i pg
+ *  possono essere in più squadre allo stesso momento)». player.team / player.bench stay the team in use: every fight (lineup()),
+ *  the Home, the story's scenes (team72), the items (wearer89) and the VS screen read them as before. Beside them player.teams
+ *  keeps every team, up to five ({ name, team: [three ids], bench }), and player.teamAt says which one fights. teams[teamAt] is
+ *  never trusted: it is read back from team / bench on every read, so the old writers (the first hero, an account reset, the
+ *  launch reset) need no change, and an old save becomes Team 1 the first time it is read. The Admin keeps his own teams
+ *  beside his own team. HP, levels, stars, items and the Home's leader stay the hero's, shared by every team. */
+const TEAMS120 = 5;
+const teamBook120 = () => (isAdmin() ? PLAYER.admin : PLAYER.player);
+const blank120 = () => ({ name: null, team: [null, null, null], bench: null });
+/** Every team of the mode you play (a save with none gets Team 1 here); the one in use is read back from team / bench. */
+const teams120 = () => {
+  const t = teamBook120();
+  if (!Array.isArray(t.teams) || !t.teams.length) t.teams = [blank120()];
+  if (t.teams.length > TEAMS120) t.teams.length = TEAMS120;
+  t.teams.forEach((x, i) => {
+    if (!x || typeof x !== "object") x = t.teams[i] = blank120();
+    if (!Array.isArray(x.team) || x.team.length !== 3) x.team = [0, 1, 2].map((k) => (Array.isArray(x.team) ? x.team[k] ?? null : null));
+    if (x.bench === undefined) x.bench = null;
+    if (typeof x.name !== "string" || !x.name.trim()) x.name = null;
+  });
+  t.teamAt = Math.min(Math.max(0, Math.trunc(Number(t.teamAt)) || 0), t.teams.length - 1);
+  const on = t.teams[t.teamAt];
+  on.team = [0, 1, 2].map((k) => t.team?.[k] ?? null);
+  on.bench = t.bench ?? null;
+  return t.teams;
+};
+const teamAt120 = () => { teams120(); return teamBook120().teamAt; };
+/** A team's name: the player's own, or «Team N» by its place. It is player text: escape it (esc102) before it goes into HTML. */
+const teamLabel120 = (i) => teams120()[i]?.name || `Team ${i + 1}`;
+/** A team's four places (three on the field, then the bench), only heroes you own. */
+const slots120 = (i) => {
+  const x = teams120()[i], ok = (id) => (id && owned(id) && heroineById(id) ? id : null);
+  return x ? [...x.team.map(ok), ok(x.bench)] : [null, null, null, null];
+};
+/** True when a hero of yours stands on that team's field: only such a team can be put in use. */
+const fit120 = (i) => slots120(i).slice(0, 3).some(Boolean);
+/** Saves a team's four places; the team in use goes through setLineup, as before. */
+const putTeam120 = (i, sl) => {
+  if (i === teamAt120()) { setLineup(sl.slice(0, 3), sl[3]); return; }
+  const x = teams120()[i];
+  if (!x) return;
+  x.team = [0, 1, 2].map((k) => sl[k] ?? null);
+  x.bench = sl[3] ?? null;
+  savePlayer();
+};
+/** Puts a team in use (it takes the next fight); false when nobody of yours stands on its field. */
+const useTeam120 = (i) => {
+  const t = teamBook120(), x = teams120()[i];
+  if (!x || !fit120(i)) return false;
+  if (i !== t.teamAt) { t.teamAt = i; t.team = [...x.team]; t.bench = x.bench; savePlayer(); }
+  return true;
+};
+/** A new team at the end, empty or a copy of team `from` (its name is its place); its index, or -1 with five already. */
+const addTeam120 = (from = null) => {
+  const list = teams120();
+  if (list.length >= TEAMS120) return -1;
+  const s = from == null ? null : list[from];
+  list.push(s ? { name: null, team: [...s.team], bench: s.bench } : blank120());
+  savePlayer();
+  return list.length - 1;
+};
+/** Deletes a team: never the one in use, never the last one. */
+const dropTeam120 = (i) => {
+  const t = teamBook120(), list = teams120();
+  if (list.length < 2 || i === t.teamAt || !list[i]) return false;
+  list.splice(i, 1);
+  if (i < t.teamAt) t.teamAt -= 1;
+  savePlayer();
+  return true;
+};
+/** Names a team: 1 to 16 characters, spaces squeezed; empty, or its own «Team N», gives back the name by its place. */
+const nameTeam120 = (i, v) => {
+  const x = teams120()[i];
+  if (!x) return;
+  const s = [...String(v ?? "").replace(/[\u0000-\u001f\u007f]/g, "").replace(/\s+/g, " ").trim()].slice(0, 16).join("").trim();
+  x.name = s && s.toLowerCase() !== `team ${i + 1}` ? s : null;
+  savePlayer();
+};
+/** The chips that put another team in use where you stand: over a team's HP (the map's sheets, the story's panel) and on the
+ *  Challenge page. Nothing with one team; a team with nobody on its field cannot be chosen. */
+const teamPick120 = () => {
+  const list = teams120(), at = teamAt120();
+  if (list.length < 2) return "";
+  return `<div class="tm120-pick" role="radiogroup" aria-label="Team in use"><small aria-hidden="true">team in use</small>${list.map((_, i) => `<button type="button" role="radio" aria-checked="${i === at}" data-tm120-pick="${i}"${i === at || fit120(i) ? "" : " disabled"}>${esc102(teamLabel120(i))}</button>`).join("")}</div>`;
+};
+/** The Challenge page's row of those chips, above Easy, Normal and Hard. */
+const teamCh120 = () => { const p = teamPick120(); return p ? `<div class="tm120-ch">${p}</div>` : ""; };
+/** The story panel's line over the team's HP: the team's name once there are several (set as text, never as HTML). */
+const teamTitle120 = () => `${teams120().length > 1 ? teamLabel120(teamAt120()) : "Your team"} · its HP carries from fight to fight`;
 /** Experience: levels up as far as it reaches. Returns the levels gained. */
 const addXp = (id, amount) => {
   const r = !isAdmin() && PLAYER.player.roster[id], top = lvTop(id);
@@ -15153,7 +15437,9 @@ const wearer89 = (id, heroId) => {
   const who = Object.entries(gearStore()).filter(([hid, l]) => hid !== heroId && ITEM_SLOTS.some((s) => l?.[s.id] === id)).map(([hid]) => hid);
   if (!who.length) return null;
   const P = PLAYER.player, team = new Set([...(P.team ?? []), P.bench].filter(Boolean));
-  return who.find((x) => !team.has(x)) ?? who[0];
+  // round 120: first from a hero in no team at all, then from one out of the team in use
+  const any = new Set(teams120().flatMap((x) => [...x.team, x.bench]).filter(Boolean));
+  return who.find((x) => !any.has(x)) ?? who.find((x) => !team.has(x)) ?? who[0];
 };
 /** Takes that piece off that hero, so it can go on another. */
 const unwear89 = (id, from) => { const l = gearStore()[from]; if (!l) return; for (const s of ITEM_SLOTS) if (l[s.id] === id) { l[s.id] = null; break; } saveGear(); };
@@ -16697,7 +16983,11 @@ const stam94 = () => {
   return { v: s.v, next: s.v >= STAM94.max ? 0 : STAM94.every - (now - s.at) };
 };
 /** The game's top bar and sheet set these: the pill's number, and the sheet that refills. */
-const ST94 = { paint: null, ask: null };
+const ST94 = { paint: null, ask: null, want: null };
+// round 120: ST94.want is the fight that sent you to the shop from the stamina's sheet; the top bar's stamina offers it for 10 minutes
+/** Round 120: starts a fight by its route, so it goes through battle.open's gate (stamina, the walk, 50% for a place already cleared).
+ *  When the address already shows that fight («play again» on its result screen) it is set back to the map first, so it changes. */
+const fight120 = (route) => { const h = `#/play/${route}`; if (location.hash === h) setAddress("#/play/story"); location.hash = h; };
 const stamAdd94 = (n) => { if (isAdmin() || window.__FREE94) return; stam94(); const s = (PLAYER.player.stam94 ??= { v: STAM94.max, at: Date.now() }); s.v = Math.max(0, Math.min(STAM94.max, s.v + n)); if (s.v >= STAM94.max) s.at = Date.now(); savePlayer(); ST94.paint?.(); };
 /** A fire is out once you rested at it, until you sleep at an inn. */
 const out94 = (r, n) => !!webStore().fire94?.[nodeKey(r, n)];
@@ -18502,7 +18792,17 @@ const STORY62 = (() => {
   };
   const centreOf = (rg) => { const ss = STORY.stages.filter((s) => s.reg === rg); return [ss.reduce((a, s) => a + s.x, 0) / ss.length, ss.reduce((a, s) => a + s.y, 0) / ss.length]; };
   const lore = (title) => { const r = STORY_REGIONS.findIndex((x) => x.name === title); return r >= 0 && LORE[title] && freed(r) ? `<span class="arc-lore62">${LORE[title]}</span>` : ""; };
-  return { ELEM, BREAK, store, ruleOf, goalsOf, mechOf, ruleName, ruleSay, sheet, stars, before, after, mapK, lore, play, scenes: SCENES, linesOf };
+  // round 120: the story map keeps its relief in a picture (r120-map.reps). It asks here which regions are free (a freed region's dots
+  // are brighter) and whether a wave of light is crossing a region or waits to cross it (then the map draws live, as before); a wave
+  // over for more than 4 s is let go even if its region is out of sight (mapK let it go only while it drew that region).
+  const mapSig = () => STORY_REGIONS.map((_, rg) => (freed(rg) ? 1 : 0)).join("");
+  const mapLive = (t) => {
+    if (wave && (t - wave.t0) / 1000 > 4) wave = null;
+    if (wave) return true;
+    const lit = store().lit ?? {};
+    return Object.keys(lit).some((rg) => lit[rg] === "new" && freed(+rg));
+  };
+  return { ELEM, BREAK, store, ruleOf, goalsOf, mechOf, ruleName, ruleSay, sheet, stars, before, after, mapK, mapSig, mapLive, lore, play, scenes: SCENES, linesOf };
 })();
 
 /* ══ Round 62 · the battlefield (A · Arena di luce, the user's pick) and the VS before a fight (V3 · Ritratti). The field is a
@@ -24621,7 +24921,8 @@ void main() {
     if (story && won && !isAdmin()) { const i98 = STORY.stages.indexOf(run.stage); if (i98 >= 0 && i98 % 25 === 24) { const l98 = land98(Math.floor(i98 / 25) + 1); if (l98) { here89Set(l98); MAP_FOCUS.at = l98; } } }
     const opened = story && won ? MAP_FOCUS.fresh.length : 0;
     const actions = won ? [...(story ? [["choose on the map", "map"]] : run.deep ? [["back to the Ember Vein", "deep"]] : run.smith ? [["Ignara's forge", "forge"]] : run.town69 === "hearth" ? [["back to the Wolf's Hearth", "hearth76"]] : run.town69 === "warcamp" ? [["back to Fernwatch", "fern"]] : run.town69 === "frost119" ? [[`back to ${run.stage?.name ?? "Frostspine"}`, `frost119:${FROST119_AT[String(run.stage?.id ?? "").slice(9)]?.[0] ?? "heart119"}`]] : run.town69 === "noon107" ? [[`back to ${run.stage?.name ?? "the Gilded Steppe"}`, `noon107:${NOON107_AT[String(run.stage?.id ?? "").slice(8)]?.[0] ?? "barque107"}`]] : run.town69 === "tide95" ? [[`back to ${run.stage?.name ?? "the Tidal Shelf"}`, `tide95:${TIDE95_AT[String(run.stage?.id ?? "").slice(7)]?.[0] ?? "pier95"}`]] : run.town69 ? [["back to Brackenford", "town"]] : []), ["play again", "again", story || !!run.deep || !!run.smith || !!run.town69], ["back to the home", "leave", true]]
-      : [["try again", "again"], ...(story ? [["the map", "map", true]] : run.deep ? [["the Ember Vein", "deep", true]] : run.smith ? [["the map", "map", true]] : run.town69 === "hearth" ? [["the map", "map", true]] : run.town69 === "warcamp" ? [["back to Fernwatch", "fern", true]] : run.town69 ? [["back to Brackenford", "town", true]] : []), ["back to the home", "leave", true]];
+      // round 120: a lost ambush in a place of the Tidal Shelf, the Gilded Steppe or Frostspine goes back to that place, as a won one does
+      : [["try again", "again"], ...(story ? [["the map", "map", true]] : run.deep ? [["the Ember Vein", "deep", true]] : run.smith ? [["the map", "map", true]] : run.town69 === "hearth" ? [["the map", "map", true]] : run.town69 === "warcamp" ? [["back to Fernwatch", "fern", true]] : run.town69 === "frost119" ? [[`back to ${run.stage?.name ?? "Frostspine"}`, `frost119:${FROST119_AT[String(run.stage?.id ?? "").slice(9)]?.[0] ?? "heart119"}`, true]] : run.town69 === "noon107" ? [[`back to ${run.stage?.name ?? "the Gilded Steppe"}`, `noon107:${NOON107_AT[String(run.stage?.id ?? "").slice(8)]?.[0] ?? "barque107"}`, true]] : run.town69 === "tide95" ? [[`back to ${run.stage?.name ?? "the Tidal Shelf"}`, `tide95:${TIDE95_AT[String(run.stage?.id ?? "").slice(7)]?.[0] ?? "pier95"}`, true]] : run.town69 ? [["back to Brackenford", "town", true]] : []), ["back to the home", "leave", true]];
     overlay(won ? "" : "is-lost", won ? "victory" : "defeat", (won ? `${run.won} in ${F.turn} turn${F.turn === 1 ? "" : "s"}` : "the team fell") + (opened ? ` · ${opened} new place${opened === 1 ? "" : "s"} open on the map` : "") + (carried ? ` · ${carried}` : ""), actions, stars, loot);
   };
   const pause = () => {
@@ -24924,7 +25225,10 @@ void main() {
     const chest = t.closest("[data-bt-chest]");
     if (chest) { openChest(chest); return; }
     const act = t.closest("[data-bt-act]")?.dataset.btAct;
-    if (act === "again") guard(start(run));
+    // round 120: for a Player, a fight of the story, of its places, of the Smith or of the Ember Vein starts again through its gate like
+    // any other fight (round 94: every fight costs stamina, a place already cleared is fought at 50%; short of stamina, the stamina's
+    // sheet keeps it), once per result screen. The Admin, the Challenge's raids and the Labyrinth start it again here, as before.
+    if (act === "again") { if (run.kind === "battle" && !isAdmin() && run.route120) { if (!run.again120) { run.again120 = true; fight120(`battle/${run.route120}`); } } else guard(start(run)); }
     else if (act === "resume") { el.over.hidden = true; paused = false; arm(); }
     else if (act === "leave") { if (run.kind === "maze") onMaze?.({ left: true }); else onLeave(); }
     else if (act === "maze") onMaze?.(F.mazeRes);
@@ -25056,18 +25360,29 @@ void main() {
     open: (kind, id) => {
       live = true; host.hidden = false;
       if (kind === "maze") { guard(start(id)); return; }
-      if (!lineup().team.length) { live = false; host.hidden = true; onLeave(); return; }
+      // round 120: said on the game's screen (the fight's own toast hides with the fight)
+      if (!lineup().team.length) { live = false; host.hidden = true; window.GM_TOAST97?.("The team in use has nobody on its field: fix it on the Team page."); onLeave(); return; }
       // round 44: a team all down cannot fight; it rests at a camp first
-      if (kind === "battle" && lineupIds().every((x) => hpOf(x) <= 0)) { live = false; host.hidden = true; toast("Your whole team is down: rest at a camp, or put other heroes in the team."); onLeave(); return; }
+      if (kind === "battle" && lineupIds().every((x) => hpOf(x) <= 0)) { live = false; host.hidden = true; /* round 120: the game's toast, the fight's own hides with the fight */ (window.GM_TOAST97 ?? toast)("Your whole team is down: rest at a camp, or put another team in use."); onLeave(); return; }
       // round 94: a Player fights one place at a time, and a fight costs stamina; a place already cleared is fought at 50%
       if (kind === "battle" && !isAdmin()) {
         const run94 = runOf(kind, id), at94 = at94of(run94);
         const mv98 = at94 ? move98(...at94) : { ok: true, cost: 0 };
-        if (!mv98.ok) { live = false; host.hidden = true; toast(mv98.why); location.hash = "#/play/story"; return; }
+        // round 120: a fight already over on its screen («play again», «try again» come through here now) that does not start again is
+        // cleared away as close() does, so nothing of it keeps running under the map
+        const stop120 = () => { live = false; host.hidden = true; if (host.firstChild) { clearTimeout(autoTimer85); gen += 1; LUX.GLX?.reset(); LUX.CLOCK.setSpeed(1); F.asking?.(false); busy = false; paused = false; clearTimeout(countdown); host.replaceChildren(); } };
+        // round 120: why it cannot be reached, said on the game's toast: the fight's own toast hides with the fight (and stop120 takes
+        // it away with a result screen; before any fight of the visit it is not there at all, and the hash below was never set)
+        if (!mv98.ok) { stop120(); (window.GM_TOAST97 ?? toast)(mv98.why); location.hash = "#/play/story"; return; }
         if (at94 && nodeDone(...at94)) run94.back94 = true;
         const c94 = cost94(run94) + (mv98.cost ?? 0);
-        if (stam94().v < c94) { live = false; host.hidden = true; location.hash = "#/play/story"; setTimeout(() => ST94.ask?.(c94), 300); return; }
+        // round 120: short of stamina, the stamina's sheet keeps this fight («fight now» once there is enough); a fight of the Ember Vein
+        // waits in the Vein, not on the map
+        if (stam94().v < c94) { stop120(); location.hash = run94.deep ? "#/play/deep" : "#/play/story"; setTimeout(() => ST94.ask?.(c94, () => fight120(`battle/${id}`)), 300); return; }
         stamAdd94(-c94);
+        // the route it came by: «play again» and «try again» come back through this gate (round 94: every fight costs stamina)
+        run94.route120 = id;
+        ST94.want = null;
         guard(start(run94));
         return;
       }
@@ -27138,30 +27453,96 @@ const STORYMAP = (() => {
     };
     /* the halftone relief, drawn live so its dots stay sharp at every zoom: a grid fixed to the land that halves or
        doubles its step as you zoom, each dot as large as the ground is high, the contour lines lit, a slow light across */
-    const relief = (t) => {
+    /* round 120: the relief can also be drawn into two pictures instead of the map (cl the land's dots, cs the sea's), without its moving
+       light (`flat`), with its own top-left corner (ox, oy) and only over a part of the screen (bx: x0, y0, x1, y1); paint120 below
+       copies the pictures each frame and lays the light over them in one stroke. It says how many sea dots it drew. */
+    const relief = (t, cl = ctx, cs = ctx, flat = false, ox = V.ox, oy = V.oy, bx = [0, 0, cv.width, cv.height]) => {
       const px = base() * V.s, lod = 2 ** Math.round(Math.log2((6 * dpr * 160) / px)) / 160, sp = lod * px;
-      const [wx0, wy0] = Wd(0, 0), [wx1, wy1] = Wd(cv.width, cv.height), sea = "rgba(58,168,255,0.3)", wk110 = W110.k(api, V.s);
+      const wx0 = (bx[0] - ox) / px, wy0 = (bx[1] - oy) / px, wx1 = (bx[2] - ox) / px, wy1 = (bx[3] - oy) / px, sea = "rgba(58,168,255,0.3)", wk110 = W110.k(api, V.s);
       const j0 = Math.max(0, Math.floor(wy0 / lod)), j1 = Math.min(Math.ceil(1 / lod), Math.ceil(wy1 / lod));
+      let seas = 0;
       for (let j = j0; j <= j1; j++) {
         const wy = j * lod, off = j % 2 ? 0.5 : 0, i0 = Math.max(0, Math.floor(wx0 / lod - off)), i1 = Math.min(Math.ceil(WA / lod), Math.ceil(wx1 / lod));
         for (let i = i0; i <= i1; i++) {
-          const wx = (i + off) * lod, v = sampleH(wx, wy), x = wx * px + V.ox, y = wy * px + V.oy;
-          if (v < 0) { if (v > -0.12 && wk110 < 1) { ctx.fillStyle = sea; ctx.globalAlpha = 1 - wk110; ctx.beginPath(); ctx.arc(x, y, sp * 0.1, 0, 7); ctx.fill(); } continue; }
-          const contour = Math.abs(((v * 9) % 1) - 0.5) < 0.06, sweep = REDUCED ? 1 : 0.82 + 0.18 * Math.sin(t * 0.0012 - wx * 5 - wy * 3);
+          const wx = (i + off) * lod, v = sampleH(wx, wy), x = wx * px + ox, y = wy * px + oy;
+          if (v < 0) { if (v > -0.12 && wk110 < 1) { cs.fillStyle = sea; cs.globalAlpha = 1 - wk110; cs.beginPath(); cs.arc(x, y, sp * 0.1, 0, 7); cs.fill(); seas++; } continue; }
+          const contour = Math.abs(((v * 9) % 1) - 0.5) < 0.06, sweep = REDUCED || flat ? 1 : 0.82 + 0.18 * Math.sin(t * 0.0012 - wx * 5 - wy * 3);
           const rg = regAt(wx, wy);
-          ctx.fillStyle = contour ? "#e8f6ff" : STORY_REGIONS[rg].c;
-          ctx.globalAlpha = (contour ? 0.9 : clamp(0.45 + v * 0.9, 0.45, 1)) * sweep * (rg >= STORY_OPEN ? 0.38 : STORY62.mapK(rg, wx, wy, t)); // a region still closed is dimmed
-          ctx.beginPath(); ctx.arc(x, y, clamp(sp * (0.18 + v * 0.6), sp * 0.18, sp * 0.47), 0, 7); ctx.fill();
+          cl.fillStyle = contour ? "#e8f6ff" : STORY_REGIONS[rg].c;
+          cl.globalAlpha = (contour ? 0.9 : clamp(0.45 + v * 0.9, 0.45, 1)) * sweep * (rg >= STORY_OPEN ? 0.38 : STORY62.mapK(rg, wx, wy, t)); // a region still closed is dimmed
+          cl.beginPath(); cl.arc(x, y, clamp(sp * (0.18 + v * 0.6), sp * 0.18, sp * 0.47), 0, 7); cl.fill();
         }
       }
-      ctx.globalAlpha = 1;
+      cl.globalAlpha = 1; cs.globalAlpha = 1;
+      return seas;
+    };
+    /* round 120 (the user, 14 Nov: «Il gioco nella nuova parte di mappa lagga abbastanza»): the relief is some 20 thousand dots (Frostspine's
+       view is the densest) and it was drawn anew for every frame, 30 to 240 times a second. Now its dots wait in two pictures, the land on
+       the map's dark and the sea's dots apart, and each frame copies them and lays the slow light over the land as one band of the map's
+       own dark, as strong as 1 − the old shimmer (0.82 + 0.18·sin) and along the same (5, 3) slant: the same picture as before (a dot's
+       colour comes out the same, the dots never touch and the sea's come after), for two copies and one stroke instead of 20 thousand
+       dots. The pictures are made again when the zoom, the size or a freed region changes, and once more when the view comes to rest
+       between two pixels; while the map is dragged or glides they slide by whole pixels and only the strip coming into view is drawn.
+       Zooming, the world's pieces (zoomed out) and a wave of light crossing a freed region draw live as before.
+       window.MAP120_LIVE = true draws live always (strumenti/round120-test.cjs compares the two). */
+    const land120 = document.createElement("canvas"), sea120 = document.createElement("canvas");
+    let sig120 = "", last120 = "", ox120 = 0, oy120 = 0, seas120 = 0;
+    const build120 = (t, W, H) => {
+      for (const c of [land120, sea120]) if (c.width !== W || c.height !== H) { c.width = W; c.height = H; }
+      const cl = land120.getContext("2d"), cs = sea120.getContext("2d");
+      cl.globalAlpha = 1; cl.fillStyle = "#05080c"; cl.fillRect(0, 0, W, H); cs.clearRect(0, 0, W, H);
+      ox120 = V.ox; oy120 = V.oy;
+      seas120 = relief(t, cl, cs, true);
+    };
+    // the pictures slide by whole pixels; the strips they uncover are drawn (clipped to the strip: a dot across its edge is drawn once)
+    const slide120 = (t, ix, iy, W, H) => {
+      const cl = land120.getContext("2d"), cs = sea120.getContext("2d");
+      for (const c of [cl, cs]) { c.globalCompositeOperation = "copy"; c.drawImage(c.canvas, ix, iy); c.globalCompositeOperation = "source-over"; }
+      ox120 += ix; oy120 += iy;
+      const strips = [];
+      if (ix) strips.push(ix > 0 ? [0, 0, ix, H] : [W + ix, 0, W, H]);
+      const xa = ix > 0 ? ix : 0, xb = ix < 0 ? W + ix : W;
+      if (iy && xb > xa) strips.push(iy > 0 ? [xa, 0, xb, iy] : [xa, H + iy, xb, H]);
+      for (const b of strips) {
+        for (const c of [cl, cs]) { c.save(); c.beginPath(); c.rect(b[0], b[1], b[2] - b[0], b[3] - b[1]); c.clip(); }
+        cl.fillStyle = "#05080c"; cl.fillRect(b[0], b[1], b[2] - b[0], b[3] - b[1]);
+        seas120 += relief(t, cl, cs, true, ox120, oy120, b);
+        cl.restore(); cs.restore();
+      }
+    };
+    const paint120 = (t) => {
+      const W = cv.width, H = cv.height, sig = `${V.s}|${W}|${H}|${dpr}|${STORY_OPEN}|${STORY62.mapSig()}`, now = `${sig}|${V.ox}|${V.oy}`, still = now === last120;
+      last120 = now;
+      if (W110.k(api, V.s) > 0 || STORY62.mapLive(t) || window.MAP120_LIVE) { sig120 = ""; return false; }
+      if (sig !== sig120) {
+        if (!still) return false; // zooming or a new size: live, until it rests
+        build120(t, W, H); sig120 = sig;
+      } else if (V.ox !== ox120 || V.oy !== oy120) {
+        const dx = V.ox - ox120, dy = V.oy - oy120;
+        if (still) build120(t, W, H); // at rest between two pixels: drawn again exactly
+        else if (Math.abs(dx) < W / 2 && Math.abs(dy) < H / 2) { const ix = Math.round(dx), iy = Math.round(dy); if (ix || iy) slide120(t, ix, iy, W, H); }
+        else { sig120 = ""; return false; } // a long jump: live, until it rests
+      }
+      ctx.globalAlpha = 1; ctx.drawImage(land120, 0, 0);
+      if (!REDUCED) {
+        // each dot's light was s = 0.82 + 0.18·sin(0.0012·t − 5·wx − 3·wy); on the screen that is a wave along u, the (5, 3) slant, so the
+        // map's dark at 1 − s over a dot drawn at full strength gives the same colour
+        const r34 = Math.sqrt(34), px = base() * V.s, u1 = (5 * W + 3 * H) / r34, ph0 = t * 0.0012 + (5 * V.ox + 3 * V.oy) / px, span = (r34 / px) * u1;
+        const g = ctx.createLinearGradient(0, 0, (5 / r34) * u1, (3 / r34) * u1), n = Math.min(160, Math.max(2, Math.ceil(span / (Math.PI / 8)) + 1));
+        for (let i = 0; i < n; i++) { const f = i / (n - 1); g.addColorStop(f, `rgba(5,8,12,${(0.18 - 0.18 * Math.sin(ph0 - span * f)).toFixed(4)})`); }
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      }
+      if (seas120) ctx.drawImage(sea120, 0, 0);
+      return true;
     };
     const draw = (t) => {
       const k = dpr * clamp(V.s / 1.6, 0.7, 1.6), st = api.states();
-      ctx.fillStyle = "#05080c"; ctx.fillRect(0, 0, cv.width, cv.height);
-      W110.under(ctx, cv.width, cv.height, V, base(), dpr, t, api);
-      relief(t);
-      W110.over(ctx, cv.width, cv.height, V, base(), dpr, t, api);
+      if (!paint120(t)) {
+        ctx.fillStyle = "#05080c"; ctx.fillRect(0, 0, cv.width, cv.height);
+        W110.under(ctx, cv.width, cv.height, V, base(), dpr, t, api);
+        relief(t);
+        W110.over(ctx, cv.width, cv.height, V, base(), dpr, t, api);
+      } else W110.under(ctx, cv.width, cv.height, V, base(), dpr, t, api); // on the island's zoom it draws nothing, it only keeps its fit
       ctx.lineCap = "round"; ctx.lineJoin = "round";
       if (!W110.far(api, V.s)) drawWebs(ctx, P, k, t, V.s, api, cv.width, cv.height);
       // the regions' names
@@ -27173,7 +27554,28 @@ const STORYMAP = (() => {
       const label = w110 ? w110.name : STORY_REGIONS.indexOf(R) < STORY_OPEN ? R.name : `${R.name} · soon`;
       if (wEl.textContent !== label) { wEl.textContent = label; wEl.style.color = w110 ? w110.c : R.c; }
     };
-    const loop = (t) => { if (!alive) return; if (!host.isConnected || host.closest("[hidden]")) { alive = false; return; } if (cv.width) draw(t); raf = requestAnimationFrame(loop); };
+    // round 120 (the user, 14 Nov: «Il gioco nella nuova parte di mappa lagga abbastanza, soprattutto nei luoghi»): the map kept drawing
+    // its whole world 60-240 times a second under the places and the talks, which cover the whole screen (strumenti/lag120.cjs: a fifth of
+    // the processor). Under a scene it does not draw at all and looks again 5 times a second; while its view stands still it draws 30
+    // times a second (its shimmer reads the same); while it is dragged, pinched, zoomed or flies it draws every frame.
+    // round 120 (perf): «under a scene» is S66's own flag now (html[data-s66], set beside S66's engine), which a scene does not set while
+    // it lets the map show through (.s66.is-over: the prologue's last talk stands over the map, and with S66.root.hidden alone the map
+    // drew nothing there, an empty dark box under the first talk). Under a scene the loop naps; the scene's closing wakes it at once
+    // («uncover120»: the map is drawn for the first frame without the scene, not up to 200 ms later), and the look every 200 ms stays
+    // as a fallback, in its own timer (raf only ever holds a frame)
+    const under120 = () => document.documentElement.hasAttribute("data-s66");
+    let wake120 = 0;
+    const rouse120 = () => { clearTimeout(wake120); wake120 = 0; removeEventListener("uncover120", rouse120); if (alive) raf = requestAnimationFrame(loop); };
+    const nap120 = () => { clearTimeout(wake120); wake120 = setTimeout(rouse120, 200); addEventListener("uncover120", rouse120); };
+    let drawn120 = -1e9, view120 = "";
+    const loop = (t) => {
+      if (!alive) return;
+      if (!host.isConnected || host.closest("[hidden]")) { alive = false; return; }
+      if (under120()) { nap120(); return; }
+      const v = `${V.s},${V.ox},${V.oy},${cv.width},${cv.height}`;
+      if (cv.width && (v !== view120 || t - drawn120 >= 32)) { draw(t); drawn120 = t; view120 = v; }
+      raf = requestAnimationFrame(loop);
+    };
     // gestures: drag with inertia, pinch, wheel, tap
     const pts = new Map();
     let last = null, moved = 0, vx = 0, vy = 0, t0 = 0, fling = 0, grab72 = null;
@@ -33802,7 +34204,7 @@ const viewLogin113 = (host) => {
   const now = new Date(), months = Array.from({ length: 13 }, (_, i) => { const d = new Date(now.getFullYear(), now.getMonth() + i, 1); return [d.getFullYear(), d.getMonth()]; });
   let pick = 1;
   host.innerHTML = `<div class="g86 g113">
-    <div class="g-pagehead"><div><h2 class="g-h2">Log In</h2><p class="g-hint">I premi di accesso. Ogni giorno in cui entra, il giocatore prende il premio del giorno dopo, finché il Log In è attivo: un giorno saltato non si perde. Crei un Log In con le sue date, oppure un mese intero con un tasto. Arrivano ai giocatori con «Manda online».</p></div></div>
+    <div class="g-pagehead"><div><h2 class="g-h2">Log In</h2><p class="g-hint">I premi di accesso. Ogni giorno in cui entra, il giocatore prende il premio del giorno dopo, finché il Log In è attivo: un giorno saltato non si perde. Crei un Log In con le sue date, oppure un mese intero con un tasto. Arrivano ai giocatori con «Manda online». Sopra a tutti, nel gioco, c'è la prima settimana con Kaori al settimo giorno: chi ha già preso Kaori da lì non la vede più; tu da Admin la vedi sempre, come anteprima.</p></div></div>
     <div class="g86-grid"><section class="g86-form" data-form></section><section class="g86-list"><p class="g-lnc-k">I tuoi Log In</p><div data-list></div></section></div></div>`;
   const form = qs("[data-form]", host), list = qs("[data-list]", host);
   const paintList = () => {
@@ -34039,33 +34441,60 @@ const initGame = () => {
   /** Round 94: the pill's number, kept up to date as the stamina comes back. */
   const paintStam94 = () => { const v = $("[data-gm-stam-v]", stage); if (v) v.textContent = isAdmin() ? "∞" : String(stam94().v); };
   setInterval(() => { if (!document.hidden) paintStam94(); }, 20000);
-  /** The stamina's sheet: what you have, when the next point comes, and how to get more. `need`: what a fight asked for. */
-  const stamAsk94 = (need = 0) => {
-    $(".sm25-sheet", stage)?.remove();
-    const s = stam94(), p = PLAYER.player, pots = isAdmin() ? 0 : p.items.stam94 ?? 0, min = Math.floor(s.next / 60000), sec = Math.floor((s.next % 60000) / 1000);
+  // round 120 (the user: «A volte noto che quando refilli la stamina, se non chiudi e riapri il pop up, anche se sei full stamina non ti
+  // fa iniziare i fight»): the sheet removed the first .sm25-sheet, which was the place's own sheet with its fight button, and it only
+  // knew a number, so after a refill nothing in it started the fight. Now `go` starts the fight that asked: once the stamina covers
+  // `need` the sheet says so and offers «fight now»; only the stamina's own sheet is replaced, so its × gives the place's sheet back;
+  // while it is open it follows the stamina coming back (its countdown each second, drawn again when a point comes back); `again`:
+  // drawn again in place, without the slide; a potion or 3 gems are never spent on a bar that filled up meanwhile.
+  const mmss120 = (ms) => `${Math.floor(ms / 60000)}:${String(Math.floor((ms % 60000) / 1000)).padStart(2, "0")}`;
+  /** The stamina's sheet: what you have, when the next point comes, and how to get more. `need`: what a fight asked for; `go`: starts
+   *  that fight (round 120); `again`: the sheet drawn again in place. */
+  const stamAsk94 = (need = 0, go = null, again = false) => {
+    const had = !!$(".st94-sheet [data-st94-go]", stage);
+    for (const x of $$(".st94-sheet", stage)) x.remove();
+    const s = stam94(), p = PLAYER.player, pots = isAdmin() ? 0 : p.items.stam94 ?? 0, full = s.v >= STAM94.max, ok = !!need && !isAdmin() && s.v >= need;
+    const needTxt = !need || isAdmin() ? "" : !ok ? `<p class="st94-need">This fight needs ${need} stamina: you have ${s.v}.</p>`
+      : `<p class="st94-ok">Enough for this fight: it takes ${need}, you have ${s.v}.</p>${go ? `<button type="button" class="gm-btn gm-btn--gold st94-go${again && !had && !REDUCED ? " is-in120" : ""}" data-st94-go><span>fight now</span><small>${need} stamina</small></button>` : ""}`;
     const box = document.createElement("div");
-    box.className = "sm25-sheet";
+    box.className = "sm25-sheet st94-sheet";
     box.innerHTML = `<div class="sm25-sheet-in" role="dialog" aria-label="Stamina" style="--rc:var(--rarity-ssr)">
       <div class="sm25-sheet-head"><p><small>stamina</small><b>Stamina</b><span>a fight costs 8, a mini boss 20, a region's boss 35</span></p><button type="button" data-sm-close aria-label="Close">×</button></div>
       <div class="st94-now">${gameIcon("bolt", "gm-ic--fill gm-bolt")}<b>${isAdmin() ? "∞" : s.v}</b><small>/ ${STAM94.max}</small></div>
       ${isAdmin() ? "" : `<div class="st94-bar"><i style="width:${(100 * s.v) / STAM94.max}%"></i></div>`}
-      ${need && !isAdmin() ? `<p class="st94-need">This fight needs ${need} stamina: you have ${s.v}.</p>` : ""}
-      <p class="sm25-note">${isAdmin() ? "Admin: no limit." : s.v >= STAM94.max ? "Full." : `One point comes back every 5 minutes, even with the game shut: the next in ${min}:${String(sec).padStart(2, "0")}.`} A camp's fire gives back half, an inn's bed all of it and lights every fire again.</p>
+      ${needTxt}
+      <p class="sm25-note">${isAdmin() ? "Admin: no limit." : full ? "Full." : `One point comes back every 5 minutes, even with the game shut: the next in <span data-st94-next>${mmss120(s.next)}</span>.`} A camp's fire gives back half, an inn's bed all of it and lights every fire again.</p>
       ${isAdmin() ? "" : `<div class="st94-acts">
-        <button type="button" class="gm-btn" data-st94-pot ${pots && s.v < STAM94.max ? "" : "disabled"}><span>drink a Stamina Potion · +${STAM94.back}</span><small>you have ${pots}</small></button>
-        <button type="button" class="gm-btn gm-btn--gold" data-st94-gems ${p.gems >= STAM94.gems && s.v < STAM94.max ? "" : "disabled"}><span>refill half · +${STAM94.back}</span><small>${STAM94.gems} gems</small></button>
+        <button type="button" class="gm-btn" data-st94-pot ${pots && !full ? "" : "disabled"}><span>drink a Stamina Potion · +${STAM94.back}</span><small>you have ${pots}</small></button>
+        <button type="button" class="gm-btn gm-btn--gold" data-st94-gems ${p.gems >= STAM94.gems && !full ? "" : "disabled"}><span>refill half · +${STAM94.back}</span><small>${STAM94.gems} gems</small></button>
         <button type="button" class="gm-btn gm-btn--ghost" data-st94-shop><span>Stamina Potions in the shop</span><small>${STAM94.price} gold each</small></button></div>`}</div>`;
     stage.append(box);
-    if (!REDUCED) $(".sm25-sheet-in", box).animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration: 340, easing: "cubic-bezier(0.32, 0.72, 0, 1)" });
+    if (!REDUCED && !again) $(".sm25-sheet-in", box).animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration: 340, easing: "cubic-bezier(0.32, 0.72, 0, 1)" });
+    // «fight now» just appeared (a refill, a point back): it takes the focus, so Enter starts the fight
+    if (ok && go && again && !had) $("[data-st94-go]", box)?.focus({ preventScroll: true });
+    // while it is open: the countdown each second; a point back draws it again (the top bar's number too); it stops once closed or full
+    if (!full) {
+      const tick = setInterval(() => {
+        if (!box.isConnected) { clearInterval(tick); return; }
+        const now = stam94();
+        if (now.v !== s.v) { clearInterval(tick); paintStam94(); stamAsk94(need, go, true); return; }
+        const t = $("[data-st94-next]", box);
+        if (t) t.textContent = mmss120(now.next);
+      }, 1000);
+    }
     box.addEventListener("click", (e) => {
       if (e.target === box || e.target.closest("[data-sm-close]")) { box.remove(); return; }
-      if (e.target.closest("[data-st94-pot]")) { if ((p.items.stam94 ?? 0) < 1) return; p.items.stam94 -= 1; stamAdd94(STAM94.back); toast(`Stamina Potion: +${STAM94.back} stamina.`); stamAsk94(need); return; }
-      if (e.target.closest("[data-st94-gems]")) { if (p.gems < STAM94.gems) return; p.gems -= STAM94.gems; stamAdd94(STAM94.back); paintGems(); toast(`+${STAM94.back} stamina for ${STAM94.gems} gems.`); stamAsk94(need); return; }
-      if (e.target.closest("[data-st94-shop]")) { box.remove(); location.hash = "#/play/shop"; }
+      // «fight now»: every sheet closes and the fight that asked goes through its gate, which takes the stamina
+      if (e.target.closest("[data-st94-go]")) { for (const x of $$(".sm25-sheet", stage)) x.remove(); go?.(); return; }
+      if (e.target.closest("[data-st94-pot], [data-st94-gems]") && stam94().v >= STAM94.max) { toast("Your stamina is already full."); stamAsk94(need, go, true); return; }
+      if (e.target.closest("[data-st94-pot]")) { if ((p.items.stam94 ?? 0) < 1) return; p.items.stam94 -= 1; stamAdd94(STAM94.back); toast(`Stamina Potion: +${STAM94.back} stamina.`); stamAsk94(need, go, true); return; }
+      if (e.target.closest("[data-st94-gems]")) { if (p.gems < STAM94.gems) return; p.gems -= STAM94.gems; stamAdd94(STAM94.back); paintGems(); toast(`+${STAM94.back} stamina for ${STAM94.gems} gems.`); stamAsk94(need, go, true); return; }
+      // the shop: the fight is kept 10 minutes for the top bar's stamina, so «fight now» is there once a potion is drunk
+      if (e.target.closest("[data-st94-shop]")) { ST94.want = need && go ? { need, go, at: Date.now() } : null; box.remove(); location.hash = "#/play/shop"; }
     });
   };
   ST94.paint = () => paintStam94();
-  ST94.ask = (need) => stamAsk94(need);
+  ST94.ask = (need, go) => stamAsk94(need, go);
   const paintGems = () => {
     $("[data-gm-gems]", stage).textContent = isAdmin() ? "∞" : PLAYER.player.gems.toLocaleString("en-US");
     $("[data-gm-gold]", stage).textContent = isAdmin() ? "∞" : (PLAYER.player.gold ?? 0).toLocaleString("en-US");
@@ -34118,7 +34547,7 @@ const initGame = () => {
     <section class="gm-sub gm-sub--maze" data-gm-sub="maze" hidden aria-label="Labyrinth"><div class="mz" data-mz></div></section>
     <section class="gm-sub gm-sub--soon" data-gm-sub="soon" hidden aria-label="Coming soon"><div class="sn58" data-sn></div></section>
     <section class="gm-sub gm-sub--m64" data-gm-sub="missions" hidden aria-label="Missions">${subHead("Missions")}<div class="mi64" data-mi64></div></section>
-    <section class="gm-sub gm-sub--m64" data-gm-sub="login" hidden aria-label="First week">${subHead("First week")}<div class="lg64" data-lg64></div></section>
+    <section class="gm-sub gm-sub--m64" data-gm-sub="login" hidden aria-label="Log-in rewards">${subHead("Log-in rewards")}<div class="lg64" data-lg64></div></section>
     <section class="gm-sub gm-sub--m64" data-gm-sub="create" hidden aria-label="Your character">${subHead("Who are you", "profile")}<div class="cr64" data-cr64></div></section>
     <section class="gm-sub gm-sub--fg66" data-gm-sub="forge" hidden aria-label="Ignara's forge"><div data-fg66></div></section>
     <section class="gm-sub gm-sub--fg66" data-gm-sub="deep" hidden aria-label="The Ember Vein"><div data-dp66></div></section>
@@ -34163,7 +34592,8 @@ const initGame = () => {
   /* the story's world map (W1 · Rilievo) and the sheet a tapped stage opens */
   const stageState = () => { const done = starsOf(), now = currentStage(); return STORY.stages.map((s, i) => (done[s.id] != null ? "done" : s === now ? "now" : s.soon ? "soon" : stageOpen(i) ? "open" : "locked")); };
   const stageSheet = (i) => {
-    $(".sm25-sheet", stage)?.remove();
+    // round 120: two sheets can be open (the stamina's over a place's): a place's new sheet replaces both
+    for (const x of $$(".sm25-sheet", stage)) x.remove();
     const s = STORY.stages[i], R = STORY_REGIONS[s.reg], open = stageOpen(i), stars = starsOf()[s.id];
     const kinds = [...new Set([...s.waves].reverse().flat().flatMap((tok) => (tok.startsWith("?") ? tok.slice(1).split(",") : [tok.split(":")[0]])))].sort((a, b) => !!FOE_KINDS[b]?.boss - !!FOE_KINDS[a]?.boss).slice(0, 4);
     const faces = s.soon ? "" : kinds.map((k) => { const K = FOE_KINDS[k], f = K?.faces?.[0]; return f ? `<span class="sm25-foe"><img src="${f.art}" alt="" style="object-position:${f.focus[0] * 100}% ${f.focus[1] * 100}%"><small>${K.name}</small></span>` : ""; }).join("");
@@ -34192,7 +34622,8 @@ const initGame = () => {
   /** The team as it stands between fights: each one's HP, the fallen marked. */
   const teamHP = () => {
     const l = lineup(), ids = [...l.team, l.bench].filter(Boolean);
-    return `<div class="w44-team">${ids.map((id) => {
+    // round 120: with several teams, chips over the HP put another one in use where you stand (their taps: teams120-ui.js)
+    return `<div class="w44-team">${teamPick120()}${ids.map((id) => {
       const h = heroineById(id), f = hpOf(id);
       if (!h) return "";
       return `<div class="w44-mem${f <= 0 ? " is-down" : ""}"><span class="w44-face">${faceChip(h)}</span><span class="w44-mem-t"><b>${h.name}${id === l.bench ? " <small>bench</small>" : ""}</b><span class="w44-hp" style="--p:${Math.max(0, f)}"><i></i></span><small>${f <= 0 ? "down until a camp" : `${Math.round(f * 100)}% HP`}</small></span></div>`;
@@ -34214,7 +34645,8 @@ const initGame = () => {
       if (!mv.ok) { b.replaceWith(lock(mv.why)); continue; }
       const total = cost + mv.cost;
       b.textContent = done && !adm ? `fight again · 50% HP · ${total} stamina` : `${done ? "fight again" : "fight"} · ${total} stamina`;
-      b.addEventListener("click", (e) => { if (stam94().v < total) { e.stopPropagation(); e.preventDefault(); ST94.ask?.(total); } });
+      // round 120: short of stamina, the stamina's sheet opens over this one and keeps this fight: «fight now» once there is enough
+      b.addEventListener("click", (e) => { if (stam94().v < total) { e.stopPropagation(); e.preventDefault(); const to = b.dataset.gmRoute; ST94.ask?.(total, () => fight120(to)); } });
       if (note) b.insertAdjacentHTML("afterend", `<p class="sm25-note w98-walk">${note}</p>`);
     }
     for (const b of box.querySelectorAll(".w44-rest, [data-walk94], [data-l66-enter]")) {
@@ -34294,7 +34726,8 @@ const initGame = () => {
     return `<p class="t72-meta w98-tp">Open: from here every open teleport of ${R} is one step away, at no cost.</p>${go || '<p class="sm25-note">No other teleport on this map yet.</p>'}`;
   };
   const sheetBox = (html, label, col) => {
-    $(".sm25-sheet", stage)?.remove();
+    // round 120: two sheets can be open (the stamina's over a place's): a place's new sheet replaces both
+    for (const x of $$(".sm25-sheet", stage)) x.remove();
     const box = document.createElement("div");
     box.className = "sm25-sheet";
     box.innerHTML = `<div class="sm25-sheet-in" role="dialog" aria-label="${label}" style="--rc:${col}">${html}</div>`;
@@ -34410,7 +34843,7 @@ const initGame = () => {
 
   /* the story: the chapter's stages and the home's call to carry on */
   const paintStory = () => {
-    $("[data-gm-chapter-h]", stage).textContent = "Your team · its HP carries from fight to fight";
+    $("[data-gm-chapter-h]", stage).textContent = teamTitle120(); // round 120: the team in use, by its name once there are several
     $("[data-gm-chapter]", stage).innerHTML = teamHP() + '<p class="w44-legend"><span><i class="w44-k is-camp"></i>camp: rest, everyone back to full HP</span><span><i class="w44-k is-mini"></i>mini boss: powered, optional</span><span><i class="w44-k is-skirm"></i>skirmish: one short wave, optional</span><span><i class="w44-k is-boss"></i>the map\'s boss: lifts the cap and heals everyone</span></p>';
     if (!$("[data-gm-sub='story']", stage).hidden) storyMap.show();
     const s = currentStage();
@@ -34437,9 +34870,135 @@ const initGame = () => {
 
   /* T1d · Team: three places on the field and one on the bench, every heroine you own below, filters by type */
   const tbHost = $("[data-tb2]", stage);
-  const tb = { sel: null, filter: "all" };
-  const slotsNow = () => { const t = isAdmin() ? PLAYER.admin : PLAYER.player; return [...[0, 1, 2].map((i) => (t.team[i] && owned(t.team[i]) ? t.team[i] : null)), t.bench && owned(t.bench) ? t.bench : null]; };
-  const putSlots = (sl) => setLineup(sl.slice(0, 3), sl[3]);
+  // round 120: the page shows one team at a time (tb.team; null is the team in use), and its places are that team's
+  const tb = { sel: null, filter: "all", team: null, naming: null, draft: null };
+  const tbTeam120 = () => { if (tb.team != null && !teams120()[tb.team]) tb.team = null; return tb.team ?? teamAt120(); };
+  const slotsNow = () => slots120(tbTeam120());
+  const putSlots = (sl) => putTeam120(tbTeam120(), sl);
+  /* ══ round 120 · the teams on the Team page (the analysis's «A · Linguette», model M2) ═══════════════════════════════════════
+   *  A rail of tabs over the field: each team's name, its four faces (the bench set apart) and «in use» on the one that fights,
+   *  then «+ new team». Under it, for the team shown: use this team, rename, copy, delete (after a question; never the team in
+   *  use, never the last one). Looking at a team never changes the one that fights: only «use this team» does, or the chips over
+   *  the team's HP on the map and on the Challenge page. A hero picked in the list stays picked across the tabs: pick them, open
+   *  another team, tap a place, and they stand in that team too. The page edits the team shown (tb.team; null is the team in
+   *  use), and only the team in use must keep a hero on the field. The PC and the phone draw the same rail; round 120's looks
+   *  place it (over the stage on a PC, a sideways strip over the field on a phone). */
+  // the faces use the pictures' small copies (art/s/, 480 px wide): they are 20-26 px wide here
+  const face120 = (id, bench) => {
+    const h = id && heroineById(id);
+    return `<span class="tm120-f${bench ? " is-bench" : ""}${h ? "" : " is-empty"}">${h ? faceChip({ ...h, art: String(h.art ?? "").replace(/^art\/(?![sm]\/)/, "art/s/") }) : ""}</span>`;
+  };
+  /** The tab shown stays in view inside its strip (a page drawn again starts the strip at its left end). */
+  const keepRail120 = () => {
+    const s = $(".tm120-strip", tbHost), t = s && $(".tm120-tab[aria-selected='true']", s);
+    if (!t || s.scrollWidth <= s.clientWidth) return;
+    const a = s.getBoundingClientRect(), b = t.getBoundingClientRect();
+    if (b.left < a.left || b.right > a.right) s.scrollLeft += b.left - a.left - (a.width - b.width) / 2;
+  };
+  /** The rail: the teams' tabs, «+ new team», and the actions for the team shown (or its name being typed). */
+  const teamRail120 = () => {
+    const list = teams120(), at = teamAt120(), on = tbTeam120(), fit = fit120(on), full = list.length >= TEAMS120;
+    queueMicrotask(keepRail120);
+    const tab = (_, i) => {
+      const nm = esc102(teamLabel120(i)), sl = slots120(i), n = sl.filter(Boolean).length;
+      return `<button type="button" role="tab" class="tm120-tab${i === at ? " is-in-use" : ""}" data-tm120-view="${i}" aria-selected="${i === on}" aria-label="${nm}${i === at ? ", in use" : ""}, ${n} of 4 places filled"><b>${nm}</b>${i === at ? '<small class="tm120-tag">in use</small>' : ""}<span class="tm120-fs" aria-hidden="true">${sl.map((id, k) => face120(id, k === 3)).join("")}</span></button>`;
+    };
+    const add = full ? "" : '<button type="button" class="tm120-tab tm120-new" data-tm120-add aria-label="New team, empty"><b aria-hidden="true">+</b><small>new team</small></button>';
+    const bar = tb.naming === on
+      ? `<form class="tm120-rn" data-tm120-form="${on}"><input class="tm120-name" type="text" maxlength="16" value="${esc102(tb.draft ?? teamLabel120(on))}" placeholder="Team ${on + 1}" aria-label="Team name, up to 16 characters" autocomplete="off" spellcheck="false" enterkeyhint="done"><button class="gm-btn" type="submit">save</button><button class="gm-btn gm-btn--ghost" type="button" data-tm120-keep>cancel</button></form>`
+      : `<div class="tm120-bar">${on === at ? '<span class="tm120-inuse">this team fights</span>' : `<button class="gm-btn" type="button" data-tm120-use="${on}"${fit ? "" : " disabled"}>${fit ? "use this team" : "put a hero on its field first"}</button>`}<button class="gm-btn gm-btn--ghost" type="button" data-tm120-rename="${on}">rename</button>${full ? "" : `<button class="gm-btn gm-btn--ghost" type="button" data-tm120-copy="${on}">copy</button>`}${list.length > 1 && on !== at ? `<button class="gm-btn gm-btn--ghost" type="button" data-tm120-del="${on}">delete</button>` : ""}</div>`;
+    return `<div class="tm120${on === at ? "" : " is-stored"}"><div class="tm120-strip"><div class="tm120-tabs" role="tablist" aria-label="Your teams">${list.map(tab).join("")}</div>${add}</div>${bar}</div>`;
+  };
+  const focus120 = (sel) => $(sel, tbHost)?.focus({ preventScroll: true });
+  const shown120 = () => focus120(".tm120-tab[aria-selected='true']");
+  // the rail's taps (the old click handler below ignores them: the rail has no hero and no place in it)
+  tbHost.addEventListener("click", (e) => {
+    const q = (k) => e.target.closest(`[data-tm120-${k}]`);
+    const v = q("view"), u = q("use"), a = q("add"), c = q("copy"), r = q("rename"), d = q("del"), k = q("keep");
+    if (v) {
+      const i = +v.dataset.tm120View;
+      if (i === tbTeam120() && tb.naming == null) return;
+      tb.team = i; tb.naming = null; tb.draft = null;
+      renderTeam(); shown120();
+      return;
+    }
+    if (u) {
+      const i = +u.dataset.tm120Use;
+      if (!useTeam120(i)) { toast("Put a hero on this team's field first."); return; }
+      tb.team = null; tb.naming = null; tb.draft = null;
+      renderTeam(); shown120();
+      toast(`${teamLabel120(i)} is in use now: it takes the next fight`);
+      return;
+    }
+    if (a || c) {
+      const from = c ? +c.dataset.tm120Copy : null, i = addTeam120(from);
+      if (i < 0) { toast(`${TEAMS120} teams at most: delete one to make room.`); return; }
+      tb.team = i; tb.naming = null; tb.draft = null;
+      renderTeam(); shown120();
+      toast(from == null ? `${teamLabel120(i)}: a new team, empty. Put heroes in it; it fights once you use it.` : `${teamLabel120(i)}: a copy of ${teamLabel120(from)}`);
+      return;
+    }
+    if (r) {
+      tb.naming = +r.dataset.tm120Rename; tb.draft = null;
+      renderTeam();
+      const n = $(".tm120-name", tbHost);
+      n?.focus(); n?.select();
+      return;
+    }
+    if (k) { tb.naming = null; tb.draft = null; renderTeam(); focus120("[data-tm120-rename]"); return; }
+    if (d) {
+      const i = +d.dataset.tm120Del, nm = teamLabel120(i);
+      confirm98(`Delete ${nm}? Its heroes stay yours, and stay in your other teams.`, "Delete it", "Keep it", "Delete a team").then((yes) => {
+        if (!yes || !dropTeam120(i)) { focus120("[data-tm120-del]"); return; }
+        tb.team = null; tb.naming = null; tb.draft = null;
+        renderTeam(); shown120();
+        toast(`${nm} is deleted`);
+      });
+    }
+  });
+  // the name: Enter (or «save») keeps it, Escape (or «cancel») drops it; Escape goes nowhere else (not the hero picked, not the Home)
+  tbHost.addEventListener("submit", (e) => {
+    const f = e.target.closest?.("[data-tm120-form]");
+    if (!f) return;
+    e.preventDefault();
+    const i = +f.dataset.tm120Form, was = teamLabel120(i);
+    nameTeam120(i, $(".tm120-name", f)?.value);
+    tb.naming = null; tb.draft = null;
+    renderTeam(); focus120("[data-tm120-rename]");
+    if (teamLabel120(i) !== was) toast(`${was} is called ${teamLabel120(i)} now`);
+  });
+  tbHost.addEventListener("input", (e) => { if (e.target.closest?.(".tm120-name")) tb.draft = e.target.value; });
+  tbHost.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || !e.target.closest?.("[data-tm120-form]")) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    tb.naming = null; tb.draft = null;
+    renderTeam(); focus120("[data-tm120-rename]");
+  });
+  /** «auto equip the whole team» dresses the team shown on the Team page (the team in use when the page opens), and says which. */
+  const tbIds120 = () => [...new Set(slots120(tbTeam120()).filter(Boolean))];
+  const eqTeam120 = () => (teams120().length > 1 ? `the whole team · ${esc102(teamLabel120(tbTeam120()))}` : "the whole team");
+  /** After a chip puts another team in use: every team HP drawn again where it stands, the story panel's line, the Challenge list. */
+  const paintTeams120 = () => {
+    for (const el of $$(".w44-team", stage)) el.outerHTML = teamHP();
+    const h = $("[data-gm-chapter-h]", stage);
+    if (h) h.textContent = teamTitle120();
+    if (current === "boss") renderBosses();
+  };
+  // the chips over a team's HP put another team in use where you stand (a map sheet, the story's panel, the Challenge page);
+  // they are never drawn in a fight, and a tap costs nothing
+  stage.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-tm120-pick]");
+    if (!b || b.disabled) return;
+    const i = +b.dataset.tm120Pick, box = b.closest(".sm25-sheet, [data-gm-chapter], [data-bm]");
+    if (i === teamAt120()) return;
+    if (!useTeam120(i)) { toast("Put a hero on that team's field first, on the Team page."); return; }
+    paintTeams120();
+    if (box?.isConnected) $(`[data-tm120-pick="${i}"]`, box)?.focus({ preventScroll: true });
+    toast(`${teamLabel120(i)} is in use now`);
+  });
+  // the test copies only (window.__T): the teams' insides
+  if (window.__T) window.__T.teams120 = { teams: teams120, at: teamAt120, use: useTeam120, add: addTeam120, drop: dropTeam120, name: nameTeam120, slots: slots120, put: putTeam120, label: teamLabel120, shown: () => tbTeam120(), view: (i) => { tb.team = i; tb.naming = null; renderTeam(); } };
   const renderTeam = () => {
     if (pc77()) return team77();
     const sl = slotsNow(), list = ownedSorted85().filter((h) => tb.filter === "all" || h.attr === tb.filter || h.attr2 === tb.filter);
@@ -34448,7 +35007,7 @@ const initGame = () => {
       return `<div class="tb2-slot${bench ? " is-bench" : ""}" data-tb-slot="${k}" role="button" tabindex="0" aria-label="${bench ? "Bench" : `Field place ${k + 1}`}${h ? `: ${h.name}` : ", empty"}">
         ${h ? `<div class="tb2-c${tb.sel === id ? " is-sel" : ""}" data-tb-id="${id}">${makeCard(h, { label: false }).outerHTML}</div>` : `<span>${bench ? "bench" : "empty"}</span>`}</div>`;
     };
-    tbHost.innerHTML = `<div class="tb2-field">${place(0)}${place(1)}${place(2)}<i class="tb2-div" aria-hidden="true"></i>${place(3)}</div>
+    tbHost.innerHTML = `${teamRail120()}<div class="tb2-field">${place(0)}${place(1)}${place(2)}<i class="tb2-div" aria-hidden="true"></i>${place(3)}</div>
       <div class="tb2-labels"><span>on the field</span><span>bench</span></div>
       <p class="gm-sub-h">your heroes · ${ownedHeroines().length}</p>
       <div class="tb2-chips" role="group" aria-label="Filter by type">${[["all", "all", "var(--accent)"], ...Object.entries(ATTRIBUTES).map(([k, a]) => [k, a.label, `var(${a.token})`])].map(([k, l, c]) => `<button type="button" data-tb-filter="${k}" aria-pressed="${tb.filter === k}" style="--chip:${c}">${l}</button>`).join("")}</div>
@@ -34463,7 +35022,8 @@ const initGame = () => {
     const sl = slotsNow(), from = sl.indexOf(id), prev = sl[k];
     sl[k] = id;
     if (from >= 0 && from !== k) sl[from] = prev ?? null;
-    if (!sl.slice(0, 3).some(Boolean)) { toast("Keep at least one hero on the field."); return; }
+    // round 120: only the team in use must keep a hero on the field; a team kept aside may be emptied, as a draft
+    if (tbTeam120() === teamAt120() && !sl.slice(0, 3).some(Boolean)) { toast("Keep at least one hero on the field: this team is in use."); return; }
     tb.sel = null;
     putSlots(sl);
     renderTeam();
@@ -34472,7 +35032,8 @@ const initGame = () => {
     const sl = slotsNow(), k = sl.indexOf(id);
     if (k < 0) return;
     sl[k] = null;
-    if (!sl.slice(0, 3).some(Boolean)) { toast("Keep at least one hero on the field."); return; }
+    // round 120: only the team in use must keep a hero on the field; a team kept aside may be emptied, as a draft
+    if (tbTeam120() === teamAt120() && !sl.slice(0, 3).some(Boolean)) { toast("Keep at least one hero on the field: this team is in use."); return; }
     putSlots(sl);
     renderTeam();
   };
@@ -34756,7 +35317,7 @@ const initGame = () => {
 
   /* T3 · the Team page has three tabs: the team, Training and Awakening */
   const TB_LEDE = {
-    team: "Three on the field, one on the bench. Drag a hero onto a place, or tap one and then the place. Hold a card to see everything about them.",
+    team: "Three on the field, one on the bench, up to five teams: the one in use fights, and a hero can stand in several. Drag a hero onto a place, or tap one and then the place. Hold a card to see everything about them.",
     training: "Potions raise a hero's level, up to the cap of the region the story has reached. Choose a hero, pick the potions, and see the new level before you confirm.",
     awaken: "Stars forged from star dust awaken a hero, and every star raises all their stats. Every enemy that falls drops dust. Seven stars at most (the 7th takes a rainbow star), and no more than the cap of the region the story has reached.",
     copies: "Pulling a hero you already have gives a copy. Combine up to six: each one raises their HP, ATK and DEF, and the 3rd and 6th open something of their own.",
@@ -34824,7 +35385,7 @@ const initGame = () => {
         <div class="tb3-who"><b>${h.name}</b><span class="ti-slots">${tiles}</span><small>${worn ? `${worn} of 6 · ${adds}` : "no items yet"}</small></div>
         <span class="eq85-acts"><button class="gm-btn gm-btn--ghost eq85-one" type="button" data-eq85="${h.id}" aria-label="Auto equip ${h.name}">auto</button><button class="gm-btn" type="button" data-gm-file="${h.id}" data-gm-file-at="items">${worn ? "change" : "dress"}</button></span></div>`;
     };
-    tb3Host.innerHTML = `<p class="tb3-bank">${bank}</p><div class="eq85"><button class="gm-btn" type="button" data-eq85="team">auto equip the whole team</button></div>${sortBar85()}<div class="tb3-list">${ownedSorted85().map(row).join("")}</div>`;
+    tb3Host.innerHTML = `<p class="tb3-bank">${bank}</p><div class="eq85"><button class="gm-btn" type="button" data-eq85="team">auto equip ${eqTeam120()}</button></div>${sortBar85()}<div class="tb3-list">${ownedSorted85().map(row).join("")}</div>`;
   };
   /** Training · the potions for the open heroine, and the level they take her to. */
   const trainPanel = (h) => {
@@ -34922,7 +35483,7 @@ const initGame = () => {
         : `<div class="p77-st-empty"><b>+</b><span>${bench ? "bench" : `field ${k + 1}`}</span><small>${tb.sel ? "tap here to put the chosen hero in" : "drag a hero here"}</small></div>`}</div>`;
     };
     const chips = [["all", "all", "var(--accent)"], ...Object.entries(ATTRIBUTES).map(([k, a]) => [k, a.label, `var(${a.token})`])].map(([k, l, c]) => `<button type="button" data-tb-filter="${k}" aria-pressed="${tb.filter === k}" style="--chip:${c}">${l}</button>`).join("");
-    tbHost.innerHTML = `<div class="p77-team">
+    tbHost.innerHTML = `<div class="p77-team">${teamRail120()}
       <div class="p77-stage">${place(0)}${place(1)}${place(2)}${place(3)}</div>
       <aside class="p77-side">
         <p class="p77-k">your heroes · ${ownedHeroines().length}</p>
@@ -35043,7 +35604,7 @@ const initGame = () => {
         <div class="p77-doll-t">${name77(h)}${stats77(s)}${relic}</div>
       </div>
       <aside class="p77-bag">
-        <div class="eq85"><button class="gm-btn" type="button" data-eq85="${h.id}">auto equip ${h.name}</button><button class="gm-btn gm-btn--ghost" type="button" data-eq85="team">the whole team</button></div>
+        <div class="eq85"><button class="gm-btn" type="button" data-eq85="${h.id}">auto equip ${h.name}</button><button class="gm-btn gm-btn--ghost" type="button" data-eq85="team">${eqTeam120()}</button></div>
         <p class="p77-k">${st.label} ${sl.n} · ${sl.type}</p>
         <p class="p77-note">${isAdmin() ? "Admin: 999 of every item, to put on as many heroes as you like." : `you hold <b>${held}</b> item${held === 1 ? "" : "s"}`}</p>
         <div class="p77-bag-l">${bag || `<p class="p77-none">No ${sl.type} yet: the ${st.label} chests in the shop give one, and so do the chests in the story.</p>`}</div>
@@ -35320,7 +35881,7 @@ const initGame = () => {
     const admin = isAdmin(), list = allBosses().filter((b) => admin || ch112Live(b));
     bmHost.innerHTML = `${admin ? `<div class="bm-tools"><button class="gm-btn" type="button" data-gm-route="bossmaker">create a boss</button>
         <button class="gm-btn gm-btn--ghost" type="button" data-bm-io="export"${CUSTOM_BOSSES.length ? "" : " disabled"}>export</button><button class="gm-btn gm-btn--ghost" type="button" data-bm-io="import">import</button></div>${bm.io ? ioPanel() : ""}` : ""}
-      <div class="ch112-diff" role="radiogroup" aria-label="Difficulty">${CH112_DIFF.map(([k, t]) => `<button class="gm-btn${CH112.diff === k ? "" : " gm-btn--ghost"}" type="button" role="radio" aria-checked="${CH112.diff === k}" data-ch112-diff="${k}">${t}</button>`).join("")}</div>
+      ${teamCh120()}<div class="ch112-diff" role="radiogroup" aria-label="Difficulty">${CH112_DIFF.map(([k, t]) => `<button class="gm-btn${CH112.diff === k ? "" : " gm-btn--ghost"}" type="button" role="radio" aria-checked="${CH112.diff === k}" data-ch112-diff="${k}">${t}</button>`).join("")}</div>
       ${list.length ? `<div class="gm-bosses ch112-list">${list.map(chCard112).join("")}</div>` : '<p class="gm-sub-lede ch112-none">No challenge right now: the next boss is on its way.</p>'}
       ${admin ? '<p class="gm-sub-lede">Admin: every boss is here. Players see only the ones the Database switched on, until their time runs out.</p>' : ""}`;
   };
@@ -35547,6 +36108,8 @@ const initGame = () => {
     p.roster[id] = { lv: 1, xp: 0, stars: 0 };
     p.team = [id, null, null];
     p.bench = null;
+    // round 120: a new account starts with one team, its first hero
+    delete p.teams; p.teamAt = 0;
     p.leader = id;
     p.started = true;
     savePlayer();
@@ -35570,6 +36133,8 @@ const initGame = () => {
     if (mode === "admin" && !adminOpen) { pfLock = { bad: false }; renderProfile(); $("[data-pf-pass]", pfHost)?.focus(); return; }
     pfLock = null;
     PLAYER.mode = mode;
+    // round 120: the other mode has its own teams: the Team page shows its team in use
+    tb.team = null; tb.naming = null; tb.draft = null;
     savePlayer();
     showEvos();
     leader = pickLeader();
@@ -36053,13 +36618,21 @@ const initGame = () => {
   /* ── the first week's log-in: one reward a day, Kaori on the seventh ── */
   const LOGIN64 = [{ gold: 2000 }, { pot: ["s", 5] }, { gems: 15 }, { pot: ["m", 3] }, { gold: 5000 }, { gems: 30 }, { hero: LOGIN_HERO64 }];
   const login64 = () => (PLAYER.player.login64 ??= { n: 0, last: "" });
-  const loginReady64 = () => !isAdmin() && PLAYER.player.started && login64().n < 7 && login64().last !== DAY64();
+  /** Round 120 (the user: «Per i giocatori che hanno già preso Kaori dal Log In, quella sequenza di 7gg falla sparire»): a Player has
+   *  taken Kaori from the first week once its day 7 is claimed (its days go in order, one a day, so login64.n reaches 7 only there;
+   *  the roster cannot tell, a code or a Database log-in can give her too). From then on the week is gone for them, on the page and
+   *  on the Home's button; the Admin always sees it, as a preview. kaoriNow120: on the day she is claimed the week stays on screen,
+   *  her tile lit, until the Player leaves the page. */
+  const kaoriTaken120 = () => login64().n >= LOGIN64.length;
+  let kaoriNow120 = false;
+  const loginReady64 = () => !isAdmin() && PLAYER.player.started && !kaoriTaken120() && login64().last !== DAY64();
   const loginHost = $("[data-lg64]", stage);
   const renderLogin64 = () => {
     const admin = isAdmin(), L = admin ? { n: 2, last: "" } : login64(), today = Math.min(L.n, 6), ready = admin || loginReady64(), k = heroineById(LOGIN_HERO64);
     const title = $(".gm-sub-title", loginHost.closest(".gm-sub"));
-    const more113 = lgOn113(), week113 = admin || L.n < 7;
-    if (title) title.firstChild.textContent = more113.length ? "Log-in rewards" : `Seven days to ${k.name}`;
+    // round 120: the week shows to the Admin (a preview) and to a Player until Kaori is taken; on her day it stays until the page is left
+    const more113 = lgOn113(), week113 = admin || !kaoriTaken120() || kaoriNow120;
+    if (title) title.firstChild.textContent = more113.length || !week113 ? "Log-in rewards" : `Seven days to ${k.name}`;
     const state = (i) => (i < L.n ? "is-got" : i === today && ready && L.n < 7 ? "is-now" : "");
     loginHost.innerHTML = (week113 ? `<div class="lg64-in">
       <header class="lg64-head">${more113.length ? `<h3>Seven days to ${k.name}</h3>` : ""}<p>${L.n >= 7 ? `The week is done: ${k.name} is with you.` : ready ? `Day ${today + 1} of 7. Your reward for today is ready.` : `Day ${L.n} of 7 claimed. The next one opens in ${UNTIL64(NEXT_DAY64())}.`}</p></header>
@@ -36069,13 +36642,14 @@ const initGame = () => {
         <div class="lg64-end ${state(6)}"><img src="${k.art}" alt="" draggable="false"><span class="lg64-end-t"><b>${k.name}</b><small>${k.rarity} · ${k.epithet} · day 7</small>
           ${L.n >= 7 ? '<i class="lg64-tick">with you</i>' : state(6) === "is-now" ? '<button type="button" class="mi64-claim" data-lg64-claim>claim</button>' : ""}</span></div>
       </div>
-      ${admin ? '<p class="mi64-note">Admin: this is what a Player sees on day 3. Rewards go to Players only.</p>' : ""}</div>` : "") + (more113.map(lgBlock113).join("") || (week113 ? "" : '<p class="gm-sub-lede">No log-in reward right now: the next one comes soon.</p>'));
+      ${admin ? `<p class="mi64-note">Admin: this is what a Player sees on day 3. A Player who has taken ${k.name} (day 7) no longer sees this week: you always see it, as a preview. Rewards go to Players only.</p>` : ""}</div>` : "") + (more113.map((x, i) => (week113 || i ? cue120(x, i) : "") + lgBlock113(x)).join("") || (week113 ? "" : '<p class="gm-sub-lede">No log-in reward right now: the next one comes soon.</p>'));
   };
   const claimLogin64 = () => {
     if (isAdmin()) { toast("Admin: the log-in rewards are for Players."); return; }
     if (!loginReady64()) return;
     const L = login64(), r = LOGIN64[L.n];
-    L.n += 1; L.last = DAY64();
+    // round 120: on Kaori's day the week stays on screen (her tile flashes and stays lit) until the page is left; then it is gone
+    L.n += 1; L.last = DAY64(); kaoriNow120 = kaoriTaken120();
     toast(`Day ${L.n}: ${rwGive64(r)}`);
     savePlayer(); paintGems(); renderLogin64(); paintBadges64();
     const stop = L.n === 7 ? $(".lg64-end", loginHost) : $$(".lg64-stop", loginHost)[L.n - 1];
@@ -36129,14 +36703,50 @@ const initGame = () => {
     const L = LOGIN113().find((x) => x.id === id);
     if (!L || !lgReady113(L)) return;
     const st = lgSt113(L), r = L.days[st.n];
+    // round 120: the claim takes this log-in's cue away (the page gets shorter above it), so the page holds it where it stood
+    const sec120 = () => $(`[data-lg113="${CSS.escape(id)}"]`, loginHost), at120 = sec120()?.getBoundingClientRect().top;
     st.n += 1;
     st.last = DAY64();
     const got = codeGive86(r);
     toast(`${L.name || "Log-in"}, day ${st.n}: ${got.join(" · ") || "claimed"}`);
     savePlayer(); paintGems(); renderLogin64(); paintBadges64();
+    const sub120 = loginHost.closest(".gm-sub"), now120 = sec120()?.getBoundingClientRect().top;
+    if (sub120 && at120 != null && now120 != null && now120 !== at120) sub120.scrollTop += now120 - at120;
     const tile = $$(`[data-lg113="${CSS.escape(id)}"] .lg113-day`, loginHost)[st.n - 1];
     tile?.animate([{ transform: "scale(1.1)", filter: "brightness(1.6)" }, { transform: "none", filter: "none" }], { duration: 520, easing: "cubic-bezier(0.34, 1.56, 0.64, 1)" });
   };
+  /* ══ round 120 · the log-in shows where its rewards wait (the user: «Anche il Log In, fai capire che per ritirarlo si deve scorrere
+     in giù (se ce ne sono 2 attivi come quello di Kaori e quello del mese)»). The page opens on the first reward waiting (one already
+     in sight leaves it at the top), and every later log-in with a reward waiting has a cue before it: it rides over the nav while
+     that log-in is out of sight (position: sticky, no script) and settles as its divider once you get there; a tap on it glides to
+     the day to claim. ══ */
+  /** Where a sub-page's content shows: under its head's room, over the nav (and over a cue riding there). */
+  const room120 = (sub) => {
+    const box = sub.getBoundingClientRect(), cs = getComputedStyle(sub), nav = $(".gm-nav", stage), cue = $$(".lg120-cue", sub).find((c) => c.offsetHeight);
+    // the nav where it rests (offsetTop, both laid out in the stage): as the game opens, enter() raises it from 28px lower for about
+    // 1.3 s, and the daily log-in opens right then (loginAuto64), so its moving box would put the room's foot 28px too low
+    const navTop = nav?.offsetHeight ? box.top - sub.offsetTop + nav.offsetTop : Infinity;
+    return { top: box.top + parseFloat(cs.paddingTop), low: Math.min(box.bottom, navTop) - (cue ? cue.offsetHeight + 24 : 12) };
+  };
+  const seen120 = (sub, el) => { const r = el.getBoundingClientRect(), v = room120(sub); return r.top >= v.top && r.bottom <= v.low; };
+  /** Brings a tile into that room, in its middle; a tile taller than the room shows its foot, where its claim button is. Opening the
+   *  page it jumps (the page is still clear, it fades in there); a tap on a cue glides. */
+  const glide120 = (sub, tile, smooth) => {
+    if (!sub.clientHeight || (!smooth && seen120(sub, tile))) return;
+    const r = tile.getBoundingClientRect(), v = room120(sub);
+    const top = Math.max(0, sub.scrollTop + (r.height > v.low - v.top ? r.bottom - v.low : r.top + r.height / 2 - (v.top + v.low) / 2));
+    if (smooth && !REDUCED) sub.scrollTo({ top, behavior: "smooth" }); else sub.scrollTop = top;
+  };
+  /** Opening the page: the first reward waiting (the week's, else the first log-in's) comes into sight. */
+  const loginJump120 = (sub) => {
+    const tile = $("[data-lg64-claim], [data-lg113-claim]", sub)?.closest(".lg64-stop, .lg64-end, .lg113-day");
+    if (tile) glide120(sub, tile, false);
+  };
+  /** The cue before a later log-in with a reward waiting (the Admin sees every log-in as a Player on its first day). Where two
+   *  ride together, the nearer one is drawn on top. */
+  const cue120 = (L, i) => (isAdmin() || lgReady113(L)
+    ? `<button type="button" class="lg120-cue" data-lg120-go="${esc102(L.id)}" style="z-index:${30 - Math.min(i, 9)}">${gameIcon("arrow", "lg120-down")}<span><b>${esc102(L.name || "Log-in")}</b> · day ${isAdmin() ? 1 : lgSt113(L).n + 1} is ready below</span></button>`
+    : "");
   /** The log-in opens by itself once a day, the first time a Player reaches Home with a reward waiting. */
   let loginShown64 = "";
   const loginAuto64 = () => { if ((loginReady64() || lgReadyAny113()) && loginShown64 !== DAY64()) { loginShown64 = DAY64(); location.hash = "#/play/login"; } };
@@ -36207,7 +36817,14 @@ const initGame = () => {
     const mb = $("[data-mi64-badge]", stage), n = misReady64();
     if (mb) { mb.hidden = !n; mb.textContent = n; }
     const lb = $("[data-lg64-btn]", stage);
-    if (lb) { const on113 = lgOn113().length; lb.hidden = !isAdmin() && login64().n >= 7 && !on113; $(".gm-badge", lb).hidden = !loginReady64() && !lgReadyAny113(); if (lb.childNodes[1]?.nodeType === 3) lb.childNodes[1].nodeValue = on113 ? "log-in" : "7 days"; }
+    // round 120: the button goes once a Player has taken Kaori (unless a Database log-in runs); with more than one reward waiting
+    // (the week's and a month's) its mark says how many, as the missions' does
+    if (lb) {
+      const on113 = lgOn113(), n120 = (loginReady64() ? 1 : 0) + on113.filter(lgReady113).length, bd = $(".gm-badge", lb);
+      lb.hidden = !isAdmin() && kaoriTaken120() && !on113.length;
+      bd.hidden = !n120; bd.textContent = n120 > 1 ? n120 : ""; bd.classList.toggle("gm-badge--dot", n120 < 2);
+      if (lb.childNodes[1]?.nodeType === 3) lb.childNodes[1].nodeValue = on113.length ? "log-in" : "7 days";
+    }
   };
   TRACK64.on = () => { paintBadges64(); if (current === "missions") renderMis64(); };
   const MENU64 = { missions: renderMis64, login: renderLogin64, create: renderCreate64 };
@@ -36218,6 +36835,9 @@ const initGame = () => {
     if (mc) { const [key, id] = mc.dataset.mi64Claim.split(":"); claimMis64(key, id); return; }
     const pt = t.closest("[data-mi64-pt]");
     if (pt && !pt.disabled) { claimPts64(+pt.dataset.mi64Pt); return; }
+    // round 120: a log-in's cue glides to its day to claim
+    const go120 = t.closest("[data-lg120-go]");
+    if (go120) { const sub = go120.closest(".gm-sub"), sec = sub && $(`[data-lg113="${CSS.escape(go120.dataset.lg120Go)}"]`, sub), to = sec && ($(".lg113-day.is-now", sec) ?? $(".lg113-head", sec) ?? sec); if (to) glide120(sub, to, true); return; }
     const lc113 = t.closest("[data-lg113-claim]");
     if (lc113) { claimLogin113(lc113.dataset.lg113Claim); return; }
     if (t.closest("[data-lg64-claim]")) { claimLogin64(); return; }
@@ -36334,7 +36954,7 @@ const initGame = () => {
     const faces = [...new Set(n.waves.flat().map((t) => t.replace("!", "").split(":")[0]))].map((k) => FOE_KINDS[k]?.faces?.[0]?.art).filter(Boolean).slice(0, 3);
     return `${head}<div class="dp66-foes">${faces.map((src) => `<span class="dp66-foe"><img src="${src.replace(/^art\/(?![sm]\/)/, "art/s/")}" alt="" draggable="false"></span>`).join("")}</div>
       <dl class="dp66-drop"><dt>Drops</dt><dd>${ORE_IMG66()}${n.ore[0]}–${n.ore[1]} Ember Ore</dd><dt>First win</dt><dd>${ORE_IMG66()}+${Math.round(n.ore[1] / 2) + 2} more and 5 gems</dd><dt>Level</dt><dd>${n.lv}</dd></dl>
-      <button type="button" class="dp66-go" ${open ? `data-gm-route="battle/deep-${n.id}"` : "disabled"}>${!open ? "clear the way first" : won != null ? "fight again" : "fight"}</button>`;
+      <button type="button" class="dp66-go" ${open ? `data-gm-route="battle/deep-${n.id}"` : "disabled"}>${!open ? "clear the way first" : `${won != null ? "fight again" : "fight"}${isAdmin() ? "" : `<small class="st120-cost">${cost94({ kind: "battle", deep: n.id })} stamina</small>`}`}</button>`;
   };
   const renderDeep66 = () => {
     if (!dpHost) return;
@@ -36505,7 +37125,7 @@ const initGame = () => {
     const beaten = smithBeaten66();
     $(".sm25-sheet-head", box)?.insertAdjacentHTML("afterend", `<div class="sm66-smith"><span class="sm66-pic"><img src="art/s/enemies/ignara.webp" alt="" draggable="false"></span><div><b>Ignara, the Smith</b>
       <p>${beaten ? "Her forge is open: she tempers your heroes' gear, and the cave beside her fire leads down to the Ember Vein." : "She works by this fire and lets nobody near her anvil. Beat her once, and her forge and the cave beside it are open to you."}</p>
-      <div class="sm66-acts">${beaten ? '<button class="gm-btn" type="button" data-gm-route="forge">Ignara\'s forge</button><button class="gm-btn gm-btn--ghost" type="button" data-gm-route="deep">go down the cave</button>' : reach ? '<button class="gm-btn" type="button" data-gm-route="battle/smith-1">challenge her · level 36</button>' : '<p class="sm25-lock">Reach this camp first.</p>'}</div></div></div>`);
+      <div class="sm66-acts">${beaten ? '<button class="gm-btn" type="button" data-gm-route="forge">Ignara\'s forge</button><button class="gm-btn gm-btn--ghost" type="button" data-gm-route="deep">go down the cave</button>' : reach ? '<button class="gm-btn st120-two" type="button" data-gm-route="battle/smith-1"><span>challenge her · level 36</span>' + (isAdmin() ? "" : `<small>${cost94({ kind: "battle", smith: true })} stamina</small>`) + '</button>' : '<p class="sm25-lock">Reach this camp first.</p>'}</div></div></div>`);
   };
   /* round 28 · the shop page is SHOP (S3 Per lei) */
   const shop = GOLD_SHOP.mount($("[data-sh-host]", stage), { toast: (t) => toast(t), paintGems: () => paintGems() });
@@ -36562,6 +37182,8 @@ const initGame = () => {
     page.dataset.where = where;
     duo.active(where === "home");
     if (where === "home") duo.update();
+    // round 120: the Team page opens on the team in use; back from a hero's file, or from one of its own tabs, it keeps the team shown
+    if (where === "team" && was64 !== "team" && was64 !== "file") { tb.team = null; tb.naming = null; tb.draft = null; }
     if (where === "team") { if (["team", "training", "awaken", "copies", "items"].includes(id)) { tb.tab = id; tb.focus = null; grow = null; } renderTabs(); }
     if (where === "boss") { bm.confirm = null; renderBosses(); }
     if (where === "bossmaker") openBf(id);
@@ -36573,6 +37195,8 @@ const initGame = () => {
     if (where === "pull") paintPity();
     if (where === "mail") renderMail();
     if (where === "create" && was64 !== "create") C64 = null;
+    // round 120: Kaori's week, left on screen on the day she is claimed, is gone once the page is left
+    if (where !== "login") kaoriNow120 = false;
     MENU64[where]?.();
     if (where === "profile") paintPf64();
     paintBadges64();
@@ -36584,7 +37208,9 @@ const initGame = () => {
     paintSoonNav();
     const fighting = where === "battle" || where === "raid";
     for (const part of [home, $(".gm-hud", stage), $(".gm-nav", stage)]) part.inert = fighting;
-    if (fighting) { for (const sub of $$("[data-gm-sub]", stage)) sub.hidden = true; battle.open(where, id); return; }
+    // round 120: a fight closes every sheet: the stamina's sits on the stage above the fight (a fight reached by the back button) and its
+    // «fight now» would start that fight once more
+    if (fighting) { for (const x of $$(".sm25-sheet", stage)) x.remove(); for (const sub of $$("[data-gm-sub]", stage)) sub.hidden = true; battle.open(where, id); return; }
     if (battle.live) { battle.close(); mazeBack({ left: true }); }
     paintStory();
     home.inert = where !== "home";
@@ -36594,7 +37220,8 @@ const initGame = () => {
     if (where === "pull") summon.enter(); else summon.leave();
     if (where === "shop") shop.enter(); else shop.leave();
     if (where === "archive") archive.enter(); else archive.leave();
-    $(".sm25-sheet", stage)?.remove();
+    // round 120: the stamina's sheet can be open over a place's: both close
+    for (const x of $$(".sm25-sheet", stage)) x.remove();
     if (where === "story") storyMap.show();
     const navAt = where === "file" ? "team" : where === "bossmaker" ? "boss" : where === "soon" ? soonFor : where === "forge" || where === "deep" ? "story" : where;
     paintGems();
@@ -36605,6 +37232,8 @@ const initGame = () => {
     const sub = $(`[data-gm-sub="${where}"]`, stage);
     if (!sub) return;
     sub.scrollTop = 0;
+    // round 120 (the user: «fai capire che per ritirarlo si deve scorrere in giù»): the log-in opens on its first reward waiting
+    if (where === "login") loginJump120(sub);
     const subIn = () => { if (!REDUCED) sub.animate([{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "none" }], { duration: 360, easing: "cubic-bezier(0.2, 0, 0, 1)" }); };
     if (PHONE_KIT) PHONE_KIT.reveal(sub, subIn); else subIn();
     if (focus) $(".gm-sub-title", sub)?.focus({ preventScroll: true });
@@ -36634,6 +37263,8 @@ const initGame = () => {
     isOpen = false;
     if (battle.live) { battle.close(); mazeBack({ left: true }); }
     duo.active(false);
+    // round 120: leaving the game leaves the log-in page too, so Kaori's week, kept on screen on her day, is gone after it
+    kaoriNow120 = false;
     page.hidden = true;
     page.classList.remove("is-open");
     for (const el of behind()) el.inert = false;
@@ -36672,13 +37303,15 @@ const initGame = () => {
     }
     const eq85 = t.closest("[data-eq85]");
     if (eq85) {
-      const ids = eq85.dataset.eq85 === "team" ? lineupIds() : [eq85.dataset.eq85], n = ids.reduce((sum, id) => sum + autoEquip85(id), 0);
-      toast(n ? `Auto equip: ${n} piece${n === 1 ? "" : "s"} changed` : "Auto equip: nothing better in your bag");
+      // round 120: «the whole team» is the team shown on the Team page (the team in use when the page opens)
+      const ids = eq85.dataset.eq85 === "team" ? tbIds120() : [eq85.dataset.eq85], n = ids.reduce((sum, id) => sum + autoEquip85(id), 0);
+      toast(!ids.length ? "Nobody in this team yet: put heroes in it first." : n ? `Auto equip: ${n} piece${n === 1 ? "" : "s"} changed` : "Auto equip: nothing better in your bag");
       if (current === "team") renderItems();
       if (current === "file") renderFile();
       return;
     }
-    if (t.closest("[data-gm-stam]")) { ST94.ask?.(0); return; }
+    // round 120: the fight that sent you to the shop from the stamina's sheet comes with it for 10 minutes («fight now» once there is enough)
+    if (t.closest("[data-gm-stam]")) { const w = ST94.want; if (w && Date.now() - w.at < 600000) ST94.ask?.(w.need, w.go); else { ST94.want = null; ST94.ask?.(0); } return; }
     const route = t.closest("[data-gm-route]");
     if (route) { location.hash = `#/play/${route.dataset.gmRoute}`; return; }
     const mrow = t.closest("[data-ml-row]");
@@ -36818,6 +37451,8 @@ const initGame = () => {
       p.roster[stPick] = { lv: 1, xp: 0, stars: 0 };
       p.team = [stPick, null, null];
       p.bench = null;
+      // round 120: a new account starts with one team, its first hero
+      delete p.teams; p.teamAt = 0;
       p.leader = stPick;
       p.started = true;
       savePlayer();
@@ -37234,6 +37869,17 @@ const S66 = (() => {
   /* ── the pictures: never past their own pixels; a side where the figure is cut fades, so its edge never shows ── */
   const DPR = () => Math.min(3, devicePixelRatio || 1);
   const sized = (src, cssH) => (src && cssH * DPR() <= 1373 * 1.04 ? src.replace(/^art\/(?![sm]\/)/, "art/m/") : src);
+  // round 120 (perf; lag120: Kolheim's chibis, 140-170 px wide on a PC, came from art/m at 880×1374): someone standing in a place
+  // (placePeople, whose height is the one they are drawn at) takes the art/s copy, 480 px wide, when it has every pixel they are drawn
+  // with, by the same rule that gives a bigger figure art/m (4% of room for the breathing). Only art/npc and art/you, where every
+  // picture has its s copy (checked on 14 Nov: 114 and 30, in Desktop/art and in pubblica/art; the heroes' and the enemies' pictures
+  // are sized by PHONE_KIT already), and only a picture whose size NATIVE67 knows; anything else goes by sized() as before. The other
+  // calls of sized() pass a set height (a gag 600, a VS 600, the flight 700, a manga page 900), not the one drawn: they keep m or whole
+  const S120 = /^art\/((?:npc|you)\/[a-z0-9-]+\.webp)$/;
+  const small120 = (src, cssH) => {
+    const m = src ? S120.exec(src) : null, n = m && typeof NATIVE67 !== "undefined" ? NATIVE67[m[1]] : null;
+    return n && n[0] > 480 && cssH * DPR() <= ((480 * n[1]) / n[0]) * 1.04 ? `art/s/${m[1]}` : sized(src, cssH);
+  };
   const capH = (cssH) => Math.min(cssH, (2048 * 1.04) / DPR());
   // cut: a figure shown from the waist or the bust up fades out just under that line (the plate covers the fade)
   const maskCss = (src, { bottom = false, cut = null } = {}) => {
@@ -37794,7 +38440,7 @@ const S66 = (() => {
     const one = (p) => {
       const w = p.src ? null : who(p.who), art = p.src ? p.src : (p.chibi && (w.idle || w.chibi)) || w.art, kid = !!(p.chibi && (w?.idle || w?.chibi));
       const walk = p.walk ? `--walk:${(p.walk * fw).toFixed(1)}px;--walk-ms:${p.walkMs ?? 9000}ms;` : "";
-      const fig = `<figure class="s66-person${kid ? " is-chibi" : ""}${p.src ? " is-thing" : ""}${p.walk ? " is-walk" : ""}" data-who="${p.who ?? ""}" style="left:${p.x * 100}%;top:${p.y * 100}%;height:${p.h * 100}%;${p.flip ? "--flip:-1;" : ""}${walk}${p.delay ? `--delay:${p.delay}ms;` : ""}"><span class="s66-person-in"><img src="${p.src ? art : sized(art, p.h * fh)}" alt="" draggable="false" style="${p.src ? "" : maskCss(art)}"></span>${p.mark ? `<b class="s66-mark"${p.markAt != null ? ` style="top:${(p.markAt * 100).toFixed(1)}%"` : ""}>${esc(p.mark)}</b>` : ""}</figure>`;
+      const fig = `<figure class="s66-person${kid ? " is-chibi" : ""}${p.src ? " is-thing" : ""}${p.walk ? " is-walk" : ""}" data-who="${p.who ?? ""}" style="left:${p.x * 100}%;top:${p.y * 100}%;height:${p.h * 100}%;${p.flip ? "--flip:-1;" : ""}${walk}${p.delay ? `--delay:${p.delay}ms;` : ""}"><span class="s66-person-in"><img src="${p.src ? art : small120(art, p.h * fh)}" alt="" draggable="false" style="${p.src ? "" : maskCss(art)}"></span>${p.mark ? `<b class="s66-mark"${p.markAt != null ? ` style="top:${(p.markAt * 100).toFixed(1)}%"` : ""}>${esc(p.mark)}</b>` : ""}</figure>`;
       return p.clip ? `<div class="s66-clip" style="clip-path:polygon(${p.clip.map(([x, y]) => `${(x * 100).toFixed(2)}% ${(y * 100).toFixed(2)}%`).join(",")})">${fig}</div>` : fig;
     };
     people.innerHTML = list.map(one).join("");
@@ -38018,6 +38664,26 @@ const S66 = (() => {
   };
 })();
 window.S66 = S66;
+/* ══ round 120 · perf (the user, 14 Nov: «Il gioco nella nuova parte di mappa lagga abbastanza, soprattutto nei luoghi», «Fai un controllo
+ *  per ottimizzare tutto») · «covered»: a scene of S66 (a place, a talk, the prologue) is an opaque layer over the whole window, above
+ *  the game (z-index 85 over the game's 70), so the game under it can rest. html[data-s66] is set while one shows, and not while the
+ *  scene lets the game show through (.s66.is-over, 42% see-through: the prologue's last talk stands over the map). It follows the
+ *  layer itself (its hidden and its classes), whoever shows or hides it, before the next frame; clearing it sends «uncover120» on the
+ *  window, so what rested draws again at once. Read by: the story map's loop, the game's backdrop lines and a fight's lines
+ *  (initContours), and r120-perf.css, which holds the game's CSS animations still under a scene. ══ */
+(() => {
+  const root = S66.root, html = document.documentElement;
+  let on = false;
+  const sync = () => {
+    const now = !root.hidden && !root.classList.contains("is-over");
+    if (now === on) return;
+    on = now;
+    html.toggleAttribute("data-s66", on);
+    if (!on) dispatchEvent(new Event("uncover120"));
+  };
+  new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ["hidden", "class"] });
+  sync();
+})();
 
 /* ══ Round 69 (lab 66 brought into the game) · the story: the prologue (Truck-kun, the black lake, Form 47-B, the fall,
  *  Brackenford) that a new player plays after making their character, ending in Form 3-A (their first hero) and the first
@@ -41642,7 +42308,13 @@ const STORY66 = (() => {
     if (!S.skipping) {
       S.fx.insertAdjacentHTML("beforeend", '<div class="r107-veil"></div>');
       veil = S.fx.lastElementChild;
-      await S.anim(veil, [{ opacity: 0, background: "rgb(255 220 150 / 0)" }, { opacity: 1, background: "rgb(255 214 140 / 0.4)", offset: 0.5 }, { opacity: 0, background: "rgb(255 214 140 / 0)" }], { duration: 2400, fill: "forwards" });
+      // round 120 (perf): the light's colour stays put and only its opacity moves, which the graphics card fades by itself (a moving
+      // background painted the whole screen again on every frame for 2.4 s). The same light: it showed the opacity times the colour's
+      // alpha, both rising and falling together (the colour is the same all along, its alpha 0 → 0.4 → 0), so 0.4·4p² on the way up
+      // and 0.4·4(1−p)² on the way down, p the eased time; the opacity alone now gives 4p² and 4(1−p)², each half on its own curve
+      // (cubic-bezier(⅓, 0, ⅔, ⅓) is u², cubic-bezier(⅓, ⅔, ⅔, 1) is 2u − u²)
+      veil.style.background = "rgb(255 214 140 / 0.4)";
+      await S.anim(veil, [{ opacity: 0, easing: "cubic-bezier(0.333333, 0, 0.666667, 0.333333)" }, { opacity: 1, offset: 0.5, easing: "cubic-bezier(0.333333, 0.666667, 0.666667, 1)" }, { opacity: 0 }], { duration: 2400, fill: "forwards" });
     }
     await S.bg("kolheim-thaw", { how: "cut" });
     veil?.remove();
@@ -41998,6 +42670,33 @@ const STORY66 = (() => {
   const PATH119 = [[0.2, 0.95], [0.284, 0.916], [0.369, 0.881], [0.453, 0.847], [0.537, 0.813], [0.621, 0.779], [0.706, 0.744], [0.79, 0.71]];
   const SAFE119 = [true, false, true, true, false, true, false, true];
   const chibiMe119 = () => (typeof CAST.me.chibi === "function" ? CAST.me.chibi() : CAST.me.chibi);
+  // round 120 (perf; lag120 found the whole 1312×2048 picture there): the bridge's walker stands 17% as tall as the place, which is as
+  // wide as the window while the bridge is on (r107-fit, 16:9), so the art/s copy (480×749) has every pixel it needs on any screen up
+  // to 8K wide; it is taken when it does, for the place as it is and for the whole screen should the window grow, else the whole
+  // picture as before (every art/you picture has its s copy: checked on 14 Nov, in Desktop/art and in pubblica/art)
+  const walk120 = (S) => {
+    const src = chibiMe119(), m = /^art\/(you\/[a-z0-9-]+\.webp)$/.exec(src ?? ""), n = m && typeof NATIVE67 !== "undefined" ? NATIVE67[m[1]] : null;
+    if (!n || n[0] <= 480) return src;
+    const fh = Math.max(S.frame.clientHeight, (Math.max(screen.width || 0, screen.height || 0) * 9) / 16);
+    return fh * 0.17 * Math.min(3, devicePixelRatio || 1) <= ((480 * n[1]) / n[0]) * 1.04 ? `art/s/${m[1]}` : src;
+  };
+  // round 120 (perf): the walker glides by a transform, which the graphics card moves by itself, instead of left and top (they laid the
+  // place out and painted it again on every frame of a step): it takes its new place at once, then slides there from where it stands,
+  // in the same 0.36 s on the same curve. A step taken mid-glide starts from where the walker is, and the same place asked for again
+  // leaves a glide under way to end, both as the old transition did; with the system's reduced motion it jumps, as round 119's
+  // transition did (r120-perf.css takes that transition away)
+  const glide120 = (el, left, top) => {
+    const at = `${left} ${top}`;
+    if (el._at120 === at) return;
+    el._at120 = at;
+    const a = el.getBoundingClientRect();
+    el._glide120?.cancel();
+    el.style.left = left; el.style.top = top;
+    const b = el.getBoundingClientRect();
+    if ((a.left === b.left && a.top === b.top) || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const h = parseFloat(getComputedStyle(el).height), k = h > 0 && b.height > 0 ? b.height / h : 1;
+    el._glide120 = el.animate([{ transform: `translate(${(a.left - b.left) / k}px, ${(a.top - b.top) / k}px)` }, { transform: "none" }], { duration: 360, easing: "cubic-bezier(0.23, 1, 0.32, 1)" });
+  };
   const mouthPeople119 = () => [
     // Kaja at the bridge's near end, Old Sigurd by the signposts on the right
     { who: "kaja", chibi: false, x: IN107.x(0.15), y: 1.04, h: 0.55, mark: save().seen?.["kaja-119"] ? null : "!" },
@@ -42015,7 +42714,7 @@ const STORY66 = (() => {
     let pos = 0, total = 2 + Math.floor(Math.random() * 2), left = total;
     S.frame.insertAdjacentHTML("beforeend", `<div class="r107-optics r119-path">
       ${PATH119.map(([x, y], i) => `<i class="r119-stop${SAFE119[i] ? " is-safe" : ""}" style="left:${(IN107.x(x) * 100).toFixed(2)}%;top:${(y * 100).toFixed(2)}%"></i>`).join("")}
-      <img class="r119-walker" src="${chibiMe119()}" alt="" draggable="false" style="left:${(IN107.x(PATH119[0][0]) * 100).toFixed(2)}%;top:${(PATH119[0][1] * 100).toFixed(2)}%">
+      <img class="r119-walker" src="${walk120(S)}" alt="" draggable="false" style="left:${(IN107.x(PATH119[0][0]) * 100).toFixed(2)}%;top:${(PATH119[0][1] * 100).toFixed(2)}%">
       <div class="r119-wind"></div>
     </div>`);
     const box = S.frame.lastElementChild, walker = box.querySelector(".r119-walker"), wind = box.querySelector(".r119-wind");
@@ -42027,7 +42726,7 @@ const STORY66 = (() => {
     const ask = S.ui.lastElementChild, bells = ask.querySelector("[data-r119-bells]"), say = (t) => { ask.querySelector("[data-r119-say]").textContent = t; };
     const paint = () => {
       const [x, y] = PATH119[pos];
-      walker.style.left = `${(IN107.x(x) * 100).toFixed(2)}%`; walker.style.top = `${(y * 100).toFixed(2)}%`;
+      glide120(walker, `${(IN107.x(x) * 100).toFixed(2)}%`, `${(y * 100).toFixed(2)}%`);
       box.dataset.pos = String(pos); box.dataset.left = String(left);
       bells.innerHTML = `${Array.from({ length: total }, (_, i) => `<i${i < total - left ? ' class="is-rung"' : ""}></i>`).join("")}<b>${SAFE119[pos] ? (pos ? "At a knot" : "Behind the sign") : "Between knots"} · ${left === 1 ? "1 bell" : `${left} bells`} to the breath</b>`;
     };
@@ -42346,7 +43045,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-13-2301";
+const BUILD = "2026-11-14-1550";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
