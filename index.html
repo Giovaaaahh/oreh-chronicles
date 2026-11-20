@@ -15873,7 +15873,7 @@ const PLAYER = (() => {
     return saved ? { ...blank, ...saved, admin: { ...blank.admin, ...saved.admin }, player: { ...freshPlayer(), ...saved.player, items: { ...freshPlayer().items, ...saved.player?.items } } } : blank;
   } catch { return blank; }
 })();
-const savePlayer = () => { try { localStorage.setItem(PLAYER_KEY, JSON.stringify(PLAYER)); } catch { /* it lasts this visit */ } window.__cloudDirty?.(); };
+const savePlayer = () => { window.__econ126?.(); try { localStorage.setItem(PLAYER_KEY, JSON.stringify(PLAYER)); } catch { /* it lasts this visit */ } window.__cloudDirty?.(); };
 const isAdmin = () => PLAYER.mode === "admin";
 /* round 111: a hero super awakened under the old rules, at Lv 101–200, is that level less 100 now (as strong as before at its
    Lv 100, and rising to +20%); the Z Stars counted in order (HP, then ATK, then DEF) become their bits */
@@ -18878,7 +18878,7 @@ const codeRedeem86 = async (raw) => {
   }
   if (!c) return { bad: asked || !SB.ok() ? "This code does not exist. Check it and try again." : "This code was not found. Check your connection and try again." };
   if (c.end && Date.now() > Date.parse(c.end)) return { bad: "This code has expired." };
-  const got = codeGive86(c);
+  const got = window.ECON126 ? window.ECON126.as(`code:${c.k}`, () => codeGive86(c)) : codeGive86(c);
   p.codes86[k] = Date.now();
   savePlayer();
   return { got };
@@ -19039,6 +19039,7 @@ const launchCheck = async () => {
     if (betaPlayed()) {
       PLAYER.player = { ...freshPlayer(), mail: { beta: false } };
       savePlayer();
+      window.ECON126?.reset?.();
       localStorage.removeItem("oreh-ai-maze");
       localStorage.setItem(RESET_NOTE, "1");
     }
@@ -31332,8 +31333,14 @@ const SUMMON = (() => {
       if (playing || choosing) return;
       let pick = null;
       if (api.choiceDue?.(n)) { choosing = true; pick = await chooseSSR(); choosing = false; if (!pick) return; }
-      const list = api.pull(n, pick);
+      choosing = true;
+      let list;
+      try { list = await api.pull(n, pick); } finally { choosing = false; }
       if (!list) return;
+      // on a phone the pictures of the heroes drawn are decoded, and on an iPhone their band's blurred background made, while the deck
+      // falls and deals (Safari decoded each one as its card turned: the iPhone's own frame counts showed a turn stalling 0.7 s)
+      // one at a time, a quarter of a second apart, so the deal itself never waits for them
+      if (PHONE) { const arts = [...new Set(list.filter((x) => x?.h?.art).map((x) => x.h.art))]; window.__pre126 = []; arts.forEach((a, i) => setTimeout(() => { const im = new Image(); im.src = a; im.decode?.().catch(() => {}); window.__pre126.push(im); if (IOS125) setTimeout(() => blurBg125(a), 120); }, 500 + i * 260)); }
       playing = true;
       document.documentElement.dataset.smPlaying = "1";
       last = n;
@@ -37956,6 +37963,7 @@ const initGame = () => {
   };
   ST94.paint = () => paintStam94();
   ST94.ask = (need, go) => stamAsk94(need, go);
+  addEventListener("econ126", () => { try { paintGems(); } catch { /* the page is not drawn yet */ } });
   const paintGems = () => {
     $("[data-gm-gems]", stage).textContent = isAdmin() ? "∞" : PLAYER.player.gems.toLocaleString("en-US");
     $("[data-gm-gold]", stage).textContent = isAdmin() ? "∞" : (PLAYER.player.gold ?? 0).toLocaleString("en-US");
@@ -39832,7 +39840,27 @@ const initGame = () => {
     return `<div class="sm31-pips" aria-label="${n} of ${STARTER_AT} multis done">${Array.from({ length: STARTER_AT }, (_, k) => `<i class="${k < n ? "is-on" : ""}"></i>`).join("")}<b class="${n >= STARTER_AT ? "is-on" : ""}">6</b></div>
       <p>${pick ? "Your next ×11 lets you choose your SSR first." : "Your next ×11 has a sure SSR."}${st.chose ? ` You chose ${heroineById(st.chose)?.name ?? "your SSR"}.` : ""}</p>`;
   };
-  const summon = SUMMON.mount($("[data-sm-host]", stage), {
+  /** Round 126: the cards the server drew ({ id } or { dust }), kept as the Pull page always kept them: a new hero, a copy for Copies, a
+ *  coin or gold past six. The server already took the gems and counted the summon (its counts come back with them). */
+const keep126 = (list, n) => {
+  const got = list.map((x) => (x?.dust ? { dust: x.dust } : heroineById(x?.id))).filter(Boolean);
+  const p = PLAYER.player, out = [];
+  paintGems();
+  TRACK64.bump("summon", n);
+  for (const x of got) {
+    if (x.dust) { p.items.dust = (p.items.dust ?? 0) + x.dust; out.push({ dust: x.dust }); continue; }
+    const h = x, r = p.roster[h.id];
+    if (!r) { p.roster[h.id] = { lv: 1, xp: 0, stars: 0, cons: 0, held: 0 }; out.push({ h, isNew: true, gold: 0 }); continue; }
+    if ((r.cons ?? 0) + (r.held ?? 0) < COPY_MAX) { r.held = (r.held ?? 0) + 1; out.push({ h, isNew: false, gold: 0, copy: true }); continue; }
+    const d102 = dupGive102(p, h);
+    out.push({ h, isNew: false, gold: d102.gold, coin: d102.coin });
+  }
+  if (!p.leader) p.leader = got.find((x) => x.id)?.id ?? p.leader;
+  savePlayer();
+  summon.pity();
+  return out;
+};
+const summon = SUMMON.mount($("[data-sm-host]", stage), {
     pity: pityText,
     /** Round 55 · the summons open now, the starter first; each with its tab's name, date, picture and colour. */
     banners: () => [{ key: "starter", name: "Starter banner", when: "always open", thumb: heroineById(STARTER_PICKS[0])?.art ?? "", tc: "var(--accent)", b: null, cv: starterCv67() },
@@ -39863,6 +39891,8 @@ const initGame = () => {
     pull: (n, pick = null) => {
       const B = curBan(), cost = banCost(n);
       if (!isAdmin() && PLAYER.player.gems < cost) { toast(`Not enough gems: ${cost} needed. Clear stages and bosses for more.`); return null; }
+      // round 126: a Player's summon is drawn and paid on the server (the same rules); its cards come back and are kept here as before
+      if (!isAdmin() && ECON126.on) return ECON126.pull(B?.key ?? "starter", n, pick, (list) => keep126(list, n)).then((r) => { if (r?.error) { toast(r.error); paintGems(); return null; } return r?.cards ?? null; });
       // the 6th ×11: a sure SSR on its last card, unless it is the one you chose
       const sure = n > 1 && !isAdmin() && !pick && (B ? !nh93(B) && banAt(B) >= 1 && banDone(B) >= banAt(B) - 1 : sixthOf() >= STARTER_AT);
       // an R pull gives star dust while there are no R heroines
@@ -39930,7 +39960,7 @@ const initGame = () => {
     const m = MAILS.find((x) => x.key === btn.dataset.mlClaim);
     if (!m || !m.has() || isAdmin() || mailClaimed(m)) return;
     const p = PLAYER.player, was = p.gems;
-    p.gems += m.gems;
+    if (window.ECON126) window.ECON126.as(`mail:${m.key}`, () => { p.gems += m.gems; }); else p.gems += m.gems;
     p.mail = { ...(p.mail ?? {}), [m.key]: true };
     savePlayer();
     btn.disabled = true;
@@ -40004,7 +40034,7 @@ const initGame = () => {
   const rwShow64 = (r) => (r.gems ? `${GEM64()}${nf64(r.gems)}` : r.gold ? `${COIN64()}${nf64(r.gold)}` : r.pot ? `${POT64(r.pot[0])}<span>× ${r.pot[1]}</span>` : "");
   const rwGive64 = (r) => {
     const p = PLAYER.player;
-    if (r.gems) { p.gems += r.gems; return `+${r.gems} gems`; }
+    if (r.gems) { if (window.ECON126) window.ECON126.as("login", () => { p.gems += r.gems; }); else p.gems += r.gems; return `+${r.gems} gems`; }
     if (r.gold) { p.gold = (p.gold ?? 0) + r.gold; return `+${nf64(r.gold)} gold`; }
     if (r.pot) { p.items[r.pot[0]] = (p.items[r.pot[0]] ?? 0) + r.pot[1]; return `${POTIONS[r.pot[0]].name} ×${r.pot[1]}`; }
     if (r.hero) {
@@ -40174,7 +40204,7 @@ const initGame = () => {
     const sec120 = () => $(`[data-lg113="${CSS.escape(id)}"]`, loginHost), at120 = sec120()?.getBoundingClientRect().top;
     st.n += 1;
     st.last = DAY64();
-    const got = codeGive86(r);
+    const got = window.ECON126 ? window.ECON126.as("login", () => codeGive86(r)) : codeGive86(r);
     toast(`${L.name || "Log-in"}, day ${st.n}: ${got.join(" · ") || "claimed"}`);
     savePlayer(); paintGems(); renderLogin64(); paintBadges64();
     const sub120 = loginHost.closest(".gm-sub"), now120 = sec120()?.getBoundingClientRect().top;
@@ -41555,6 +41585,7 @@ const initGame = () => {
       pfConfirm = false;
       PLAYER.player = freshPlayer();
       savePlayer();
+      window.ECON126?.reset?.();
       toast("Account reset: a new Player account starts");
       if (!isAdmin()) { location.hash = "#/play/starter"; return; }
       renderProfile();
@@ -47718,7 +47749,8 @@ const GLOW121 = (() => {
   if (window.OREH_GEST_ONLY) return;
   if (!window.__CLOUD124_TEST && (/^(127\.0\.0\.1|localhost)$/.test(location.hostname) || /\/\.oreh-[^/]*$/.test(decodeURIComponent(location.pathname)))) return;
   const AUTH = "oreh-ai-auth", META = "oreh-ai-cloud", BAK = "oreh-ai-cloud-bak";
-  const SKIP = /^oreh-ai-(device|pack|pack-try.*|gest-.*|bosses|auth|cloud|cloud-bak)$/;
+  // round 126: the gems still waiting for the server (econ-q, econ-reset) belong to this device, never to the run online
+  const SKIP = /^oreh-ai-(device|pack|pack-try.*|gest-.*|bosses|auth|cloud|cloud-bak|econ-q|econ-reset)$/;
   const ours = (k) => !!k && (k.startsWith("oreh-ai-") || k.startsWith("oreh-here")) && !SKIP.test(k);
   const ls = {
     get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
@@ -47981,7 +48013,8 @@ const GLOW121 = (() => {
   window.__cloudDirty = () => soon();
   setInterval(() => { const M = meta(); if (!st.busy && !st.asking && S && M.uid === S.user.id && M.hash !== hashOf(keys())) upload(); }, 60000);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") upload(); });
-  window.CLOUD124 = { html, sync, upload, welcome, user: () => S?.user ?? null, line };
+  // round 126: the account's session for the server's other functions (econ)
+  window.CLOUD124 = { html, sync, upload, welcome, user: () => S?.user ?? null, line, session: async () => { await session(); return S; } };
   setTimeout(sync, 1200);
 })();
 /* ══ round 125 · iPhones. The user, 20 Nov: «da telefono gira ancora malissimo, specialmente quando ci sono animazioni complesse come le
@@ -48098,13 +48131,133 @@ const PERF125 = (() => {
   };
   return { time, on };
 })();
+/* ══ round 126 · a Player run's gems, summons and heroes held, kept by the server (the function «econ», server/econ126). The user,
+ *  20 Nov: PvP with real heroes («2 modalità nessuna alla pari»), so a save touched on a device must not give gems or heroes.
+ *  · A summon is drawn and paid on the server, with the game's own rules (the same luck gives the same cards: econ126-parita.cjs);
+ *    the cards come back and this device keeps them as the Pull page always did (new hero, copy, coin or gold).
+ *  · Every change of the Player run's gems is seen here (PLAYER.player.gems is watched) and told to the server, in order: what is
+ *    earned goes in within what a day of hard play brings (a code or a mail once each), what is spent comes off. The server's count
+ *    is what the device shows, with what still waits here.
+ *  · The first time, the device's own numbers become the account's start. A reset (the Profile's, the launch's) resets it there too.
+ *  · Offline the changes wait on this device (oreh-ai-econ-q, never part of the run online) and go when it is back; a summon needs
+ *    the connection.
+ *  The Admin's mode never counts. Not in the Database program, nor in the tests' copies (as the accounts, round 124). ══ */
+const ECON126 = (() => {
+  const on = typeof ONLINE !== "undefined" && !!ONLINE?.url && !!ONLINE?.key && !window.OREH_GEST_ONLY
+    && (!!window.__CLOUD124_TEST || !!window.__ECON126_TEST || !(/^(127\.0\.0\.1|localhost)$/.test(location.hostname) || /\/\.oreh-[^/]*$/.test(decodeURIComponent(location.pathname))));
+  const QK = "oreh-ai-econ-q", RK = "oreh-ai-econ-reset";
+  const ls = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* this visit */ } }, del: (k) => { try { localStorage.removeItem(k); } catch { /* none */ } } };
+  let q = (() => { try { const x = JSON.parse(ls.get(QK)); return Array.isArray(x) ? x : []; } catch { return []; } })();
+  const keepQ = () => (q.length ? ls.set(QK, JSON.stringify(q)) : ls.del(QK));
+  const waiting = () => q.reduce((t, o) => t + o.n, 0);
+  let applying = false, why = null, synced = false, flushT = 0, chain = Promise.resolve(), offline = false;
+  /** One call at a time, in order. */
+  const run = (job) => (chain = chain.then(job, job));
+  const call = async (body) => {
+    const s = await window.CLOUD124?.session?.();
+    if (!s?.access_token) throw new Error("no account yet");
+    const r = await fetch(`${ONLINE.url}/functions/v1/econ`, { method: "POST", headers: { apikey: ONLINE.key, Authorization: `Bearer ${s.access_token}`, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    if (r.status === 409 && j.sync) synced = false;
+    if (!r.ok && !j.state) throw Object.assign(new Error(j.error ?? `the server answered ${r.status}`), { status: r.status });
+    offline = false;
+    return j;
+  };
+  /** The server's count on this device: its gems with what still waits here, and the summon's counts. */
+  const take = (st) => {
+    if (!st || typeof st.gems !== "number") return;
+    const p = PLAYER.player;
+    watch(p);
+    applying = true;
+    try {
+      p.gems = st.gems + waiting();
+      p.pity93 = st.pity93 ?? null; p.bpity = st.bpity ?? {}; p.sixth = st.sixth ?? null; p.starter = st.starter ?? p.starter;
+      if (p.pity93 == null) delete p.pity93;
+      if (p.sixth == null) delete p.sixth;
+    } finally { applying = false; }
+    savePlayer();
+    dispatchEvent(new Event("econ126"));
+  };
+  /** The Player run's gems, watched: each change goes into the queue (unless it is the server's own count coming in). */
+  const watch = (p) => {
+    if (!p || typeof p !== "object" || Object.getOwnPropertyDescriptor(p, "gems")?.get) return;
+    let g = Math.round(+p.gems || 0);
+    Object.defineProperty(p, "gems", { configurable: true, enumerable: true, get: () => g, set: (v) => {
+      v = Math.round(+v || 0);
+      const d = v - g;
+      g = v;
+      if (!d || applying || !on || isAdmin()) return;
+      q.push({ k: why ?? "any", n: d });
+      keepQ();
+      soon();
+    } });
+  };
+  const sync = async () => {
+    if (ls.get(RK)) { const j = await call({ action: "sync", seed: seed() }); if (!j.seeded) await call({ action: "reset" }); ls.del(RK); }
+    const j = await call({ action: "sync", seed: seed() });
+    synced = true;
+    take(j.state);
+  };
+  const seed = () => { const p = PLAYER.player; return { gems: Math.max(0, (p.gems ?? 0) - waiting()), own: Object.keys(p.roster ?? {}), pity93: p.pity93, bpity: p.bpity, sixth: p.sixth, starter: p.starter }; };
+  const flush = () => run(async () => {
+    if (!on || isAdmin()) return;
+    try {
+      if (!synced) await sync();
+      if (!q.length) return;
+      const ops = q.slice(0, 100);
+      const j = await call({ action: "batch", ops });
+      q.splice(0, ops.length);
+      keepQ();
+      take(j.state);
+      if (j.refused?.length) console.warn("econ126: the server did not take", j.refused);
+    } catch (e) { offline = true; if (e?.status !== 401) console.warn("econ126", e?.message ?? e); }
+    finally { if (q.length) soon(20000); }
+  });
+  const soon = (ms = 1500) => { clearTimeout(flushT); flushT = setTimeout(flush, ms); };
+  /** A Player's summon on the server; `keep(cards)` keeps the cards on this device and gives what the summon shows. Null (with a
+   *  word for the player in `.error`) when it cannot be done. */
+  const pull = (banner, n, pick, keep) => run(async () => {
+    if (!navigator.onLine) return { error: "Summons need a connection." };
+    try {
+      if (!synced) await sync();
+      const ops = q.slice(0, 100);
+      const j = await call({ action: "pull", banner, n, pick, ops });
+      q.splice(0, ops.length);
+      keepQ();
+      take(j.state);
+      if (!j.got) return { error: j.error ?? "The summon did not happen. Try again." };
+      return { cards: keep(j.got) };
+    } catch (e) { return { error: e?.status === 400 ? e.message : "The summon needs the connection: try again in a moment." }; }
+  });
+  /** The run starts again (a reset): here at once, on the server now or as soon as it can. */
+  const reset = () => {
+    q = [];
+    keepQ();
+    watch(PLAYER.player);
+    if (!on) return;
+    ls.set(RK, "1");
+    run(async () => { try { await call({ action: "reset" }); ls.del(RK); const j = await call({ action: "sync" }); synced = true; take(j.state); } catch { /* the next sync does it */ } });
+  };
+  /** Runs `fn` with its gems told as `key` (a code, a mail, the log-in, a challenge's first gift). */
+  const as = (key, fn) => { const was = why; why = key; try { return fn(); } finally { why = was; } };
+  watch(PLAYER.player);
+  if (on) {
+    setTimeout(flush, 2500);
+    addEventListener("online", () => soon(500));
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden" && q.length) flush(); });
+  }
+  // a run replaced (a reset, an account's run coming in) is watched as soon as it is saved
+  window.__econ126 = () => watch(PLAYER.player);
+  return { on, pull, reset, as, flush, watch, state: () => ({ queued: q.length, synced, offline }) };
+})();
+window.ECON126 = ECON126; // for the code that runs early (the launch's reset) and the tests
 initGame();
 bindAnchors();
 /* ── round 59 · a new version: when the Admin asks every game to update (the pack's `app`, from the Gestionale's Lancio
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-20-1535";
+const BUILD = "2026-11-20-1631";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
