@@ -16885,6 +16885,34 @@ const here122Set = (id) => {
   HERE122.mode = k; HERE122.at = id;
   try { localStorage.setItem(`oreh-here122-${k}`, id); } catch { /* full: it stays for this visit */ }
 };
+/* ── round 128 · one place at a time under the island, as on the story map (the user, 20 Nov: «nel sottosuolo noto che le battaglie
+ *  partono ovunque anche se non sono nello slot adiacente»): a fight, a rest or the anvil where you stand or beside it; the places you
+ *  can stand on (the way, a cleared fight, an open camp, the open anvil) are walked to, free, through each other. In a vein you are not in,
+ *  you stand at its way. The Admin goes anywhere. ── */
+const FAR128 = "Too far: walk there one place at a time, from where you stand.";
+/** Where you stand in a vein: the place you stand on when it is in this vein, else the vein's way. */
+const hereIn128 = (v) => { const h = here122(); return h && VPL122.get(h)?.v === v ? h : veinWay122(v)?.id ?? null; };
+const near128 = (id) => {
+  if (isAdmin()) return true;
+  const p = VPL122.get(id), h = p ? hereIn128(p.v) : null;
+  return !!h && (h === id || (VNB122.get(h) ?? []).includes(id));
+};
+/** A place you can stand on: the way, a cleared fight, an open camp or anvil (its vein open). */
+const stand128 = (id) => {
+  const p = VPL122.get(id);
+  if (!p || !veinOpen122(p.v)) return false;
+  if (p.k === "way") return true;
+  if (p.k === "camp" || p.k === "anvil") return deepOpen66(id);
+  return deepStore66()[id] != null;
+};
+/** A place you can stand on, not where you are, reached from there through places you can stand on. */
+const walkable128 = (id) => {
+  const p = VPL122.get(id), h = p ? hereIn128(p.v) : null;
+  if (!h || h === id || !stand128(id)) return false;
+  const seen = new Set([h]), q = [h];
+  for (let i = 0; i < q.length; i++) for (const n of VNB122.get(q[i]) ?? []) { if (seen.has(n) || !stand128(n)) continue; if (n === id) return true; seen.add(n); q.push(n); }
+  return false;
+};
 /** A vein fight lost: everyone healed, awake at the vein's camp (the rested one nearest the fight), else at its way. The story's own
  *  place (here89) stays as it was. Says where, for «everyone wakes at …, healed». */
 const veinFall122 = (id) => {
@@ -18913,7 +18941,7 @@ const pieceSay104 = (g = {}) => {
  * SSR: da 500 a 5000»: three built-in wares of the Coin Shop (the Database changes their price and coin, or takes them off), and a
  * chest the Database's own wares and bundles can give («goldchest-R|SR|SSR»).
  * «il mirror shard non abbiamo detto al player cosa fa, fai in modo che nello shop venga specificato». */
-const BAL106 = { from: 3, bars: { common: 3, elite: 4, mini: 6, boss: 7 }, dmg: 20 };
+const BAL106 = { from: 3, bars: { common: 3, elite: 4, mini: 6, boss: 7, regal: 4, royal: 2 }, dmg: 20 };
 /* ══════════ Round 116 (2026-11-13) · the 5th map, Frostspine: no HP bars, a harder bite, the cold ══════════
  * The user: «In questa mappa le barre di vita non ci sono, dobbiamo trovare un altro modo per rendere il gioco "avvincente" ma senza
  * limitare i danni che può fare il player. Aumenta del 50% l'attacco dei nemici base di questa area … mettiamo una passiva in questa
@@ -18931,7 +18959,7 @@ const bal106Read = (x) => {
   const b = x && typeof x === "object" && !Array.isArray(x) ? x : {};
   const n = (v, lo, hi, d) => { const k = Math.round(+v); return v == null || v === "" || !Number.isFinite(k) ? d : Math.min(hi, Math.max(lo, k)); };
   BAL106.from = n(b.from, 1, 8, 4) - 1;
-  for (const [k, d] of [["common", 3], ["elite", 4], ["mini", 6], ["boss", 7]]) BAL106.bars[k] = n(b.bars?.[k], 1, 20, d);
+  for (const [k, d] of [["common", 3], ["elite", 4], ["mini", 6], ["boss", 7], ["regal", 4], ["royal", 2]]) BAL106.bars[k] = n(b.bars?.[k], 1, 20, d);
   BAL106.dmg = n(b.dmg, 0, 300, 20);
   // round 116: Frostspine's own two
   const fr116 = b.frost && typeof b.frost === "object" && !Array.isArray(b.frost) ? b.frost : {};
@@ -21019,6 +21047,9 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     for (const [ic, val, name, fx, when, t, foe] of states118(m)) add(ic, val, name, null, "enemy", fx, when, t, true, foe);
     for (const [ic, val, name, fx, when, t, foe] of states123(m)) add(ic, val, name, null, "enemy", fx, when, t, true, foe);
     if (m.overload) add("spiral", "", "Overloaded", me, "ultimate", "Golden Overdrive failed: she waits for the enemy turn to end.", "this enemy turn", "", true);
+    // round 128: Talon's stacks first among his chips, so the count is never hidden behind «+n»
+    const w128 = out.findIndex((x) => /^Wild Stack /.test(x.name));
+    if (w128 > 0) out.unshift(out.splice(w128, 1)[0]);
     return out;
   };
   /** Her chips, in the team's layer (her card is cut to its shape): above her name plate on PC, under her card on a phone. */
@@ -23053,8 +23084,10 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   const foe101 = (e, m, mul) => { if (e.vines101 > 0) mul(0.85, "Venom Vines"); };
   /** His chip: the stacks (Wild Fury shows as a buff). */
   const effects101 = (m, add, me) => {
-    if (!isTalon(m) || m.ko || !m.stk101) return;
-    add("up", `×${m.stk101}`, "Wild Stack", me, "passive", `ATK, DEF and HP +${5 * m.stk101}% for the rest of the battle; each stack counts as a buff for Strangler Coil. At 10: Wild Fury for 3 turns, then 6 stacks go.`, "this battle", m.stk101);
+    if (!isTalon(m) || m.ko) return;
+    // round 128: how many, always (0 too), out of the 10 (the user: «deve dirmi che sono a x/10»)
+    const n128 = m.stk101 ?? 0;
+    add("up", `${n128}/10`, `Wild Stack ${n128}/10`, me, "passive", `${n128} of 10 Wild Stacks: ATK, DEF and HP +${5 * n128}% for the rest of the battle; each stack counts as a buff for Strangler Coil. At 10: Wild Fury for 3 turns, then 6 stacks go.`, "this battle", "∞");
   };
   /** The tools of his ultimate. */
   const x101 = (m) => ({
@@ -25026,8 +25059,11 @@ void main(){
   /** How many bars: the region's boss, a mini boss or a chapter's boss, an elite, everyone else. */
   const barsOf106 = (e) => {
     const b = BAL106.bars, i = STORY.stages.indexOf(run.stage);
-    if (e.regal || e.court || (e.boss && !e.royal && !e.mini && i >= 0 && i % 25 === 24)) return b.boss;
-    if (e.mini || e.boss || e.royal) return b.mini;
+    // round 128: Altea and her two Royal Guards, bars of their own (the user: «un piccolo nerf ad altea»: 4, the guards 2)
+    if (e.regal) return b.regal;
+    if (e.royal) return b.royal;
+    if (e.court || (e.boss && !e.mini && i >= 0 && i % 25 === 24)) return b.boss;
+    if (e.mini || e.boss) return b.mini;
     return e.elite ? b.elite : b.common;
   };
   /** A wave comes in: from the Database's map (4) on, its bars and its harder bite; anywhere, each enemy's own ability. */
@@ -28568,6 +28604,7 @@ void main() {
         // it away with a result screen; before any fight of the visit it is not there at all, and the hash below was never set)
         // round 122: a vein's place still shut is never fought (runOf gave the story's stage in its place): no stamina, back under the island
         if (/^deep-/.test(id ?? "") && !run94.deep) { stop120(); (window.GM_TOAST97 ?? toast)(deepShut122(id.slice(5))); location.hash = "#/play/deep"; return; }
+        if (run94.deep && !near128(run94.deep)) { stop120(); (window.GM_TOAST97 ?? toast)(FAR128); location.hash = "#/play/deep"; return; }
         if (!mv98.ok) { stop120(); (window.GM_TOAST97 ?? toast)(mv98.why); location.hash = "#/play/story"; return; }
         if (at94 && nodeDone(...at94)) run94.back94 = true;
         const c94 = cost94(run94) + (mv98.cost ?? 0);
@@ -34796,9 +34833,9 @@ const dragTrack = (trk, wrap) => {
 /* ══ round 106 · nel Database: le barre di vita e il danno dei nemici dalla mappa 4 in poi (in cima alla pagina Nemici, finisce in
  *  D.bal106 e arriva ai giocatori con Manda online) e le casse di monete d'oro del Coin Shop (pagina Shop: prezzo, moneta, in vendita). ══ */
 const B106 = () => { const b = D.bal106 && typeof D.bal106 === "object" && !Array.isArray(D.bal106) ? D.bal106 : (D.bal106 = {}); if (!b.bars || typeof b.bars !== "object") b.bars = {}; return b; };
-const BAL_F106 = [["from", "Da mappa", 4, 1, 8, "", 1], ["bars.common", "Barre: comuni", 3, 1, 20, "", 1], ["bars.elite", "Barre: élite", 4, 1, 20, "", 1], ["bars.mini", "Barre: mini boss", 6, 1, 20, "", 1], ["bars.boss", "Barre: boss", 7, 1, 20, "", 1], ["dmg", "Danno dei nemici", 20, 0, 300, "%", 5]];
+const BAL_F106 = [["from", "Da mappa", 4, 1, 8, "", 1], ["bars.common", "Barre: comuni", 3, 1, 20, "", 1], ["bars.elite", "Barre: élite", 4, 1, 20, "", 1], ["bars.mini", "Barre: mini boss", 6, 1, 20, "", 1], ["bars.boss", "Barre: boss", 7, 1, 20, "", 1], ["bars.regal", "Barre: Altea", 4, 1, 20, "", 1], ["bars.royal", "Barre: guardie di Altea", 2, 1, 20, "", 1], ["dmg", "Danno dei nemici", 20, 0, 300, "%", 5]];
 const balGet106 = (k, d) => { const b = B106(), v = k.startsWith("bars.") ? b.bars[k.slice(5)] : b[k]; return v == null || v === "" || !Number.isFinite(+v) ? d : +v; };
-const balSay106 = () => `Dalla mappa ${balGet106("from", 4)}: barre ${balGet106("bars.common", 3)} ai comuni, ${balGet106("bars.elite", 4)} alle élite, ${balGet106("bars.mini", 6)} ai mini boss, ${balGet106("bars.boss", 7)} ai boss · danno dei nemici +${balGet106("dmg", 20)}%`;
+const balSay106 = () => `Dalla mappa ${balGet106("from", 4)}: barre ${balGet106("bars.common", 3)} ai comuni, ${balGet106("bars.elite", 4)} alle élite, ${balGet106("bars.mini", 6)} ai mini boss, ${balGet106("bars.boss", 7)} ai boss (Altea ${balGet106("bars.regal", 4)}, le sue guardie ${balGet106("bars.royal", 2)}) · danno dei nemici +${balGet106("dmg", 20)}%`;
 /* ══ round 116 · nel Database, pagina Nemici: la mappa 5 (Frostspine) senza barre di vita, l'attacco in più dei suoi nemici base e il
  *  freddo quando in campo non c'è un eroe Fuoco (in D.bal106.frost, arriva ai giocatori con Manda online) ══ */
 const FROST_F116 = [["base", "Nemici base: attacco", 50, 0, 300, "%", 5], ["cold", "Freddo senza Fuoco", 10, 0, 50, "%", 1], ["ice", "Carte gelate", 1, 0, 3, "", 1], ["iceCold", "Gelate senza Fuoco", 2, 0, 4, "", 1], ["rise", "Statue: turni", 2, 0, 5, "", 1], ["riseHp", "Statue: vita", 50, 10, 100, "%", 5]];
@@ -41239,6 +41276,8 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
     const key = p.v, V = VEINS122[key], R = STORY_REGIONS[V.r], S = STORYMAP.U122.states(), st = S.st.get(p.id) ?? "locked";
     const reach = st === "open" || st === "now" || st === "done", shut = !S.open[key], why = shut ? veinWhy122(key) : "";
     const off = { label: shut ? why : "Clear a place beside it first", off: true };
+    // round 128: near (where you stand or beside it), else walked to (a place you can stand on), else too far
+    const near = near128(p.id), walk = !shut && walkable128(p.id), far = { label: FAR128, off: true }, walkAct = { label: "Walk here", act: "walk", ghost: true };
     const cn = (n) => esc66(coreName122(key, n)), core = coreImg122(key, "u122-mat"), els = coreEls122(key), steps = coreSteps122();
     const d = { key, place: p, c: R.c, kicker: `${KIND122[p.k] ?? "Place"} · ${V.name}`, name: p.name, sub: "", drops: [] };
     if (p.k === "way") {
@@ -41249,6 +41288,7 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
       else if (!ph) { d.foes = tribe122(key); d.lead = false; }
       d.drops = [["Vein", `${esc66(V.name)} · Lv ${rng122(V.lv)}`], ["Core", `${core}${esc66(V.core)}`]];
       d.action = shut ? off : { label: "Climb up", act: "up", ghost: true };
+      if (walk) d.action2 = walkAct;
       return d;
     }
     if (p.k === "camp") {
@@ -41257,7 +41297,8 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
       d.text = "A dry place out of the water and the dark. Rest: the whole team is back to full HP.";
       d.team = ph ? teamHP() : teamFig122();
       d.drops = [["Heals", "the whole team"], ["Costs", "nothing"]];
-      d.action = reach ? { label: rested ? "Rest again" : "Rest", act: "rest", ghost: rested } : off;
+      d.action = !reach ? off : near ? { label: rested ? "Rest again" : "Rest", act: "rest", ghost: rested } : walk ? { ...walkAct, ghost: false } : far;
+      if (reach && near && walk) d.action2 = walkAct;
       return d;
     }
     if (p.k === "anvil") {
@@ -41266,7 +41307,8 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
       d.text = "Ignara's spare anvil, down where the ore is. The same steps as at her forge, at a miner's price.";
       d.figure = IGNARA122;
       d.anvil = true;
-      d.action = !reach ? off : !smithBeaten66() ? { label: "Beat Ignara at her camp first", off: true } : { label: "Temper here", route: `forge/${p.id}` };
+      d.action = !reach ? off : !near ? (walk ? { ...walkAct, ghost: false } : far) : !smithBeaten66() ? { label: "Beat Ignara at her camp first", off: true } : { label: "Temper here", route: `forge/${p.id}` };
+      if (reach && near && walk) d.action2 = walkAct;
       return d;
     }
     // a fight of any kind: its level, its region's rules, its waves; who is inside; what it pays; the fight and its stamina
@@ -41285,7 +41327,8 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
     else if (p.k === "boss" && FORGE122.first.bossCores) d.drops.push(["First win", `${core}${FORGE122.first.bossCores} ${cn(FORGE122.first.bossCores)}${gems ? ` · ${gems}` : ""}`]);
     else if (gems) d.drops.push(["First win", gems]);
     const cost = deepCost122(p.id);
-    d.action = reach ? { label: `${stars != null ? "Fight again" : "Fight"}${isAdmin() ? "" : ` · ${cost} stamina`}`, route: `battle/deep-${p.id}`, cost } : off;
+    d.action = !reach ? off : near ? { label: `${stars != null ? "Fight again" : "Fight"}${isAdmin() ? "" : ` · ${cost} stamina`}`, route: `battle/deep-${p.id}`, cost } : walk ? { ...walkAct, ghost: false } : far;
+    if (reach && near && walk) d.action2 = walkAct;
     d.gain = p.ore;
     return d;
   };
@@ -41332,7 +41375,7 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
       ${d.text ? `<p class="u122-txt">${d.text}</p>` : ""}
       ${d.figure ?? foesHTML122(d.foes, d.lead)}${d.team ?? ""}
       ${d.drops?.length ? `<dl class="u122-drops">${d.drops.map(([dt, dd]) => `<div><dt>${esc66(dt)}</dt><dd>${dd}</dd></div>`).join("")}</dl>` : ""}
-      ${d.action ? actHTML122(d.action) : ""}
+      ${d.action ? actHTML122(d.action) : ""}${d.action2 ? actHTML122(d.action2) : ""}
     </div>`;
   /** What «Forge next» under a place is given (part r122-next fills NEXT122): its rows, the gold off at the anvil, what a win there pays,
    *  and the vein box (PC: the place's vein, or the vein under a story place). */
@@ -41476,6 +41519,8 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
   /** Down the stairs of a vein's door: the island turns over, the map flies to the way at zoom 3 and the way is chosen. */
   const goDown122 = (key) => {
     const way = veinWay122(key);
+    // round 128: down the stairs you stand at the vein's way
+    if (way) here122Set(way.id);
     UP122.quiet++;
     UP122.map.turn("deep", () => {
       UP122.quiet = Math.max(0, UP122.quiet - 1);
@@ -41522,6 +41567,7 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
   const act122 = (what) => {
     const sel = UP122.sel, p = VPL122.get(sel?.deep);
     if (what === "rest") { rest122(); return; }
+    if (what === "walk") { const id = sel?.deep; if (id && walkable128(id)) { here122Set(id); veinBump122(); toast(`You walk to ${theName122(VPL122.get(id).name)}.`); paint122(); } return; }
     if (what === "up" && p) { close122(); goUp122(p.v); return; }
     if (what === "down" && sel?.at) { const key = doorKey122(sel.at); if (key && veinOpen122(key)) { close122(); goDown122(key); } return; }
     if (what === "turn") { close122(); UP122.map.turn(UP122.map.view() === "deep" ? "surface" : "deep"); }
@@ -49378,7 +49424,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-20-2216";
+const BUILD = "2026-11-20-2251";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
