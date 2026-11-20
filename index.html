@@ -3372,7 +3372,7 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 @media (min-width: 900px) { .arc-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
 /* the menu has seven entries now: the Archive is the last */
-.gm-nav { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.gm-nav { grid-template-columns: repeat(8, minmax(0, 1fr)); }
 .gm[data-where="home"][data-device="pc"] .gm-nav { grid-template-columns: repeat(3, minmax(0, 1fr)) 420px repeat(4, minmax(0, 1fr)); }
 .gm-nav button span { max-width: 100%; text-align: center; }
 /* seven across a phone: the labels a touch smaller, so "Labyrinth" stays one word */
@@ -4832,8 +4832,8 @@ html.gest-on, html.gest-on body { overflow: hidden !important; }
 
 /* ══ round 60 · a fight covers the whole stage (opaque, above everything): what lies under it is not drawn and rests. It goes by
  *  the game's own "where" (set once as a screen opens), never by :has(), which made every change in the fight restyle the stage ══ */
-.gm:is([data-where="battle"], [data-where="raid"]) .gm-stage > :not(.bt):not(.gm-toast):not(.hs) { visibility: hidden; }
-.gm:is([data-where="battle"], [data-where="raid"]) .gm-stage > :not(.bt):not(.gm-toast):not(.hs) * { animation-play-state: paused !important; }
+.gm:is([data-where="battle"], [data-where="raid"], [data-where="duel"]) .gm-stage > :not(.bt):not(.gm-toast):not(.hs) { visibility: hidden; }
+.gm:is([data-where="battle"], [data-where="raid"], [data-where="duel"]) .gm-stage > :not(.bt):not(.gm-toast):not(.hs) * { animation-play-state: paused !important; }
 /* a screen open over the home rests the home's animations (it is covered) */
 .gm:not([data-where="home"]) .gm-home * { animation-play-state: paused !important; }
 
@@ -4875,7 +4875,7 @@ html.gest-on, html.gest-on body { overflow: hidden !important; }
 @keyframes bf62-sweep { from { transform: translateX(-35%); } to { transform: translateX(35%); } }
 .bf62-vig { inset: 0; background: linear-gradient(to top, rgb(2 4 6 / 0.82), rgb(2 4 6 / 0) 30%), linear-gradient(to bottom, rgb(2 4 6 / 0.55), rgb(2 4 6 / 0) 14%); }
 .bf62.is-phone .bf62-vig { background: linear-gradient(to top, rgb(2 4 6 / 0.85), rgb(2 4 6 / 0) 26%), linear-gradient(to bottom, rgb(2 4 6 / 0.6), rgb(2 4 6 / 0) 10%); }
-.gm:not([data-where="battle"]):not([data-where="raid"]) .bf62-sweep { animation-play-state: paused; }
+.gm:not([data-where="battle"]):not([data-where="raid"]):not([data-where="duel"]) .bf62-sweep { animation-play-state: paused; }
 
 /* ── the VS: V3 · Ritratti ── */
 .v62 { position: absolute; inset: 0; z-index: 900; overflow: hidden; cursor: pointer; font-family: var(--font-display); background: radial-gradient(70% 70% at 50% 50%, #0b0e12, #020304 80%); }
@@ -7147,8 +7147,8 @@ button.s66-log:focus-visible { outline: 2px solid var(--acc); outline-offset: 2p
 
 /* a phone held sideways: the fight alone takes the whole screen (the menus stay in their column), small plates, a small plan */
 @media (orientation: landscape) and (max-height: 560px) {
-  .gm[data-device="phone"]:is([data-where="battle"], [data-where="raid"]) .gm-stage { width: 100%; }
-  .gm[data-device="phone"]:is([data-where="battle"], [data-where="raid"]) .gm-exit { display: none; }
+  .gm[data-device="phone"]:is([data-where="battle"], [data-where="raid"], [data-where="duel"]) .gm-stage { width: 100%; }
+  .gm[data-device="phone"]:is([data-where="battle"], [data-where="raid"], [data-where="duel"]) .gm-exit { display: none; }
 }
 .bt.is-hz.is-short83 .bt-plv, .bt.is-hz.is-short83 .bt-prar { display: none; }
 .bt.is-hz.is-short83 .bt-plate2 { gap: 4px; padding: 5px 7px 6px; }
@@ -9118,6 +9118,169 @@ html.ios125 .sm8-pillar { filter: none; }
 /* the cover's rim turns by transform (always on the graphics chip), not by the separate rotate property */
 html.ios125 .c7.is-live .c7-ec-rim { animation-name: c7-spin125; }
 @keyframes c7-spin125 { to { transform: rotate(1turn); } }
+
+/* ══ round 127 · the duel's page in the fight: the rival's turn (this device's cards and buttons out of sight), no pause and no story
+   Auto in an online duel. The Arena's own looks: arena127-look.css. ══ */
+.bt.is-their127 .sc, .bt.is-their127 .bt-ctrl, .bt.is-their127 .bt-q, .bt.is-their127 .bt-auto, .bt.is-their127 .bt-reset { visibility: hidden; pointer-events: none; }
+.bt.is-online127 .bt-pause, .bt.is-online127 .bt-auto { visibility: hidden; pointer-events: none; }
+.ar127-line { margin: 0; color: var(--raw-color-ice-200); font-size: 15px; }
+.ar127-quit { position: absolute; left: 0; top: 50%; z-index: 2; width: 44px; height: 44px; display: grid; place-items: center; transform: translateY(-50%); border: 1px solid var(--border-on-dark); background: var(--raw-color-ink-900); color: var(--raw-color-ice-200); cursor: pointer; }
+.ar127-quit svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; }
+.ar127-quit:hover, .ar127-quit:focus-visible { color: var(--rv127); border-color: var(--rv127); }
+.bt:not(.is-online127) .ar127-quit { display: none; }
+/* the Home on a PC: the menu stands in two groups beside the leader (three and four); with the Arena the fights go left (Story, Labyrinth,
+   Challenge, Arena) and the rest right (Team, Pull, Shop, Archive), four and four */
+.gm[data-where="home"][data-device="pc"] .gm-nav { grid-template-columns: repeat(4, minmax(0, 1fr)) 420px repeat(4, minmax(0, 1fr)); }
+.gm[data-where="home"][data-device="pc"] .gm-nav button:nth-child(4) { grid-column: auto; box-shadow: inset 0 -2px 0 var(--ca, var(--accent)), inset 0 0 0 1px rgb(255 255 255 / 0.08); }
+.gm[data-where="home"][data-device="pc"] .gm-nav button:nth-child(5) { grid-column: 6; }
+/* the menu holds eight now: on a phone its words a little smaller, so they never run into each other (the PC's stay as they are) */
+.gm[data-device="phone"] .gm-nav button { font-size: 9px; letter-spacing: 0; }
+@media (max-width: 430px) { .gm[data-device="phone"] .gm-nav button { font-size: 8.2px; } }
+@media (max-width: 390px) { .gm[data-device="phone"] .gm-nav button { font-size: 7.6px; } }
+
+/* ══ round 127 · the Arena's looks (arena127-look.js), as picked in lab 127: the page C (the board), the rival found A (the
+   blade), the clock B (on the fight button), the end B (the best hero). Each part follows its own room (container queries): a narrow page, or a fight standing upright, gets the
+   phone's layout, whatever the device is called. The game's own plates (ink, one cut corner), its display letters, the hero's light. ══ */
+.gm { --rv127: #e0605a; --win127: #f2c24a; }
+@keyframes lk127-pulse { 50% { opacity: 0.15; } }
+@keyframes lk127-inL { from { transform: translateX(-55%); opacity: 0; } }
+@keyframes lk127-inR { from { transform: translateX(55%); opacity: 0; } }
+@keyframes lk127-inT { from { transform: translateY(-40%); opacity: 0; } }
+@keyframes lk127-inB { from { transform: translateY(40%); opacity: 0; } }
+@keyframes lk127-pop { from { transform: translate(-50%, -50%) scale(2.4); opacity: 0; } }
+@keyframes lk127-rise { from { transform: translateY(24px); opacity: 0; } }
+@keyframes lk127-out { to { opacity: 0; visibility: hidden; } }
+
+/* ── a hero's whole figure in its box: the picture's filled part fitted and centred, standing on the box's floor ── */
+.lk127-box { position: relative; display: block; min-width: 0; min-height: 0; container-type: size; overflow: hidden; }
+.lk127-box::before { content: ""; position: absolute; left: 6%; right: 6%; bottom: 0; height: 44%; background: radial-gradient(50% 65% at 50% 100%, color-mix(in srgb, var(--el) 42%, transparent), transparent 72%); }
+.lk127-fig { position: absolute; left: 50%; bottom: 0; display: block; width: auto; max-width: none; height: min(100cqh / var(--bh), 100cqw * 1.561 / var(--bw)); transform: translate(calc(var(--bc) * -100%), calc((1 - var(--bb)) * 100%)); pointer-events: none; user-select: none; -webkit-user-drag: none; }
+
+/* ── the Arena page: the whole page (not the 1120 px column the other pages keep on a PC), the record left, the team right ── */
+.gm-sub--ar127:not([hidden]) { display: flex; flex-direction: column; }
+.gm[data-device="pc"] .gm-sub--ar127 { padding-left: 32px; padding-right: 32px; }
+[data-ar127] { flex: 1 0 auto; display: flex; flex-direction: column; container: ar127 / inline-size; }
+.ar127-line { margin: 0; color: var(--raw-color-ice-200); font-size: 15px; }
+.hubC { flex: 1 1 auto; min-height: 540px; display: grid; grid-template-columns: minmax(300px, 420px) minmax(0, 1fr); gap: 16px; margin-top: 18px; }
+.hubC h3 { margin: 0; font: 700 24px/1 var(--font-display); text-transform: uppercase; color: #fff; }
+.hubC-board, .hubC-team { min-width: 0; background: var(--raw-color-ink-900); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1); clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); }
+.hubC-board { display: flex; flex-direction: column; gap: 16px; padding: 22px 22px 20px; }
+.hubC-rows { display: grid; gap: 8px; }
+.hubC-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 12px; padding: 14px 16px; border: 0; background: rgb(255 255 255 / 0.04); color: inherit; text-align: left; cursor: pointer; }
+.hubC-row[aria-checked="true"] { background: rgb(2 210 227 / 0.1); box-shadow: inset 4px 0 0 var(--accent); }
+.hubC-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hubC-row span { display: grid; gap: 3px; min-width: 0; }
+.hubC-row b { font: 700 22px/1 var(--font-display); text-transform: uppercase; color: #fff; }
+.hubC-row small { font-size: 12px; color: var(--raw-color-ice-200); }
+.hubC-row em { font-style: normal; font-size: 13px; color: var(--raw-color-ice-200); }
+.hubC-row strong { font: 700 46px/1 var(--font-display); color: var(--accent); font-variant-numeric: tabular-nums; }
+.hubC-row:not([aria-checked="true"]) strong { color: #fff; }
+.hubC-last { display: grid; gap: 8px; }
+.hubC-last small { font: 600 12px var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--raw-color-ice-200); }
+.hubC-last span { display: flex; flex-wrap: wrap; gap: 4px; font-size: 14px; color: var(--raw-color-ice-200); }
+.hubC-last i { display: grid; place-items: center; width: 30px; height: 30px; font: 700 15px/1 var(--font-display); font-style: normal; color: #031018; background: var(--accent); }
+.hubC-last i.is-l { background: var(--rv127); }
+.hubC-last i:is(.is-d, .is-x) { background: #8b979f; }
+.hubC-acts { display: grid; gap: 10px; margin-top: auto; }
+.hubC-acts .gm-btn { width: 100%; min-height: 54px; font-size: 17px; }
+.hubC-acts .lk127-practice { min-height: 46px; font-size: 15px; }
+.hubC-team { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 14px; padding: 22px 22px 20px; }
+.hubC-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; min-height: 0; }
+.hubC-card { display: grid; grid-template-rows: minmax(0, 1fr) auto auto; gap: 3px; min-width: 0; min-height: 0; padding: 12px 12px 14px; background: radial-gradient(90% 55% at 50% 100%, color-mix(in srgb, var(--el) 24%, transparent), transparent 72%), rgb(255 255 255 / 0.03); box-shadow: inset 0 -3px 0 var(--el); clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%); }
+.hubC-card b { font: 700 20px/1.1 var(--font-display); text-transform: uppercase; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hubC-card small { font-size: 13px; color: var(--raw-color-ice-200); }
+.hubC-card.is-bench { opacity: 0.74; }
+/* a narrow page (a phone): the record, the buttons, then the team two by two, the page scrolling */
+@container ar127 (max-width: 720px) {
+  .hubC { grid-template-columns: minmax(0, 1fr); min-height: 0; flex: none; }
+  .hubC-board, .hubC-team { padding: 16px; }
+  .hubC h3 { font-size: 20px; }
+  .hubC-row { padding: 12px 14px; }
+  .hubC-row strong { font-size: 36px; }
+  .hubC-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .hubC-card { aspect-ratio: 3 / 4.3; padding: 8px 8px 10px; }
+  .hubC-card b { font-size: 16px; }
+  .hubC-card small { font-size: 12px; }
+}
+
+/* ── the rival found · the blade (over the field, 2.8 s): wide, you on the left and the rival on the right; upright, the rival above ── */
+.lk127-vs { position: absolute; inset: 0; z-index: 140; overflow: hidden; pointer-events: none; background: rgb(4 7 10 / 0.93); container: vs127 / size; animation: lk127-out 0.3s ease-in 2.5s forwards; }
+.vsA-in { position: absolute; inset: 0; }
+.lk127-figs { display: flex; min-height: 0; }
+.lk127-figs .lk127-box { flex: 1 1 0; }
+.lk127-who { min-width: 0; }
+.lk127-who b { display: block; font: 700 clamp(28px, 4vw, 58px)/1 var(--font-display); text-transform: uppercase; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lk127-who small { font: 600 14px var(--font-sans); color: var(--raw-color-ice-200); }
+.lk127-vs .lk127-mode { position: absolute; left: 50%; bottom: 5%; transform: translateX(-50%); font: 600 13px var(--font-sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--raw-color-ice-200); }
+.vsA-side { position: absolute; top: 0; bottom: 0; width: 60%; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; gap: 10px; padding: 4% 3% 9%; }
+.vsA-side.is-me { left: 0; padding-right: 15%; clip-path: polygon(0 0, 100% 0, 74% 100%, 0 100%); background: linear-gradient(100deg, rgb(2 210 227 / 0.22), transparent 75%); animation: lk127-inL 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.vsA-side.is-them { right: 0; padding-left: 15%; clip-path: polygon(26% 0, 100% 0, 100% 100%, 0 100%); background: linear-gradient(260deg, rgb(224 96 90 / 0.22), transparent 75%); text-align: right; animation: lk127-inR 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) 0.08s both; }
+.vsA-side.is-me .lk127-who b { color: var(--accent); }
+.vsA-side.is-them .lk127-who b { color: var(--rv127); }
+.vsA-vs { position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%); font: 700 clamp(70px, 11vw, 150px)/1 var(--font-display); color: transparent; -webkit-text-stroke: 2px #fff; text-shadow: 0 0 0.35em rgb(255 255 255 / 0.3); animation: lk127-pop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both; }
+@container vs127 (orientation: portrait) {
+  .vsA-in { display: grid; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
+  .vsA-side { position: relative; inset: auto; width: auto; gap: 6px; }
+  .vsA-side.is-them { grid-template-rows: auto minmax(0, 1fr); padding: 5% 4% 7%; clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%); animation-name: lk127-inT; }
+  .vsA-side.is-them .lk127-who { order: -1; }
+  .vsA-side.is-me { grid-template-rows: minmax(0, 1fr) auto; padding: 12% 4% 5%; clip-path: polygon(0 12%, 100% 0, 100% 100%, 0 100%); text-align: left; animation-name: lk127-inB; }
+  /* the three a little over each other, so each stands taller in the narrow room (the middle one in front) */
+  .lk127-figs { justify-content: center; }
+  .lk127-figs .lk127-box { flex: 0 0 44%; margin: 0 -9%; }
+  .lk127-figs .lk127-box:nth-child(2) { z-index: 1; }
+  .lk127-who b { font-size: 9cqw; }
+  .lk127-who small { font-size: 3.6cqw; }
+  .vsA-vs { top: 50%; font-size: 24cqw; }
+  .lk127-vs .lk127-mode { top: calc(50% + 15cqw); bottom: auto; font-size: 3.2cqw; }
+}
+
+/* ── the turn's clock · on the fight button, the seconds at its right end and a line along its foot that runs out; the rival's
+   turn where the button stands (out of sight then) ── */
+.ar127-clock { position: absolute; z-index: 80; pointer-events: none; }
+.bt-go.tB-on { padding-right: 44px; }
+.ar127-clock.tB { display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; }
+.ar127-clock.tB b { font: 700 24px/1 var(--font-display); color: #031018; font-variant-numeric: tabular-nums; }
+.ar127-clock.tB i { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: rgb(3 16 24 / 0.55); transform-origin: 0 50%; transform: scaleX(var(--p, 1)); }
+.ar127-clock.tB.is-low b { color: #7a1010; animation: lk127-pulse 0.5s ease-in-out infinite; }
+.ar127-clock.tB.is-their { display: block; padding: 0; }
+.ar127-clock.tB.is-their span { display: grid; place-content: center; justify-items: center; height: 100%; padding: 0 10px; font: 600 11px var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--raw-color-ice-200); background: rgb(6 9 14 / 0.92); box-shadow: inset 0 0 0 1px var(--rv127); }
+.ar127-clock.tB.is-their span b { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 18px; color: var(--rv127); }
+/* the game plays your turn: a stamp over the hand */
+.ar127-auto { position: absolute; left: 50%; top: 58%; z-index: 81; transform: translate(-50%, -50%) rotate(-6deg); padding: 8px 26px 6px; font: 700 clamp(40px, 6vw, 72px)/1 var(--font-display); letter-spacing: 0.08em; color: var(--accent); box-shadow: inset 0 0 0 3px var(--accent); background: rgb(6 9 14 / 0.75); pointer-events: none; animation: lk127-pop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both, lk127-out 0.3s ease-in 1.4s forwards; }
+
+/* ── the end · the best hero: wide, the hero on the left and the words on the right; upright, the hero above ── */
+.lk127-end { position: absolute; inset: 0; z-index: 150; background: rgb(4 7 10 / 0.86); container: end127 / size; animation: lk127-rise 0.35s ease-out both; }
+.endB-in { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr); gap: 3%; padding: 3% 5%; }
+.endB-mvp { animation: lk127-inL 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.endB-txt { align-self: center; min-width: 0; }
+.lk127-end h2 { margin: 0; font: 700 clamp(56px, 9vw, 120px)/0.95 var(--font-display); text-transform: uppercase; color: #fff; }
+.lk127-end.is-win h2 { color: var(--win127); }
+.lk127-end.is-loss h2 { color: var(--rv127); }
+.endB-who { display: grid; margin: 14px 0 0; }
+.endB-who small { font: 600 12px var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--raw-color-ice-200); }
+.endB-who b { font: 700 34px/1.05 var(--font-display); text-transform: uppercase; color: #fff; }
+.endB-who span { font-size: 16px; color: var(--raw-color-ice-200); }
+.lk127-why { margin: 8px 0 0; font-size: 16px; color: #fff; }
+.lk127-rate { margin: 8px 0 0; font-size: 18px; color: var(--raw-color-ice-200); }
+.lk127-rate b { font: 700 30px/1 var(--font-display); color: var(--accent); }
+.lk127-end.is-loss .lk127-rate b { color: var(--rv127); }
+.lk127-end-acts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.lk127-end-acts .gm-btn { min-height: 50px; min-width: 180px; }
+@container end127 (orientation: portrait) {
+  .endB-in { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; gap: 2%; padding: 4% 6% 7%; }
+  .endB-mvp { animation-name: lk127-inT; }
+  .lk127-end h2 { font-size: 15cqw; }
+  .endB-who { margin-top: 8px; }
+  .endB-who b { font-size: 7cqw; }
+  .lk127-rate { font-size: 4.2cqw; }
+  .lk127-end-acts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); margin-top: 12px; }
+  .lk127-end-acts .gm-btn { min-width: 0; width: 100%; }
+}
+/* the question before giving a match up */
+.lk127-askbox { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(520px, calc(100% - 32px)); padding: 24px 26px; background: var(--raw-color-ink-900); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.14); clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%); }
+.lk127-askbox h2 { font-size: clamp(40px, 6vw, 64px); }
+
+@media (prefers-reduced-motion: reduce) { .lk127-vs *, .lk127-end, .endB-mvp, .ar127-auto { animation-duration: 0.01s !important; animation-delay: 0s !important; } }
 
 </style>
 </head>
@@ -19127,7 +19290,7 @@ const btMult = (a, d) => {
 /** Defence takes its share off every hit, measured against the attacker's level. */
 const btGuard = (def, lv = 1) => { const K = 120 + 105 * (Math.max(1, lv) - 1); return K / (K + Math.max(0, def)); };
 const btWait = (ms) => new Promise((resolve) => setTimeout(resolve, REDUCED ? Math.min(ms, 40) : ms));
-const btPick = (list) => list[Math.floor(Math.random() * list.length)];
+const btPick = (list) => list[Math.floor((window.__rng127 ?? Math.random)() * list.length)];
 const FLAME_MAX = 5, BURN_MAX = 6, BRUISE_MAX = 5;
 const BT_STATE_ICON = {
   burn: '<path d="M12 3C15 7 17 10 16.5 14C16 18 13.5 20 12 20C10.5 20 8 18 7.5 14C7.2 11.5 8.5 9.5 10 8C10 10 11 11 12 11C12.5 9 12 6 12 3Z"/>',
@@ -20419,7 +20582,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   /** Each start is a new run: a wait that wakes into a newer run stops the older one there. */
   let gen = 0;
   const STALE = Symbol("stale");
-  const hold = async (ms) => { const mine = gen; await btWait(ms); while (paused && mine === gen) await btWait(120); if (mine !== gen) throw STALE; };
+  const hold = async (ms) => { const mine = gen; await btWait(DUEL127?.fast ? Math.min(ms, 30) : ms); while (paused && mine === gen) await btWait(120); if (mine !== gen) throw STALE; };
   const guard = (promise) => promise.catch((error) => { if (error !== STALE) throw error; });
   const fmt = (n) => Math.round(n).toLocaleString("en-US");
 
@@ -20500,7 +20663,8 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     const R = rowPhone83(rs, g.hB);
     return rs.map((r, i) => ({ h: R.h, w: R.cells[i], x: R.xs[i], fw: r * R.h }));
   };
-  const memPos = (i) => {
+  const memPos = (i) => (DUEL127?.on && DUEL127.active !== DUEL127.me ? duelPos127(F.team[i]) : memPos0(i));
+  const memPos0 = (i) => {
     const p = teamRow83()[i] ?? { h: 100, w: 60, x: 0, fw: 60 }, top = g.floor - p.h, plateTop = g.pc ? top : top - g.plateGap - g.plateH;
     return { x: p.x, y: top, w: p.w, fw: p.fw, h: p.h, fs: p.h / 14, plateTop, cx: p.x + p.w / 2, cy: top + p.h * 0.42, chipX: g.pc ? p.x + p.w + g.plateGap : p.x, chipY: g.pc ? g.floor - g.plateMem - g.plateH : plateTop, chipW: g.pc ? g.plateW : p.w };
   };
@@ -20622,9 +20786,9 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   };
 
   /* ── the board ── */
-  const foeEl = (e) => $(`[data-foe="${e.uid}"]`, el.foes);
+  const foeEl = (e) => (DUEL127?.on && e?.duel127 != null ? duelNode127(e) : $(`[data-foe="${e.uid}"]`, el.foes));
   const cardEl = (c) => $(`[data-card="${c.uid}"]`, el.hand);
-  const memEl = (i) => $(`[data-slot="${i}"]`, el.team);
+  const memEl = (i) => (DUEL127?.on ? duelNode127(F.team[i]) : $(`[data-slot="${i}"]`, el.team));
   const hpColour = (p) => (p > 0.5 ? "var(--hp-hi)" : p > 0.25 ? "var(--hp-mid)" : "var(--hp-lo)");
   const plate = (name, foe, mark = "", lv = "") => `<div class="bt-plate2"><div class="bt-pname-row">${mark}<b class="bt-pname">${name}</b>${lv}</div><span class="bt-hp2"><b></b><i></i></span>
     <div class="bt-plate2-top"><span class="bt-hpn"></span>${foe ? "" : `<span class="bt-orbs" aria-hidden="true">${"<i></i>".repeat(5)}</span>`}</div>${foe ? `<span class="bt-kit"><span class="bt-next" data-next hidden></span><span class="bt-orbs is-foe" aria-hidden="true">${"<i></i>".repeat(5)}</span></span>` : ""}</div>`;
@@ -20638,7 +20802,8 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   };
   const foeFace = (e) => ({ id: `foe-${e.kind}`, name: e.name, epithet: e.tribe, rarity: e.rarity, attr: e.attr, role: e.boss ? "Boss" : "Enemy", hair: "#ff8a5a", shade: "#2a0d0d", art: e.art, focus: e.focus });
   const reflection = (html, fs) => (g.reflect ? `<div class="bt-refl" aria-hidden="true" style="font-size:${fs}px"><div>${html}</div></div>` : "");
-  const placeFoes = (enter) => {
+  const placeFoes = (enter) => (DUEL127?.on ? placeAll127() : placeFoes0(enter));
+  const placeFoes0 = (enter) => {
     const n = F.foes.length;
     F.row83 = null;
     F.pos = F.foes.map((e, i) => foePos(e, i, n));
@@ -20700,7 +20865,8 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     const foe83 = node.classList.contains("bt-foe"), full83 = `${short(hp)} / ${short(max)}`, k83 = (n) => (n >= 10000 ? `${fmt(Math.round(n / 1000))}K` : fmt(n));
     $(".bt-hpn", node).textContent = foe83 && (!g.pc || g.short) ? short(hp) : foe83 && full83.length * 5.75 + 2 > g.plateW - Math.max(107, 43 + 96 * g.u) ? `${k83(hp)} / ${k83(max)}` : full83;
   };
-  const paintFoes = () => {
+  const paintFoes = () => (DUEL127?.on ? withSide127(DUEL127.me, paintFoes0) : paintFoes0());
+  const paintFoes0 = () => {
     F.foes.forEach((e, i) => {
       const node = foeEl(e);
       if (!node) return;
@@ -20726,7 +20892,8 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     });
     paintThread();
   };
-  const placeTeam = () => {
+  const placeTeam = () => (DUEL127?.on ? placeAll127() : placeTeam0());
+  const placeTeam0 = () => {
     el.team.innerHTML = F.team.map((m, i) => {
       const p = memPos(i), h = m.h, card = figure83(picOf83(h), p.fw, p.h);
       return `<div class="bt-mem" data-slot="${i}" role="button" tabindex="0" style="left:${p.x}px;top:${p.plateTop}px;width:${p.w}px;--attr:${attrColour(h.attr)};--hair:${h.hair};--shade:${h.shade};--plate:${g.plateH}px;--pgap:${g.plateGap}px;--fw:${p.fw}px;--fh:${p.h}px;--pw:${g.plateW}px;--pb:${g.plateMem ?? 0}px;--tal:${g.tal ?? 44}px">
@@ -20937,7 +21104,8 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
       GLOW121.prepare({ look, src, ...figGeom121(src, bw, bh), bw, bh, fs: p.fs, focus: focus ?? [0.55, 0.25] });
     });
   };
-  const paintTeam = () => {
+  const paintTeam = () => (DUEL127?.on ? withSide127(DUEL127.me, paintTeam0) : paintTeam0());
+  const paintTeam0 = () => {
     F.team.forEach((m, i) => {
       const node = memEl(i);
       if (!node) return;
@@ -21066,7 +21234,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     el.reset.disabled = !planning || F.untouched;
     el.go.disabled = !planning || !!F.picking;
     $(".bt-go-label", el.go).textContent = planning ? (F.plan.length ? `fight · ${F.plan.length}` : "end turn") : { act: "fighting", enemy: "enemy turn", deal: "drawing", over: "the end" }[F.phase];
-    el.wave.innerHTML = `wave <em>${F.wave + 1}</em> / ${run.waves.length} · lv ${F.foes[0]?.level ?? run.level}`;
+    el.wave.innerHTML = DUEL127?.on ? duelLine127() : `wave <em>${F.wave + 1}</em> / ${run.waves.length} · lv ${F.foes[0]?.level ?? run.level}`;
     el.turn.textContent = F.turn;
     paintQueue();
   };
@@ -21187,6 +21355,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     if (k !== 1) parts.push([`×${k} ${k > 1 ? "type" : "resisted"}`, k > 1 ? "gold" : ""]);
     const pierce = (m.id === "ana" && m.ice?.t > 0 ? 1 + 1.5 * m.ice.n : 1) * (o.pierceX ?? 1);
     let d = (atk * pct) / 100 * k * btGuard(o.rage89 ? 0 : foeDef(e) / pierce, m.lv) * (o.bonus ?? 1);
+    if (DUEL127?.on && m.duel127 != null) { const k127 = duelAtkMul127(m); if (k127 !== 1) { d *= k127; parts.push([`×${k127.toFixed(2)} its own states`, ""]); } }
     if (o.rage89) parts.push(["Raging Fire: no DEF, no damage reduction", "hot"]);
     if (pierce > 1) parts.push([`Pierce +${Math.round((pierce - 1) * 100)}%`, "hot"]);
     if ((o.bonus ?? 1) !== 1) parts.push([`×${o.bonus.toFixed(2)} ${o.bonusLabel ?? "card"}`, "hot"]);
@@ -21529,8 +21698,8 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   };
   let toastTimer = 0;
   const toast = (text) => { el.toast.textContent = text; el.toast.classList.add("is-on"); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.toast.classList.remove("is-on"), 2400); };
-  const foeAt = (e) => F.pos[F.foes.indexOf(e)];
-  const memAt = (m) => memPos(F.team.indexOf(m));
+  const foeAt = (e) => (DUEL127?.on && e?.duel127 != null ? duelPos127(e) : F.pos[F.foes.indexOf(e)]);
+  const memAt = (m) => (DUEL127?.on ? duelPos127(m) : memPos(F.team.indexOf(m)));
 
   /** The VS: it lands in the middle when the fight starts, and leaves the stage clear. */
   const versus = async () => {
@@ -22245,8 +22414,8 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     return { move };
   })();
   /** Round 64: every move plays as Carta gigante, every ultimate as Manifesto; a failed overdrive keeps its tear. */
-  const moveShow = (m, c, target) => PERF125.time("move", () => SAGOMA83.move(m, c, target));
-  const ultShow = (m, target, fail = false, c = null) => PERF125.time("ult", () => (fail ? ultShowC2(m, target, fail, c) : SHOW64.ult(m, target, c)));
+  const moveShow = (m, c, target) => DUEL127?.fast ? Promise.resolve() : PERF125.time("move", () => SAGOMA83.move(m, c, target));
+  const ultShow = (m, target, fail = false, c = null) => DUEL127?.fast ? Promise.resolve() : PERF125.time("ult", () => (fail ? ultShowC2(m, target, fail, c) : SHOW64.ult(m, target, c)));
   /** S4 · her card opens into a wide band where she shows big; the band flies into the one she acts on and the blow lands
    *  (twice for a card merged from two). Higher ranks shine brighter, and rank III shakes the screen. */
   const moveShowS4 = async (m, c, target) => {
@@ -22532,6 +22701,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   };
   const fell = (e, by = null) => {
     if (e.dead) return;
+    if (DUEL127?.on && e.duel127 != null) { duelFell127(e, by); return; }
     if (g78Can() && e === g78Boss()) { e.hp = g78Thr(e); return; }
     if (fall106(e, by)) return;
     if (fall118(e, by)) return;
@@ -22575,7 +22745,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     const r = hitMath(m, e, pct, o);
     let d = r.d;
     if (o.noCrit) d *= 1 + critOf(m) / 100; // Cleave
-    const crit = Math.random() * 100 < critChance(m, e, o), cm = critMultOf(m, o), dice = 0.95 + Math.random() * 0.1;
+    const crit = rng127() * 100 < critChance(m, e, o), cm = critMultOf(m, o), dice = 0.95 + rng127() * 0.1;
     if (crit) { d *= cm; arrogantUp(m); }
     if (crit && F.pr112 && e.uid === F.pr112.uid) F.crit112 = true;
     // Killing Edge: every crit Iris lands is a stack of ATK +7%, for 4 turns
@@ -22585,13 +22755,13 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     const x2 = (t) => (t.startsWith("×") ? `× ${t.slice(1)}` : t);
     logIt("you", `${F.acting ?? m.h.name} → ${e.name}`, [`${fmt(r.atk)} ${o.statLabel ? `ATK ${o.statLabel}` : "ATK"}`, `× ${pct}%${o.weakSpot ? " weak spot" : ""}`, ...r.parts.map(([t]) => x2(t)), `× ${btGuard(o.rage89 ? 0 : foeDef(e), m.lv).toFixed(2)} defence`, o.noCrit && `× ${(1 + critOf(m) / 100).toFixed(2)} Cleave`, crit && `× ${cm} crit`, `× ${dice.toFixed(2)} dice`, `= ${fmt(d)}`].filter(Boolean).join(" "), fmt(d) + (crit ? " crit" : ""));
     const over = d - e.hp, hp0106 = e.hp;
-    e.hp = floor78(e, Math.max(0, e.hp - d));
+    e.hp = DUEL127?.on && e.duel127 != null ? duelHurt127(m, e, d) : floor78(e, Math.max(0, e.hp - d));
     ward62(m, e);
     post106(m, e, d, crit, hp0106 - e.hp);
     post118(m, e, d, hp0106 - e.hp);
     post123(m, e, d, hp0106 - e.hp, crit);
     const p = foeAt(e);
-    number(p.x, p.y, d, crit ? "is-crit" : r.k > 1 ? "is-weak" : r.k < 1 ? "is-resist" : "", crit ? (cm >= 3 ? `crit ×${+cm.toFixed(2)}` : "critical") : r.k > 1 ? "super effective" : r.k < 1 ? "resisted" : "");
+    number(p.x, p.y, DUEL127?.on && e.duel127 != null ? Math.max(0, hp0106 - e.hp) : d, crit ? "is-crit" : r.k > 1 ? "is-weak" : r.k < 1 ? "is-resist" : "", crit ? (cm >= 3 ? `crit ×${+cm.toFixed(2)}` : "critical") : r.k > 1 ? "super effective" : r.k < 1 ? "resisted" : "");
     burst(p.x, p.y, attrColour(m.h.attr));
     if (crit) ring(p.x, p.y, "#fff");
     shake(foeEl(e));
@@ -22600,7 +22770,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     if (m.id === "lilith" && d > 0 && (F.inCard || o.counter)) giveHeal(m, d * 0.15);
     const killed = e.hp === 0;
     if (d > 0) lava(e, m);
-    if (d > 0 && !killed && m?.sp?.has("ember") && Math.random() < 0.15) {
+    if (d > 0 && !killed && m?.sp?.has("ember") && rng127() < 0.15) {
       e.burn = { n: Math.min(BURN_MAX, (e.burn?.n ?? 0) + 1), t: 3 };
       const p = foeAt(e);
       flameFx(p.x, p.y);
@@ -24112,6 +24282,7 @@ void main(){
     if (!e || !m) return;
     if (lost > 0) {
       F.dealt123[m.id] = (F.dealt123[m.id] ?? 0) + lost;
+      if (DUEL127?.on) { const t = (DUEL127.dmg ??= [{}, {}])[DUEL127.active]; t[m.id] = (t[m.id] ?? 0) + lost; }
       (e.by123 ??= {})[m.id] = (e.by123[m.id] ?? 0) + lost;
     }
     const k = k123(e);
@@ -25228,7 +25399,7 @@ void main(){
   /** At the start of each of his turns: 3 of his form's 5 effects, at random. */
   const reoRoll = (m) => {
     if (!isReo(m) || m.ko || m.form === "base") return;
-    m.reoFx = [...REO_FX].sort(() => Math.random() - 0.5).slice(0, 3);
+    m.reoFx = (DUEL127?.on ? shuffle127([...REO_FX]) : [...REO_FX].sort(() => Math.random() - 0.5)).slice(0, 3);
     reoHpSync(m);
     logIt("buff", `Reo: ${m.h.label}`, `${m.reoFx.map((k) => reoFxText(m, k)).join(" · ")} · until his next turn`);
   };
@@ -25412,6 +25583,7 @@ void main() {
   });
   /** W1 · the seal on his card: once a turn, while you plan, his card turns over into his other form. */
   const reoSwitch = async (m) => {
+    rec127("reo", { id: m?.id });
     if (busy || F.phase !== "plan" || !isReo(m) || m.ko || m.form === "base") return;
     if (m.formTurn === F.turn) { toast("Reo has already changed form this turn"); return; }
     if (F.picking) { toast(F.picking.step === "ally" ? "Choose an ally first" : "Choose the enemy first"); return; }
@@ -25441,12 +25613,13 @@ void main() {
     await hold(260);
   };
   /** The enemies' DEF after Time Lock (−50%, or nothing at rank III) and Celestial Plunge (−50%). */
-  const foeDef = (e) => Math.round(e.def * (e.time > 0 ? e.timeDef ?? 1 : 1) * (e.sink > 0 ? 0.5 : 1) * (e.shade78 > 0 ? 0.5 : 1) * (e.defDown ? 1 - e.defDown.k : 1) * (e.vines101 > 0 ? 0.85 : 1));
+  const foeDef = (e) => Math.round((e.duelDef127 ?? e.def) * (e.time > 0 ? e.timeDef ?? 1 : 1) * (e.sink > 0 ? 0.5 : 1) * (e.shade78 > 0 ? 0.5 : 1) * (e.defDown ? 1 - e.defDown.k : 1) * (e.vines101 > 0 ? 0.85 : 1));
   /** The heroine a card shows: as she is in this battle (Reo in his form), and his ultimate as it was drawn. */
   /** Reo's ultimate in hand, Sphere or Sword: the swap beside his form's seal changes it. */
   const ULT_VER_ICON = { sfera: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><ellipse cx="12" cy="12" rx="10" ry="3.6"/></svg>', spada: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5V15.5 M7.5 15.5H16.5 M12 15.5V21.5"/></svg>' };
   const reoUltCard = (c) => !!c?.ult && !!c.ver && isReo(memberOf(c.owner)) && !!memberOf(c.owner)?.h?.ults;
   const swapUlt = async (uid) => {
+    rec127("sw", { uid });
     const c = F.hand.find((x) => x.uid === uid), m = c && memberOf(c.owner);
     if (!c || !reoUltCard(c) || F.phase !== "plan" || busy) return;
     c.ver = c.ver === "spada" ? "sfera" : "spada";
@@ -25867,7 +26040,7 @@ void main() {
     while (roll >= w[k]) roll -= w[k++];
     return cardOf(e, ["N", "R", "SR", "SSR"][k]);
   };
-  const kitUp = (e) => { if (e.next) return; e.orbs = e.boss || e.mini ? 1 : Math.random() < 0.5 ? 1 : 0; e.next = drawCard(e); };
+  const kitUp = (e) => { if (e.next || e.duel127 != null) return; e.orbs = e.boss || e.mini ? 1 : Math.random() < 0.5 ? 1 : 0; e.next = drawCard(e); };
   /** After it acts: an orb (none after its ultimate, which empties them), then its next card. */
   const foeActed = (e, card) => { e.orbs = card?.ult ? 0 : Math.min(5, (e.orbs ?? 0) + 1); e.next = drawCard(e); };
   /** When an enemy falls, every enemy still standing gets an orb. */
@@ -26373,7 +26546,7 @@ void main() {
     }
     for (const m of F.team) if (reoHas(m, "ult") && F.hand.length < BT_HAND && !F.hand.some((c) => c.ult && c.owner === m.id)) { F.hand.push({ uid: ++uid, owner: m.id, move: m.h.ultimate.name, rank: 3, ult: true, ver: btPick(["sfera", "spada"]) }); logIt("buff", `Reo: ${m.h.label}`, "his ultimate is ready, his orbs stay"); }
     if (F.freeUlt && teamHas("clea") && F.hand.length < BT_HAND) { F.hand.push({ uid: ++uid, owner: "clea", move: heroineById("clea").ultimate.name, rank: 3, ult: true, free: true }); F.freeUlt = false; }
-    if (F.hand.length < BT_HAND && !F.hand.some((c) => c.wild)) F.hand.splice(Math.floor(Math.random() * (F.hand.length + 1)), 0, { uid: ++uid, wild: true, owner: null, move: "Wild", rank: 1 });
+    if (F.hand.length < BT_HAND && !F.hand.some((c) => c.wild)) F.hand.splice(Math.floor(rng127() * (F.hand.length + 1)), 0, { uid: ++uid, wild: true, owner: null, move: "Wild", rank: 1 });
     while (!first && F.hand.length < BT_HAND && standing.length) {
       const m = btPick(standing);
       F.hand.push({ uid: ++uid, owner: m.id, move: btPick(m.h.cards).name, rank: 1 });
@@ -26436,6 +26609,7 @@ void main() {
   const stopPicking = () => { F.picking = null; el.pick.hidden = true; host.classList.remove("is-picking"); };
   const reset = () => {
     if (F.phase !== "plan" || busy || !F.snap) return;
+    rec127("rs");
     clearTimeout(countdown);
     el.go.classList.remove("is-counting");
     stopPicking();
@@ -26496,10 +26670,11 @@ void main() {
     const charmed = F.team.find((m) => m.id === c.owner && m.charm > 0);
     if (charmed && !pr112Dark(c) && !BT_SUPPORT.has(c.move) && F.foes.some((e) => !e.dead && (e.regal || e.royal))) toast(`${charmed.h.name} is charmed: her attacks cannot reach Altea or her guards`);
     F.plan.push(step);
+    rec127("c", { uid: c.uid });
     thaw117(c);
     thaw118(c);
     chose123(c);
-    if (!c.ult && node) { if (pr112Dark(c)) step.orb114 = true; else addOrb(F.team.find((m) => m.id === c.owner), 1, within(node)); }
+    if (!c.ult && (node || DUEL127?.on)) { if (pr112Dark(c)) step.orb114 = true; else addOrb(F.team.find((m) => m.id === c.owner), 1, node ? within(node) : null); }
     paintTeam();
     paintCtrl();
     const slots = $$(".bt-qslot", el.q), dest = slots[F.plan.length - 1];
@@ -26526,6 +26701,7 @@ void main() {
   };
   /** A move costs one and feeds its heroine an orb; a wild moved beside a card becomes its copy, and the two fuse. */
   const move = async (c, to) => {
+    rec127("m", { uid: c.uid, to });
     const from = F.hand.indexOf(c);
     if (from === to) { paintHand(); return; }
     if (ice117(c)) { paintHand(); iceNo117(c); return; }
@@ -26553,6 +26729,7 @@ void main() {
   /* ── the turn plays out ── */
   /** The wave is down: the cards of this turn not played burn, then the next wave walks in (or the fight is won). True when it is over. */
   const nextWave = async () => {
+    if (DUEL127?.on) { duelOver127(); return true; }
     if (F.wave === run.waves.length - 1) { finish(true); return true; }
     await hold(400);
     await burnQueue();
@@ -26578,7 +26755,7 @@ void main() {
     F.target = F.foes.indexOf(target);
     paintFoes();
     // Golden Overdrive's 30% Confusion is rolled before her ultimate plays, so the show can glitch with it
-    step.fail = !!step.c.ult && m.id === "kaori" && !cn(m, 6) && Math.random() < 0.3;
+    step.fail = !!step.c.ult && m.id === "kaori" && !cn(m, 6) && rng127() < 0.3;
     F.acting = `${m.h.name} · ${step.c.ult ? m.h.ultimate.name : step.c.move}`;
     F.stepId = (F.stepId ?? 0) + 1;
     await stepUp(m, step.c, target, step.fail);
@@ -26606,6 +26783,8 @@ void main() {
   const execute = async () => {
     clearTimeout(countdown);
     if (F.phase !== "plan" || busy || F.picking) return;
+    // round 127: this device's turn of an online duel goes to the server first (the rival plays it again from there)
+    if (DUEL127?.on && DUEL127.cfg.online && DUEL127.active === DUEL127.me && !DUEL127.replaying && !DUEL127.sent) { busy = true; DUEL127.sent = true; const ok127 = await duelSend127(); busy = false; if (!ok127) { DUEL127.sent = false; DUEL127.cfg.onRefused?.(DUEL127.n); return; } }
     busy = true;
     F.phase = "act";
     hideTip();
@@ -26617,6 +26796,7 @@ void main() {
     if (F.plan.length) await versus();
     while (F.plan.length) {
       // the wave fell before these cards were played: the buff cards still play (not when the fight is won), the rest burn and the next wave comes in
+      if (DUEL127?.on && F.foes.every((e) => e.dead)) break;
       if (F.foes.every((e) => e.dead)) {
         const keep = F.wave < run.waves.length - 1 ? F.plan.filter((st) => !st.c.ult && BT_ALWAYS.has(st.c.move)) : [];
         if (keep.length) logIt("buff", "The wave fell first", `${keep.map((st) => st.c.move).join(", ")} still play${keep.length === 1 ? "s" : ""}`);
@@ -26624,7 +26804,7 @@ void main() {
         if (await nextWave()) { busy = false; return; }
         continue;
       }
-      { const st118 = F.plan.shift(); await playStep(st118); await watch118(st118); await phase123(); }
+      { const st118 = F.plan.shift(); if (DUEL127?.on) DUEL127.cardN = (DUEL127.cardN ?? 0) + 1; await playStep(st118); await watch118(st118); await phase123(); if (DUEL127?.on) await duelCounters127(); }
     }
     nanaCools();
     paintQueue();
@@ -26633,6 +26813,7 @@ void main() {
     for (const m of F.team) m.buffs = m.buffs.filter((b) => b.until !== "act");
     // the True form ends at the close of her second turn in it
     if (F.trueForm && F.turn > F.trueForm.since && --F.trueForm.turns <= 0) { leaveTrueForm(); toast("Tachibana's True form fades"); }
+    if (DUEL127?.on) { await duelPass127(); if (!DUEL127.done) busy = false; return; }
     if (F.foes.every((e) => e.dead) && (await nextWave())) { busy = false; return; }
     if (F.foes[F.target]?.dead || guarded(F.foes[F.target])) F.target = pickTarget();
     await enemyTurn();
@@ -27125,6 +27306,10 @@ void main() {
       await regalMark(e);
     }
     await g78Check();
+    await endRound127();
+  };
+  /** Round 127: the end of a round (the states run down, then the next turn), pulled out of the enemy's turn so a duel runs it too. */
+  const endRound127 = async () => {
     // the states run down at the end of the enemy turn
     for (const e of F.foes) { if (e.sun && --e.sun.t <= 0) e.sun = null; if (e.frozen > 0) e.frozen -= 1; }
     for (const e of F.foes) { if (e.petrify > 0) e.petrify -= 1; if (e.defDown && --e.defDown.t <= 0) e.defDown = null; if (e.hpDown && --e.hpDown.t <= 0) { e.max += e.hpDown.cut; e.hpDown = null; } }
@@ -27202,7 +27387,7 @@ void main() {
     anaTurn();
     paintTeam();
     paintCtrl();
-    await banner("your turn", "is-you");
+    await banner(DUEL127?.on ? `${DUEL127.sides[DUEL127.active].name}: ${DUEL127.active === DUEL127.me ? "your turn" : "their turn"}` : "your turn", DUEL127?.on && DUEL127.active !== DUEL127.me ? "is-enemy" : "is-you");
     if (await cold116()) return;
     if (pr114Deep()) await pr114Turn(); else { await deal(); pr112Cover(); }
     await freeze117();
@@ -27389,6 +27574,7 @@ void main() {
     return `<span>${got.join(" · ")}</span>${items.length ? `<span class="loot-items">${items.map(itemTile).join("")}</span><span>${items.map((i) => i.name).join(" · ")}</span>` : ""}<span>+${fmt(xp)} XP each${benchId ? ", half to the bench" : ""}</span>${ups.length ? `<span class="up">level up: ${ups.join(" · ")}</span>` : ""}`;
   };
   const finish = (won) => {
+    if (DUEL127?.on) { duelEnd127(won ? DUEL127.active : 1 - DUEL127.active); return; }
     F.phase = "over";
     F.plan = [];
     clearTimeout(countdown);
@@ -27459,6 +27645,7 @@ void main() {
   };
   /** A talent switched on by its button. */
   const useTalent = (m, tb) => {
+    rec127("ta", { id: m.id });
     const t = m.talent;
     if (t.state === "ready" && F.phase === "plan") {
       touch();
@@ -27578,7 +27765,7 @@ void main() {
     if (!el.go.classList.contains("is-counting")) guard(execute());
   };
   const autoStep85 = () => {
-    if (!auto85 || !live) return;
+    if (!auto85 || !live || DUEL127?.on) return;
     try { autoAct85(); } finally { autoNext85(); }
   };
 
@@ -27791,30 +27978,8 @@ void main() {
   };
   new ResizeObserver(relayout).observe(host);
 
-  const start = async (which) => {
-    run = which;
-    gen += 1;
-    LUX.GLX?.reset();
-    LUX.CLOCK.setSpeed(1);
-    F.asking?.(false);
-    paused = false;
-    uid = 0;
-    busy = true;
-    insp = null;
-    clearTimeout(countdown);
-    build();
-    applyMeasure();
-    FIELD62.lay(host, run, g);
-    autoPaint85();
-    autoNext85();
-    const l = run.kind === "maze" ? { team: run.maze.field, bench: run.maze.reserve } : lineup();
-    Object.assign(F, { lineup: l, team: [], reserve: null, wave: 0, hand: [], moves: 3, turn: 1, phase: "deal", pending: [], plan: [], bonusNext: 0,
-      flags: { nana: 0 }, veil: 0, snap: null, untouched: true, queen: null, guard: null, requiem: 0, trueForm: null, picking: null, asking: null, foes: [],
-      chests: [], dust: 0, roar: 0, roared: false, encore: 0, freeUlt: false, log: [], acting: null, zenAD: 0, zenHP: 0, bedsideAgain: false, roarK: 0.25, paulCd: 0, paulHD: 0, robinUp: 0, dawnUsed: false, g78: false, skip78: false, nadirEnd78: null });
-    logOpen = false;
-    paintChests();
-    F.team = l.team.map(member);
-    F.reserve = l.bench ? member(l.bench) : null;
+  /** Round 127: the passives that open a battle, for the team in F (start's own, and each side's of a duel). */
+  const opening127 = (l) => {
     for (const x of [...F.team, F.reserve].filter(Boolean)) [x.h.ultArt ?? x.h.art, x.h.failArt].filter(Boolean).forEach(natOf);
     // Kindred Fire: Kayla, on the field or on the bench, adds 7% HP to everyone for each heroine on the field
     if (l.team.includes("kayla") || l.bench === "kayla") for (const m of [...F.team, F.reserve].filter(Boolean)) { m.max = Math.round(m.max * (1 + 0.07 * F.team.length)); m.hp = m.max; }
@@ -27844,6 +28009,34 @@ void main() {
     // Black Court: Clea's shields on her and on every Sacred Fox and Deity beside her
     // Black Court gives +15% to every stat for each of them: ATK and DEF live in upOf, the HP go on here
     if (F.team.some((m) => m.id === "clea")) { const kin = F.team.filter((x) => has(x, FOX_KIN)); for (const m of kin) { m.max = Math.round(m.max * (1 + 0.15 * kin.length)); m.hp = m.max; m.black = Math.round(7 * defOf(m)); } }
+  };
+  /** Round 127: a battle's starting state (start's own, and each side's of a duel). */
+  const freshF127 = (l) => ({ lineup: l, team: [], reserve: null, wave: 0, hand: [], moves: 3, turn: 1, phase: "deal", pending: [], plan: [], bonusNext: 0,
+      flags: { nana: 0 }, veil: 0, snap: null, untouched: true, queen: null, guard: null, requiem: 0, trueForm: null, picking: null, asking: null, foes: [],
+      chests: [], dust: 0, roar: 0, roared: false, encore: 0, freeUlt: false, log: [], acting: null, zenAD: 0, zenHP: 0, bedsideAgain: false, roarK: 0.25, paulCd: 0, paulHD: 0, robinUp: 0, dawnUsed: false, g78: false, skip78: false, nadirEnd78: null });
+  const start = async (which) => {
+    run = which;
+    gen += 1;
+    LUX.GLX?.reset();
+    LUX.CLOCK.setSpeed(1);
+    F.asking?.(false);
+    paused = false;
+    uid = 0;
+    busy = true;
+    insp = null;
+    clearTimeout(countdown);
+    build();
+    applyMeasure();
+    FIELD62.lay(host, run, g);
+    autoPaint85();
+    autoNext85();
+    const l = run.kind === "maze" ? { team: run.maze.field, bench: run.maze.reserve } : lineup();
+    Object.assign(F, freshF127(l));
+    logOpen = false;
+    paintChests();
+    F.team = l.team.map(member);
+    F.reserve = l.bench ? member(l.bench) : null;
+    opening127(l);
     // Labyrinth: everyone comes in with the HP she had left
     if (run.kind === "maze") for (const m of [...F.team, F.reserve].filter(Boolean)) m.hp = Math.max(1, Math.round(m.max * (run.maze.hp[m.id] ?? 1)));
     // round 44: in the story each hero comes in with the HP she had left
@@ -27882,9 +28075,483 @@ void main() {
     paintCtrl();
     busy = false;
   };
+  /* ══════════ Round 127 · the duel (the Arena): two teams of heroes, each with its real kit ══════════
+   * The user, 20 Nov: «2 modalità nessuna alla pari», «un turno del giocatore dura 15 secondi», «se scade il tempo il gioco gioca per
+   * me», and «Duello completo»: both sides are heroes with all their powers. One engine, two sides (the plan and the engine's map:
+   * anteprime/scelte127/piano-duello.md). F holds the side whose turn it is: its heroes in F.team, the rival's heroes in F.foes, where
+   * they wear a foe's face (uid, name, level, art, `dead` = ko) so every card reaches them as it reaches an enemy; at each turn the sides
+   * swap (everything of F but the fight's own keys goes with its side). A blow on a hero goes through what a hero has against a blow
+   * (evasion, shields, the black shield, the reductions, the saves at 1 HP); a hero who falls lets the bench in. Every device draws its
+   * own side at the bottom and the rival at the top, whoever's turn it is. ══════════ */
+  var DUEL127 = null;
+  /** The duel's luck (the same seed, the same numbers on both devices); anything else keeps Math.random. Hoisted: strike and deal call it. */
+  function rng127() { return DUEL127?.on && DUEL127.rng ? DUEL127.rng() : Math.random(); }
+  const mulberry127 = (a) => () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  /** A shuffle that gives the same order on every browser for the same luck (a sort with a random comparison does not). */
+  function shuffle127(list) { for (let i = list.length - 1; i > 0; i--) { const j = Math.floor(rng127() * (i + 1)); [list[i], list[j]] = [list[j], list[i]]; } return list; }
+  // what of F belongs to the whole fight, not to a side
+  const GLOBAL127 = new Set(["phase", "log", "wave", "lineup", "pos", "row83", "target", "acting", "inCard", "aoeNow", "picking", "asking", "chests", "dust", "untouched", "snap", "rule62", "i62", "held62", "kos62", "goals62", "mech62", "terrain62", "ult62", "goalsHTML62", "team", "foes", "reserve"]);
+  /** The side whose turn it is becomes s: its own F comes in, the other's goes to its side. */
+  function swap127(s) {
+    const D = DUEL127;
+    if (!D || s === D.active) return;
+    const a = D.sides[D.active], b = D.sides[s];
+    a.reserve = F.reserve;
+    a.fields = {};
+    for (const k of Object.keys(F)) if (!GLOBAL127.has(k)) { a.fields[k] = F[k]; delete F[k]; }
+    Object.assign(F, b.fields ?? {});
+    b.fields = null;
+    F.team = b.members;
+    F.reserve = b.reserve;
+    F.foes = a.members;
+    D.active = s;
+  }
+  /** fn run as side s's turn (only what runs at once: never across an await). */
+  function withSide127(s, fn) {
+    const D = DUEL127;
+    if (!D?.on || s == null || s === D.active) return fn();
+    const was = D.active;
+    swap127(s);
+    try { return fn(); } finally { swap127(was); }
+  }
+  /** A hero who stands on the other side: a foe's face on her, so the cards reach her as they reach an enemy. */
+  const face127 = (m, side) => {
+    if (!m) return m;
+    Object.assign(m, { duel127: side, uid: ++uid, name: m.h.name, attr: m.h.attr, rarity: m.h.rarityShown ?? m.h.rarity, level: m.lv, art: picOf83(m.h), tribe: "Heroes", kind: "duel127", critChance: (m.crit ?? 0) / 100, glyph: null });
+    // the states an enemy carries, at nothing (a card adds to them: «flame + 1» on nothing was NaN)
+    for (const k of ["flame", "sword", "bleed", "poison", "mark", "weaken", "stun", "time", "sink", "frozen", "petrify", "vines101", "shade78", "reoMark", "death", "feasts"]) m[k] ??= 0;
+    for (const k of ["burn", "bruise", "sun", "defDown", "hpDown", "hell78", "cut82"]) m[k] ??= null;
+    Object.defineProperty(m, "dead", { configurable: true, enumerable: false, get: () => m.ko, set: (v) => { m.ko = !!v; } });
+    return m;
+  };
+  /** The DEF a hero shows the other side: hers with her own side's boosts, taken at each swap. */
+  const freezeDef127 = (s) => withSide127(s, () => { for (const m of [...F.team, F.reserve].filter(Boolean)) m.duelDef127 = defOf(m); });
+  /** What a hero's own states take off her blows (the states the other side put on her, as an enemy's would). */
+  const duelAtkMul127 = (m) => {
+    let k = 1;
+    if (m.weaken > 0) k *= 0.7;
+    if (m.flame) k *= Math.pow(0.65, m.flame);
+    if (m.sun?.n) k *= 1 - 0.1 * Math.min(3, m.sun.n);
+    if (m.sink > 0) k *= 0.5;
+    if (m.shade78 > 0) k *= 0.5;
+    if (m.poison) k *= 0.91;
+    if (m.vines101 > 0) k *= 0.85;
+    return k;
+  };
+  /** What the side of a hero takes off a blow on her (the hero's half of an enemy's blow, foeHitMath). */
+  const duelTake127 = (t, a) => withSide127(t.duel127, () => {
+    let k = 1;
+    const mul = (v) => { k *= v; };
+    if (F.veil) mul(1 - F.veil / 100);
+    const kn = kneelTake();
+    if (kn) mul(Math.max(0.3, 1 - kn));
+    if (has(t, FOX_KIN) && court()) mul(Math.max(0.3, 1 - 0.12 * court()));
+    if (talentOn(t) && t.id === "rin") mul(0.3);
+    foe78(a, t, mul);
+    foe82(a, t, mul);
+    foe101(a, t, mul);
+    if (reoHas(t, "dmg") && t.form === "luce") mul(0.5);
+    if (spiritN()) mul(1 - 0.12 * spiritN());
+    if (t.anaGuard) mul(t.anaGuard);
+    if (F.fortune > 0) mul(0.8);
+    if (sheen()) mul(0.8);
+    if (t.id === "alfael") { const down = [...F.team, F.reserve].filter((x) => x && x !== t && x.ko).length; if (down) mul(Math.max(0.2, 1 - 0.2 * down)); }
+    foe43(t, mul);
+    return k;
+  });
+  /** A blow of a hero on a hero: what her side takes off, evasion, the black shield, the shield, the HP, the saves at 1 HP. Gives the HP
+   *  she has left (the blow's own numbers stay as strike counted them). */
+  const duelHurt127 = (a, t, d) => {
+    if (t.evade > 0) { const p = foeAt(t); number(p.x, p.y, "miss", "is-resist", "evasion"); logIt("you", `${a.h.name} → ${t.h.name}`, "Evasion: the blow misses", "miss"); return t.hp; }
+    // a blow between heroes, as the user wants it: whole (no cap, «nessun damage cap»); the match's rules may still set one (DUEL127.cap,
+    // a share of her max HP), as they may set hpK
+    const raw127 = Math.round(d * duelTake127(t, a)), capV127 = DUEL127.cap ? Math.round(t.max * DUEL127.cap) : Infinity;
+    // how often the cap decides instead of the numbers (the balance's measure: duel127-test prints it)
+    DUEL127.blows = (DUEL127.blows ?? 0) + 1;
+    if (raw127 > capV127) DUEL127.capped = (DUEL127.capped ?? 0) + 1;
+    // one card takes at most cardCap of a hero's max HP over all its blows (off unless the match's rules say: a card that hits everyone
+    // many times would take a whole team down at once); the counters are blows of their own
+    let cardLeft = Infinity;
+    if (DUEL127.cardCap && !DUEL127.inCounter) {
+      const n = DUEL127.cardN ?? 0;
+      if (t.card127?.n !== n) t.card127 = { n, sum: 0 };
+      cardLeft = Math.max(0, Math.round(t.max * DUEL127.cardCap) - t.card127.sum);
+    }
+    let left = Math.min(raw127, capV127, cardLeft);
+    if (t.card127 && DUEL127.cardCap && !DUEL127.inCounter) t.card127.sum += left;
+    const black = Math.min(t.black, left);
+    t.black -= black;
+    left -= black;
+    const soaked = Math.min(t.shield, left);
+    t.shield -= soaked;
+    left -= soaked;
+    let hp = Math.max(0, t.hp - left);
+    if (isOreh(t) && left > 0) t.took78 = true;
+    if (black && t.black <= 0) { t.fury = lasts(2); logIt("buff", `${t.h.name}: Dark Fury`, "her Black Shield broke · ATK +300% · 2 turns"); }
+    if (hp === 0) withSide127(t.duel127, () => {
+      if (t.sp?.has("phoenix") && !t.phoenixUsed) { t.phoenixUsed = true; hp = 1; logIt("buff", `${t.h.name}: Phoenix Mantle`, "she stays up with 1 HP, once a battle"); }
+      else if (!F.dawnUsed && cn(anyIn("alfael"), 6) && !anyIn("alfael")?.ko) { F.dawnUsed = true; hp = 1; logIt("buff", `${t.h.name}: Dawn's mercy`, "Alfael keeps the ally up with 1 HP, once a battle"); }
+      else if (reoHas(t, "immortal")) { hp = 1; logIt("buff", "Reo: immortal", "he stays up with 1 HP"); }
+    });
+    // Thorn Bracer: 4% of the blow back on whoever struck
+    if (left > 0 && t.sp?.has("thorn") && !a.ko) { const back = Math.max(1, Math.round(left * 0.04)); a.hp = Math.max(0, a.hp - back); if (a.hp === 0) duelFell127(a, t); }
+    // her side strikes back as it does against an enemy's blow (once a card each): Rin's vow (300%), Reo's counter, Lilith's stance,
+    // Oreh's vengeance, the Royal Guard's knight; never a counter to a counter
+    const D = DUEL127;
+    const q = (kind) => { if (D.inCounter || a.ko || D.counters.some((c) => c.kind === kind && (c.by === t || ((kind === "venge" || kind === "knight") && c.by.duel127 === t.duel127)))) return; D.counters.push({ kind, by: t, at: a, d: left }); };
+    if (hp > 0 && talentOn(t) && t.id === "rin" && !isReo(t)) q("vow");
+    if (hp > 0 && isReo(t) && reoHas(t, "counter") && !(t.taunt > 0)) q("reo");
+    if (hp > 0 && t.stance?.t > 0) q("lilith");
+    q("venge");
+    q("knight");
+    if (hp > 0 && (black || soaked)) number(foeAt(t).x, foeAt(t).y - 30, black ? `${fmt(black)} black shield` : `${fmt(soaked)} shielded`, "is-resist");
+    return hp;
+  };
+  /** A hero of side s falls: as knockOut does it, at once (no wait), in her own side; the bench steps in. */
+  const duelFell127 = (e, by = null) => {
+    if (e.ko || e.duel127 == null) return;
+    withSide127(e.duel127, () => {
+      const i = F.team.indexOf(e);
+      e.hp = 0;
+      e.ko = true;
+      fallen78(e);
+      Object.assign(e, { shield: 0, black: 0, edge: [], taunt: 0, stance: null, evade: 0, charge: 0, spheres: 0 });
+      if (isReo(e)) e.reoFx = [];
+      for (const b of e.buffs) if (b.hpUp) { if (e.baseMax) e.baseMax -= b.hpUp; else e.max -= b.hpUp; }
+      e.buffs = [];
+      F.pending = (F.pending ?? []).filter((id) => id !== e.id);
+      if (e.id === "tachibana") { F.guard = null; if (F.trueForm) leaveTrueForm(); }
+      if (F.queen?.ally === e.id) F.queen = null;
+      F.hand = (F.hand ?? []).filter((x) => x.owner !== e.id);
+      if (F.aim?.id === e.id) F.aim = null;
+      logIt("ko", `${e.h.name} is down`, F.reserve && i >= 0 ? `${F.reserve.h.name} steps in from the bench` : "");
+      if (F.reserve && i >= 0) { F.team[i] = F.reserve; F.reserve = null; }
+    });
+    if (by?.id === "clea" && by.relic) { by.kills = (by.kills ?? 0) + 1; if (by.kills >= 5) { by.kills = 0; F.freeUlt = true; } }
+    placeAll127();
+  };
+  /** Each side's heroes where this device draws them: its own at the bottom, the rival's at the top. */
+  const mineOf127 = (m) => DUEL127.sides[DUEL127.me].members.includes(m) || DUEL127.sides[DUEL127.me].reserve === m;
+  const duelNode127 = (m) => (!m ? null : mineOf127(m) ? $(`[data-slot="${DUEL127.sides[DUEL127.me].members.indexOf(m)}"]`, el.team) : $(`[data-foe="${m.uid}"]`, el.foes));
+  const duelPos127 = (m) => {
+    const D = DUEL127;
+    if (!m) return { x: 0, y: 0, w: 60, h: 100, fw: 60, fs: 7, cx: 0, cy: 0, plateTop: 0, chipX: 0, chipY: 0 };
+    if (mineOf127(m)) { const p = withSide127(D.me, () => memPos0(D.sides[D.me].members.indexOf(m))); return { ...p, x: p.cx, y: p.cy, w: p.w, h: p.h, left: p.x }; }
+    const q = D.top?.get(m.uid) ?? { x: g.W / 2, y: g.floor / 3, w: 60, h: 100, fw: 60, fs: 7 };
+    return { ...q, cx: q.x, cy: q.y, plateTop: q.y - (q.h ?? 100) / 2, chipX: q.x, chipY: q.y };
+  };
+  /** The whole field drawn again from this device's side. */
+  const placeAll127 = () => {
+    withSide127(DUEL127.me, () => {
+      placeTeam0();
+      placeFoes0(false);
+      DUEL127.top = new Map(F.foes.map((e, i) => [e.uid, F.pos[i]]));
+    });
+  };
+  /** The cards of a side's hero who cannot act this turn (stunned, frozen, petrified, time-locked) wait in the hand. */
+  const duelHeld127 = () => {
+    for (const m of F.team) {
+      const stop = !m.ko && (m.stun > 0 || m.frozen > 0 || m.petrify > 0 || m.time > 0);
+      if (!stop) continue;
+      for (const c of F.hand) if (c.owner === m.id) c.held123 = F.turn;
+      if (m.stun > 0) m.stun -= 1;
+      logIt("state", `${m.h.name} cannot act this turn`, "her cards wait in the hand");
+    }
+    paintHand();
+  };
+  /** Whether the duel is over: a side with nobody standing loses. */
+  const duelOver127 = () => {
+    const D = DUEL127;
+    if (!D?.on) return false;
+    if (D.done) return true;
+    const down = (s) => D.sides[s].members.every((m) => m.ko) && !(s === D.active ? F.reserve : D.sides[s].reserve);
+    const lost = [0, 1].filter(down);
+    if (!lost.length) return false;
+    duelEnd127(lost.length === 2 ? -1 : 1 - lost[0]);
+    return true;
+  };
+  /** The duel's end: who won (-1 a draw), told to whoever opened it; no progress, no rewards here. */
+  const duelEnd127 = (win) => {
+    const D = DUEL127;
+    if (!D || D.done) return;
+    D.done = true;
+    window.__rng127 = null;
+    clearInterval(D.answering);
+    F.phase = "over";
+    F.plan = [];
+    clearTimeout(countdown);
+    stopPicking();
+    paintCtrl();
+    busy = false;
+    D.win = win;
+    D.hash = duelHash127();
+    logIt("sys", win === -1 ? "The duel ends in a draw" : `${D.sides[win].name} wins the duel`);
+    toast(win === -1 ? "A draw" : win === D.me ? "Victory" : "Defeat");
+    D.cfg.onEnd?.({ win, hash: D.hash, turns: D.turns });
+  };
+  /** A fingerprint of the field (both devices compare it at the end): every hero's HP and state, by side. */
+  const duelHash127 = () => {
+    const D = DUEL127, parts = [];
+    for (const s of [0, 1]) for (const m of [...D.sides[s].members, s === D.active ? F.reserve : D.sides[s].reserve].filter(Boolean)) parts.push(`${s}:${m.id}:${m.hp}:${m.ko ? 1 : 0}:${m.shield}:${m.orbs}`);
+    let h = 2166136261;
+    const str = parts.join("|");
+    for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0).toString(36);
+  };
+  /** The counters a blow woke in the other side (Rin's vow…), struck back once the card is over, from the striker's own side. */
+  const duelCounters127 = async () => {
+    const D = DUEL127;
+    D.inCounter = true;
+    try {
+      while (D.counters.length && !D.done) {
+        const c = D.counters.shift();
+        if (c.at.ko || (c.by.ko && c.kind !== "knight" && c.kind !== "venge")) continue;
+        const back = D.active;
+        swap127(c.by.duel127);
+        try {
+          if (c.kind === "vow") { F.acting = `${c.by.h.name} · Vow counter`; strike(c.by, c.at, 300); F.acting = null; }
+          else if (c.kind === "reo") await reoCounter(c.by, c.at, false);
+          else if (c.kind === "lilith") await lilithCounter(c.by, c.at);
+          else if (c.kind === "venge") await vengeance78(c.at, c.by, c.d);
+          else if (c.kind === "knight") await knightCounter(c.at);
+        } finally { swap127(back); }
+        placeAll127();
+        await hold(200);
+        if (duelOver127()) break;
+      }
+    } finally { D.inCounter = false; D.counters.length = 0; }
+  };
+  /** The end of a side's plan: the other side's burns and poisons as its turn begins, then its turn (states run down, its hand). */
+  const duelPass127 = async () => {
+    const D = DUEL127;
+    D.n += 1;
+    D.sent = false;
+    // the actions kept are this turn's only (a turn played again from the server's copy leaves its own behind)
+    D.rec = [];
+    await duelCounters127();
+    if (duelOver127()) return;
+    await foeTicks();
+    if (duelOver127()) return;
+    freezeDef127(D.active);
+    swap127(1 - D.active);
+    freezeDef127(1 - D.active);
+    D.turns += 1;
+    if (D.turns >= 2 * D.maxTurns) { const left = (s) => { const L = [...D.sides[s].members, s === D.active ? F.reserve : D.sides[s].reserve].filter(Boolean); return L.reduce((t, m) => t + (m.ko ? 0 : m.hp / m.max), 0) / L.length; }; const a = left(0), b = left(1); logIt("sys", "Time: the side with more HP left wins", `${Math.round(a * 100)}% · ${Math.round(b * 100)}%`); duelEnd127(Math.abs(a - b) < 1e-9 ? -1 : a > b ? 0 : 1); return; }
+    F.target = pickTarget();
+    placeAll127();
+    await endRound127();
+    if (duelOver127()) return;
+    duelHeld127();
+    D.cfg.onTurn?.(D.active, duelHash127());
+    duelTurnStart127();
+  };
+  /** A side's turn played by the game (the Auto battle's choice: talents, the weakest enemy aimed, the cards worth most, support first;
+   *  then the questions a card asks on its way). */
+  const duelAuto127 = async () => {
+    const D = DUEL127;
+    if (!D?.on || D.done) return;
+    D.autoNow = true;
+    if (F.picking) resolvePick127(null, null);
+    for (let n = 0; n < 12 && F.phase === "plan" && !busy && !D.done; n++) {
+      if (F.picking) { duelPick127(); continue; }
+      const t = alive().find((m) => m.talent?.state === "ready" && autoTalent85(m));
+      // its button (this device's side), else the hero's own figure: where the talent's light starts from
+      const tb = t && ($(`[data-bt-talent="${F.team.indexOf(t)}"]`, host) ?? duelNode127(t));
+      if (t && tb) { useTalent(t, tb); continue; }
+      const aim = autoAim85();
+      if (aim >= 0) F.target = aim;
+      const big = Math.max(1, ...alive().map((m) => atkOf(m))) * 3;
+      const worth = F.hand.filter((c) => !c.wild && !ice117(c) && c.held123 !== F.turn && (c.free || F.moves > 0)).map((c) => ({ c, v: autoWorth85(c, big) })).filter((x) => x.v > 0).sort((a, b) => b.v - a.v);
+      const free = worth.filter((x) => x.c.free), paid = worth.filter((x) => !x.c.free).slice(0, F.moves), pick = [...free, ...paid];
+      const next = pick.find((x) => !x.c.ult && BT_SUPPORT.has(x.c.move)) ?? pick[0];
+      if (!next) break;
+      await choose(next.c);
+      if (F.picking) duelPick127();
+    }
+    if (F.phase === "plan" && !D.done) await execute();
+    D.autoNow = false;
+  };
+  /** An ally or an enemy a card asks for, chosen as the Auto battle does. */
+  const duelPick127 = () => {
+    const p = F.picking;
+    if (!p) return;
+    if (p.step === "ally") {
+      const m = autoAlly85(p);
+      if (!m) { stopPicking(); return; }
+      if (p.kind === "exec") { p.resolve(m); return; }
+      if (p.kind === "ally") { p.step$.ally = m.id; stopPicking(); return; }
+      p.ally = m.id;
+      p.step = "foe";
+    }
+    if (F.picking?.step === "foe") { const i = autoAim85(), st = F.picking.step$; st.ally = F.picking.ally; st.target = F.foes[i]?.uid; stopPicking(); }
+  };
+  /** While a side's cards play by themselves: the questions on the way. */
+  const duelAnswer127 = () => {
+    if (F.asking) { const clea = F.team.find((m) => m.id === "clea"); F.asking(!!clea && clea.hp / clea.max > 0.5); return; }
+    if (F.picking) duelPick127();
+  };
+  /** The line under the fight's title in a duel: who fights whom. */
+  const esc127 = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" })[c]);
+  const duelLine127 = () => { const D = DUEL127; return `${esc127(D.sides[D.me].name)} <em>vs</em> ${esc127(D.sides[1 - D.me].name)}`; };
+  /** The two sides as a battle opens: each side's heroes made from its own numbers, its opening passives in its own context. */
+  const duelStart127 = async (cfg) => {
+    live = true;
+    host.hidden = false;
+    clearTimeout(autoTimer85);
+    run = { kind: "duel", title: cfg.title ?? "Arena", waves: [[]], level: 1, duel: cfg, stage: null };
+    gen += 1;
+    LUX.GLX?.reset();
+    LUX.CLOCK.setSpeed(1);
+    F.asking?.(false);
+    paused = false;
+    uid = 0;
+    busy = true;
+    insp = null;
+    clearTimeout(countdown);
+    build();
+    applyMeasure();
+    FIELD62.lay(host, run, g);
+    autoPaint85();
+    const sides = [0, 1].map((s) => ({ name: cfg.names?.[s] ?? (s ? "Rival" : "You"), members: [], reserve: null, fields: null }));
+    // the Arena's balance: heroes have hpK times their HP, one blow takes at most cap of a hero's max HP (the user tunes both)
+    DUEL127 = { on: true, sides, active: 0, me: cfg.me ?? 0, turns: 0, cfg, counters: [], done: false, top: new Map(), n: 0, rec: [], replaying: false, fast: !!cfg.fast, hpK: cfg.hpK ?? 1, cap: cfg.cap === undefined ? null : cfg.cap, cardCap: cfg.cardCap ?? null, maxTurns: cfg.maxTurns ?? 12, rng: mulberry127(cfg.seed ?? (Date.now() & 0x7fffffff)) };
+    window.__rng127 = DUEL127.rng;
+    clearInterval(DUEL127.answering);
+    DUEL127.answering = setInterval(() => { if (DUEL127?.on && !DUEL127.done && F.phase === "act") duelAnswer127(); }, 120);
+    for (const s of [1, 0]) {
+      const T = cfg.teams[s], l = { team: T.team, bench: T.bench ?? null };
+      for (const k of Object.keys(F)) delete F[k];
+      Object.assign(F, freshF127(l));
+      F.team = l.team.map((id) => face127(member(id, T.over?.[id] ?? null), s));
+      F.reserve = l.bench ? face127(member(l.bench, T.over?.[l.bench] ?? null), s) : null;
+      // the Arena's HP: every hero's (bench too) times hpK, BEFORE the opening passives: they grow it by shares (the same in the end)
+      // and some keep the max they saw (Johta's base82, which his Marks then build on: kept unmultiplied, it took his HP below zero)
+      for (const m of [...F.team, F.reserve].filter(Boolean)) { m.max = Math.round(m.max * DUEL127.hpK); m.hp = m.max; }
+      opening127(l);
+      for (const m of [...F.team, F.reserve].filter(Boolean)) m.hp = Math.min(m.hp, m.max);
+      // the trackers the regions' rules keep in F (what each hero dealt…): every side has its own, as a battle's start makes them
+      reset118();
+      reset123();
+      F.aim = null;
+      F.inCard = false;
+      sides[s].members = F.team;
+      sides[s].reserve = F.reserve;
+      if (s === 1) { sides[1].fields = {}; for (const k of Object.keys(F)) if (!GLOBAL127.has(k)) sides[1].fields[k] = F[k]; }
+    }
+    F.foes = sides[1].members;
+    DUEL127.active = 0;
+    freezeDef127(0);
+    freezeDef127(1);
+    if ((cfg.first ?? 0) === 1) swap127(1);
+    // the side that plays second counts its first turn as 1 too (its first newTurn makes it so)
+    DUEL127.sides[1 - DUEL127.active].fields.turn = 0;
+    logOpen = false;
+    setup62();
+    paintChests();
+    F.target = pickTarget();
+    placeAll127();
+    for (const s of [0, 1]) for (const m of DUEL127.sides[s].members) if (isReo(m)) { m.form = "buio"; m.h = reoH("buio"); }
+    warmUlts();
+    GLX?.warm();
+    if (PHONE_KIT) await PHONE_KIT.ready(host, 500);
+    snack();
+    paulTurn();
+    turn65();
+    turn101();
+    await deal();
+    F.phase = "plan";
+    snapshot();
+    placeAll127();
+    paintCtrl();
+    busy = false;
+    duelHeld127();
+    cfg.onTurn?.(DUEL127.active, duelHash127());
+    duelTurnStart127();
+  };
+  /* ── online (step 3): this device's turn is sent as what the player did (its actions), the rival's is played again from them ── */
+  /** What the player does in the plan, kept while it is this device's turn of an online duel. */
+  function rec127(t, data = {}) { const D = DUEL127; if (D?.on && D.cfg.online && D.active === D.me && !D.replaying && !D.done) D.rec.push({ t, ...data }); }
+  /** A card's ally or enemy, chosen as the plan's own pick would (the replay, and a pick the timer cut short). */
+  const resolvePick127 = (allyId, tgtUid) => {
+    const P = F.picking;
+    if (!P) return;
+    if (P.step === "ally") {
+      const m = (allyId && F.team.find((x) => x.id === allyId && !x.ko)) || autoAlly85(P);
+      if (!m) { stopPicking(); return; }
+      if (P.kind === "exec") { P.resolve(m); return; }
+      if (P.kind === "ally") { P.step$.ally = m.id; stopPicking(); return; }
+      P.ally = m.id;
+      P.step = "foe";
+    }
+    if (F.picking?.step === "foe") { const st = F.picking.step$, e = F.foes.find((x) => x.uid === tgtUid && !x.dead) ?? F.foes[autoAim85()]; st.ally = F.picking.ally; st.target = e?.uid; stopPicking(); }
+  };
+  /** This device's turn, sent: the actions with each card's ally and target as the plan holds them. Gives whether the server took it. */
+  const duelSend127 = async () => {
+    const D = DUEL127;
+    if (F.picking) resolvePick127(null, null);
+    const acts = D.rec.map((a) => { if (a.t !== "c") return a; const st = F.plan.find((x) => x.c.uid === a.uid); return { ...a, tgt: st?.target ?? null, ally: st?.ally ?? null }; });
+    let ok = false;
+    try { ok = !!(await D.cfg.onPlan?.(D.n, { acts, auto: !!D.autoNow })); } catch { ok = false; }
+    if (ok) D.rec = [];
+    return ok;
+  };
+  /** The rival's turn played again from its actions (or by the game, the same way on both devices, when the rival was gone). */
+  const duelReplay127 = async (mv) => {
+    const D = DUEL127;
+    D.replaying = true;
+    try {
+      if (!mv?.plan) { await duelAuto127(); return; }
+      for (const a of mv.plan.acts ?? []) {
+        if (D.done || F.phase !== "plan") break;
+        if (a.t === "c") {
+          const c = F.hand.find((x) => x.uid === a.uid);
+          if (!c) continue;
+          const ti = F.foes.findIndex((e) => e.uid === a.tgt && !e.dead);
+          if (ti >= 0) F.target = ti;
+          await choose(c);
+          if (F.picking) resolvePick127(a.ally, a.tgt);
+        } else if (a.t === "m") { const c = F.hand.find((x) => x.uid === a.uid); if (c) await move(c, a.to); }
+        else if (a.t === "ta") { const m = memberOf(a.id); const tb = m && ($(`[data-bt-talent="${F.team.indexOf(m)}"]`, host) ?? duelNode127(m)); if (m && tb) useTalent(m, tb); }
+        else if (a.t === "reo") { const m = memberOf(a.id); if (m) await reoSwitch(m); }
+        else if (a.t === "sw") await swapUlt(a.uid);
+        else if (a.t === "rs") reset();
+        await hold(D.fast ? 0 : 140);
+      }
+      if (F.phase === "plan" && !D.done) await execute();
+    } finally { D.replaying = false; }
+  };
+  /** The rival's turn: its move asked for (the caller waits for the server), then played. */
+  const duelTheirs127 = async () => {
+    const D = DUEL127;
+    const n = D.n, mv = await D.cfg.nextMove?.(n);
+    if (!D.on || D.done || D.n !== n) return;
+    await duelReplay127(mv);
+  };
+  /** Who plays the turn that starts: this device's player (online: the caller starts the 15 s), the game, or the rival's moves. */
+  const duelTurnStart127 = () => {
+    const D = DUEL127;
+    if (D.done) return;
+    if (D.cfg.online && D.active !== D.me) { setTimeout(() => guard(duelTheirs127()), 300); return; }
+    if (D.cfg.auto?.[D.active]) setTimeout(() => guard(duelAuto127()), 400);
+  };
+  // the Arena's handle on the duel (arena127.js: one battle in the game)
+  window.__BATTLE127 = { duel: (cfg) => guard(duelStart127(cfg)), auto: () => { const D = DUEL127; if (D?.on && !D.done && D.active === D.me && F.phase === "plan" && !busy && !D.sent && !D.autoNow && !D.replaying) { guard(duelAuto127()); return true; } return false; }, resync: (mv) => { if (DUEL127?.replaying) return; reset(); return guard(duelReplay127(mv)); }, state: () => DUEL127, fast: (on) => { if (DUEL127) DUEL127.fast = !!on; },
+    // what each hero did, for the end's screen (the blows each side's heroes dealt, counted as they land)
+    report: () => { const D = DUEL127; if (!D) return null; return { me: D.me, turns: D.turns, sides: [0, 1].map((s) => ({ name: D.sides[s].name, heroes: [...D.sides[s].members, s === D.active ? F.reserve : D.sides[s].reserve].filter(Boolean).map((m) => ({ id: m.id, ko: !!m.ko, dmg: D.dmg?.[s]?.[m.id] ?? 0 })) })) }; },
+    // the match ended on the server (the rival gave up or left): the fight stops where it stands, with no result of its own
+    stop: () => { const D = DUEL127; if (!D || D.done) return; D.done = true; window.__rng127 = null; clearInterval(D.answering); F.phase = "over"; F.plan = []; clearTimeout(countdown); stopPicking(); paintCtrl(); busy = false; } };
+  if (window.__T) Object.assign(window.__T, { duel127: () => DUEL127, duelStart: (cfg) => guard(duelStart127(cfg)) });
   return {
+    duel: (cfg) => guard(duelStart127(cfg)),
+    duelAuto: () => guard(duelAuto127()),
+    duelResync: (mv) => { reset(); return guard(duelReplay127(mv)); },
+    duelState: () => DUEL127,
+    duelFast: (on) => { if (DUEL127) DUEL127.fast = !!on; },
     open: (kind, id) => {
       live = true; host.hidden = false;
+      if (kind === "duel") return;
+      if (DUEL127) DUEL127.on = false;
+      host.classList.remove("is-online127", "is-their127");
       if (kind === "maze") { guard(start(id)); return; }
       // round 120: said on the game's screen (the fight's own toast hides with the fight)
       if (!lineup().team.length) { live = false; host.hidden = true; window.GM_TOAST97?.("The team in use has nobody on its field: fix it on the Team page."); onLeave(); return; }
@@ -27916,7 +28583,7 @@ void main() {
       }
       guard(start(runOf(kind, id)));
     },
-    close: () => { clearTimeout(autoTimer85); live = false; gen += 1; LUX.GLX?.reset(); LUX.CLOCK.setSpeed(1); F.asking?.(false); busy = false; paused = false; clearTimeout(countdown); host.hidden = true; host.replaceChildren(); },
+    close: () => { if (DUEL127) { DUEL127.on = false; clearInterval(DUEL127.answering); window.__rng127 = null; } clearTimeout(autoTimer85); live = false; gen += 1; LUX.GLX?.reset(); LUX.CLOCK.setSpeed(1); F.asking?.(false); busy = false; paused = false; clearTimeout(countdown); host.hidden = true; host.replaceChildren(); },
     relayout,
     pause,
     escape: () => { if (logOpen) { closeLog(); return true; } if (!el.insp?.hidden) { closeInsp(); return true; } return false; },
@@ -27954,12 +28621,14 @@ const GAME_ICON = {
   home: '<path d="M3 11.5L12 4L21 11.5 M5.5 9.5V20H18.5V9.5 M10 20V14H14V20"/>',
   maze: '<path d="M3.5 3.5H20.5V20.5H14 M10 20.5H3.5V3.5 M7.5 7.5H16.5V16.5H11 M7.5 7.5V16.5 M11 12H13.5"/>',
   archive: '<path d="M8.5 3.5H19.5V17.5H8.5Z M5.5 6.5V20.5H15.5 M11 8H17 M11 11H15"/>',
+  arena: '<path d="M4 4L15 15 M12.5 17.5L17.5 12.5 M16 16L20 20 M20 4L9 15 M6.5 12.5L11.5 17.5 M8 16L4 20"/>',
 };
 const gameIcon = (name, cls = "") => `<svg class="gm-ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${GAME_ICON[name]}</svg>`;
 const GAME_MENU = [
   { id: "story", label: "Story", icon: "story" },
   { id: "maze", label: "Labyrinth", icon: "maze" },
   { id: "boss", label: "Challenge", icon: "boss" },
+  { id: "arena", label: "Arena", icon: "arena" },
   { id: "team", label: "Team", icon: "team" },
   { id: "pull", label: "Pull", icon: "pull" },
   { id: "shop", label: "Shop", icon: "shop" },
@@ -38032,6 +38701,7 @@ const initGame = () => {
       <div class="tb3" data-tb3 hidden></div>
     </section>
     <section class="gm-sub" data-gm-sub="profile" hidden aria-label="Profile">${subHead("Profile")}<div class="pf" data-pf></div></section>
+    <section class="gm-sub gm-sub--ar127" data-gm-sub="arena" hidden aria-label="Arena">${subHead("Arena")}<p class="gm-sub-lede">Other players' heroes, live. A turn lasts 15 seconds: when it runs out, the game plays it for you.</p><div data-ar127></div></section>
     <section class="gm-sub gm-sub--starter" data-gm-sub="starter" hidden aria-label="Choose your first hero">
       <h2 class="gm-sub-title" tabindex="-1">Choose your first hero<span class="head-stop" aria-hidden="true">.</span></h2>
       <p class="gm-sub-lede">A Player run starts with one SR at Lv 1, no gear and 30 gems. The other two can still come from the pulls.</p>
@@ -41129,7 +41799,7 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
     }
     if (e.target.closest("[data-u122-pill]")) sheet122(fxSheet122(), "Forge next", "#02d2e3", "forge");
   });
-  const MENU66 = { forge: renderForge66, deep: renderUnder122 };
+  const MENU66 = { forge: renderForge66, deep: renderUnder122, arena: () => window.ARENA127?.render() };
   stage.addEventListener("click", (e) => {
     const t = e.target;
     const tb = t.closest("[data-fg66-tab]");
@@ -41297,7 +41967,7 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
     if (m[1] === "forge" && m[2]) return { where: "forge", id: m[2] };
     if (m[1] === "gestionale") return { where: "gestionale" };
     if (m[1] === "team") return { where: "team", id: m[2] ?? "team" };
-    return { where: GAME_MENU.some((x) => x.id === m[1]) || ["profile", "starter", "mail", "missions", "login", "create", "forge", "deep"].includes(m[1]) ? m[1] : "home" };
+    return { where: GAME_MENU.some((x) => x.id === m[1]) || ["profile", "starter", "mail", "missions", "login", "create", "forge", "deep", "arena", "duel"].includes(m[1]) ? m[1] : "home" };
   };
   let current = "home";
   const show = (where, { focus = true, id = null } = {}) => {
@@ -41308,6 +41978,7 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
     // the first vein that can open, and where)
     if (where === "forge" && !smithBeaten66()) { setAddress("#/play/story"); where = "story"; toast("Beat Ignara at her camp in the Crimson Reach first."); }
     if (where === "deep" && !veinsOpen122().length) { setAddress("#/play/story"); where = "story"; toast(shut122()); }
+    if (where === "duel" && !(window.__BATTLE127?.state()?.on && !window.__BATTLE127.state().done)) { setAddress("#/play/arena"); where = "arena"; }
     // a closed mode (a Boss mode fight included) shows Coming soon to a Player
     if (where === "raid" && !isAdmin() && !ch112Live(bossById(id))) { setAddress("#/play/boss"); where = "boss"; toast("That challenge is over, or not here yet."); }
     const shutMode = where === "raid" ? "boss" : where;
@@ -41351,7 +42022,7 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
     if (where === "home" && !newsOpen67) loginAuto64();
     paintMailBadge();
     paintSoonNav();
-    const fighting = where === "battle" || where === "raid";
+    const fighting = where === "battle" || where === "raid" || where === "duel";
     for (const part of [home, $(".gm-hud", stage), $(".gm-nav", stage)]) part.inert = fighting;
     // round 120: a fight closes every sheet: the stamina's sits on the stage above the fight (a fight reached by the back button) and its
     // «fight now» would start that fight once more
@@ -47759,7 +48430,8 @@ const GLOW121 = (() => {
   };
   const J = (s, d) => { try { return JSON.parse(s) ?? d; } catch { return d; } };
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-  const build = () => (typeof BUILD !== "undefined" ? String(BUILD) : "");
+  // BUILD is declared further down the game's script: an error while the game starts comes before it (typeof does not shield that)
+  const build = () => { try { return String(BUILD); } catch { return ""; } };
   const device = () => { const u = navigator.userAgent; return /iPhone/.test(u) ? "iPhone" : /iPad/.test(u) ? "iPad" : /Android/.test(u) ? "Android" : /Windows/.test(u) ? "PC" : /Mac/.test(u) ? "Mac" : "browser"; };
   const keys = () => { const o = {}; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (ours(k)) o[k] = localStorage.getItem(k); } } catch { /* no storage */ } return o; };
   const hashOf = (o) => { let h = 2166136261; for (const k of Object.keys(o).sort()) { const s = `${k}\u0001${o[k]}\u0002`; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } } return `${(h >>> 0).toString(36)}:${Object.keys(o).length}`; };
@@ -48251,13 +48923,462 @@ const ECON126 = (() => {
   return { on, pull, reset, as, flush, watch, state: () => ({ queued: q.length, synced, offline }) };
 })();
 window.ECON126 = ECON126; // for the code that runs early (the launch's reset) and the tests
+/* ══ round 127 · the Arena's looks, as the user picked them in lab 127 (20 Nov): the Arena page «C · Tabellone», the rival found «A · La
+ *  lama», the turn's clock «B · Sul tasto» (arena127.js draws it on the fight button), the end «B · Il migliore». The user: «centrare per
+ *  bene i personaggi», «usare tutta la pagina», a phone of its own («fai una grafica a parte per il telefono»). Each look follows the room
+ *  it has (container queries: a narrow page or a fight standing upright is a phone's), never the device's name alone. Every figure is the
+ *  hero's whole picture, fitted by its own filled box (ART_BOX83, as the field does) and centred on it, its straight cuts faded
+ *  (ART_EDGES64); never a face cut. arena127.js gives the data; this file only draws. ══ */
+const LOOK127 = (() => {
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  const light = (h) => `var(${ATTRIBUTES[h?.attr]?.token ?? "--accent"})`;
+  const num = (n) => (n >= 1e6 ? `${(n / 1e6).toFixed(n >= 1e7 ? 0 : 1)}M` : n >= 1e4 ? `${Math.round(n / 1e3)}k` : Math.round(n).toLocaleString("en-US"));
+  const sign = (n) => `${n >= 0 ? "+" : "−"}${Math.abs(n)}`;
+  const MODE = { 1: ["Capped", "Lv 100 · ★7 · no super awakening"], 2: ["Unlimited", "every level, star and awakening counts"] };
+  /** A hero's whole figure in a box (.lk127-box, a size container): the picture's filled part fitted inside and centred, standing on the
+   *  box's floor; the picture's own cut edges (it touches its left, right, top or bottom) faded. */
+  const fig = (h) => {
+    if (!h?.art) return "";
+    const key = String(h.art).replace(/^.*?(art\/)/, "$1").replace("art/s/", "art/").replace("art/m/", "art/");
+    const b = ART_BOX83[key] ?? { l: 0.05, r: 0.95, t: 0, b: 1 }, e = ART_EDGES64[key] ?? { l: 0, r: 0, t: 0, b: 0 };
+    const L = e.l > 0.04 ? 7 : 0, R = e.r > 0.04 ? 7 : 0, T = e.t > 0.04 ? 4 : 0, B = e.b > 0.04 ? 14 : 0;
+    const across = L || R ? `linear-gradient(to right, transparent 0, #000 ${L}%, #000 ${100 - R}%, transparent 100%)` : "";
+    const down = T || B ? `linear-gradient(to bottom, transparent 0, #000 ${T}%, #000 ${100 - B}%, transparent 100%)` : "";
+    const mask = [across, down].filter(Boolean).join(",");
+    const m = mask ? `-webkit-mask-image:${mask};mask-image:${mask};${across && down ? "-webkit-mask-composite:source-in;mask-composite:intersect;" : ""}` : "";
+    return `<img class="lk127-fig" src="${h.art}" alt="" draggable="false" decoding="async" style="--bh:${(b.b - b.t).toFixed(3)};--bw:${(b.r - b.l).toFixed(3)};--bc:${((b.l + b.r) / 2).toFixed(3)};--bb:${b.b.toFixed(3)};${m}">`;
+  };
+  const box = (h, cls = "") => `<span class="lk127-box${cls ? ` ${cls}` : ""}" style="--el:${light(h)}">${fig(h)}</span>`;
+
+  /* ── the Arena page · C · Tabellone: the record on the left (the modes, the last matches, the buttons), the team as tall cards on the
+   *    right, the whole page; on a phone the record, the buttons, then the team two by two ── */
+  const acts = (c) => (c.queued
+    ? `<div class="hubC-acts"><button class="gm-btn gm-btn--ghost lk127-go" type="button" data-ar127-leave>stop looking · ${c.wait} s</button></div>`
+    : `<div class="hubC-acts"><button class="gm-btn lk127-go" type="button" data-ar127-go${c.team(c.k).length && !c.busy ? "" : " disabled"}>find a match · ${MODE[c.k][0]}</button><button class="gm-btn gm-btn--ghost lk127-practice" type="button" data-ar127-practice${c.team(c.k).length && !c.busy ? "" : " disabled"}>practice · no rating</button></div>`);
+  const hub = (c) => `<div class="lk127 hubC">
+      <section class="hubC-board" aria-label="Your Arena record"><h3>${esc(c.name)}</h3>
+        <div class="hubC-rows" role="radiogroup" aria-label="Mode">${[1, 2].map((k) => `<button type="button" class="hubC-row" role="radio" aria-checked="${c.k === k}" data-ar127-mode="${k}"><span><b>${MODE[k][0]}</b><small>${MODE[k][1]}</small><em>${c.wl(k)}</em></span><strong>${c.rating(k)}</strong></button>`).join("")}</div>
+        <div class="hubC-last"><small>last matches</small><span>${(c.recent ?? []).map((r) => `<i class="is-${r.toLowerCase()}" title="${r === "W" ? "won" : r === "L" ? "lost" : r === "D" ? "draw" : "set aside"}">${r}</i>`).join("") || "none yet"}</span></div>
+        ${acts(c)}
+        <p class="ar127-line lk127-line" role="status">${esc(c.line)}</p></section>
+      <section class="hubC-team" aria-label="Your team"><h3>Your team · ${MODE[c.k][0]}</h3>
+        <div class="hubC-cards">${c.team(c.k).map((x) => { const h = heroineById(x.id); return `<div class="hubC-card${x.bench ? " is-bench" : ""}" style="--el:${light(h)}">${box(h)}<b>${esc(h?.name)}</b><small>Lv ${x.lv} · ★${x.stars}${x.bench ? " · bench" : ""}</small></div>`; }).join("")}</div></section></div>`;
+
+  /* ── the rival found · A · La lama: a diagonal cut, your three in your light, theirs in red, VS in the middle; standing upright (a phone)
+   *    the rival above and you below, as on the field ── */
+  const side = (cls, p) => `<div class="vsA-side ${cls}"><div class="lk127-figs">${p.team.slice(0, 3).map((x) => box(heroineById(x.id))).join("")}</div><div class="lk127-who"><b>${esc(p.name)}</b><small>${p.rating} rating</small></div></div>`;
+  const vs = (v) => `<div class="lk127-vs vsA" role="img" aria-label="${esc(v.me.name)} against ${esc(v.them.name)}"><div class="vsA-in">${side("is-them", v.them)}${side("is-me", v.me)}<b class="vsA-vs">VS</b><small class="lk127-mode">${MODE[v.mode][0]}</small></div></div>`;
+
+  /* ── the end · B · Il migliore: the hero of your team who did most (or your first, before any blow), whole on her light; upright, the
+   *    hero above and the words below ── */
+  const title = (L) => (L.disputed ? "Set aside" : L.draw ? "Draw" : L.win ? "Victory" : "Defeat");
+  const why = (L) => (L.why === "forfeit" ? (L.win ? "Your rival gave up." : "You gave up.") : L.why === "gone" ? (L.win ? "Your rival left the match." : "You were away too long.") : "");
+  const rate = (L) => (L.practice ? "A practice match: no rating." : L.disputed ? "The two devices saw different fights: this match counts for nobody." : `<b>${sign(L.rating)}</b> rating · now ${L.now}`);
+  const end = (L) => {
+    const h = heroineById(L.mvp?.id), w = why(L);
+    return `<div class="lk127-end endB is-${L.disputed ? "aside" : L.draw ? "draw" : L.win ? "win" : "loss"}" style="--el:${light(h)}"><div class="endB-in">
+      ${h ? box(h, "endB-mvp") : ""}
+      <div class="endB-txt"><h2>${title(L)}</h2>
+        ${h ? `<p class="endB-who"><small>${L.mvp.dmg > 0 ? "best of your team" : "your team"}</small><b>${esc(h.name)}</b>${L.mvp.dmg > 0 ? `<span>${num(L.mvp.dmg)} damage</span>` : ""}</p>` : ""}
+        ${w ? `<p class="lk127-why">${w}</p>` : ""}<p class="lk127-rate">${rate(L)}</p>
+        <div class="lk127-end-acts"><button class="gm-btn" type="button" data-ar127-again>again</button><button class="gm-btn gm-btn--ghost" type="button" data-ar127-back>back to the Arena</button></div></div></div></div>`;
+  };
+  return { hub, vs, end, MODE, esc };
+})();
+/* ══ round 127 · the Arena online (the server function «arena», server/arena127): the queue, the match, the turns sent and received.
+ *  The user, 20 Nov: «2 modalità nessuna alla pari» (Capped: at most Lv 100 and ★7, no super awakening; Unlimited: everything), «un
+ *  turno del giocatore dura 15 secondi», «se scade il tempo il gioco gioca per me». The fight is the duel of createBattle (duel127.js):
+ *  both devices play it from the same seed and the same turns; this device sends what its player did (the actions of the plan) and plays
+ *  the rival's turn again from what the rival's device sent. The team goes with its numbers (each hero's level, stars, copies and gear
+ *  as this device counts them; Capped holds them at Lv 100 and ★7): the rival's device fights it as it is. Live news come as «ticks» on
+ *  Supabase Realtime (a few lines of its protocol): a tick only wakes the device up, it then asks the server. A match left open is taken
+ *  up again by playing its turns from the start, fast. Not in the Database program, nor in the tests' copies (as the accounts). ══ */
+const ARENA127 = (() => {
+  const on = typeof ONLINE !== "undefined" && !!ONLINE?.url && !!ONLINE?.key && !window.OREH_GEST_ONLY
+    && (!!window.__CLOUD124_TEST || !!window.__ARENA127_TEST || !(/^(127\.0\.0\.1|localhost)$/.test(location.hostname) || /\/\.oreh-[^/]*$/.test(decodeURIComponent(location.pathname))));
+  const TURN = () => window.__ARENA127_TURN ?? 15000;
+  const st = { mode: 1, me: null, queued: null, match: null, busy: false, line: "", last: null, timer: 0, clockAt: 0 };
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  try { st.mode = +localStorage.getItem("oreh-ai-arena-mode") === 2 ? 2 : 1; } catch { /* the first */ }
+
+  /** The server's function, as the account logged in on this device. */
+  const call = async (action, body = {}) => {
+    const s = await window.CLOUD124?.session?.();
+    if (!s?.access_token) throw new Error("The Arena needs an account: it is made by itself when the game is online.");
+    const r = await fetch(`${ONLINE.url}/functions/v1/arena`, { method: "POST", headers: { apikey: ONLINE.key, Authorization: `Bearer ${s.access_token}`, "Content-Type": "application/json" }, body: JSON.stringify({ action, ...body }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw Object.assign(new Error(j.error ?? `The server answered ${r.status}.`), { status: r.status, body: j });
+    return j;
+  };
+
+  /* ── the live channel: Supabase Realtime's own protocol, the little of it a tick needs (join, heartbeat) ── */
+  const rt = (() => {
+    let ws = null, ref = 0, hb = 0;
+    const subs = new Map();
+    const send = (topic, event, payload = {}) => { if (ws?.readyState === 1) ws.send(JSON.stringify({ topic, event, payload, ref: String(++ref) })); };
+    const joinOne = (topic) => send(`realtime:${topic}`, "phx_join", { config: { broadcast: { self: false }, presence: { key: "" }, private: false } });
+    const open = () => {
+      if (ws && ws.readyState <= 1) return;
+      try { ws = new WebSocket(`${ONLINE.url.replace(/^http/, "ws")}/realtime/v1/websocket?apikey=${ONLINE.key}&vsn=1.0.0`); } catch { ws = null; return; }
+      ws.onopen = () => { for (const t of subs.keys()) joinOne(t); clearInterval(hb); hb = setInterval(() => send("phoenix", "heartbeat"), 25000); };
+      ws.onmessage = (m) => { let d; try { d = JSON.parse(m.data); } catch { return; } if (d.event !== "broadcast") return; const t = String(d.topic ?? "").replace(/^realtime:/, ""); for (const fn of subs.get(t) ?? []) { try { fn(d.payload); } catch { /* the next tick */ } } };
+      ws.onclose = () => { clearInterval(hb); ws = null; if (subs.size) setTimeout(open, 3000); };
+    };
+    return {
+      join(topic, fn) { if (!subs.has(topic)) { subs.set(topic, new Set()); if (ws?.readyState === 1) joinOne(topic); } subs.get(topic).add(fn); open(); return () => { subs.get(topic)?.delete(fn); if (!subs.get(topic)?.size) { subs.delete(topic); send(`realtime:${topic}`, "phx_leave"); } }; },
+    };
+  })();
+
+  /* ── the team, as the rival's device will fight it ── */
+  /** Each hero of the team in use: its level, stars and copies (Capped: at most Lv 100 and ★7, no super awakening, no Z Star) and its
+   *  numbers with its gear, as a fight on this device counts them. */
+  const snapOf = (mode, only = null, given = null) => {
+    // the team a fight takes (lineup: up to three on the field, one on the bench); a relic counts the allies of all four, as statsOf does
+    const p = PLAYER.player, L = only ? { team: only.slice(0, 3), bench: only[3] ?? null } : lineup(), ids = [...L.team, L.bench].filter(Boolean);
+    return ids.map((id) => {
+      // Capped: no super awakening, so its rarity jump does not count either (the copies' share is the base rarity's)
+      const h0 = heroineById(id), r = given ?? p.roster[id] ?? { lv: 100, stars: 7, cons: 0 }, h = mode === 1 ? { ...h0, rarity: baseRarity(h0) } : h0, prog0 = { lv: r.lv ?? 1, xp: 0, stars: r.stars ?? 0, cons: r.cons ?? 0, evo: r.evo ?? 0, zs: r.zs ?? 0 };
+      const prog = mode === 1 ? { ...prog0, lv: Math.min(100, prog0.lv), stars: Math.min(7, prog0.stars), evo: 0, zs: 0 } : prog0;
+      const base = baseStats(h, prog), s = { ...base }, l = loadout(id);
+      for (const sl of ITEM_SLOTS) { const it = ITEM_BY_ID[l[sl.id]]; if (it) s[it.stat] += Math.round(itemAdd(it, base[it.stat]) * (1 + 0.2 * Math.max(it.temper ?? 0, temperOf66(id, sl.id)))); }
+      const relic = !!(l.relic && h.relic);
+      if (relic) {
+        for (const [k, v] of Object.entries(h.relic.stats)) s[k] += v;
+        const allies = ids.filter((x) => x !== id).map(heroineById).filter((a) => a?.categories?.some((c) => h.relic.boost.includes(c)));
+        if (allies.length) for (const k of ["atk", "def", "hp"]) s[k] = Math.round(s[k] * (1 + 0.25 * allies.length));
+      }
+      const sp = ITEM_SLOTS.map((sl) => ITEM_BY_ID[l[sl.id]]?.special).filter(Boolean);
+      return { id, bench: id === L.bench, lv: prog.lv, stars: prog.stars, copies: prog.cons, evo: !!prog.evo, zs: prog.zs, prog, stats: { atk: s.atk, def: s.def, hp: s.hp, crit: s.crit, relic, base, gear: { atk: s.atk - base.atk, def: s.def - base.def, hp: s.hp - base.hp }, allies: [] }, sp };
+    });
+  };
+  const teamOf = (t) => ({ team: t.filter((x) => !x.bench).slice(0, 3).map((x) => x.id), bench: t.find((x) => x.bench)?.id ?? null, over: Object.fromEntries(t.map((x) => [x.id, { prog: x.prog ?? { lv: x.lv, xp: 0, stars: x.stars, cons: x.copies, evo: x.evo ? 1 : 0, zs: x.zs ?? 0 }, stats: x.stats, sp: new Set(x.sp ?? []) }])) });
+
+  /* ── the page (its look: arena127-look.js, the one picked in lab 127) ── */
+  const host = () => document.querySelector("[data-ar127]");
+  const rating = (k) => st.me?.player?.[`r${k}`] ?? 1000;
+  const lab = () => !!window.__AR127_LAB;
+  const ctx = () => {
+    const teams = {};
+    return {
+      k: st.mode, name: PLAYER.player.avatar?.name || "You", rating, recent: st.me?.recent ?? [], busy: st.busy, queued: !!st.queued,
+      wl: (k) => { const p = st.me?.player; return p && (p[`w${k}`] || p[`l${k}`]) ? `${p[`w${k}`]} won · ${p[`l${k}`]} lost` : "no matches yet"; },
+      team: (k) => (teams[k] ??= snapOf(k)), wait: st.queued ? Math.round((Date.now() - (st.waitFrom ?? Date.now())) / 1000) : 0,
+      line: st.line || "Your team in use fights: change it on the Team page.",
+    };
+  };
+  const render = () => {
+    const h = host();
+    if (!h) return;
+    if (!on && !lab()) { h.innerHTML = '<p class="ar127-line">The Arena needs the game online.</p>'; return; }
+    if (isAdmin()) { h.innerHTML = '<p class="ar127-line">The Arena is for your Player run: switch to Player on your Profile to fight.</p>'; return; }
+    h.innerHTML = LOOK127.hub(ctx());
+  };
+  const say = (t) => { st.line = t; const l = host()?.querySelector(".ar127-line[role=status]"); if (l) l.textContent = t; };
+  const refresh = async () => { try { st.me = await call("me"); if (st.me.live && !st.match) { play(st.me.live); return; } if (st.me.queue && !st.queued) { st.queued = st.me.queue; wait(); } } catch (e) { st.line = e.message; } render(); };
+
+  /* ── waiting for a rival ── */
+  let stopWait = null;
+  /** The seconds of the wait, where the page shows them (the stop button, the rival's empty place), with no new drawing of the page. */
+  const tickWait = () => {
+    const s = Math.round((Date.now() - (st.waitFrom ?? Date.now())) / 1000), h = host();
+    say(`Looking for a rival… ${s} s`);
+    const b = h?.querySelector("[data-ar127-leave]");
+    if (b) b.textContent = `stop looking · ${s} s`;
+    const r = h?.querySelector(".hubB-rival small");
+    if (r) r.textContent = `looking · ${s} s`;
+  };
+  const wait = () => {
+    stopWait?.();
+    const check = async () => { try { const r = await call("poll"); if (r.queue?.match) { done(); play(r.queue.match); } else if (!r.queue) { done(); st.queued = null; render(); } } catch { /* the next */ } };
+    st.waitFrom = Date.parse(st.queued?.since ?? "") || Date.now();
+    const uid = window.CLOUD124?.user?.()?.id, off = uid ? rt.join(`arena:u:${uid}`, check) : null, iv = setInterval(check, 4000);
+    const tick = setInterval(tickWait, 1000);
+    const done = () => { off?.(); clearInterval(iv); clearInterval(tick); stopWait = null; };
+    stopWait = done;
+  };
+  const queue = async () => {
+    if (st.busy) return;
+    st.busy = true; say("Looking for a rival…"); render();
+    try {
+      const av = PLAYER.player.avatar, nm = String(av?.name ?? "").replace(/[<>&"]/g, "").trim().slice(0, 16) || "Player";
+      if (st.me?.player?.name !== nm) { await call("name", { name: nm, look: av ? { sex: av.sex ?? null, el: av.el ?? null, hsex: av.hsex ?? null } : null }).catch(() => {}); if (st.me?.player) st.me.player.name = nm; }
+      // the game this device runs (its build and online pack): the server pairs only the same game (two games, two different fights)
+      const ver = (() => { try { return `${BUILD}|${PACK?.version ?? 0}`; } catch { return ""; } })();
+      const r = await call("queue", { mode: st.mode, team: snapOf(st.mode), ver });
+      if (r.match) { play(r.match); return; }
+      st.queued = { mode: st.mode, since: new Date().toISOString() };
+      wait();
+    } catch (e) { say(e.message); }
+    finally { st.busy = false; render(); }
+  };
+  const leave = async () => { stopWait?.(); st.queued = null; try { await call("leave"); } catch { /* it lapses */ } say("You stopped waiting."); render(); };
+
+  /* ── the match ── */
+  const bt = () => document.querySelector("section.bt[data-bt]");
+  /** The local time the server's deadline of the turn due falls at (the server's clock and this device's may differ by a few seconds). */
+  const deadlineHere = (m) => { const d = Date.parse(m?.deadline ?? ""), now = Date.parse(m?.now ?? ""); return Number.isFinite(d) && Number.isFinite(now) ? d - (now - (st.polledAt ?? Date.now())) : Infinity; };
+  const poll = async (mid) => { const r = await call("poll", { match: mid }); st.polledAt = Date.now(); return r.match; };
+  /** The turn's clock on the fight button (the user's pick «Sul tasto»): «mine» counts this device's 15 s down and has the game play the turn at 0;
+   *  «their» says the rival is playing (this device's cards and buttons out of sight); false takes it away. */
+  const clock = (on, side) => {
+    clearInterval(st.timer);
+    const b = bt();
+    b?.querySelectorAll(".ar127-clock").forEach((x) => x.remove());
+    b?.querySelector(".bt-go")?.classList.remove("tB-on");
+    b?.classList.toggle("is-their127", on === "their");
+    if (!on || !b) return;
+    const names = st.match?.names ?? [], me = st.match?.side ?? 0, theirName = esc(names[1 - me]?.name ?? "Your rival");
+    const c = document.createElement("div");
+    c.className = `ar127-clock tB${on === "their" ? " is-their" : ""}`;
+    c.setAttribute("role", "status");
+    b.append(c);
+    // on the fight button: its place (or where it stands out of sight, in the rival's turn), measured again as the field moves
+    const onGo = () => {
+      const g = b.querySelector(".bt-go");
+      if (!g) return;
+      const r = g.getBoundingClientRect(), o = b.getBoundingClientRect(), their = on === "their";
+      g.classList.toggle("tB-on", !their);
+      Object.assign(c.style, { left: `${r.left - o.left}px`, width: `${r.width}px`, top: `${r.top - o.top}px`, height: `${r.height}px` });
+    };
+    const view = (s, p, low, auto) => {
+      onGo();
+      c.innerHTML = on === "their" ? `<span><b>${theirName}</b>is playing</span>` : `<b>${auto ? "auto" : s}</b><i style="--p:${p}"></i>`;
+      c.classList.toggle("is-low", low);
+    };
+    if (on === "their") { view(0, 1, false, false); st.timer = setInterval(onGo, 1000); return; }
+    // 15 s from when the rival found shows no more, or less when the server's time for this turn ends sooner (a long show of the
+    // rival's turn on this device): the game plays the turn a little before the server would
+    const start = Math.max(Date.now(), st.vsUntil ?? 0), end = Math.min(start + TURN(), deadlineHere(st.match) - 2500), span = Math.max(1000, end - start);
+    let stamped = false;
+    const paint = () => {
+      const now = Date.now(), left = Math.max(0, end - Math.max(now, start)), s = Math.ceil(left / 1000);
+      if (left > 0) { view(s, (left / span).toFixed(3), s <= 5, false); return; }
+      // at 0 the game plays the turn (a stamp over the hand says so): asked again every 3 s while it is still this device's turn and not
+      // sent (a card's show running, the server not reached)
+      view(0, 0, true, true);
+      if (!stamped) { stamped = true; const a = document.createElement("div"); a.className = "ar127-auto"; a.textContent = "auto"; a.setAttribute("aria-hidden", "true"); b.append(a); setTimeout(() => a.remove(), 1900); }
+      const D = window.__BATTLE127?.state();
+      if (!D?.on || D.done || D.sent || D.active !== D.me) { clearInterval(st.timer); return; }
+      if (now - (st.autoAt ?? 0) > 3000 && window.__BATTLE127.auto()) st.autoAt = now;
+    };
+    paint();
+    st.timer = setInterval(paint, 250);
+  };
+  /** The rival found, over the field for a moment (its look: LOOK127.vs); the first turn's clock starts after it. */
+  const showVs = (m) => {
+    const b = bt();
+    if (!b) return;
+    const me = m.side, who = (s) => ({ name: m.names[s]?.name ?? (s === me ? "You" : "Rival"), rating: m.names[s]?.rating ?? 1000, team: (m.teams[s] ?? []).filter((x) => !x.bench) });
+    b.querySelector(".lk127-vs")?.remove();
+    b.insertAdjacentHTML("beforeend", LOOK127.vs({ mode: m.mode, me: who(me), them: who(1 - me) }));
+    st.vsUntil = Date.now() + 2800;
+    const el = b.lastElementChild;
+    setTimeout(() => el?.remove(), 3000);
+  };
+  /** The match ended on the server while this device was still fighting it (the rival gave up, or was gone six turns; or the two devices
+   *  disagreed): the fight stops where it is and the server's word is shown. */
+  const endFromServer = async (m) => {
+    if (!st.match || st.ending) return;
+    st.ending = true;
+    window.__BATTLE127?.stop();
+    clock(false);
+    let after = st.r0;
+    try { st.me = await call("me"); after = st.me.player?.[`r${m.mode}`] ?? st.r0; } catch { /* the rating shows next time */ }
+    st.last = { win: m.winner === m.side, draw: m.winner === -1, rating: after - st.r0, disputed: m.status === "disputed", why: m.why };
+    st.match = null;
+    st.off?.();
+    showEnd();
+  };
+  /** Waits for move n of the match (ticks, a look every 4 s, and the server told when its time is over: «nudge»). Gives the move, or
+   *  { over } when the match ended on the server. */
+  const waitMove = (mid, n) => new Promise((resolve) => {
+    let over = false;
+    const check = async () => {
+      if (over) return;
+      try {
+        let m = await poll(mid);
+        st.match = m;
+        if (m.moves[n]) return done(m.moves[n]);
+        if (m.status !== "live") return done({ over: m });
+        if (Date.parse(m.now) > Date.parse(m.deadline) + 4000) {
+          const r = await call("nudge", { match: mid });
+          if (r.ended || (r.match && r.match.status !== "live")) return done({ over: await poll(mid) });
+          m = r.match ?? m;
+          if (m.moves?.[n]) { st.match = m; return done(m.moves[n]); }
+        }
+      } catch { /* the next look */ }
+    };
+    const off = rt.join(`arena:${mid}`, check), iv = setInterval(check, 4000);
+    const done = (mv) => { if (over) return; over = true; off(); clearInterval(iv); resolve(mv); };
+    check();
+  });
+  const play = async (mid) => {
+    stopWait?.();
+    st.queued = null;
+    let m;
+    try { m = await poll(mid); } catch (e) { say(e.message); return; }
+    if (m.status !== "live") { st.match = null; refresh(); return; }
+    st.match = m;
+    st.ending = false;
+    st.r0 = m.names?.[m.side]?.rating ?? 1000;
+    const known = m.moves.length;
+    // while it is this device's turn the match's channel still counts: the rival gave up (the match ends), or the server played this
+    // device's turn for it (its time was up: the device was away) and the fight goes on from the server's copy
+    st.off?.();
+    st.off = rt.join(`arena:${mid}`, async () => {
+      try {
+        const mm = await poll(mid);
+        st.match = mm;
+        if (mm.status !== "live") { endFromServer(mm); return; }
+        const D = window.__BATTLE127?.state();
+        if (D?.on && !D.done && D.active === D.me && !D.sent && !D.replaying && mm.moves[D.n]) { clock(false); window.__BATTLE127.resync(mm.moves[D.n]); }
+      } catch { /* the next tick */ }
+    });
+    // the duel first (it is on at once), then its page: a page «duel» with no duel on it sends one to the Arena
+    window.__BATTLE127?.duel({
+      teams: [teamOf(m.teams[0]), teamOf(m.teams[1])], names: m.names.map((x) => x.name), title: m.mode === 1 ? "Arena · Capped" : "Arena · Unlimited", seed: m.seed, first: m.first, me: m.side, online: true,
+      // the balance the server wrote in the match (arena_rules: HP times hpK, one blow at most cap of a hero's HP, maxTurns each)
+      hpK: m.rules?.hpK, cap: m.rules?.cap, cardCap: m.rules?.cardCap, maxTurns: m.rules?.maxTurns, fast: known > 0 || !!window.__ARENA127_FAST,
+      onTurn: (side) => {
+        const D = window.__BATTLE127?.state();
+        if (D && D.fast && D.n >= known && !window.__ARENA127_FAST) window.__BATTLE127.fast(false);
+        if (side === m.side) {
+          // a turn of this device the server already has (the match taken up again, or played by the server while this device was away):
+          // played again from there
+          const mv = D ? st.match?.moves?.[D.n] ?? (D.n < known ? m.moves[D.n] : null) : null;
+          if (mv) { clock(false); setTimeout(() => window.__BATTLE127.resync(mv), 200); return; }
+          clock("mine");
+        } else clock("their", side);
+      },
+      onPlan: async (n, plan) => {
+        try {
+          const r = await call("move", { match: mid, n, plan, auto: !!plan.auto });
+          if (r.match) { st.match = r.match; st.polledAt = Date.now(); }
+          if (r.match?.status !== "live") return false;
+          clock(false);
+          return true;
+        } catch { return false; }
+      },
+      onRefused: async (n) => {
+        try {
+          const mm = await poll(mid);
+          st.match = mm;
+          if (mm.status !== "live") { endFromServer(mm); return; }
+          if (mm.moves[n]) window.__BATTLE127.resync(mm.moves[n]);
+        } catch { /* the server's deadline comes */ }
+      },
+      nextMove: async (n) => {
+        const mv = st.match?.moves?.[n] ?? (await waitMove(mid, n));
+        if (mv?.over) { endFromServer(mv.over); return null; }
+        return mv;
+      },
+      onEnd: async (r) => {
+        clock(false);
+        st.ending = true;
+        let res = null;
+        for (let i = 0; i < 24 && !res?.ended && !res?.disputed; i++) {
+          try { res = await call(i ? "nudge" : "result", { match: mid, side: r.win, hash: r.hash }); } catch { res = null; }
+          if (res?.match?.status === "done") res.ended = true;
+          if (res?.match?.status === "disputed") res.disputed = true;
+          if (!res?.ended && !res?.disputed) await new Promise((ok) => setTimeout(ok, 5000));
+        }
+        let after = st.r0;
+        try { st.me = await call("me"); after = st.me.player?.[`r${m.mode}`] ?? st.r0; } catch { /* the rating shows next time */ }
+        st.last = { win: r.win === m.side, draw: r.win === -1, rating: after - st.r0, disputed: !!res?.disputed, waiting: !res };
+        st.match = null;
+        st.off?.();
+        showEnd();
+      },
+    });
+    // an online duel has no pause (the server's clock goes on); a fight opened later takes the class off (battle.open)
+    bt()?.classList.add("is-online127");
+    addQuit(mid);
+    if (!known) showVs(m);
+    location.hash = "#/play/duel";
+  };
+  /** The way out of a match, where the pause was (an online duel has none): give it up, after a question; it counts as a defeat. */
+  const addQuit = (mid) => {
+    const top = bt()?.querySelector(".bt-top");
+    st.quitMid = mid;
+    if (!top || top.querySelector("[data-ar127-quit]")) return;
+    top.insertAdjacentHTML("beforeend", '<button class="ar127-quit" type="button" data-ar127-quit aria-label="Give up the match"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2 M4 3H12.5L10.5 6L12.5 9H4"/></svg></button>');
+  };
+  const askQuit = () => {
+    const b = bt();
+    if (!b || b.querySelector(".lk127-ask") || !st.match) return;
+    b.insertAdjacentHTML("beforeend", '<div class="lk127-end lk127-ask" role="alertdialog" aria-label="Give up the match"><div class="lk127-askbox"><h2>Give up?</h2><p class="lk127-why">The match counts as a defeat, and your rival wins it.</p><div class="lk127-end-acts"><button class="gm-btn" type="button" data-ar127-quit-yes>give up</button><button class="gm-btn gm-btn--ghost" type="button" data-ar127-quit-no>keep fighting</button></div></div></div>');
+    b.querySelector("[data-ar127-quit-no]")?.focus();
+  };
+  const quit = async () => {
+    bt()?.querySelector(".lk127-ask")?.remove();
+    const mid = st.quitMid;
+    if (!mid || !st.match) return;
+    try { await call("forfeit", { match: mid }); endFromServer(await poll(mid)); } catch (e) { say(e.message); }
+  };
+  /** The match's end over the field (its look: LOOK127.end): who won, what the rating did, what each hero did; again, or the Arena. */
+  const showEnd = () => {
+    const b = bt(), L = st.last;
+    if (!b || !L) return;
+    b.querySelector(".lk127-end")?.remove();
+    const R = window.__BATTLE127?.report?.() ?? { turns: 0, me: 0, sides: [] }, mine = R.sides[R.me]?.heroes ?? [];
+    const best = mine.slice().sort((x, y) => y.dmg - x.dmg)[0] ?? null;
+    b.insertAdjacentHTML("beforeend", LOOK127.end({ ...L, now: (st.r0 ?? 1000) + (L.rating ?? 0), mvp: best }));
+    b.querySelector(".lk127-end button")?.focus({ preventScroll: true });
+  };
+  /** A match on this device against the game (no server, no rating): the lab's, and the way to try the Arena's look. */
+  /** A practice rival: four heroes not in your team, at your team's mean level and stars, no gear (the game plays it). */
+  const practiceTeam = () => {
+    const mine = snapOf(st.mode), n = Math.max(1, mine.length);
+    const lv = Math.round(mine.reduce((t, x) => t + x.lv, 0) / n), stars = Math.round(mine.reduce((t, x) => t + x.stars, 0) / n);
+    const pool = HEROINES.filter((h) => !h.guest && h.ultimate && h.cards?.length && ["SR", "SSR", "UR", "LR"].includes(baseRarity(h)) && !mine.some((x) => x.id === h.id)).map((h) => h.id);
+    for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+    return snapOf(st.mode, pool.slice(0, 4), { lv, stars, cons: 0, evo: 0, zs: 0 });
+  };
+  /** A match on this device against the game: no server, no rating. The Arena's «practice» (its rival from practiceTeam), and the
+   *  lab's (a set rival holding every hero, as the lab's run does). */
+  const demo = () => {
+    const mine = snapOf(st.mode), theirs = lab() ? snapOf(st.mode, ["oreh", "johta", "clea", "lilith"]) : practiceTeam();
+    const m = { mode: st.mode, side: 0, names: [{ name: PLAYER.player.avatar?.name || "You", rating: rating(st.mode) }, { name: "Training rival", rating: rating(st.mode) }], teams: [mine, theirs], moves: [], status: "live" };
+    st.match = m; st.r0 = rating(st.mode); st.ending = false; st.practice = true;
+    window.__BATTLE127?.duel({
+      teams: [teamOf(mine), teamOf(theirs)], names: m.names.map((x) => x.name), title: lab() ? (m.mode === 1 ? "Arena · Capped" : "Arena · Unlimited") : "Arena · Practice", seed: Date.now() & 0x7fffffff, first: 0, me: 0, online: false, auto: [false, true],
+      onTurn: (side) => clock(side === 0 ? "mine" : "their", side),
+      onEnd: (r) => { clock(false); st.last = { win: r.win === 0, draw: r.win === -1, rating: lab() ? (r.win === -1 ? 0 : r.win === 0 ? 16 : -16) : 0, practice: !lab(), disputed: false }; st.match = null; showEnd(); },
+    });
+    showVs(m);
+    location.hash = "#/play/duel";
+  };
+  document.addEventListener("click", (ev) => {
+    const t = ev.target;
+    // the buttons first: a door of the Arena page is a mode and holds the find button
+    if (t.closest?.("[data-ar127-go]")) { st.practice = false; if (lab()) demo(); else queue(); return; }
+    if (t.closest?.("[data-ar127-practice]")) { demo(); return; }
+    if (t.closest?.("[data-ar127-leave]")) { leave(); return; }
+    if (t.closest?.("[data-ar127-again]")) { location.hash = "#/play/arena"; setTimeout(() => (lab() || st.practice ? demo() : queue()), 350); return; }
+    if (t.closest?.("[data-ar127-back]")) { location.hash = "#/play/arena"; return; }
+    if (t.closest?.("[data-ar127-quit]")) { askQuit(); return; }
+    if (t.closest?.("[data-ar127-quit-yes]")) { quit(); return; }
+    if (t.closest?.("[data-ar127-quit-no]")) { bt()?.querySelector(".lk127-ask")?.remove(); return; }
+    const m = t.closest?.("[data-ar127-mode]");
+    if (m && +m.dataset.ar127Mode !== st.mode) { st.mode = +m.dataset.ar127Mode; try { localStorage.setItem("oreh-ai-arena-mode", String(st.mode)); } catch { /* this visit */ } render(); }
+  });
+  document.addEventListener("keydown", (ev) => {
+    const m = ev.target.closest?.('[data-ar127-mode][role="radio"]:not(button)');
+    if (m && (ev.key === "Enter" || ev.key === " ")) { ev.preventDefault(); m.click(); }
+  });
+  // the page is drawn as the game shows it (MENU66): a fault here must never keep the game's page from showing
+  return { on, call, render: () => { try { render(); if (on && !isAdmin() && !lab()) refresh(); } catch (e) { console.error("arena127", e); } }, queue, leave, play, demo, snapOf, state: () => st,
+    // the lab's: an end, a rival found, the page with a made-up record
+    preview: { end: (L) => { st.last = L; showEnd(); }, vs: (m) => showVs(m), me: (me) => { st.me = me; render(); }, clock: (on, side) => clock(on, side) } };
+})();
+window.ARENA127 = ARENA127;
 initGame();
 bindAnchors();
 /* ── round 59 · a new version: when the Admin asks every game to update (the pack's `app`, from the Gestionale's Lancio
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-20-1631";
+const BUILD = "2026-11-20-2216";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
@@ -48308,7 +49429,7 @@ const AUTO = { next: null, pill: null, veil: null, timer: 0 };
 /** A fight (the story's, Boss mode's or the Labyrinth's) or a summon on screen: the note waits, small, until it ends. */
 const autoBusy = () => {
   const gm = document.querySelector(".gm");
-  return !!gm && !gm.hidden && (["battle", "raid"].includes(gm.dataset.where) || !!document.documentElement.dataset.smPlaying);
+  return !!gm && !gm.hidden && (["battle", "raid", "duel"].includes(gm.dataset.where) || !!document.documentElement.dataset.smPlaying);
 };
 const autoBlock = () => {
   if (AUTO.veil) return;
