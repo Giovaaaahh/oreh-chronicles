@@ -1,0 +1,10 @@
+name: keep the online server awake
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -fsS "https://mwxaifqqeofinsvhcraq.supabase.co/rest/v1/packs?select=version&limit=1" -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13eGFpZnFxZW9maW5zdmhjcmFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwODgzOTMsImV4cCI6MjEwODY2NDM5M30.3V9hr_q9jWTELcPBNTtfmUKeQkCudNb6lUZ9bv0pIFM" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13eGFpZnFxZW9maW5zdmhjcmFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwODgzOTMsImV4cCI6MjEwODY2NDM5M30.3V9hr_q9jWTELcPBNTtfmUKeQkCudNb6lUZ9bv0pIFM" > /dev/null
