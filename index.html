@@ -9282,6 +9282,29 @@ html.ios125 .c7.is-live .c7-ec-rim { animation-name: c7-spin125; }
 
 @media (prefers-reduced-motion: reduce) { .lk127-vs *, .lk127-end, .endB-mvp, .ar127-auto { animation-duration: 0.01s !important; animation-delay: 0s !important; } }
 
+/* round 129 · a duel's hand: only the cards of the side whose turn it is, and online never the rival's. Hidden, not removed (a card's
+   place still counts for what flies from it); hidden cards are not touched either, the cards under them are. */
+.bt[data-act127="0"] .bt-card[data-side127="1"], .bt[data-act127="1"] .bt-card[data-side127="0"],
+.bt.is-online127[data-me127="0"] .bt-card[data-side127="1"], .bt.is-online127[data-me127="1"] .bt-card[data-side127="0"],
+.bt[data-act127="0"] .bt-card[data-side127="1"] *, .bt[data-act127="1"] .bt-card[data-side127="0"] *,
+.bt.is-online127[data-me127="0"] .bt-card[data-side127="1"] *, .bt.is-online127[data-me127="1"] .bt-card[data-side127="0"] * { visibility: hidden !important; pointer-events: none !important; }
+/* round 129 · on an iPhone the cards of a menu's screen (the Team pages, the Archive, the Shop…) hold still, with no motion at all (as the
+   Archive's cards do while they move, round 86): their aura specks, LR sparkles, eclipse breathing and fires each kept a layer of their
+   own for the graphics chip (390 on the Team page, against 20-30 on any other screen), worked out and painted again every frame and made
+   again at every tap that draws the list again; on an iPhone, at three times the pixels, the phone had no time left to answer a tap.
+   What shows at rest stays (the eclipse's glow, the frames); what only shows moving (the specks, the sparkles) goes. The summon, a
+   hero's open file and the big pictures move as before. */
+html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .card),
+html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .card) *,
+html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .card)::before,
+html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .card)::after,
+html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .card) *::before,
+html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .card) *::after { animation: none !important; will-change: auto !important; }
+/* and they lie flat: a card's thickness (its edges stacked behind the face) only shows while it turns, and each edge was one more layer
+   (about 18 a card); a card with two faces keeps its depth (it shows the right face by it) */
+html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .card) .card-edge { display: none; }
+html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .card, .card--both) .card-tilt { transform-style: flat; }
+
 </style>
 </head>
 <body>
@@ -10717,7 +10740,7 @@ if (!REDUCED) {
   setInterval(() => {
     // the heavy moments (an ultimate or a blow on screen, a summon) keep the whole machine for themselves
     if (document.hidden || live >= MAX || document.documentElement.dataset.smPlaying || document.querySelector(".bt-fx > :not(canvas), .is-moving86")) return;
-    const list = [...document.querySelectorAll(".card.card--front:not(.is-asleep)")].filter((c) => !c._glint && !c.closest(".is-locked, .bt-refl, [hidden]"));
+    const list = [...document.querySelectorAll(".card.card--front:not(.is-asleep)")].filter((c) => !c._glint && !c.closest(".is-locked, .bt-refl, [hidden]") && !(window.__ios125 && c.closest(".gm-sub") && !c.closest("[data-sm], .arc-d, [data-art-full]")));
     // each card on screen about every EVERY ms, on average
     for (let n = (list.length * TICK) / EVERY; n > 0 && live < MAX && list.length; n -= 1) {
       if (n < 1 && Math.random() > n) break;
@@ -11367,8 +11390,8 @@ const initContours = (canvas, token, owner) => {
   // round 120 (perf): what of the lines can be seen (0 none, Infinity all, else a rim or a top band). The game's backdrop asks
   // gmLines120, a fight's own lines btLines120; the site's sections draw whole, as before. `again` draws them at once when something
   // uncovers more of them; canvas._view120 is for the tests (strumenti/round120-test.cjs)
-  let loop = null, seen = null;
-  const again = () => { if (loop?.isRunning()) draw(); };
+  let loop = null, seen = null, v129 = null, v129at = 0;
+  const again = () => { v129 = null; if (loop?.isRunning()) draw(); };
   const view = REDUCED ? null : canvas.matches("[data-gm-lines]") ? gmLines120(owner, again) : canvas.matches(".bt-lines") ? btLines120(again) : null;
   if (view) canvas._view120 = view;
 
@@ -11376,7 +11399,7 @@ const initContours = (canvas, token, owner) => {
     // round 125: on an iPhone the backdrop's lines hold still while an ultimate, a move or a summon plays (each frame of them asked the
     // page's styles and redrew the whole canvas under the show)
     if (window.__ios125 && window.__show125 > 0) return;
-    const v = view ? view() : Infinity;
+    const v = !view ? Infinity : !window.__ios125 ? view() : v129 != null && now - v129at < 1000 ? v129 : ((v129at = now), (v129 = view()));
     if (!v) return; // nothing of them shows: the canvas keeps what it had, and nothing is worked out
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     fitCanvas(canvas, ratio);
@@ -11454,7 +11477,7 @@ const initContours = (canvas, token, owner) => {
     draw();
     new ResizeObserver(() => draw()).observe(canvas);
   } else {
-    loop = loopInView(owner, draw, () => 24);
+    loop = loopInView(owner, draw, () => (window.__ios125 ? 100 : 24)); // round 129: 10 a second on an iPhone
   }
 };
 
@@ -21308,6 +21331,8 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
         node.type = "button";
         node.className = "bt-card";
         node.dataset.card = c.uid;
+        // round 129: in a duel, whose card it is (F.hand is always the hand of the side whose turn it is)
+        if (DUEL127?.on) node.dataset.side127 = String(DUEL127.active);
         node.style.transition = "none";
         node.style.transform = T(instant ? slot(i) : deck());
         el.hand.append(node);
@@ -28258,6 +28283,8 @@ void main() {
       F.pending = (F.pending ?? []).filter((id) => id !== e.id);
       if (e.id === "tachibana") { F.guard = null; if (F.trueForm) leaveTrueForm(); }
       if (F.queen?.ally === e.id) F.queen = null;
+      // round 129: her cards leave the hand's box too (they stayed drawn, and showed again at her side's turn)
+      for (const c of (F.hand ?? []).filter((x) => x.owner === e.id)) { const n = cardEl(c); if (n) { n.style.opacity = "0"; setTimeout(() => n.remove(), 300); } }
       F.hand = (F.hand ?? []).filter((x) => x.owner !== e.id);
       if (F.aim?.id === e.id) F.aim = null;
       logIt("ko", `${e.h.name} is down`, F.reserve && i >= 0 ? `${F.reserve.h.name} steps in from the bench` : "");
@@ -28265,6 +28292,14 @@ void main() {
     });
     if (by?.id === "clea" && by.relic) { by.kills = (by.kills ?? 0) + 1; if (by.kills >= 5) { by.kills = 0; F.freeUlt = true; } }
     placeAll127();
+  };
+  /** Round 129: whose cards the hand shows, set at the turn's real changes (never at a moment's look from the other side, which
+   *  would cut the cards' flights short): the side whose turn it is, and online never the rival's (CSS: .bt-card[data-side127]). */
+  const duelShow127 = () => {
+    const D = DUEL127;
+    if (!D?.on) { delete host.dataset.act127; delete host.dataset.me127; return; }
+    host.dataset.act127 = String(D.active);
+    host.dataset.me127 = String(D.me);
   };
   /** Each side's heroes where this device draws them: its own at the bottom, the rival's at the top. */
   const mineOf127 = (m) => DUEL127.sides[DUEL127.me].members.includes(m) || DUEL127.sides[DUEL127.me].reserve === m;
@@ -28370,6 +28405,7 @@ void main() {
     if (duelOver127()) return;
     freezeDef127(D.active);
     swap127(1 - D.active);
+    duelShow127();
     freezeDef127(1 - D.active);
     D.turns += 1;
     if (D.turns >= 2 * D.maxTurns) { const left = (s) => { const L = [...D.sides[s].members, s === D.active ? F.reserve : D.sides[s].reserve].filter(Boolean); return L.reduce((t, m) => t + (m.ko ? 0 : m.hp / m.max), 0) / L.length; }; const a = left(0), b = left(1); logIt("sys", "Time: the side with more HP left wins", `${Math.round(a * 100)}% · ${Math.round(b * 100)}%`); duelEnd127(Math.abs(a - b) < 1e-9 ? -1 : a > b ? 0 : 1); return; }
@@ -28479,6 +28515,7 @@ void main() {
     freezeDef127(0);
     freezeDef127(1);
     if ((cfg.first ?? 0) === 1) swap127(1);
+    duelShow127();
     // the side that plays second counts its first turn as 1 too (its first newTurn makes it so)
     DUEL127.sides[1 - DUEL127.active].fields.turn = 0;
     logOpen = false;
@@ -28588,6 +28625,8 @@ void main() {
       if (kind === "duel") return;
       if (DUEL127) DUEL127.on = false;
       host.classList.remove("is-online127", "is-their127");
+      delete host.dataset.act127;
+      delete host.dataset.me127;
       if (kind === "maze") { guard(start(id)); return; }
       // round 120: said on the game's screen (the fight's own toast hides with the fight)
       if (!lineup().team.length) { live = false; host.hidden = true; window.GM_TOAST97?.("The team in use has nobody on its field: fix it on the Team page."); onLeave(); return; }
@@ -30117,7 +30156,7 @@ void main() {
     const sideA = host.querySelector("[data-duo-a]"), sideB = host.querySelector("[data-duo-b]");
     const back = makeGL(host, "is-back", sideA), front = makeGL(host, "is-front", sideB.nextSibling);
     const pa = host.querySelector("[data-duo-pa]"), pb = host.querySelector("[data-duo-pb]"), benchEl = host.querySelector("[data-duo-bench]"), swapBtn = host.querySelector("[data-duo-swap]");
-    let A = null, B = null, bench = [], W = 0, Hh = 0, wide = false, busy = false, on = false, raf = 0, last = 0, flare = 0, xs = [];
+    let A = null, B = null, bench = [], W = 0, Hh = 0, wide = false, busy = false, on = false, raf = 0, last = 0, flare = 0, xs = [], drawn129 = 0;
     const cA = liveCol("#02d2e3"), cB = liveCol("#02d2e3"), solo = live(0, 40, 12);
     const jag = Array.from({ length: N }, (_, i) => (i % 2 ? 1 : -1) * (0.6 + ((i * 37) % 10) / 22));
     const geo = () => ({ figH: Hh * (wide ? 0.86 : 0.58), base: Hh * (wide ? 1.0 : 0.78), xA: B ? W * (wide ? 0.31 : 0.26) : W * (wide ? 0.5 : 0.5), xB: W * (wide ? 0.69 : 0.74), faceY: Hh * (wide ? 0.34 : 0.31), y0: -Hh * 0.04, dy: (Hh * 1.08) / (N - 1), slant: wide ? 0.12 : 0.06, J: wide ? 16 : 10 });
@@ -30144,6 +30183,9 @@ void main() {
     const seamAt = (y) => { const g = geo(), k = clampV((y - g.y0) / g.dy, 0, N - 1.001), i = Math.floor(k); return xs.length ? xs[i] + (xs[i + 1] - xs[i]) * (k - i) : W / 2; };
     const frame = (t) => {
       raf = on ? requestAnimationFrame(frame) : 0;
+      // round 129: on an iPhone, while nothing moves, 15 frames a second
+      if (window.__ios125 && !busy && flare <= 0 && t - drawn129 < 66) return;
+      drawn129 = t;
       const dt = Math.min(0.05, (t - (last || t)) / 1000), tt = t / 1000;
       last = t;
       cA.step(dt); cB.step(dt); solo.step(dt);
@@ -48847,7 +48889,25 @@ const PERF125 = (() => {
     done();
     return p;
   };
-  return { time, on };
+  return { time, on, send, dev };
+})();
+/* round 129 · how long a tap waits on an iPhone (the user: «clicco "Train" e mi rimane inchiodato 40 secondi»): from the finger down (its
+ * own time stamp) to the first frame drawn after the tap's click. The first 12 taps of a visit go online (client_perf, kind
+ * «tap:<screen>»; strumenti/perf125-leggi.cjs), so a phone that answers late says where. */
+if (IOS125 && PERF125.on) (() => {
+  let down = 0, sent = 0;
+  addEventListener("pointerdown", (e) => { down = e.timeStamp || performance.now(); }, { capture: true, passive: true });
+  addEventListener("click", () => {
+    if (!down || sent >= 12) return;
+    const t0 = down;
+    down = 0;
+    sent++;
+    requestAnimationFrame(() => setTimeout(() => {
+      const ms = Math.max(0, Math.round(performance.now() - t0)), where = (location.hash.split("/")[2] || "home").replace(/[^a-z0-9-]/gi, "").slice(0, 20);
+      PERF125.send({ kind: `tap:${where}`, ms: Math.min(600000, ms), frames: 1, fps: 0, long: ms > 50 ? 1 : 0, worst: Math.min(600000, ms), lite: true, dpr: devicePixelRatio, vw: innerWidth, vh: innerHeight,
+        build: String(typeof BUILD !== "undefined" ? BUILD : "").slice(0, 40), device: PERF125.dev(), ua: navigator.userAgent.slice(0, 400), user_id: window.CLOUD124?.user()?.id ?? null });
+    }, 0));
+  }, { capture: true, passive: true });
 })();
 /* ══ round 126 · a Player run's gems, summons and heroes held, kept by the server (the function «econ», server/econ126). The user,
  *  20 Nov: PvP with real heroes («2 modalità nessuna alla pari»), so a save touched on a device must not give gems or heroes.
@@ -49424,7 +49484,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-20-2251";
+const BUILD = "2026-11-21-0059";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
