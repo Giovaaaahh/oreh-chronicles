@@ -50122,6 +50122,115 @@ const LOOK127 = (() => {
  *  as this device counts them; Capped holds them at Lv 100 and ★7): the rival's device fights it as it is. Live news come as «ticks» on
  *  Supabase Realtime (a few lines of its protocol): a tick only wakes the device up, it then asks the server. A match left open is taken
  *  up again by playing its turns from the start, fast. Not in the Database program, nor in the tests' copies (as the accounts). ══ */
+/* ══ round 131 · the vault (the server function «vault», server/vault131): a Player run's heroes, gold, items, gear and tempering as the
+ *  server has checked them. The user, 21 Nov: «procedi ora con anti cheat». The server follows the run this account keeps online
+ *  (round 124) and takes what it spends at once, what it gains within a day's allowance per kind; a touched save stays held back.
+ *  · The Arena fights with the vault's heroes: the device sends only who is in the team; the server sends each hero's kit (progress,
+ *    gear, tempering) and both devices work the numbers out of it here, with the same rule (kitStats131): what a device says of its
+ *    own heroes never counts.
+ *  · The device asks the vault when the Arena opens, before a match, and now and then while the game is open (every 5 minutes, when the
+ *    run online moved on); the Arena shows the team as the vault has it, and says which numbers there are behind this device's.
+ *  Not for the Admin, the Database program, or the tests' copies (as the accounts, round 124). ══ */
+/** A hero's numbers from their kit alone (progress, gear, tempering, the relic on or off), as a fight takes them: the same on every
+ *  device. `L` the lineup ({ team, bench }); a relic counts the allies of all four. Capped (mode 1): Lv 100 and ★7 at most, no super
+ *  awakening, no Z Star, the copies' share of the base rarity. */
+const kitStats131 = (mode, L, kits) => {
+  const ids = [...L.team, L.bench].filter(Boolean);
+  const n = (v, lo, hi, d) => { const x = Math.round(Number(v)); return Number.isFinite(x) ? Math.min(hi, Math.max(lo, x)) : d; };
+  return ids.map((id) => {
+    const h0 = heroineById(id), k = kits?.[id] ?? {}, pr = k.prog ?? {}, h = mode === 1 ? { ...h0, rarity: baseRarity(h0) } : h0;
+    const prog0 = { lv: n(pr.lv, 1, 100, 1), xp: 0, stars: n(pr.stars, 0, 7, 0), cons: n(pr.cons, 0, 6, 0), evo: pr.evo ? 1 : 0, zs: n(pr.zs, 0, 7, 0) };
+    const prog = mode === 1 ? { ...prog0, lv: Math.min(100, prog0.lv), stars: Math.min(7, prog0.stars), evo: 0, zs: 0 } : prog0;
+    const base = baseStats(h, prog), s = { ...base }, l = k.gear ?? {}, t = k.temper ?? {};
+    // a piece counts in its own slot, a rolled one only within its rarity's range (a kit is the server's; this holds a made-up one to nothing)
+    const fair = (it) => !it.rolled || (ITEM_ROLL[it.rarity] && it.pct >= ITEM_ROLL[it.rarity][0] && it.pct <= ITEM_ROLL[it.rarity][1]);
+    const worn = ITEM_SLOTS.map((sl) => { const it = ITEM_BY_ID[l[sl.id]]; return it && it.slot === sl.id && fair(it) ? [sl, it] : null; }).filter(Boolean);
+    for (const [sl, it] of worn) s[it.stat] += Math.round(itemAdd(it, base[it.stat]) * (1 + 0.2 * Math.max(it.temper ?? 0, n(t[sl.id], 0, 5, 0))));
+    const relic = !!(l.relic && h.relic);
+    if (relic) {
+      for (const [k2, v] of Object.entries(h.relic.stats)) s[k2] += v;
+      const allies = ids.filter((x) => x !== id).map(heroineById).filter((a) => a?.categories?.some((c) => h.relic.boost.includes(c)));
+      if (allies.length) for (const k2 of ["atk", "def", "hp"]) s[k2] = Math.round(s[k2] * (1 + 0.25 * allies.length));
+    }
+    const sp = worn.map(([, it]) => it.special).filter(Boolean);
+    return { id, bench: id === L.bench, lv: prog.lv, stars: prog.stars, copies: prog.cons, evo: !!prog.evo, zs: prog.zs, prog, stats: { atk: s.atk, def: s.def, hp: s.hp, crit: s.crit, relic, base, gear: { atk: s.atk - base.atk, def: s.def - base.def, hp: s.hp - base.hp }, allies: [] }, sp };
+  });
+};
+/** A team as the server sends it ([{ id, bench, kit }]), with its numbers worked out here. */
+const kitTeam131 = (mode, list) => {
+  const a = (Array.isArray(list) ? list : []).filter((x) => x && typeof x.id === "string");
+  const L = { team: a.filter((x) => !x.bench).slice(0, 3).map((x) => x.id), bench: a.find((x) => x.bench)?.id ?? null };
+  return kitStats131(mode, L, Object.fromEntries(a.map((x) => [x.id, x.kit ?? {}])));
+};
+const VAULT131 = (() => {
+  const on = typeof ONLINE !== "undefined" && !!ONLINE?.url && !!ONLINE?.key && !window.OREH_GEST_ONLY
+    && (!!window.__CLOUD124_TEST || !!window.__VAULT131_TEST || !(/^(127\.0\.0\.1|localhost)$/.test(location.hostname) || /\/\.oreh-[^/]*$/.test(decodeURIComponent(location.pathname))));
+  let view = null, busy = null, seenRev = null;
+  const call = async (action, body = {}) => {
+    const s = await window.CLOUD124?.session?.();
+    if (!s?.access_token) throw new Error("The server needs an account: it is made by itself when the game is online.");
+    const r = await fetch(`${ONLINE.url}/functions/v1/vault`, { method: "POST", headers: { apikey: ONLINE.key, Authorization: `Bearer ${s.access_token}`, "Content-Type": "application/json" }, body: JSON.stringify({ action, ...body }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw Object.assign(new Error(j.error ?? `The server answered ${r.status}.`), { status: r.status, body: j });
+    return j;
+  };
+  /** The vault as the server has it now; `fresh`: the run goes online first (as it is this moment), so the vault follows it. */
+  const check = (fresh = false) => {
+    if (!on || isAdmin()) return Promise.resolve(null);
+    if (busy) return busy;
+    busy = (async () => {
+      try {
+        if (fresh) await window.CLOUD124?.upload?.();
+        const r = await call("check");
+        if (r.vault) view = r.vault;
+        return view;
+      } finally { busy = null; }
+    })();
+    return busy;
+  };
+  // now and then while the game is open: when the run online has moved on (its revision, as this device last saved it)
+  if (on) setInterval(() => {
+    let rev = null;
+    try { rev = JSON.parse(localStorage.getItem("oreh-ai-cloud") ?? "{}")?.rev ?? null; } catch { rev = null; }
+    if (rev != null && rev !== seenRev && !isAdmin()) { seenRev = rev; check().catch(() => {}); }
+  }, 5 * 60 * 1000);
+  /** The team in use as the vault has it (null while the vault has not answered, or misses one of them). */
+  const team = (mode) => {
+    if (!view) return null;
+    const L = lineup(), ids = [...L.team, L.bench].filter(Boolean), kits = {};
+    for (const id of ids) { const h = view.heroes?.[id]; if (!h) return null; kits[id] = { prog: h, gear: view.gear?.[id] ?? {}, temper: view.temper?.[id] ?? {} }; }
+    return kitStats131(mode, L, kits);
+  };
+  /** What the vault has lower than this device, for the team in use: «Rin Lv 80 (85 here)», «Kaori ★3 (★4 here)», «Dalila's gear». */
+  const behind = () => {
+    if (!view || isAdmin()) return [];
+    const L = lineup(), out = [], p = PLAYER.player;
+    for (const id of [...L.team, L.bench].filter(Boolean)) {
+      const v = view.heroes?.[id], r = p.roster?.[id], nm = heroineById(id)?.name ?? id;
+      if (!r) continue;
+      if (!v) { out.push(`${nm} (not checked yet)`); continue; }
+      if ((v.evo ?? 0) < (r.evo ? 1 : 0)) out.push(`${nm}'s super awakening`);
+      else if (v.lv < (r.lv ?? 1) && (v.evo ?? 0) === (r.evo ? 1 : 0)) out.push(`${nm} Lv ${v.lv} (${r.lv} here)`);
+      if (v.stars < (r.stars ?? 0)) out.push(`${nm} ★${v.stars} (★${r.stars} here)`);
+      if (v.cons < (r.cons ?? 0)) out.push(`${nm}'s copies ${v.cons} (${r.cons} here)`);
+      const g = view.gear?.[id] ?? {}, l = p.gear?.[id] ?? {}, t = view.temper?.[id] ?? {}, tl = p.temper?.[id] ?? {};
+      if (ITEM_SLOTS.some((sl) => (l[sl.id] ?? null) !== (g[sl.id] ?? null) || (tl[sl.id] ?? 0) > (t[sl.id] ?? 0))) out.push(`${nm}'s gear`);
+    }
+    return out;
+  };
+  /** The Arena's line about it: empty when the vault has the team as this device has it. */
+  const line = () => {
+    const b = behind();
+    if (!b.length) return "";
+    const hrs = Object.values(view?.hold ?? {}).map((h) => h.hours).filter((h) => Number.isFinite(h));
+    const when = hrs.length ? ` The server takes the rest within about ${Math.max(1, Math.max(...hrs))} hour${Math.max(...hrs) > 1 ? "s" : ""}.` : "";
+    return `In the Arena your heroes fight as the server has checked them: ${b.slice(0, 2).join(", ")}${b.length > 2 ? ` and ${b.length - 2} more` : ""}.${when}`;
+  };
+  // the tests' own handle: a view put in by hand (what the page shows only: the server decides every fight)
+  return { on, check, view: () => view, team, behind, line, _view: (v) => { view = v; } };
+})();
+// for the game's own other parts and the tests (as ARENA127): the rule and the vault's handle
+window.VAULT131 = VAULT131; window.kitStats131 = kitStats131; window.kitTeam131 = kitTeam131;
 const ARENA127 = (() => {
   const on = typeof ONLINE !== "undefined" && !!ONLINE?.url && !!ONLINE?.key && !window.OREH_GEST_ONLY
     && (!!window.__CLOUD124_TEST || !!window.__ARENA127_TEST || !(/^(127\.0\.0\.1|localhost)$/.test(location.hostname) || /\/\.oreh-[^/]*$/.test(decodeURIComponent(location.pathname))));
@@ -50134,7 +50243,7 @@ const ARENA127 = (() => {
   const call = async (action, body = {}) => {
     const s = await window.CLOUD124?.session?.();
     if (!s?.access_token) throw new Error("The Arena needs an account: it is made by itself when the game is online.");
-    const r = await fetch(`${ONLINE.url}/functions/v1/arena`, { method: "POST", headers: { apikey: ONLINE.key, Authorization: `Bearer ${s.access_token}`, "Content-Type": "application/json" }, body: JSON.stringify({ action, ...body }) });
+    const r = await fetch(`${ONLINE.url}/functions/v1/${window.__ARENA_FN ?? "arena"}`, { method: "POST", headers: { apikey: ONLINE.key, Authorization: `Bearer ${s.access_token}`, "Content-Type": "application/json" }, body: JSON.stringify({ action, ...body }) });
     const j = await r.json().catch(() => ({}));
     if (!r.ok) throw Object.assign(new Error(j.error ?? `The server answered ${r.status}.`), { status: r.status, body: j });
     return j;
@@ -50160,25 +50269,11 @@ const ARENA127 = (() => {
 
   /* ── the team, as the rival's device will fight it ── */
   /** Each hero of the team in use: its level, stars and copies (Capped: at most Lv 100 and ★7, no super awakening, no Z Star) and its
-   *  numbers with its gear, as a fight on this device counts them. */
+   *  numbers with its gear, as a fight on this device counts them (round 131: by kitStats131, the rule both devices of a match use). */
   const snapOf = (mode, only = null, given = null) => {
-    // the team a fight takes (lineup: up to three on the field, one on the bench); a relic counts the allies of all four, as statsOf does
     const p = PLAYER.player, L = only ? { team: only.slice(0, 3), bench: only[3] ?? null } : lineup(), ids = [...L.team, L.bench].filter(Boolean);
-    return ids.map((id) => {
-      // Capped: no super awakening, so its rarity jump does not count either (the copies' share is the base rarity's)
-      const h0 = heroineById(id), r = given ?? p.roster[id] ?? { lv: 100, stars: 7, cons: 0 }, h = mode === 1 ? { ...h0, rarity: baseRarity(h0) } : h0, prog0 = { lv: r.lv ?? 1, xp: 0, stars: r.stars ?? 0, cons: r.cons ?? 0, evo: r.evo ?? 0, zs: r.zs ?? 0 };
-      const prog = mode === 1 ? { ...prog0, lv: Math.min(100, prog0.lv), stars: Math.min(7, prog0.stars), evo: 0, zs: 0 } : prog0;
-      const base = baseStats(h, prog), s = { ...base }, l = loadout(id);
-      for (const sl of ITEM_SLOTS) { const it = ITEM_BY_ID[l[sl.id]]; if (it) s[it.stat] += Math.round(itemAdd(it, base[it.stat]) * (1 + 0.2 * Math.max(it.temper ?? 0, temperOf66(id, sl.id)))); }
-      const relic = !!(l.relic && h.relic);
-      if (relic) {
-        for (const [k, v] of Object.entries(h.relic.stats)) s[k] += v;
-        const allies = ids.filter((x) => x !== id).map(heroineById).filter((a) => a?.categories?.some((c) => h.relic.boost.includes(c)));
-        if (allies.length) for (const k of ["atk", "def", "hp"]) s[k] = Math.round(s[k] * (1 + 0.25 * allies.length));
-      }
-      const sp = ITEM_SLOTS.map((sl) => ITEM_BY_ID[l[sl.id]]?.special).filter(Boolean);
-      return { id, bench: id === L.bench, lv: prog.lv, stars: prog.stars, copies: prog.cons, evo: !!prog.evo, zs: prog.zs, prog, stats: { atk: s.atk, def: s.def, hp: s.hp, crit: s.crit, relic, base, gear: { atk: s.atk - base.atk, def: s.def - base.def, hp: s.hp - base.hp }, allies: [] }, sp };
-    });
+    const kits = Object.fromEntries(ids.map((id) => { const r = given ?? p.roster[id] ?? { lv: 100, stars: 7, cons: 0 }; return [id, { prog: { lv: r.lv ?? 1, stars: r.stars ?? 0, cons: r.cons ?? 0, evo: r.evo ?? 0, zs: r.zs ?? 0 }, gear: loadout(id), temper: temperStore66()[id] ?? {} }]; }));
+    return kitStats131(mode, L, kits);
   };
   const teamOf = (t) => ({ team: t.filter((x) => !x.bench).slice(0, 3).map((x) => x.id), bench: t.find((x) => x.bench)?.id ?? null, over: Object.fromEntries(t.map((x) => [x.id, { prog: x.prog ?? { lv: x.lv, xp: 0, stars: x.stars, cons: x.copies, evo: x.evo ? 1 : 0, zs: x.zs ?? 0 }, stats: x.stats, sp: new Set(x.sp ?? []) }])) });
 
@@ -50191,8 +50286,8 @@ const ARENA127 = (() => {
     return {
       k: st.mode, name: PLAYER.player.avatar?.name || "You", rating, recent: st.me?.recent ?? [], busy: st.busy, queued: !!st.queued,
       wl: (k) => { const p = st.me?.player; return p && (p[`w${k}`] || p[`l${k}`]) ? `${p[`w${k}`]} won · ${p[`l${k}`]} lost` : "no matches yet"; },
-      team: (k) => (teams[k] ??= snapOf(k)), wait: st.queued ? Math.round((Date.now() - (st.waitFrom ?? Date.now())) / 1000) : 0,
-      line: st.line || "Your team in use fights: change it on the Team page.",
+      team: (k) => (teams[k] ??= VAULT131.team(k) ?? snapOf(k)), wait: st.queued ? Math.round((Date.now() - (st.waitFrom ?? Date.now())) / 1000) : 0,
+      line: st.line || VAULT131.line() || "Your team in use fights: change it on the Team page.",
     };
   };
   const render = () => {
@@ -50203,7 +50298,7 @@ const ARENA127 = (() => {
     h.innerHTML = LOOK127.hub(ctx());
   };
   const say = (t) => { st.line = t; const l = host()?.querySelector(".ar127-line[role=status]"); if (l) l.textContent = t; };
-  const refresh = async () => { try { st.me = await call("me"); if (st.me.live && !st.match) { play(st.me.live); return; } if (st.me.queue && !st.queued) { st.queued = st.me.queue; wait(); } } catch (e) { st.line = e.message; } render(); };
+  const refresh = async () => { VAULT131.check(true).then(() => { if (!st.match && !st.busy) render(); }).catch(() => {}); try { st.me = await call("me"); if (st.me.live && !st.match) { play(st.me.live); return; } if (st.me.queue && !st.queued) { st.queued = st.me.queue; wait(); } } catch (e) { st.line = e.message; } render(); };
 
   /* ── waiting for a rival ── */
   let stopWait = null;
@@ -50233,7 +50328,9 @@ const ARENA127 = (() => {
       if (st.me?.player?.name !== nm) { await call("name", { name: nm, look: av ? { sex: av.sex ?? null, el: av.el ?? null, hsex: av.hsex ?? null } : null }).catch(() => {}); if (st.me?.player) st.me.player.name = nm; }
       // the game this device runs (its build and online pack): the server pairs only the same game (two games, two different fights)
       const ver = (() => { try { return `${BUILD}|${PACK?.version ?? 0}`; } catch { return ""; } })();
-      const r = await call("queue", { mode: st.mode, team: snapOf(st.mode), ver });
+      // round 131: the vault follows the run as it is this moment; the server takes each hero from it (only who is in the team goes)
+      await VAULT131.check(true).catch(() => {});
+      const r = await call("queue", { v: 131, mode: st.mode, team: snapOf(st.mode).map((x) => ({ id: x.id, bench: x.bench })), ver });
       if (r.match) { play(r.match); return; }
       st.queued = { mode: st.mode, since: new Date().toISOString() };
       wait();
@@ -50365,7 +50462,7 @@ const ARENA127 = (() => {
     });
     // the duel first (it is on at once), then its page: a page «duel» with no duel on it sends one to the Arena
     window.__BATTLE127?.duel({
-      teams: [teamOf(m.teams[0]), teamOf(m.teams[1])], names: m.names.map((x) => x.name), title: m.mode === 1 ? "Arena · Capped" : "Arena · Unlimited", seed: m.seed, first: m.first, me: m.side, online: true,
+      teams: [teamOf(kitTeam131(m.mode, m.teams[0])), teamOf(kitTeam131(m.mode, m.teams[1]))], names: m.names.map((x) => x.name), title: m.mode === 1 ? "Arena · Capped" : "Arena · Unlimited", seed: m.seed, first: m.first, me: m.side, online: true,
       // the balance the server wrote in the match (arena_rules: HP times hpK, one blow at most cap of a hero's HP, maxTurns each)
       hpK: m.rules?.hpK, cap: m.rules?.cap, cardCap: m.rules?.cardCap, maxTurns: m.rules?.maxTurns, fast: known > 0 || !!window.__ARENA127_FAST,
       onTurn: (side) => {
@@ -50507,7 +50604,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-21-1037";
+const BUILD = "2026-11-21-1157";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
