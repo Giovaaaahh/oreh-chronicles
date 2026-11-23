@@ -19069,7 +19069,11 @@ const pieceSay104 = (g = {}) => {
  * SSR: da 500 a 5000»: three built-in wares of the Coin Shop (the Database changes their price and coin, or takes them off), and a
  * chest the Database's own wares and bundles can give («goldchest-R|SR|SSR»).
  * «il mirror shard non abbiamo detto al player cosa fa, fai in modo che nello shop venga specificato». */
-const BAL106 = { from: 3, bars: { common: 3, elite: 4, mini: 6, boss: 7, regal: 4, royal: 2 }, dmg: 20 };
+const BAL106 = { from: 3, to: 3, bars: { common: 3, elite: 4, mini: 6, boss: 7, regal: 4, royal: 2 }, dmg: 20 };
+/** Round 134: does a region (from 0) have HP bars? From «Da mappa» to «Barre fino alla mappa» (the Database; map 4 alone by default):
+ *  Frostspine, Violet Vale and the maps after have none (the user: «come mai nella mappa viola i nemici hanno le barre di vita? NON le
+ *  volevo»). The harder bite stays from «Da mappa» on. */
+const barsOn134 = (r) => Number.isInteger(r) && r >= BAL106.from && r <= BAL106.to;
 /* ══════════ Round 116 (2026-11-13) · the 5th map, Frostspine: no HP bars, a harder bite, the cold ══════════
  * The user: «In questa mappa le barre di vita non ci sono, dobbiamo trovare un altro modo per rendere il gioco "avvincente" ma senza
  * limitare i danni che può fare il player. Aumenta del 50% l'attacco dei nemici base di questa area … mettiamo una passiva in questa
@@ -19087,6 +19091,8 @@ const bal106Read = (x) => {
   const b = x && typeof x === "object" && !Array.isArray(x) ? x : {};
   const n = (v, lo, hi, d) => { const k = Math.round(+v); return v == null || v === "" || !Number.isFinite(k) ? d : Math.min(hi, Math.max(lo, k)); };
   BAL106.from = n(b.from, 1, 8, 4) - 1;
+  // round 134: the last map with HP bars (map 4 unless the Database says otherwise; set before «Da mappa», none at all)
+  BAL106.to = n(b.to, 1, 8, 4) - 1;
   for (const [k, d] of [["common", 3], ["elite", 4], ["mini", 6], ["boss", 7], ["regal", 4], ["royal", 2]]) BAL106.bars[k] = n(b.bars?.[k], 1, 20, d);
   BAL106.dmg = n(b.dmg, 0, 300, 20);
   // round 116: Frostspine's own two
@@ -24695,7 +24701,7 @@ void main(){
         const room = F.foes.filter((x) => up123(x)).length < 3;
         if (room) {
           const moth = { uid: ++uid, ...spawnFoe("candlemoth:SSR", e.level) };
-          if (reg106() >= BAL106.from) { moth.bars106 = Math.max(1, barsOf106(moth)); if (BAL106.dmg) moth.atk = Math.round(moth.atk * (1 + BAL106.dmg / 100)); }
+          if (reg106() >= BAL106.from) { moth.bars106 = barsOn134(reg106()) ? Math.max(1, barsOf106(moth)) : 1; if (BAL106.dmg) moth.atk = Math.round(moth.atk * (1 + BAL106.dmg / 100)); }
           const keep = F.foes.filter((x) => !x.dead), at = keep.indexOf(e);
           keep.splice(at + 1, 0, moth);
           metFoes([moth]);
@@ -24732,7 +24738,7 @@ void main(){
   /* ── Noctua, the Hive Queen: her knights, and every other turn one of her moves in turn (dust, bite, brood) ── */
   const knight123 = (lv, share = 1) => {
     const n = { uid: ++uid, ...spawnFoe("hiveknight:SSR", lv) };
-    if (reg106() >= BAL106.from) { n.bars106 = Math.max(1, barsOf106(n)); if (BAL106.dmg) n.atk = Math.round(n.atk * (1 + BAL106.dmg / 100)); }
+    if (reg106() >= BAL106.from) { n.bars106 = barsOn134(reg106()) ? Math.max(1, barsOf106(n)) : 1; if (BAL106.dmg) n.atk = Math.round(n.atk * (1 + BAL106.dmg / 100)); }
     n.hp = Math.max(1, Math.round(n.max * share));
     return n;
   };
@@ -24961,7 +24967,7 @@ void main(){
   /** A new piece of the Violet Crown in the old one's place: its bars and the map's bite as a wave's enemies get them. */
   const crown123 = (old, tok, set) => {
     const n = { uid: ++uid, ...spawnFoe(tok, old.level), ...set };
-    if (reg106() >= BAL106.from) { n.bars106 = k123(n) === "cocoon" ? 1 : Math.max(1, barsOf106(n)); if (BAL106.dmg && k123(n) !== "cocoon") n.atk = Math.round(n.atk * (1 + BAL106.dmg / 100)); }
+    if (reg106() >= BAL106.from) { n.bars106 = k123(n) === "cocoon" || !barsOn134(reg106()) ? 1 : Math.max(1, barsOf106(n)); if (BAL106.dmg && k123(n) !== "cocoon") n.atk = Math.round(n.atk * (1 + BAL106.dmg / 100)); }
     const i = F.foes.indexOf(old);
     F.foes = F.foes.map((x) => (x === old ? n : x));
     metFoes([n]);
@@ -25232,7 +25238,7 @@ void main(){
         const up = common116(e) ? BAL116.base : on ? BAL106.dmg : 0;
         if (up) e.atk = Math.round(e.atk * (1 + up / 100));
       } else if (on) {
-        e.bars106 = Math.max(1, barsOf106(e));
+        e.bars106 = barsOn134(reg106()) ? Math.max(1, barsOf106(e)) : 1;
         if (BAL106.dmg) e.atk = Math.round(e.atk * (1 + BAL106.dmg / 100));
       }
       if (k === "mask") { e.mask106 = 1; e.maskN106 = 0; }
@@ -25242,7 +25248,8 @@ void main(){
       if (k === "sunmane") e.heat106 = 0;
       if (k === "lancer") e.lc106 = 0;
     }
-    if (on && F.foes.some((e) => e.bars106 > 1)) logIt("sys", "HP bars", `from map ${BAL106.from + 1} on: a blow empties at most the bar it lands in · enemies hit ${BAL106.dmg}% harder`);
+    if (on && F.foes.some((e) => e.bars106 > 1)) logIt("sys", "HP bars", `a blow empties at most the bar it lands in · enemies hit ${BAL106.dmg}% harder`);
+    if (on && !frost116() && !barsOn134(reg106()) && F.wave === 0) logIt("sys", "No HP bars", `a blow takes all the HP it can${BAL106.dmg ? ` · enemies hit ${BAL106.dmg}% harder` : ""}`);
     if (frost116() && F.wave === 0) logIt("sys", "Frostspine", `no HP bars · common enemies hit ${BAL116.base}% harder · with no Fire hero on the field, the cold takes ${BAL116.cold}% of every hero's HP at the start of each of your turns`);
   };
   /** What a loss of HP may take (every hit passes here, through floor78): the gear plating first, no more than 25% while the mask
@@ -35009,9 +35016,11 @@ const dragTrack = (trk, wrap) => {
 /* ══ round 106 · nel Database: le barre di vita e il danno dei nemici dalla mappa 4 in poi (in cima alla pagina Nemici, finisce in
  *  D.bal106 e arriva ai giocatori con Manda online) e le casse di monete d'oro del Coin Shop (pagina Shop: prezzo, moneta, in vendita). ══ */
 const B106 = () => { const b = D.bal106 && typeof D.bal106 === "object" && !Array.isArray(D.bal106) ? D.bal106 : (D.bal106 = {}); if (!b.bars || typeof b.bars !== "object") b.bars = {}; return b; };
-const BAL_F106 = [["from", "Da mappa", 4, 1, 8, "", 1], ["bars.common", "Barre: comuni", 3, 1, 20, "", 1], ["bars.elite", "Barre: élite", 4, 1, 20, "", 1], ["bars.mini", "Barre: mini boss", 6, 1, 20, "", 1], ["bars.boss", "Barre: boss", 7, 1, 20, "", 1], ["bars.regal", "Barre: Altea", 4, 1, 20, "", 1], ["bars.royal", "Barre: guardie di Altea", 2, 1, 20, "", 1], ["dmg", "Danno dei nemici", 20, 0, 300, "%", 5]];
+const BAL_F106 = [["from", "Da mappa", 4, 1, 8, "", 1], ["to", "Barre fino alla mappa", 4, 1, 8, "", 1], ["bars.common", "Barre: comuni", 3, 1, 20, "", 1], ["bars.elite", "Barre: élite", 4, 1, 20, "", 1], ["bars.mini", "Barre: mini boss", 6, 1, 20, "", 1], ["bars.boss", "Barre: boss", 7, 1, 20, "", 1], ["bars.regal", "Barre: Altea", 4, 1, 20, "", 1], ["bars.royal", "Barre: guardie di Altea", 2, 1, 20, "", 1], ["dmg", "Danno dei nemici", 20, 0, 300, "%", 5]];
 const balGet106 = (k, d) => { const b = B106(), v = k.startsWith("bars.") ? b.bars[k.slice(5)] : b[k]; return v == null || v === "" || !Number.isFinite(+v) ? d : +v; };
-const balSay106 = () => `Dalla mappa ${balGet106("from", 4)}: barre ${balGet106("bars.common", 3)} ai comuni, ${balGet106("bars.elite", 4)} alle élite, ${balGet106("bars.mini", 6)} ai mini boss, ${balGet106("bars.boss", 7)} ai boss (Altea ${balGet106("bars.regal", 4)}, le sue guardie ${balGet106("bars.royal", 2)}) · danno dei nemici +${balGet106("dmg", 20)}%`;
+/** Round 134: where the HP bars are, in words: «solo nella mappa 4», «dalla mappa 4 alla 6», «in nessuna mappa». */
+const barsWhere134 = () => { const a = balGet106("from", 4), z = balGet106("to", 4); return z < a ? "in nessuna mappa" : z === a ? `solo nella mappa ${a}` : `dalla mappa ${a} alla ${z}`; };
+const balSay106 = () => `Dalla mappa ${balGet106("from", 4)}: danno dei nemici +${balGet106("dmg", 20)}% · barre di vita ${barsWhere134()}: ${balGet106("bars.common", 3)} ai comuni, ${balGet106("bars.elite", 4)} alle élite, ${balGet106("bars.mini", 6)} ai mini boss, ${balGet106("bars.boss", 7)} ai boss (Altea ${balGet106("bars.regal", 4)}, le sue guardie ${balGet106("bars.royal", 2)})`;
 /* ══ round 116 · nel Database, pagina Nemici: la mappa 5 (Frostspine) senza barre di vita, l'attacco in più dei suoi nemici base e il
  *  freddo quando in campo non c'è un eroe Fuoco (in D.bal106.frost, arriva ai giocatori con Manda online) ══ */
 const FROST_F116 = [["base", "Nemici base: attacco", 50, 0, 300, "%", 5], ["cold", "Freddo senza Fuoco", 10, 0, 50, "%", 1], ["ice", "Carte gelate", 1, 0, 3, "", 1], ["iceCold", "Gelate senza Fuoco", 2, 0, 4, "", 1], ["rise", "Statue: turni", 2, 0, 5, "", 1], ["riseHp", "Statue: vita", 50, 10, 100, "%", 5]];
@@ -35034,8 +35043,8 @@ const bal106Box = (host) => {
   if (!arch || !top) return;
   const box = mk("section", "g106-bal");
   box.setAttribute("aria-label", "Bilanciamento dei nemici");
-  box.innerHTML = `<div class="g106-bal-h"><b data-t></b><small>Ogni nemico ha più barre di vita, e un colpo ne svuota al massimo una. I nemici fanno più danno. Le mappe prima restano com'erano.</small></div><div class="g106-bal-f" data-f></div>`;
-  const title = () => { qs("[data-t]", box).textContent = `Dalla mappa ${balGet106("from", 4)} in poi`; };
+  box.innerHTML = `<div class="g106-bal-h"><b data-t></b><small>Dalla mappa di «Da mappa» in poi i nemici fanno più danno. Fino a «Barre fino alla mappa» hanno anche più barre di vita, e un colpo ne svuota al massimo una. Nelle mappe dopo non ci sono barre, come a Frostspine e Violet Vale. Le mappe prima restano com'erano.</small></div><div class="g106-bal-f" data-f></div>`;
+  const title = () => { qs("[data-t]", box).textContent = `Dalla mappa ${balGet106("from", 4)} in poi · barre di vita ${barsWhere134()}`; };
   title();
   const f = qs("[data-f]", box);
   for (const [k, label, d, lo, hi, unit, step] of BAL_F106) {
@@ -41407,7 +41416,7 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
   /** Which side the map showed last (this device), for the page's first opening. */
   const side0_122 = () => { try { return localStorage.getItem("oreh-view122") === "surface" ? "surface" : "deep"; } catch { return "deep"; } };
   /** What the Database's rules make of a vein's fights: map 4's HP bars, Frostspine's cold, or nothing (the Database's switch off). */
-  const rule122 = (V) => (!V.rules ? "" : V.r === BAL116.map ? "cold" : V.r >= BAL106.from ? "bars" : "");
+  const rule122 = (V) => (!V.rules ? "" : V.r === BAL116.map ? "cold" : barsOn134(V.r) ? "bars" : "");
 
   /* ── who is inside: whole figures, each kind and rarity once with how many, the powered lead first ── */
   const foesOf122 = (waves) => {
@@ -50618,7 +50627,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-22-1221";
+const BUILD = "2026-11-23-1319";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
