@@ -36222,6 +36222,12 @@ const TPL_IT = {
 };
 /** What would stop it working for a player. Round 67: every summon has a cover from the ten (the Starter too), a main
  *  hero, and its Rate Up, hero by hero, each with her share of her rarity. */
+/** Round 135: a UR in Rate Up keeps its quota of the UR cards; the rest come out at random among the summon's other URs and its SSRs
+ *  together, as the game draws them. instead135g counts them ({ ur, ssr }, the heroes `skip` leaves out); insteadSay135g says them
+ *  («l'altro UR e i 5 SSR»); altro135g: what the count's lost 50/50 gives («un altro UR o un SSR», «un SSR»). */
+const instead135g = (b, skip) => { const ups = (b.rateUp ?? []).map((x) => x.id), inS = (h) => b.pool.includes(h.id) || ups.includes(h.id); return { ur: HEROINES.filter((h) => h.rarity === "UR" && inS(h) && !skip(h)).length, ssr: HEROINES.filter((h) => h.rarity === "SSR" && inS(h)).length }; };
+const insteadSay135g = ({ ur, ssr }) => [ur === 1 ? "l'altro UR" : ur ? `gli altri ${ur} UR` : "", ssr === 1 ? "l'SSR" : ssr ? `i ${ssr} SSR` : ""].filter(Boolean).join(" e ");
+const altro135g = (b, h) => { if (h.rarity !== "UR") return `un altro ${h.rarity}`; const n = instead135g(b, (x) => x.id === h.id); return n.ur && n.ssr ? "un altro UR o un SSR" : n.ssr ? "un SSR" : "un altro UR"; };
 const rateSums = (b) => { const s = {}; for (const r of b.rateUp ?? []) { const h = HEROINES.find((x) => x.id === r.id); if (h) s[h.rarity] = (s[h.rarity] ?? 0) + (+r.pct || 0); } return s; };
 const bannerChecks = (b) => {
   const out = [], tot = Object.values(b.rates).reduce((t, v) => t + (+v || 0), 0), ups = (b.rateUp ?? []).map((r) => r.id);
@@ -36462,7 +36468,7 @@ const viewSummon = (host) => {
     paintSet();
     f1.append(nm, ty, tp, who, cv, set);
     // the right column: the Rate Up, the odds, who can come out, cost, dates
-    const ru = mk("div", "g-field g-ru", `<span>Rate Up</span><p class="g-note">Gli eroi che escono più spesso. La quota è la sua parte della sua rarità: 50% vuol dire che, quando esce un SSR, è lui una volta su due. Gli altri della stessa rarità si dividono il resto.</p><div class="g-ru-list" data-rul></div><div class="g-ru-sum" data-rus></div><details class="g-ru-add"><summary>${ic("plus")}<span>Metti un eroe in Rate Up</span></summary><div data-rup></div></details>`);
+    const ru = mk("div", "g-field g-ru", `<span>Rate Up</span><p class="g-note">Gli eroi che escono più spesso. La quota è la sua parte della sua rarità: 50% vuol dire che, quando esce un SSR, è lui una volta su due. Gli altri della stessa rarità si dividono il resto. Per un UR è diverso: con 50%, quando esce un UR è lui una volta su due, e l'altra volta esce a caso uno degli altri UR o degli SSR della summon.</p><div class="g-ru-list" data-rul></div><div class="g-ru-sum" data-rus></div><details class="g-ru-add"><summary>${ic("plus")}<span>Metti un eroe in Rate Up</span></summary><div data-rup></div></details>`);
     const upIds = b.rateUp.map((r) => r.id);
     const paintUp = () => {
       upIds.splice(0, upIds.length, ...b.rateUp.map((r) => r.id));
@@ -36482,7 +36488,7 @@ const viewSummon = (host) => {
     };
     const paintSum = () => {
       const s = rateSums(b);
-      qs("[data-rus]", ru).innerHTML = Object.entries(s).map(([r, v]) => { const rest = HEROINES.filter((h) => h.rarity === r && b.pool.includes(h.id) && !upIds.includes(h.id)).length; return `<p data-s="${v > 100.01 ? "bad" : "ok"}">${tierG(r)} in Rate Up ${v.toLocaleString("it-IT")}%${v < 100 ? ` · gli altri ${rest} ${r} si dividono il ${(100 - v).toLocaleString("it-IT")}%` : ""}</p>`; }).join("");
+      qs("[data-rus]", ru).innerHTML = Object.entries(s).map(([r, v]) => { const rest = HEROINES.filter((h) => h.rarity === r && b.pool.includes(h.id) && !upIds.includes(h.id)).length; return `<p data-s="${v > 100.01 ? "bad" : "ok"}">${tierG(r)} in Rate Up ${v.toLocaleString("it-IT")}%${v < 100 ? (r === "UR" ? ((n) => (n.ur || n.ssr ? ` · l'altro ${(100 - v).toLocaleString("it-IT")}% esce a caso tra ${insteadSay135g(n)} della summon${n.ur ? "" : " (non ci sono altri UR)"}` : " · non c'è nessun altro: esce sempre lui"))(instead135g(b, (h) => upIds.includes(h.id))) : rest ? ` · gli altri ${rest} ${r} si dividono il ${(100 - v).toLocaleString("it-IT")}%` : ` · non c'è nessun altro ${r}: esce sempre lui`) : ""}</p>`; }).join("");
     };
     qs("[data-rup]", ru).append(heroPick(upIds, 6, (id, on) => {
       if (on) { const h = HEROINES.find((x) => x.id === id), same = b.rateUp.filter((r) => HEROINES.find((x) => x.id === r.id)?.rarity === h.rarity).length; b.rateUp.push({ id, pct: same ? 25 : 50 }); }
@@ -36542,7 +36548,7 @@ const viewSummon = (host) => {
       sure86.hidden = !!h;
       const pf93 = pity89()?.closest(".g-num");
       if (pf93) pf93.hidden = !!h;
-      if (h) qs("[data-e89-say]", easy89).innerHTML = `${ic("check")}<span>Così, per i giocatori: ${esc(h.name)} si può pullare. Vale il conto unico di tutte le summon con un eroe nuovo: parte da 100, una pull toglie 1 e una multi 10. A 0 è ${esc(h.name)} col 50%, altrimenti un altro ${h.rarity} della summon, e allora allo 0 dopo è ${esc(h.name)} di sicuro. Se esce prima, il conto riparte da 100.${+b.rates[h.rarity] > 0 ? "" : ` Nelle pull normali gli ${h.rarity} hanno 0%: esce solo allo 0 del conto.`}</span>`;
+      if (h) qs("[data-e89-say]", easy89).innerHTML = `${ic("check")}<span>Così, per i giocatori: ${esc(h.name)} si può pullare. Vale il conto unico di tutte le summon con un eroe nuovo: parte da 100, una pull toglie 1 e una multi 10. A 0 è ${esc(h.name)} col 50%, altrimenti ${altro135g(b, h)} della summon, e allora allo 0 dopo è ${esc(h.name)} di sicuro. Se esce prima, il conto riparte da 100.${+b.rates[h.rarity] > 0 ? "" : ` Nelle pull normali gli ${h.rarity} hanno 0%: esce solo allo 0 del conto.`}</span>`;
     };
     qs("[data-e89-hero]", easy89).addEventListener("change", (ev) => {
       const id = ev.target.value, h = HEROINES.find((x) => x.id === id);
@@ -40630,6 +40636,47 @@ const initGame = () => {
     if (U.length && (!rest.length || Math.random() * 100 < Math.min(100, all))) { let x = Math.random() * all; for (const u of U) if ((x -= u.pct) < 0) return u.h; return U.at(-1).h; }
     return btPick(rest.length ? rest : L);
   };
+  /** Round 135 (the user: «quando usciranno le UR mi serve che il 50% sia inteso che il 50% possono essere gli altri SSR o UR del
+   *  caso e l'altro 50% il personaggio nuovo»; for a summon with more URs: «Diviso tra UR e SSR»). A UR in Rate Up keeps its quota
+   *  of the UR cards (Iris 50%: one UR card in two); the rest of them, and the count's lost 50/50 for a UR new hero, come out at
+   *  random among the summon's other URs and its SSRs together, the same chance each. The other rarities as before (round 67).
+   *  lose135: who can come instead (the heroes `skip` leaves out). The server (server/econ126/regole.js) asks the same random
+   *  numbers in the same order. */
+  const lose135 = (b, r, skip) => { const own = banPool(b, r).filter((h) => !skip(h)); return r === "UR" ? [...new Set([...own, ...banPool(b, "SSR")])] : own; };
+  /** One card of rarity r in summon b: round 67's upPick67, but a UR in Rate Up loses its rest to the other URs and the SSRs together. */
+  const upPick135 = (b, r, L) => {
+    const U = banUps(b, r), M = U.length && r === "UR" ? lose135(b, r, (h) => U.some((u) => u.h === h)) : [];
+    if (!M.length) return upPick67(U, L);
+    const all = U.reduce((t, u) => t + u.pct, 0);
+    if (Math.random() * 100 < Math.min(100, all)) { let x = Math.random() * all; for (const u of U) if ((x -= u.pct) < 0) return u.h; return U.at(-1).h; }
+    return btPick(M);
+  };
+  /** Every hero of summon b with her odds a card, as upPick135 draws them (Iris 50% of the UR 2%: Iris 1%, the SSRs 1% more). */
+  const odds135 = (b) => {
+    const odds = new Map(), add = (h, x) => odds.set(h, (odds.get(h) ?? 0) + x);
+    for (const [r, p] of banRates(b)) {
+      const L = banPool(b, r), U = banUps(b, r), rest = L.filter((h) => !U.some((u) => u.h === h)), upT = Math.min(100, U.reduce((t, u) => t + u.pct, 0)), upS = U.reduce((t, u) => t + u.pct, 0) || 1;
+      const M = U.length && r === "UR" ? lose135(b, r, (h) => U.some((u) => u.h === h)) : [];
+      for (const h of L) add(h, 0);
+      if (!U.length) { for (const h of L) add(h, p / L.length); continue; }
+      const to = M.length ? M : rest, keep = to.length ? upT / 100 : 1;
+      for (const u of U) add(u.h, (p * keep * u.pct) / upS);
+      for (const h of to) add(h, (p * (1 - keep)) / to.length);
+    }
+    return [...odds].map(([h, x]) => ({ h, rarity: baseRarity(h), x }));
+  };
+  /** Who comes instead of a UR, in words: «another UR or an SSR», «an SSR» (the heroes `skip` leaves out). */
+  const instead135 = (b, skip) => { const o = banPool(b, "UR").some((h) => !skip(h)), s = banPool(b, "SSR").length; return o && s ? "another UR or an SSR" : o ? "another UR" : s ? "an SSR" : ""; };
+  /** The Rate Up line, saying who comes instead of a UR in Rate Up: «Rate up: Iris is 50% of every UR, otherwise an SSR.» */
+  const upSay135 = (b) => {
+    const R = COVER.rateUpOf(b), L = R.map((u) => ({ h: heroineById(u.id), pct: +u.pct || 0 })).filter((u) => u.h && u.pct > 0), ur = L.filter((u) => baseRarity(u.h) === "UR");
+    if (!ur.length) return upText67(R);
+    const U = banUps(b, "UR"), w = U.reduce((t, u) => t + u.pct, 0) < 100 ? instead135(b, (h) => U.some((u) => u.h === h)) : "", more = L.filter((u) => baseRarity(u.h) !== "UR");
+    const say = (l) => l.map((u, i) => `${u.h.name}${i ? "" : " is"} ${+u.pct.toFixed(1)}% of every ${u.h.rarity}`).join(", ");
+    return `Rate up: ${say(ur)}${w ? `, otherwise ${w}` : ""}${more.length ? `; ${say(more)}` : ""}.`;
+  };
+  /** What the count's lost 50/50 gives: for a UR new hero another UR or an SSR of this summon, else another of hers. */
+  const other135 = (b, nh) => (baseRarity(nh) === "UR" && instead135(b, (h) => h.id === nh.id)) || `another ${baseRarity(nh)}`;
   /** What the Rate Up means, in a line short enough for a phone. */
   const upText67 = (R) => { const L = R.map((u) => ({ h: heroineById(u.id), pct: +u.pct || 0 })).filter((u) => u.h && u.pct > 0); return !L.length ? "Every hero in it shares the odds of their rarity." : `Rate up: ${L.map((u, i) => `${u.h.name}${i ? "" : " is"} ${+u.pct.toFixed(1)}% of every ${u.h.rarity}`).join(", ")}.`; };
   const banPool = (b, r) => [...new Set([...HEROINES.filter((h) => baseRarity(h) === r && (b.pool ?? []).includes(h.id)), ...banFeat(b, r)])];
@@ -40657,7 +40704,7 @@ const initGame = () => {
     const sh92 = sure ? sureHero92(b.sureHero, r, surePct86(b)) : null;
     if (sh92) return surePick86([{ h: sh92, pct: 100 }], [...new Set([...L, sh92])], surePct86(b));
     if (sure && surePct86(b) != null && banUps(b, r).length) return surePick86(banUps(b, r), L, surePct86(b));
-    return upPick67(banUps(b, r), L);
+    return upPick135(b, r, L);
   };
   if (window.__T) window.__T.draw67 = (key, sure = false) => banDraw(key === "starter" ? null : liveBans().find((b) => b.key === key) ?? null, sure);
   const banCost = (n) => { const b = curBan(); return b ? (n === 1 ? pnum(b.one, 0, 999, PULL_ONE) : pnum(b.multi, 0, 9999, PULL_MULTI)) : n === 1 ? PULL_ONE : PULL_MULTI; };
@@ -40683,7 +40730,8 @@ const initGame = () => {
       c.left -= 1;
       if (c.left > 0) continue;
       // 0: the new hero with 50% (or for sure after a lost 50/50), otherwise another of its rarity in this summon
-      const L = banPool(b, rar).filter((h) => h.id !== nh.id);
+      // round 135: for a UR new hero, another UR or an SSR of this summon, the same chance each
+      const L = lose135(b, rar, (h) => h.id === nh.id);
       got[k] = c.spec || !L.length || Math.random() < 0.5 ? nh : btPick(L);
       c.spec = got[k].id !== nh.id;
       c.left = 100;
@@ -40698,7 +40746,7 @@ const initGame = () => {
       <p class="sm100-line">${c.spec ? `${c.left} more pull${s}, then ${nh.name} at 100%: you lost the last 50/50.` : `${c.left} more pull${s}, then a 50% chance of ${nh.name}. Lose it, and the next 0 is ${nh.name} at 100%.`} A pull counts 1, a ×11 counts 10.</p>`;
   };
   /** The rule, for «who's inside». */
-  const rule93 = (b) => { const nh = nh93(b), c = count93(), s = c.left === 1 ? "" : "s"; return `<b class="sm99-now${c.spec ? " is-sure" : ""}">${c.spec ? `Your next 0: ${nh.name} at 100%, ${c.left} more pull${s} away. You lost the last 50/50.` : `Your next 0: a 50% chance of ${nh.name}, ${c.left} more pull${s} away.`}</b>Every summon with a new hero shares one count from 100 to 0: a pull counts 1, a ×11 counts 10 (its 11th card is a gift). At 0 it is ${nh.name} with a 50% chance, otherwise another ${baseRarity(nh)} of this summon, and then the next 0 is ${nh.name} for sure, at 100%. If ${nh.name} comes sooner, the count starts again from 100.`; };
+  const rule93 = (b) => { const nh = nh93(b), c = count93(), s = c.left === 1 ? "" : "s"; return `<b class="sm99-now${c.spec ? " is-sure" : ""}">${c.spec ? `Your next 0: ${nh.name} at 100%, ${c.left} more pull${s} away. You lost the last 50/50.` : `Your next 0: a 50% chance of ${nh.name}, ${c.left} more pull${s} away.`}</b>Every summon with a new hero shares one count from 100 to 0: a pull counts 1, a ×11 counts 10 (its 11th card is a gift). At 0 it is ${nh.name} with a 50% chance, otherwise ${other135(b, nh)} of this summon, and then the next 0 is ${nh.name} for sure, at 100%. If ${nh.name} comes sooner, the count starts again from 100.`; };
   const banPityText = (b) => {
     const at = banAt(b);
     if (at < 1) return "";
@@ -40709,7 +40757,7 @@ const initGame = () => {
   };
   const banText = (b) => {
     // short, so the sure-SSR line still fits above the pulls on a phone; the closing date is on the cover and the tab
-    return upText67(COVER.rateUpOf(b));
+    return upSay135(b);
   };
   /* round 28 · the pull page is SUMMON (P1 Il mazzo); here, what a pull costs and gives. Round 36: an R pull gives star dust,
    * and a copy of a heroine you have is kept for Copies until she has six; past that it burns into gold. The gems go at once; the copies' gold shows as each one burns, so the counter never tells the draw first. */
@@ -40766,10 +40814,11 @@ const summon = SUMMON.mount($("[data-sm-host]", stage), {
     whoFoot: () => { const b = curBan(); return !b ? `<p class="sm42-foot">Every 6th ×11 has ${sureSay86(null, sureHero92(STARTER_SURE86.hero, STARTER_SURE86.rar || "SSR", STARTER_SURE86.pct) ? [{ h: heroineById(STARTER_SURE86.hero) }] : starterUps67(STARTER_SURE86.rar || "SSR"), STARTER_SURE86.rar || "SSR", STARTER_SURE86.pct)}; in this banner the first one lets you choose it.</p>` : nh93(b) ? `<p class="sm42-foot">${rule93(b)}</p>` : banAt(b) === 1 ? `<p class="sm42-foot">Every ×11 has ${banSure86(b)}.</p>` : banAt(b) >= 2 ? `<p class="sm42-foot">Every ${ordOf(banAt(b))} ×11 has ${banSure86(b)}.</p>` : ""; },
     /** Round 42 · P1: who is in the banner, by rarity, each with her odds and what you hold of her (copies combined and waiting). */
     blank: () => { const b = curBan(); if (!b) return PULL_POOL("R").length ? null : { odds: PULL_RATES.find(([x]) => x === "R")?.[1] ?? 0, dust: DUST_PER_R }; const p = banRates(b).find(([x]) => x === "R")?.[1] ?? 0; return p && !banPool(b, "R").length ? { odds: p, dust: DUST_PER_R } : null; },
-    pool: () => curBan() ? banRates(curBan()).flatMap(([r, p]) => {
-      const b = curBan(), L = banPool(b, r), U = banUps(b, r), rest = L.filter((h) => !U.some((u) => u.h === h)), upT = Math.min(100, U.reduce((t, u) => t + u.pct, 0)), upS = U.reduce((t, u) => t + u.pct, 0) || 1;
-      return L.map((h) => { const o = PLAYER.player.roster[h.id], u = U.find((x) => x.h === h); return { h, rarity: r, feat: !!u, odds: u ? (rest.length ? (p * u.pct) / 100 : (p * u.pct) / upS) : (p * (1 - upT / 100)) / rest.length, own: isAdmin() ? COPY_MAX : o ? (o.cons ?? 0) + (o.held ?? 0) : null }; });
-    }) : ["SSR", "SR", "R"].flatMap((r) => { const U = starterUps67(r), l = [...new Set([...PULL_POOL(r), ...U.map((u) => u.h)])], rest = l.filter((h) => !U.some((u) => u.h === h)), upT = Math.min(100, U.reduce((t, u) => t + u.pct, 0)), upS = U.reduce((t, u) => t + u.pct, 0) || 1, p = PULL_RATES.find(([x]) => x === r)?.[1] ?? 0; return l.map((h) => { const o = PLAYER.player.roster[h.id], u = U.find((x) => x.h === h); return { h, rarity: r, feat: !!u, odds: u ? (rest.length ? (p * u.pct) / 100 : (p * u.pct) / upS) : (p * (1 - upT / 100)) / rest.length, own: isAdmin() ? COPY_MAX : o ? (o.cons ?? 0) + (o.held ?? 0) : null }; }); }),
+    // round 135: odds135 (a UR in Rate Up passes its rest to the other URs and the SSRs: Iris 1%, the SSRs 1% more)
+    pool: () => curBan() ? (() => {
+      const b = curBan(), ups = new Set(COVER.rateUpOf(b).map((u) => u.id));
+      return odds135(b).map(({ h, rarity, x }) => { const o = PLAYER.player.roster[h.id]; return { h, rarity, feat: ups.has(h.id), odds: x, own: isAdmin() ? COPY_MAX : o ? (o.cons ?? 0) + (o.held ?? 0) : null }; });
+    })() : ["SSR", "SR", "R"].flatMap((r) => { const U = starterUps67(r), l = [...new Set([...PULL_POOL(r), ...U.map((u) => u.h)])], rest = l.filter((h) => !U.some((u) => u.h === h)), upT = Math.min(100, U.reduce((t, u) => t + u.pct, 0)), upS = U.reduce((t, u) => t + u.pct, 0) || 1, p = PULL_RATES.find(([x]) => x === r)?.[1] ?? 0; return l.map((h) => { const o = PLAYER.player.roster[h.id], u = U.find((x) => x.h === h); return { h, rarity: r, feat: !!u, odds: u ? (rest.length ? (p * u.pct) / 100 : (p * u.pct) / upS) : (p * (1 - upT / 100)) / rest.length, own: isAdmin() ? COPY_MAX : o ? (o.cons ?? 0) + (o.held ?? 0) : null }; }); }),
     /** The 6th multi of the starter banner: the choice comes first (only if the gems are there). */
     choiceDue: (n) => !curBan() && n > 1 && !isAdmin() && !starterOf().chose && sixthOf() >= STARTER_AT && PLAYER.player.gems >= PULL_MULTI,
     paintGems: () => paintGems(),
@@ -50627,7 +50676,7 @@ bindAnchors();
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-23-1319";
+const BUILD = "2026-11-23-1645";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
