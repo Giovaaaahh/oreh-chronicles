@@ -9589,6 +9589,10 @@ html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .ca
 @media (prefers-reduced-motion: reduce) {
   :is(.rk136, .rk136-change, .rk136-gift, .rk136-table, .rkD-team) *, :is(.rk136, .rk136-change, .rk136-gift, .rk136-table, .rkD-team) *::before, :is(.rk136, .rk136-change, .rk136-gift, .rk136-table, .rkD-team) *::after, .rk136, .rk136-change, .rk136-gift, .rk136-table { animation: none !important; }
 }
+/* ══ round 138 · the Home on a PC (the user, 24 Nov: «nella grafica PC il tasto del PVP è mezzo coperto dietro altri tasti»): since the
+   Arena came (round 127) the menu stands four and four, so the call to carry on («continue the story») has the middle column, right at
+   the middle. The rule from the days of three and four still moved it a fourteenth of the tiles' room to the left, half onto the Arena. ══ */
+.gm[data-where="home"][data-device="pc"] .gm-go { left: 50%; }
 </style>
 </head>
 <body>
@@ -16319,6 +16323,11 @@ const copyPct = (h, n) => Math.round((COPY_RATE[h.rarity] ?? 0) * n * 100) / 100
 /** Round 31 (the user's numbers): star dust, by the rarity of the enemy that falls. 100 dust forge a star, which awakens a
  *  heroine by one; the 7th star takes a rainbow star, forged from 250 dust. Boss shards are gone (each old one became 25 dust). */
 const DUST_OF = { N: 5, R: 10, SR: 25, SSR: 50, UR: 100, LR: 100 };
+/** Round 138 (the user, 24 Nov: «dopo altea aumenta il drop delle polveri di stelle del 50%. Nella mappa finale invece che faremo tra un
+ *  po le polveri saranno raddoppiate dai drop»): the star dust a fight pays, by its map (regions from 0). From Frostspine on (past Altea's
+ *  Gilded Steppe, region 3) half again; in the story's last map (the last of STORY_WEB, map 8 today) twice. */
+const DUST138 = { from: 4, k: 1.5, last: 2 };
+const dustK138 = (r) => (!Number.isInteger(r) || r < DUST138.from ? 1 : r >= STORY_WEB.length - 1 ? DUST138.last : DUST138.k);
 const DUST_STAR = 1000, DUST_RAINBOW = 2500, DUST_PER_SHARD = 25; // round 41: ten times as much
 /** What her next awakening takes. */
 const starNeed = (stars) => (stars + 1 >= STAR_MAX ? "rainbow" : "star");
@@ -21980,12 +21989,15 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     rows.push(["hp", `${fmt(e.max)}${e.bars106 > 1 ? `<small>${e.bars106} bars of ${fmt(Math.round(e.max / e.bars106))} · a blow empties at most the bar it lands in</small>` : ""}`]);
     rows.push(["items", e.items?.length ? `${e.items.length}<small>${e.items.map((i) => `${i.name} +${i.pct}% ${ITEM_STAT[i.stat].label}`).join(" · ")}</small>` : "none<small>enemies wear items from Lv 10</small>"]);
     rows.push(["type", `${ATTRIBUTES[e.attr].label}<small>${typeLine(e.attr)}</small>`]);
-    if (!e.regal) { kitUp(e); rows.push(["next card", `${e.next.ult ? "its ultimate" : e.next.r}<small>only the rarity shows</small>`]); rows.push(["orbs", `${e.orbs ?? 0} of 5<small>at five, ${deckOf(e).U}</small>`]); }
-    return `<p class="ins-who">${e.name} · ${e.tribe} · wave ${F.wave + 1} of ${run.waves.length}</p>
+    // round 138: a hero of the Arena's rival (duel127) is no enemy of the story: no kit of enemy cards, no waves, its gear in its stats
+    const duel138 = e.duel127 != null;
+    if (duel138) { const k = rows.findIndex(([a]) => a === "items"); if (k >= 0) rows.splice(k, 1); }
+    if (!e.regal && !duel138) { kitUp(e); rows.push(["next card", `${e.next.ult ? "its ultimate" : e.next.r}<small>only the rarity shows</small>`]); rows.push(["orbs", `${e.orbs ?? 0} of 5<small>at five, ${deckOf(e).U}</small>`]); }
+    return `<p class="ins-who">${e.name} · ${duel138 ? "the rival's team" : `${e.tribe} · wave ${F.wave + 1} of ${run.waves.length}`}</p>
       <div class="ins-hp ins-hp--foe"><span style="--p:${(e.hp / e.max) * 100}%;--hpc:${hpColour(e.hp / e.max)}"><i></i></span><b>${fmt(e.hp)} / ${fmt(e.max)} HP</b></div>
       <dl class="ins-rows">${rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("")}</dl>
       <p class="ins-h">states</p>${states.length ? `<ul class="ins-list">${states.map((x) => `<li>${x}</li>`).join("")}</ul>` : '<p class="ins-txt">None right now.</p>'}
-      <p class="ins-h">how it fights</p><p class="ins-txt">${FOE_NOTES[e.kind] ?? FOE_NOTES[FOE_KINDS[e.kind]?.made] ?? allBosses().find((b) => b.id === e.kind)?.note ?? ""}</p>${e.regal ? "" : `<p class="ins-txt">${kitText(e)}</p>`}`;
+      <p class="ins-h">how it fights</p><p class="ins-txt">${e.duel127 != null ? "A hero of the rival's team: it plays its own cards and ultimate, as yours do." : FOE_NOTES[e.kind] ?? FOE_NOTES[FOE_KINDS[e.kind]?.made] ?? allBosses().find((b) => b.id === e.kind)?.note ?? ""}</p>${e.regal || e.duel127 != null ? "" : `<p class="ins-txt">${kitText(e)}</p>`}`;
   };
   const foeVsTab = (e) => {
     const vow = F.team.find((m) => m.id === "rin" && talentOn(m) && !m.ko);
@@ -23083,6 +23095,14 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
       { ...at(dx * 0.5, dy * 0.5 - 70, 0.8), offset: 0.8, easing: "cubic-bezier(0.55, 0, 0.45, 1)" }, at(dx, dy, 0.3, 0.9)], 1900, "linear");
     setTimeout(() => paintChests(true), 1900);
   };
+  /** Round 138: the star dust this fight pays, by its map (dustK138): an enemy's drop, a mini boss's or a skirmish's first win, a place
+   *  fought again to pass. The Database's special drops stay as the Database wrote them. */
+  const dustHere138 = () => {
+    if (run.kind !== "battle" || !run.stage) return 1;
+    const s = run.stage, i = STORY.stages.indexOf(s);
+    return dustK138(Number.isInteger(s.reg) ? s.reg : i >= 0 ? Math.floor(i / 25) : -1);
+  };
+  const dust138 = (n) => Math.round(n * dustHere138());
   /** The won fight's chests, closed: a tap opens each. Admin sees them too, and keeps nothing. */
   const chestRow = () => {
     const list = F.chests ?? [];
@@ -23099,7 +23119,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     btn.animate([{ transform: "scale(1)" }, { transform: "scale(1.12)", offset: 0.5 }, { transform: "scale(1)" }], { duration: 620, easing: "cubic-bezier(0.34, 1.56, 0.64, 1)" });
   };
   const dropDust = (e, p) => {
-    const n = DUST_OF[e.rarity] ?? DUST_OF.N;
+    const n = dust138(DUST_OF[e.rarity] ?? DUST_OF.N);
     F.dust = (F.dust ?? 0) + n;
     if (!isAdmin()) { PLAYER.player.items.dust = (PLAYER.player.items.dust ?? 0) + n; savePlayer(); }
     fx(`<span class="bt-dust"><i></i>+${n}</span>`, p.x, p.y - 24, [{ transform: "translate(-50%, -50%) scale(0.6)", opacity: 0 }, { transform: "translate(-50%, -50%) translateY(-14px) scale(1.1)", opacity: 1, offset: 0.25 }, { transform: "translate(-50%, -50%) translateY(-52px)", opacity: 0 }], 1300, "cubic-bezier(0.2, 0.8, 0.3, 1)");
@@ -25463,6 +25483,8 @@ void main(){
     if (on && F.foes.some((e) => e.bars106 > 1)) logIt("sys", "HP bars", `a blow empties at most the bar it lands in · enemies hit ${BAL106.dmg}% harder`);
     if (on && !frost116() && !barsOn134(reg106()) && F.wave === 0) logIt("sys", "No HP bars", `a blow takes all the HP it can${BAL106.dmg ? ` · enemies hit ${BAL106.dmg}% harder` : ""}`);
     if (frost116() && F.wave === 0) logIt("sys", "Frostspine", `no HP bars · common enemies hit ${BAL116.base}% harder · with no Fire hero on the field, the cold takes ${BAL116.cold}% of every hero's HP at the start of each of your turns`);
+    // round 138: past Altea every enemy drops half again the star dust, in the story's last map twice
+    if (F.wave === 0 && dustHere138() !== 1) logIt("sys", `Star dust ×${dustHere138()}`, dustHere138() >= 2 ? "the last map: every enemy drops twice the star dust" : "past Altea: every enemy drops half again the star dust");
   };
   /** What a loss of HP may take (every hit passes here, through floor78): the gear plating first, no more than 25% while the mask
    *  holds, and no more than the bar it lands in. Heals go through as they are. */
@@ -27903,7 +27925,7 @@ void main() {
       if (gold) { p.gold = (p.gold ?? 0) + gold; got.push(`+${gold} gold from the chests`); }
       if (F.dust) got.push(`+${F.dust} star dust`);
     } else if (run.mini) {
-      const first = webStore().minis?.[run.stage.id] == null, r = run.mini[0], dust = 60 * (r + 1);
+      const first = webStore().minis?.[run.stage.id] == null, r = run.mini[0], dust = dust138(60 * (r + 1));
       xp = Math.round((120 + 90 * run.stage.base) / 10);
       if (first) { p.gems += 15; p.items.dust = (p.items.dust ?? 0) + dust; p.items.l += 1; got.push("+15 gems", `+${dust} star dust`, `${POTIONS.l.name} ×1`); items.push(...gainItems(ITEM_DROPS.story(run.stage.level), 2)); }
       else if (!run.back94) { p.items.s += 1; got.push(`${POTIONS.s.name} ×1`); }
@@ -27916,7 +27938,7 @@ void main() {
       if (F.dust) got.push(`+${F.dust} star dust`);
     } else if (run.skirm) {
       // round 45: a skirmish pays a little, once; after that only its experience and its chests
-      const first = webStore().skirms?.[run.stage.id] == null, dust = 15 * (run.skirm[0] + 1);
+      const first = webStore().skirms?.[run.stage.id] == null, dust = dust138(15 * (run.skirm[0] + 1));
       xp = Math.round((120 + 90 * run.stage.base) / 20);
       if (first && !ownGems90(STORY_WEB[run.skirm[0]]?.nodes?.[run.skirm[1]])) { p.gems += GEMS90; got.push(`+${GEMS90} gems`); }
       if (first) { p.items.dust = (p.items.dust ?? 0) + dust; p.items.s += 1; got.push(`+${dust} star dust`, `${POTIONS.s.name} ×1`); }
@@ -27972,7 +27994,7 @@ void main() {
       }
     }
     // round 94: a place fought again to pass: gold and star dust
-    if (run.back94) { const lv94 = run.stage?.level ?? 1, g94 = Math.round(20 + 4 * lv94), d94 = Math.round(10 + lv94 / 2); p.gold = (p.gold ?? 0) + g94; p.items.dust = (p.items.dust ?? 0) + d94; got.push(`+${g94} gold`, `+${d94} star dust`); }
+    if (run.back94) { const lv94 = run.stage?.level ?? 1, g94 = Math.round(20 + 4 * lv94), d94 = dust138(Math.round(10 + lv94 / 2)); p.gold = (p.gold ?? 0) + g94; p.items.dust = (p.items.dust ?? 0) + d94; got.push(`+${g94} gold`, `+${d94} star dust`); }
     // round 90: one fight yes, one no gives a sure item of its region's highest rarity, the first win only
     {
       const st90 = run.mini || run.town69 || run.smith || run.deep || !(run.skirm || run.kind === "battle") ? null : run.stage, rar90 = sure90(st90);
@@ -51109,7 +51131,7 @@ setTimeout(() => window.ARENA136?.start(), 6000);
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-24-1041";
+const BUILD = "2026-11-24-1429";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
