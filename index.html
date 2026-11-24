@@ -9593,6 +9593,140 @@ html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .ca
    Arena came (round 127) the menu stands four and four, so the call to carry on («continue the story») has the middle column, right at
    the middle. The rule from the days of three and four still moved it a fourteenth of the tiles' room to the left, half onto the Arena. ══ */
 .gm[data-where="home"][data-device="pc"] .gm-go { left: 50%; }
+/* ══ round 139 (lab 138) · who starts, worked out over the rival-found screen (power139.js). The game's plates (ink, one cut corner), its
+   display letters, tabular figures, the player's light (cyan) and the rival's (red). Wide screens: the two sums face each other under the
+   blade; upright screens (a phone, or a narrow window: the container vs127): each sum beside its team's name. ══ */
+.lk127-vs.is-pw139 { pointer-events: auto; cursor: pointer; animation-delay: var(--pw-end, 2.5s); }
+
+/* a hero's tag, standing at its feet (never over a face) */
+.pw139-c { position: absolute; z-index: 3; translate: -50% -100%; display: grid; justify-items: center; min-width: 4.6em; padding: 0.32em 0.7em 0.36em; color: #fff; background: rgb(6 9 13 / 0.88); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--el, var(--accent)) 60%, transparent), 0 0 18px color-mix(in srgb, var(--el, var(--accent)) 30%, transparent); clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%); font: 600 clamp(11px, 0.95cqw, 16px)/1.15 var(--font-sans); font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; }
+.pw139-c strong { font: 700 clamp(17px, 1.75cqw, 30px)/1 var(--font-display); letter-spacing: 0.01em; }
+.pw139-c.is-A { min-width: 7.4em; overflow: visible; clip-path: none; }
+.pw139-rows { display: grid; gap: 0.08em; width: 100%; }
+.pw139-c.is-A .pw139-rows { position: absolute; left: 0; right: 0; bottom: 100%; box-sizing: border-box; padding: 0.34em 0.7em 0.2em; background: rgb(6 9 13 / 0.88); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--el, var(--accent)) 60%, transparent); clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%); transform-origin: 50% 100%; }
+.pw139-rows i { display: flex; justify-content: space-between; gap: 0.9em; font-style: normal; color: var(--raw-color-ice-200, #cfe6f0); }
+.pw139-rows em { font-style: normal; font-weight: 700; letter-spacing: 0.06em; opacity: 0.8; }
+.pw139-rows span { font-weight: 700; color: #fff; }
+.pw139-c.is-A strong { width: 100%; text-align: right; box-shadow: 0 -1px 0 rgb(255 255 255 / 0.35); }
+.lk127-vs.is-pw-done .pw139-rows { display: none; }
+.lk127-vs.is-pw-done .pw139-c.is-A strong { box-shadow: none; text-align: center; }
+/* the bench: its tag beside the team's name, a little smaller */
+.pw139-bench { display: flex; align-items: center; gap: 0.7em; margin-top: 8px; font: 600 12px var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--raw-color-ice-200, #cfe6f0); }
+.pw139-bl { white-space: nowrap; }
+.vsA-side.is-them .pw139-bench { flex-direction: row-reverse; justify-content: flex-start; }
+.pw139-bench .pw139-c { position: relative; left: auto; bottom: auto; translate: none; font-size: 12px; }
+.pw139-bench .pw139-c strong { font-size: 20px; }
+.pw139-bench .pw139-c.is-A .pw139-rows { bottom: auto; top: 50%; left: calc(100% + 6px); right: auto; width: max-content; min-width: 8.6em; translate: 0 -50%; }
+.vsA-side.is-them .pw139-bench .pw139-c.is-A .pw139-rows { left: auto; right: calc(100% + 6px); }
+
+/* the layer over the two halves */
+.pw139 { position: absolute; inset: 0; z-index: 6; pointer-events: none; container-type: size; }
+.pw139-t { position: absolute; top: 76%; display: grid; gap: 2px; translate: 0 -50%; font-variant-numeric: tabular-nums; }
+.pw139-t small { font: 600 13px var(--font-sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--raw-color-ice-200, #cfe6f0); }
+.pw139-t b { font: 700 clamp(32px, 4.4cqw, 76px)/0.92 var(--font-display); letter-spacing: 0.01em; }
+.pw139-t.is-me { right: calc(50% + 3.4cqw); text-align: right; }
+.pw139-t.is-me b { color: var(--accent); text-shadow: 0 0 0.45em rgb(2 210 227 / 0.45); }
+.pw139-t.is-them { left: calc(50% + 3.4cqw); }
+.pw139-t.is-them b { color: var(--rv127); text-shadow: 0 0 0.45em rgb(224 96 90 / 0.45); }
+/* the sign between the sums: its open side to the bigger one (a tie: two bars) */
+.pw139-x { position: absolute; left: 50%; top: 76%; width: 3.2cqw; height: 3.2cqw; translate: -50% -50%; opacity: 0; }
+.pw139-x::before { content: ""; position: absolute; inset: 22%; border-top: 0.55cqw solid #fff; border-right: 0.55cqw solid #fff; rotate: 45deg; translate: -18% 0; filter: drop-shadow(0 0 10px rgb(255 255 255 / 0.6)); }
+.pw139.is-met .pw139-x { opacity: 1; }
+.pw139.is-them-wins .pw139-x { rotate: 180deg; }
+.pw139.is-tie .pw139-x { rotate: none; }
+.pw139.is-tie .pw139-x::before { inset: 30% 18%; rotate: none; translate: none; border: 0; border-top: 0.5cqw solid #fff; border-bottom: 0.5cqw solid #fff; }
+/* the rule, where the mode's word was */
+.pw139-f { position: absolute; left: 50%; bottom: 3.6%; translate: -50% 0; margin: 0; display: flex; gap: 0.8em; align-items: baseline; white-space: nowrap; font: 600 clamp(11px, 0.95cqw, 15px) var(--font-sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--raw-color-ice-200, #cfe6f0); }
+.pw139-f b { color: #fff; }
+/* who starts, where the VS was */
+.pw139-r { position: absolute; left: 50%; top: 47%; translate: -50% -50%; display: grid; justify-items: center; gap: 0.4em; text-align: center; opacity: 0; }
+.pw139.is-met .pw139-r { opacity: 1; }
+.pw139-r b { font: 700 clamp(46px, 7.4cqw, 124px)/0.9 var(--font-display); text-transform: uppercase; white-space: nowrap; }
+.pw139-r.is-me b { color: var(--accent); text-shadow: 0 0 0.35em rgb(2 210 227 / 0.55), 0 0 1.2em rgb(2 210 227 / 0.25); }
+.pw139-r.is-them b { color: var(--rv127); text-shadow: 0 0 0.35em rgb(224 96 90 / 0.55), 0 0 1.2em rgb(224 96 90 / 0.25); }
+.pw139-r small { font: 600 clamp(13px, 1.2cqw, 18px) var(--font-sans); letter-spacing: 0.1em; text-transform: uppercase; color: #fff; font-variant-numeric: tabular-nums; }
+.lk127-vs.is-pw-done .vsA-vs, .lk127-vs.is-pw-met .vsA-vs { opacity: 0; }
+.lk127-vs.is-pw-done .lk127-mode { opacity: 0; }
+
+/* A · a hero's total flies into its team's sum: a streak of the team's light */
+.pw139-streak { position: absolute; z-index: 8; width: 44px; height: 6px; margin: -3px 0 0 -22px; border-radius: 3px; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--c) 70%, #fff) 70%, #fff); box-shadow: 0 0 14px var(--c), 0 0 28px var(--c); }
+
+/* B · the blade between the halves, and each half's light up to it (behind the heroes) */
+.pw139-flood { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.pw139-flood i { position: absolute; inset: 0; }
+.pw139-flood .is-me { background: linear-gradient(100deg, rgb(2 210 227 / 0.34), rgb(2 210 227 / 0.1) 55%, rgb(2 210 227 / 0.22)); clip-path: polygon(0 0, calc(57.8% + var(--pw-s, 0) * 1%) 0, calc(42.2% + var(--pw-s, 0) * 1%) 100%, 0 100%); }
+.pw139-flood .is-them { background: linear-gradient(260deg, rgb(224 96 90 / 0.34), rgb(224 96 90 / 0.1) 55%, rgb(224 96 90 / 0.22)); clip-path: polygon(calc(57.8% + var(--pw-s, 0) * 1%) 0, 100% 0, 100% 100%, calc(42.2% + var(--pw-s, 0) * 1%) 100%); }
+.pw139-seam { position: absolute; left: calc(50% + var(--pw-s, 0) * 1%); top: -12%; width: 4px; height: 124%; translate: -50% 0; rotate: var(--seam-a, 16deg); background: linear-gradient(transparent, #fff 18%, #fff 82%, transparent); box-shadow: 0 0 16px #fff, 0 0 40px rgb(255 255 255 / 0.55); }
+.pw139-wave { position: absolute; left: calc(50% + var(--pw-s, 0) * 1%); top: 50%; width: 24cqmin; height: 24cqmin; translate: -50% -50%; border-radius: 50%; box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.8), 0 0 30px rgb(255 255 255 / 0.5); opacity: 0; }
+.lk127-vs.is-pw139B .vsA-side.is-me, .lk127-vs.is-pw139B .vsA-side.is-them { background: none; }
+.lk127-vs.is-pw139B.is-pw-met .pw139-flood i { transition: filter 0.5s, opacity 0.5s; }
+.lk127-vs.is-pw139B.is-pw-met:has(.pw139.is-me-wins) .pw139-flood .is-them, .lk127-vs.is-pw139B.is-pw-met:has(.pw139.is-them-wins) .pw139-flood .is-me { filter: saturate(0.25) brightness(0.6); }
+
+/* C · each team's sphere of light, growing with each hero's share; the two meet */
+.pw139-sph { position: absolute; top: 69%; width: 17cqmin; height: 17cqmin; translate: -50% -50%; scale: var(--k, 0.4); border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle, color-mix(in srgb, var(--c) 45%, #fff) 0 9%, color-mix(in srgb, var(--c) 92%, #fff) 24%, color-mix(in srgb, var(--c) 62%, transparent) 44%, color-mix(in srgb, var(--c) 22%, transparent) 60%, transparent 70%); filter: drop-shadow(0 0 18px var(--c)); }
+.pw139-sph::before { content: ""; position: absolute; inset: 6%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 0, color-mix(in srgb, var(--c) 70%, #fff) 12%, transparent 30%, transparent 50%, color-mix(in srgb, var(--c) 70%, #fff) 62%, transparent 80%); -webkit-mask: radial-gradient(circle, transparent 58%, #000 61%, #000 66%, transparent 70%); mask: radial-gradient(circle, transparent 58%, #000 61%, #000 66%, transparent 70%); animation: pw139-turn 1.6s linear infinite; }
+.pw139-sph::after { content: ""; position: absolute; inset: -14%; border-radius: 50%; background: radial-gradient(circle, transparent 46%, color-mix(in srgb, var(--c) 30%, transparent) 58%, transparent 70%); animation: pw139-breathe 1.2s ease-in-out infinite alternate; }
+@keyframes pw139-turn { to { rotate: 360deg; } }
+@keyframes pw139-breathe { from { opacity: 0.45; scale: 0.94; } to { opacity: 1; scale: 1.06; } }
+.pw139-sph.is-me { --c: #02d2e3; left: 40%; }
+.pw139-sph.is-them { --c: #e0605a; left: 60%; }
+.pw139-sph b { position: relative; z-index: 1; font: 700 4.6cqmin/1 var(--font-display); color: #fff; text-shadow: 0 0 3px rgb(0 0 0 / 0.9), 0 1px 10px rgb(0 0 0 / 0.85); font-variant-numeric: tabular-nums; }
+.pw139-sph.is-lose { opacity: 0.32; }
+.pw139-sph.is-win { filter: drop-shadow(0 0 30px var(--c)) drop-shadow(0 0 70px var(--c)); }
+.pw139-orb { position: absolute; z-index: 8; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: radial-gradient(circle, #fff 0 22%, var(--c) 55%, transparent 72%); box-shadow: 0 0 16px var(--c), 0 0 34px var(--c); }
+.pw139-flash { position: absolute; left: 50%; top: 69%; width: 30cqmin; height: 30cqmin; margin: -15cqmin 0 0 -15cqmin; border-radius: 50%; background: radial-gradient(circle, #fff 0, rgb(255 255 255 / 0.7) 22%, transparent 64%); opacity: 0; }
+.pw139-spark { position: absolute; z-index: 9; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px var(--c), 0 0 18px var(--c); }
+
+/* ── upright (a phone, or a narrow window): the rival above, you below; each sum beside its team's name ── */
+@container vs127 (orientation: portrait) {
+  .pw139-c { font-size: 3cqw; }
+  .pw139-c strong { font-size: 5.4cqw; }
+  .pw139-c.is-A { min-width: 0; padding: 0.3em 0.5em; }
+  .pw139-rows i { gap: 0.5em; }
+  .pw139-bench { font-size: 2.8cqw; margin-top: 3px; }
+  .pw139-bench .pw139-c { font-size: 2.8cqw; }
+  .pw139-bench .pw139-c strong { font-size: 4.6cqw; }
+  .pw139-t { top: auto; translate: none; }
+  .pw139-t b { font-size: 10cqw; }
+  .pw139-t small { font-size: 2.8cqw; }
+  .pw139-t.is-them { left: 4%; right: auto; top: 3.5%; text-align: left; }
+  .pw139-t.is-me { right: 4%; left: auto; bottom: 4%; top: auto; text-align: right; }
+  .pw139-t b { font-size: 8.6cqw; }
+  .pw139-x { display: none; }
+  .pw139.is-them-wins .pw139-x { rotate: 90deg; }
+  .pw139.is-tie .pw139-x { rotate: none; }
+  .pw139-x::before { border-width: 1.3cqw; }
+  .pw139-f { bottom: auto; top: 50%; translate: -50% -50%; white-space: normal; flex-direction: column; align-items: center; gap: 0.35em; width: 80%; text-align: center; font-size: 2.9cqw; line-height: 1.35; }
+  .pw139-f b { font: 700 7cqw/1 var(--font-display); letter-spacing: 0.02em; }
+  .pw139-r { top: 50%; }
+  .pw139-r b { font-size: 13cqw; }
+  .pw139-r small { font-size: 3.2cqw; }
+  .pw139-flood .is-them { clip-path: polygon(0 0, 100% 0, 100% calc(47% - var(--pw-s, 0) * 1%), 0 calc(53% - var(--pw-s, 0) * 1%)); }
+  .pw139-flood .is-me { clip-path: polygon(0 calc(53% - var(--pw-s, 0) * 1%), 100% calc(47% - var(--pw-s, 0) * 1%), 100% 100%, 0 100%); }
+  .pw139-seam { left: -12%; top: calc(50% - var(--pw-s, 0) * 1%); width: 124%; height: 4px; translate: 0 -50%; background: linear-gradient(90deg, transparent, #fff 14%, #fff 86%, transparent); }
+  .pw139-wave { left: 50%; top: calc(50% - var(--pw-s, 0) * 1%); width: 36cqw; height: 36cqw; }
+  .pw139-sph { width: 26cqw; height: 26cqw; top: 50%; }
+  .pw139-sph.is-them { left: 15%; }
+  .pw139-sph.is-me { left: 85%; }
+  .lk127-vs.is-pw139C .pw139-f { width: 58%; }
+  .pw139-sph b { font-size: 8cqw; }
+  .lk127-vs.is-pw139C .pw139-t.is-them { top: 4%; }
+  .lk127-vs.is-pw139C .pw139-t.is-me { top: auto; bottom: 5%; }
+  .lk127-vs.is-pw139C .pw139-x { top: 50%; }
+  .pw139-flash { top: 50%; width: 60cqw; height: 60cqw; margin: -30cqw 0 0 -30cqw; }
+}
+
+/* the meeting: the figures step back into the dark (the winner's a little less), so who starts reads over them */
+.lk127-vs.is-pw139 .lk127-figs { transition: filter 0.4s ease; }
+.lk127-vs.is-pw-met .lk127-figs { filter: brightness(0.38) saturate(0.75); }
+.lk127-vs.is-pw-met.is-pw-me .vsA-side.is-me .lk127-figs, .lk127-vs.is-pw-met.is-pw-them .vsA-side.is-them .lk127-figs { filter: brightness(0.55) saturate(0.9); }
+/* C: the spheres carry the sums (the plates stay for the record, unseen); they stand where the plates would */
+.lk127-vs.is-pw139C .pw139-t, .lk127-vs.is-pw139C .pw139-x, .lk127-vs.is-pw139B .pw139-x { visibility: hidden; }
+@container vs127 (orientation: landscape) {
+  .lk127-vs.is-pw139C .pw139-sph { top: 76%; }
+  .lk127-vs.is-pw139C .pw139-sph.is-me { left: 41%; }
+  .lk127-vs.is-pw139C .pw139-sph.is-them { left: 59%; }
+}
 </style>
 </head>
 <body>
@@ -50920,9 +51054,13 @@ const ARENA127 = (() => {
     const me = m.side, who = (s) => ({ name: m.names[s]?.name ?? (s === me ? "You" : "Rival"), rating: m.names[s]?.rating ?? 1000, lp: m.mode === 1 ? m.names[s]?.lp ?? null : null, team: (m.teams[s] ?? []).filter((x) => !x.bench) });
     b.querySelector(".lk127-vs")?.remove();
     b.insertAdjacentHTML("beforeend", LOOK127.vs({ mode: m.mode, me: who(me), them: who(1 - me) }));
-    st.vsUntil = Date.now() + 2800;
     const el = b.lastElementChild;
-    setTimeout(() => el?.remove(), 3000);
+    // round 139: who starts, worked out over the screen (the user: «fai vedere il calcolo della potenza delle due squadre»); the first
+    // turn's clock starts when the sum has been shown (a tap ends the show sooner; the clock keeps its time)
+    let ms139 = 0;
+    try { ms139 = window.POWER139?.play(el, m) ?? 0; } catch (e) { console.warn("power139", e); }
+    st.vsUntil = Date.now() + Math.max(2800, ms139 - 200);
+    setTimeout(() => el?.remove(), Math.max(3000, ms139 + 100));
   };
   /** The match ended on the server while this device was still fighting it (the rival gave up, or was gone six turns; or the two devices
    *  disagreed): the fight stops where it is and the server's word is shown. */
@@ -51091,9 +51229,10 @@ const ARENA127 = (() => {
   const demo = () => {
     const mine = snapOf(st.mode), theirs = lab() ? snapOf(st.mode, ["oreh", "johta", "clea", "lilith"]) : practiceTeam();
     const m = { mode: st.mode, side: 0, names: [{ name: PLAYER.player.avatar?.name || "You", rating: rating(st.mode) }, { name: "Training rival", rating: rating(st.mode) }], teams: [mine, theirs], moves: [], status: "live" };
+    { const R139 = ARENA136.rulesOf(st.me, st.mode), P139 = POWER139.sums(m.teams, R139); m.first = POWER139.firstOf(P139); m.rules = { ...R139, power: P139 }; }
     st.match = m; st.r0 = rating(st.mode); st.ending = false; st.practice = true;
     window.__BATTLE127?.duel({
-      teams: [teamOf(mine), teamOf(theirs)], names: m.names.map((x) => x.name), title: lab() ? (m.mode === 1 ? "Arena · Capped" : "Arena · Unlimited") : "Arena · Practice", seed: Date.now() & 0x7fffffff, first: 0, me: 0, online: false, auto: [false, true], ...ARENA136.rulesOf(st.me, st.mode),
+      teams: [teamOf(mine), teamOf(theirs)], names: m.names.map((x) => x.name), title: lab() ? (m.mode === 1 ? "Arena · Capped" : "Arena · Unlimited") : "Arena · Practice", seed: Date.now() & 0x7fffffff, first: m.first, me: 0, online: false, auto: [false, true], ...ARENA136.rulesOf(st.me, st.mode), power: m.rules.power,
       onTurn: (side) => clock(side === 0 ? "mine" : "their", side),
       onEnd: (r) => { clock(false); st.last = { win: r.win === 0, draw: r.win === -1, rating: lab() ? (r.win === -1 ? 0 : r.win === 0 ? 16 : -16) : 0, practice: !lab(), disputed: false }; st.match = null; showEnd(); },
     });
@@ -51124,6 +51263,286 @@ const ARENA127 = (() => {
     preview: { end: (L) => { st.last = L; showEnd(); }, vs: (m) => showVs(m), me: (me) => { st.me = me; render(); }, clock: (on, side) => clock(on, side) } };
 })();
 window.ARENA127 = ARENA127;
+/* ══ round 139 (lab 138) · who starts an Arena match, worked out before the fight. The user, 24 Nov: «nel pvp mentre si decide chi parte
+ *  primo, fai vedere il calcolo della potenza delle due squadre, fammi un animazione fluida, dammi un paio di esempi».
+ *  Over the screen of the rival found (LOOK127.vs, «La lama»): each hero's share as the server counts it (round 137, teamPower137:
+ *  ATK × atkK + DEF × defK + HP × hpK, the four heroes, the bench too), each team's sum and who starts. Three looks (lab 138):
+ *   A «Il conto»     the sum written out under each hero (its ATK, DEF and HP, their total), each total flying into its team's
+ *   B «La spinta»    each hero's number pushes the blade between the two halves; it comes to rest where the sums say
+ *   C «Le energie»   each hero's light flies into its team's sphere; the spheres meet and the bigger one wins
+ *  play(el, m, { done }) runs over the screen (el: the .lk127-vs) and gives how long it lasts; a tap ends it at once (done(at): when it
+ *  is gone). sums() and firstOf() are the server's rule, for a match on this device (practice).
+ *  Placing is done with the CSS properties translate / rotate / scale; the motion with transform: the two never fight. ══ */
+const POWER139 = (() => {
+  // the three ways by their lab letters (the lab's panel names them in Italian: A «Il conto», B «La spinta», C «Le energie»)
+  const LOOKS = { A: "the tally", B: "the push", C: "the energies" };
+  // the user's pick in lab 138 (24 Nov: «B · La spinta»); the other two stay here, for the lab
+  const st = { pick: "B", speed: 1 };
+  const E = { out: "cubic-bezier(0.16, 1, 0.3, 1)", soft: "cubic-bezier(0.2, 0.8, 0.2, 1)", in: "cubic-bezier(0.55, 0, 0.75, 0)", spring: "cubic-bezier(0.34, 1.56, 0.64, 1)", io: "cubic-bezier(0.65, 0, 0.35, 1)" };
+  const fmt = (n) => Math.round(n).toLocaleString("en-US");
+  const pc = (k) => `${Math.round(k * 100)}%`;
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const kOf = (rules) => ({ atk: Number(rules?.atkK ?? 1) || 1, def: Number(rules?.defK ?? 1) || 1, hp: Number(rules?.hpK ?? 1) || 1 });
+  /** One hero's share, as the server counts it (each part rounded, as teamPower137 does). */
+  const share = (x, K) => { const s = x?.stats ?? {}, a = Math.round((+s.atk || 0) * K.atk), d = Math.round((+s.def || 0) * K.def), h = Math.round((+s.hp || 0) * K.hp); return { a, d, h, p: a + d + h }; };
+  /** The two teams' sums (a match's teams, as snapOf and kitTeam131 give them) under a balance (atkK, defK, hpK). */
+  const sums = (teams, rules) => { const K = kOf(rules); return [0, 1].map((s) => (teams?.[s] ?? []).reduce((n, x) => n + share(x, K).p, 0)); };
+  /** Who starts by the sums, as the server decides: the higher; a tie, a coin. */
+  const firstOf = (P) => (P[0] === P[1] ? (Math.random() < 0.5 ? 0 : 1) : P[0] > P[1] ? 0 : 1);
+  /** What the screen shows: each side's heroes (the field's three, then the bench), its sum (the server's when it wrote one), who starts. */
+  const data = (m) => {
+    const K = kOf(m.rules), me = m.side === 1 ? 1 : 0;
+    const sides = [0, 1].map((s) => {
+      // a match online brings its teams as the server keeps them ([{ id, bench, kit }]): their numbers worked out here, by the rule both
+      // devices and the server use (kitTeam131); a practice match's teams have theirs already (snapOf)
+      const raw = (m.teams?.[s] ?? []).filter((x) => x?.id), withStats = raw.length && raw.every((x) => x.stats) ? raw : typeof kitTeam131 === "function" ? kitTeam131(m.mode, raw) : raw;
+      const list = [...withStats].sort((x, y) => (x.bench ? 1 : 0) - (y.bench ? 1 : 0)).slice(0, 4);
+      const heroes = list.map((x) => ({ id: x.id, bench: !!x.bench, side: s === me ? "me" : "them", h: typeof heroineById === "function" ? heroineById(x.id) : null, ...share(x, K) }));
+      return { s, me: s === me, name: m.names?.[s]?.name ?? (s === me ? "You" : "Rival"), heroes, sum: heroes.reduce((n, x) => n + x.p, 0) };
+    });
+    const P = Array.isArray(m.rules?.power) && m.rules.power.length === 2 ? m.rules.power.map(Number) : null;
+    if (P && P.every(Number.isFinite)) sides.forEach((x, i) => { x.sum = P[i]; });
+    const first = m.first === 0 || m.first === 1 ? m.first : firstOf(sides.map((x) => x.sum));
+    return { K, mode: m.mode, me, first, tie: sides[0].sum === sides[1].sum, sides };
+  };
+  const formula = (K) => (K.atk === 1 && K.def === 1 && K.hp === 1 ? "ATK + DEF + HP" : `ATK ${pc(K.atk)} + DEF ${pc(K.def)} + HP ${pc(K.hp)}`);
+
+  /* ── the run: every animation, timer and counter kept, so a tap can end them all at once ── */
+  const makeRun = () => {
+    const R = { anims: [], timers: [], counters: new Set(), done: false };
+    const S = () => st.speed || 1;
+    R.at = (ms, fn) => { const t = setTimeout(() => { if (!R.done) fn(); }, ms / S()); R.timers.push(t); };
+    R.anim = (node, frames, o = {}) => { if (!node) return null; const a = node.animate(frames, { fill: "backwards", ...o, duration: (o.duration ?? 400) / S(), delay: (o.delay ?? 0) / S() }); R.anims.push(a); return a; };
+    /** A number counting to `to` in step with the page's frames (tabular figures: the digits never jump). */
+    R.count = (node, from, to, ms, delay = 0) => {
+      if (!node) return;
+      const c = { node, to };
+      const go = () => {
+        R.counters.add(c);
+        const t0 = performance.now(), d = ms / S();
+        const step = (now) => {
+          if (c.stop || R.done) return;
+          const k = Math.min(1, (now - t0) / d), e = 1 - Math.pow(1 - k, 3);
+          node.textContent = fmt(from + (to - from) * e);
+          if (k < 1) requestAnimationFrame(step); else R.counters.delete(c);
+        };
+        requestAnimationFrame(step);
+      };
+      if (delay) R.at(delay, go); else go();
+    };
+    R.stop = () => {
+      R.done = true;
+      R.timers.forEach(clearTimeout);
+      R.anims.forEach((a) => { try { a.cancel(); } catch { /* gone */ } });
+      for (const c of R.counters) { c.stop = true; c.node.textContent = fmt(c.to); }
+      R.counters.clear();
+    };
+    return R;
+  };
+
+  /* ── the screen's parts, the same for the three looks ── */
+  /** A hero's tag (A: its three parts and their sum; B and C: its share). */
+  const tag = (x, look) => look === "A"
+    ? `<span class="pw139-c is-A${x.bench ? " is-bench" : ""}" data-side="${x.side}"><span class="pw139-rows"><i><em>ATK</em><span data-v="${x.a}">0</span></i><i><em>DEF</em><span data-v="${x.d}">0</span></i><i><em>HP</em><span data-v="${x.h}">0</span></i></span><strong data-v="${x.p}">0</strong></span>`
+    : `<span class="pw139-c is-${look}${x.bench ? " is-bench" : ""}" data-side="${x.side}"><strong data-v="${x.p}">0</strong></span>`;
+  const bench = (x, look) => (x ? `<span class="pw139-bench"><span class="pw139-bl">bench · ${esc(x.h?.name ?? x.id)}</span>${tag(x, look)}</span>` : "");
+  const total = (side) => `<div class="pw139-t ${side.me ? "is-me" : "is-them"}"><small>${side.me ? "your team" : esc(side.name)}</small><b data-sum>0</b></div>`;
+
+  /**
+   * Plays the sum over the rival-found screen. el: the .lk127-vs just put in place; m: the match ({ mode, side, names, teams, first,
+   * rules }). Gives how long it lasts (ms, from now); opt.done(at) says when it is gone for good (a tap ends it early).
+   */
+  const play = (el, m, opt = {}) => {
+    const box = el?.querySelector(".vsA-in");
+    if (!box || !m?.teams?.[0]?.length || !m?.teams?.[1]?.length) return 0;
+    const look = LOOKS[opt.look] ? opt.look : st.pick, D = data(m), W = D.sides[D.first], Lz = D.sides[1 - D.first], SP = st.speed || 1;
+    const R = makeRun();
+    const sideEl = (s) => el.querySelector(s.me ? ".vsA-side.is-me" : ".vsA-side.is-them");
+    el.classList.add("is-pw139", `is-pw139${look}`);
+    // the blade's slant in this screen's shape (B's seam follows it): wide, the line from 57.8% at the top to 42.2% at the bottom; upright,
+    // from 53% on the left to 47% on the right
+    const rb = el.getBoundingClientRect(), wide = rb.width >= rb.height;
+    el.style.setProperty("--seam-a", `${wide ? ((Math.atan((0.156 * rb.width) / Math.max(1, rb.height)) * 180) / Math.PI).toFixed(2) : (-(Math.atan((0.06 * rb.height) / Math.max(1, rb.width)) * 180) / Math.PI).toFixed(2)}deg`);
+    // each hero's tag inside its own box (the field's three), the bench's beside the team's name
+    const tags = new Map(), feet = [];
+    for (const s of D.sides) {
+      const boxes = [...(sideEl(s)?.querySelectorAll(".lk127-figs .lk127-box") ?? [])], field = s.heroes.filter((x) => !x.bench), b = s.heroes.find((x) => x.bench);
+      field.forEach((x, i) => { if (boxes[i]) feet.push([x, boxes[i]]); });
+      const who = sideEl(s)?.querySelector(".lk127-who");
+      if (b && who) { who.insertAdjacentHTML("beforeend", bench(b, look)); tags.set(b, who.lastElementChild.querySelector(".pw139-c")); }
+    }
+    // the layer over the two halves: the rule, the two sums, the sign between them, who starts; B's blade and floods, C's spheres
+    if (look === "B") box.insertAdjacentHTML("afterbegin", '<div class="pw139-flood" aria-hidden="true"><i class="is-me"></i><i class="is-them"></i></div>');
+    box.insertAdjacentHTML("beforeend", `<div class="pw139 is-${look}" aria-hidden="true">
+      ${look === "B" ? '<i class="pw139-seam"></i><i class="pw139-wave"></i>' : ""}
+      ${look === "C" ? `${D.sides.map((s) => `<i class="pw139-sph ${s.me ? "is-me" : "is-them"}"><b>0</b></i>`).join("")}<i class="pw139-flash"></i>` : ""}
+      ${D.sides.map(total).join("")}
+      <i class="pw139-x"></i>
+      <p class="pw139-f"><b>Who starts</b><span>${formula(D.K)} · all four heroes, the bench too</span></p>
+      <div class="pw139-r ${W.me ? "is-me" : "is-them"}"><b>${W.me ? "You start" : `${esc(W.name)} starts`}</b><small>${D.tie ? `the same sum, ${fmt(W.sum)}: a coin chose` : `${fmt(W.sum)} against ${fmt(Lz.sum)}`}</small></div></div>`);
+    const layer = box.querySelector(".pw139"), q = (sel) => layer.querySelector(sel);
+    // the field's tags on the layer, in each hero's light, put at its feet (its box's bottom, a little up) once the two halves have
+    // slid in (measured before, they would stand where the halves came from)
+    for (const [x, bx] of feet) {
+      layer.insertAdjacentHTML("beforeend", tag(x, look));
+      const t = layer.lastElementChild;
+      t.classList.add("is-feet");
+      t.style.setProperty("--el", bx.style.getPropertyValue("--el") || "var(--accent)");
+      tags.set(x, t);
+    }
+    const place = () => { const o = layer.getBoundingClientRect(); for (const [x, bx] of feet) { const r = bx.getBoundingClientRect(), t = tags.get(x); t.style.left = `${(r.left + r.width / 2 - o.left).toFixed(1)}px`; t.style.top = `${(r.bottom - r.height * 0.06 - o.top).toFixed(1)}px`; } };
+    R.at(600, place);
+    const sumEl = (s) => layer.querySelector(`.pw139-t.${s.me ? "is-me" : "is-them"} [data-sum]`);
+    const sphEl = (s) => layer.querySelector(`.pw139-sph.${s.me ? "is-me" : "is-them"}`);
+    const vs = el.querySelector(".vsA-vs"), mode = el.querySelector(".lk127-mode");
+    // the sums so far (each hero's share added as it arrives), the spheres' size by them
+    const run0 = [0, 0], maxSum = Math.max(1, ...D.sides.map((s) => s.sum)), kOfSum = (n) => 0.4 + 0.6 * Math.sqrt(Math.max(0, n) / maxSum);
+    // B: the blade's place (in % of the screen, toward the rival when this device's team is ahead); a near tie still moves it a little
+    const shiftOf = (a, b) => { const t = a + b || 1, d = (a - b) / t; return Math.sign(d) * Math.min(17, Math.max(Math.abs(d) * 90, d ? 2.4 : 0)); };
+    const finS = shiftOf(D.sides[D.me].sum, D.sides[1 - D.me].sum);
+    let seamNow = 0, seamRaf = 0;
+    const seamTo = (target, ms, give = true) => {
+      cancelAnimationFrame(seamRaf);
+      const from = seamNow, t0 = performance.now(), d = ms / SP;
+      const step = (now) => {
+        if (R.done && !R.ending) return;
+        const k = Math.min(1, (now - t0) / d), e = k >= 1 ? 1 : give ? 1 - Math.pow(1 - k, 3) * Math.cos(k * 5) : 1 - Math.pow(1 - k, 3);
+        seamNow = from + (target - from) * e;
+        el.style.setProperty("--pw-s", seamNow.toFixed(3));
+        if (k < 1) seamRaf = requestAnimationFrame(step);
+      };
+      seamRaf = requestAnimationFrame(step);
+    };
+    // where on the layer a node's middle is
+    const mid = (node) => { const a = node.getBoundingClientRect(), o = layer.getBoundingClientRect(); return { x: a.left + a.width / 2 - o.left, y: a.top + a.height / 2 - o.top }; };
+    /** A light from a hero's tag into its team's sum (A: a streak; C: its own colour, into the sphere). */
+    const fly = (from, to, colour, ms, cls) => {
+      if (!from || !to) return;
+      const a = mid(from), b = mid(to), dx = b.x - a.x, dy = b.y - a.y, bow = Math.max(-70, Math.min(70, -Math.abs(dx) * 0.22));
+      layer.insertAdjacentHTML("beforeend", `<i class="${cls}" style="--c:${colour};left:${a.x.toFixed(1)}px;top:${a.y.toFixed(1)}px"></i>`);
+      const dot = layer.lastElementChild, ang = (Math.atan2(dy, dx) * 180) / Math.PI;
+      const an = R.anim(dot, [
+        { transform: `translate(0, 0) rotate(${ang}deg) scale(0.4)`, opacity: 0 },
+        { transform: `translate(${(dx * 0.5).toFixed(1)}px, ${(dy * 0.5 + bow).toFixed(1)}px) rotate(${ang}deg) scale(1.15)`, opacity: 1, offset: 0.5 },
+        { transform: `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) rotate(${ang}deg) scale(0.55)`, opacity: 0.25 }], { duration: ms, easing: E.io, fill: "forwards" });
+      if (an) an.onfinish = () => dot.remove();
+    };
+    // the rule, the two sums' plates (and C's spheres, B's blade) come in as the VS lands; upright, the rule takes the VS's place
+    if (!wide && vs) R.anim(vs, [{ opacity: 1, transform: "translate(-50%, -50%) scale(1)" }, { opacity: 0, transform: "translate(-50%, -50%) scale(0.7)" }], { duration: 240, delay: 820, easing: E.in, fill: "forwards" });
+    R.anim(q(".pw139-f"), [{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }], { duration: 420, delay: wide ? 560 : 960, easing: E.out });
+    if (!wide) R.at(0, () => q(".pw139-f").classList.add("is-mid"));
+    if (mode) R.anim(mode, [{ opacity: 1 }, { opacity: 0 }], { duration: 240, delay: 520, fill: "forwards" });
+    layer.querySelectorAll(".pw139-t").forEach((n, i) => R.anim(n, [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "none" }], { duration: 440, delay: 640 + i * 70, easing: E.out }));
+    if (look === "C") layer.querySelectorAll(".pw139-sph").forEach((n, i) => R.anim(n, [{ opacity: 0, scale: "0.05" }, { opacity: 1, scale: "0.4" }], { duration: 560, delay: 620 + i * 70, easing: E.spring }));
+    if (look === "B") { R.anim(q(".pw139-seam"), [{ opacity: 0, transform: "scaleY(0)" }, { opacity: 1, transform: "scaleY(1)" }], { duration: 520, delay: 520, easing: E.out }); R.anim(el.querySelector(".pw139-flood"), [{ opacity: 0 }, { opacity: 1 }], { duration: 520, delay: 520 }); }
+    // the tags come in hero by hero, both sides together (the rival's a breath later)
+    const T0 = 760, GAP = 380, landAt = (i, s) => T0 + i * GAP + (s.me ? 0 : 90);
+    for (const s of D.sides) {
+      s.heroes.forEach((x, i) => {
+        const t = tags.get(x), at = landAt(i, s);
+        if (!t) return;
+        const v = t.querySelector("strong"), colour = s.me ? "var(--accent)" : "var(--rv127)";
+        R.anim(t, [{ opacity: 0, transform: "translateY(10px) scale(0.86)" }, { opacity: 1, transform: "none" }], { duration: 300, delay: at, easing: E.out });
+        if (look === "A") {
+          // ATK, DEF and HP count up, their sum under the line, then the three rows fold into it and it flies into the team's sum
+          [...t.querySelectorAll(".pw139-rows [data-v]")].forEach((b2, k) => R.count(b2, 0, +b2.dataset.v, 360, at + 110 + k * 70));
+          R.anim(t.querySelector(".pw139-rows"), [{ opacity: 1, transform: "none" }, { opacity: 1, transform: "none", offset: 0.55 }, { opacity: 0, transform: "translateY(55%) scaleY(0.4)" }], { duration: 900, delay: at + 260, easing: E.io, fill: "forwards" });
+          R.anim(v, [{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 260, delay: at + 520, easing: E.out });
+          R.count(v, 0, x.p, 300, at + 520);
+          R.at(at + 860, () => fly(t, sumEl(s), colour, 500, "pw139-streak"));
+          R.at(at + 1300, () => { const n = sumEl(s); R.count(n, run0[s.s], (run0[s.s] += x.p), 360); R.anim(n, [{ transform: "scale(1)" }, { transform: "scale(1.1)", offset: 0.35 }, { transform: "scale(1)" }], { duration: 420, easing: E.soft, fill: "none" }); });
+        } else if (look === "B") {
+          // its share counts up, then it lands on its half and pushes the blade
+          R.count(v, 0, x.p, 340, at + 60);
+          R.anim(t, [{ transform: "none" }, { transform: "translateY(7px) scale(1.12, 0.86)", offset: 0.4 }, { transform: "none" }], { duration: 380, delay: at + 460, easing: E.soft, fill: "none" });
+          R.at(at + 520, () => { const n = sumEl(s); R.count(n, run0[s.s], (run0[s.s] += x.p), 320); seamTo(shiftOf(run0[D.me], run0[1 - D.me]), 560); });
+        } else {
+          // its share counts up, then its light flies into its team's sphere, which grows
+          R.count(v, 0, x.p, 340, at + 60);
+          R.at(at + 420, () => fly(t, sphEl(s), `var(--el, ${colour})`, 560, "pw139-orb"));
+          R.at(at + 960, () => {
+            const n = sumEl(s), sp = sphEl(s), k0 = kOfSum(run0[s.s]), k1 = kOfSum(run0[s.s] + x.p);
+            R.count(n, run0[s.s], run0[s.s] + x.p, 320);
+            R.count(sp.querySelector("b"), run0[s.s], run0[s.s] + x.p, 320);
+            run0[s.s] += x.p;
+            sp.style.setProperty("--k", k1.toFixed(3));
+            R.anim(sp, [{ scale: String(k0) }, { scale: String(k1 * 1.12), offset: 0.4 }, { scale: String(k1) }], { duration: 480, easing: E.soft, fill: "none" });
+          });
+        }
+      });
+    }
+    // the meeting: the bigger sum wins, who starts takes the middle
+    const TC = Math.max(3450, landAt(Math.max(...D.sides.map((s) => s.heroes.length)) - 1, D.sides.find((s) => !s.me)) + (look === "A" ? 1460 : 1000));
+    const lose = layer.querySelector(`.pw139-t.${Lz.me ? "is-me" : "is-them"}`), win = layer.querySelector(`.pw139-t.${W.me ? "is-me" : "is-them"}`);
+    // (upright the VS gave its place to the rule already)
+    if (vs && wide) R.anim(vs, [{ opacity: 1, transform: "translate(-50%, -50%) scale(1)" }, { opacity: 0, transform: "translate(-50%, -50%) scale(0.55)" }], { duration: 260, delay: TC, easing: E.in, fill: "forwards" });
+    if (!wide) R.anim(q(".pw139-f"), [{ opacity: 1 }, { opacity: 0 }], { duration: 220, delay: TC, fill: "forwards" });
+    R.at(TC, () => { layer.classList.add("is-met", W.me ? "is-me-wins" : "is-them-wins"); el.classList.add("is-pw-met", W.me ? "is-pw-me" : "is-pw-them"); if (D.tie) layer.classList.add("is-tie"); });
+    R.anim(win, [{ filter: "brightness(1)" }, { filter: "brightness(1.8)", offset: 0.3 }, { filter: "brightness(1.1)" }], { duration: 720, delay: TC + 80, easing: E.soft, fill: "forwards" });
+    R.anim(lose, [{ opacity: 1 }, { opacity: 0.4 }], { duration: 420, delay: TC + 120, easing: E.soft, fill: "forwards" });
+    R.anim(q(".pw139-x"), [{ opacity: 0, transform: "scale(2.2)" }, { opacity: 1, transform: "scale(1)" }], { duration: 440, delay: TC + 60, easing: E.spring });
+    if (look === "B") {
+      R.at(TC - 80, () => seamTo(finS * 1.22, 320, false));
+      R.at(TC + 240, () => seamTo(finS, 620));
+      R.anim(q(".pw139-wave"), [{ opacity: 0.95, transform: "scale(0.2)" }, { opacity: 0, transform: "scale(3.6)" }], { duration: 800, delay: TC + 200, easing: E.out, fill: "none" });
+    }
+    if (look === "C") {
+      // the spheres rush together; the smaller is thrown back, the bigger stays where they met
+      R.at(TC - 60, () => {
+        const sw = sphEl(W), sl = sphEl(Lz), pw = mid(sw), pl = mid(sl), mx = (pw.x + pl.x) / 2, my = (pw.y + pl.y) / 2, kw = kOfSum(W.sum), kl = kOfSum(Lz.sum);
+        sw.classList.add("is-win"); sl.classList.add("is-lose");
+        if (!wide) R.anim(sw.querySelector("b"), [{ opacity: 1 }, { opacity: 0 }], { duration: 300, delay: 420, fill: "forwards" });
+        R.anim(sw, [{ transform: "translate(0, 0)" }, { transform: `translate(${(mx - pw.x) * 1.04}px, ${(my - pw.y) * 1.04}px) scale(1.08)`, offset: 0.45 }, { transform: `translate(${mx - pw.x}px, ${my - pw.y}px)` }], { duration: 680, easing: E.io, fill: "forwards" });
+        R.anim(sl, [{ transform: "translate(0, 0)", opacity: 1 }, { transform: `translate(${(mx - pl.x) * 0.62}px, ${(my - pl.y) * 0.62}px) scale(0.92, 1.08)`, opacity: 1, offset: 0.42 }, { transform: `translate(${(pl.x - mx) * 0.7}px, ${(pl.y - my) * 0.7}px) scale(${(0.55 * kl) / kl})`, opacity: 0.32 }], { duration: 800, easing: E.io, fill: "forwards" });
+        const fl = q(".pw139-flash");
+        fl.style.left = `${mx}px`; fl.style.top = `${my}px`;
+        R.anim(fl, [{ opacity: 0, transform: "scale(0.3)" }, { opacity: 1, transform: "scale(1)", offset: 0.22 }, { opacity: 0, transform: "scale(2.8)" }], { duration: 720, delay: 290, easing: E.out, fill: "none" });
+        R.at(300, () => {
+          for (let i = 0; i < 20; i++) {
+            const a = (i / 20) * Math.PI * 2 + Math.random() * 0.3, r = 80 + Math.random() * 120;
+            layer.insertAdjacentHTML("beforeend", `<i class="pw139-spark" style="--c:${W.me ? "var(--accent)" : "var(--rv127)"};left:${mx}px;top:${my}px"></i>`);
+            const sp = layer.lastElementChild;
+            const an = R.anim(sp, [{ transform: "translate(0, 0) scale(1)", opacity: 1 }, { transform: `translate(${(Math.cos(a) * r).toFixed(1)}px, ${(Math.sin(a) * r).toFixed(1)}px) scale(0.2)`, opacity: 0 }], { duration: 620 + Math.random() * 280, easing: E.out, fill: "forwards" });
+            if (an) an.onfinish = () => sp.remove();
+          }
+        });
+        void kw;
+      });
+    }
+    // who starts, where the VS was
+    const TR = TC + 340;
+    R.anim(q(".pw139-r"), [{ opacity: 0, transform: "scale(1.35)", letterSpacing: "0.22em" }, { opacity: 1, transform: "scale(1)", letterSpacing: "0.02em" }], { duration: 580, delay: TR, easing: E.out });
+    // the screen goes when it has been seen (CSS: the .lk127-vs fades at --pw-end)
+    const total0 = TR + 1150;
+    el.style.setProperty("--pw-end", `${((total0 - 300) / 1000 / SP).toFixed(2)}s`);
+    // a tap: everything at its end at once, who starts shown a moment, then the fight
+    let tapped = false;
+    const skip = () => {
+      if (tapped || R.done) return;
+      tapped = true;
+      R.stop();
+      place();
+      layer.querySelectorAll(".pw139-streak, .pw139-orb, .pw139-spark").forEach((n) => n.remove());
+      D.sides.forEach((s) => { const n = sumEl(s); if (n) n.textContent = fmt(s.sum); const sp = sphEl(s); if (sp) { sp.style.setProperty("--k", kOfSum(s.sum).toFixed(3)); sp.querySelector("b").textContent = fmt(s.sum); } });
+      el.querySelectorAll(".pw139-c [data-v]").forEach((n) => { n.textContent = fmt(+n.dataset.v); });
+      cancelAnimationFrame(seamRaf); el.style.setProperty("--pw-s", finS.toFixed(3));
+      layer.classList.add("is-met", W.me ? "is-me-wins" : "is-them-wins");
+      el.classList.add("is-pw-met", "is-pw-done", W.me ? "is-pw-me" : "is-pw-them");
+      if (D.tie) layer.classList.add("is-tie");
+      sphEl(W)?.classList.add("is-win"); sphEl(Lz)?.classList.add("is-lose");
+      el.style.setProperty("--pw-end", "0.9s");
+      el.style.animation = "none"; void el.offsetWidth; el.style.animation = "";
+      const gone = Date.now() + 1200;
+      setTimeout(() => el.remove(), 1250);
+      opt.done?.(gone);
+    };
+    el.addEventListener("pointerdown", skip, { once: true });
+    R.at(total0, () => { el.classList.add("is-pw-done"); R.done = true; opt.done?.(Date.now()); });
+    return total0 / SP;
+  };
+  return { LOOKS, play, data, sums, firstOf, share, get pick() { return st.pick; }, set pick(v) { if (LOOKS[v]) st.pick = v; }, get speed() { return st.speed; }, set speed(v) { st.speed = v > 0 ? v : 1; } };
+})();
+window.POWER139 = POWER139;
 initGame();
 bindAnchors();
 setTimeout(() => window.ARENA136?.start(), 6000);
@@ -51131,7 +51550,7 @@ setTimeout(() => window.ARENA136?.start(), 6000);
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-24-1429";
+const BUILD = "2026-11-24-1706";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
