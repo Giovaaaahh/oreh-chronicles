@@ -9377,6 +9377,218 @@ html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .ca
 /* on a phone his wide figure fills the width: the card he plays back hangs inside it, at its top left, not past the screen's edge */
 .bt:not(.is-pc) .bt-foe.is-pr112.is-wide132 .pr112-mirror { right: auto; left: 0.4em; top: 2.4em; }
 
+/* ══ round 136 · the Capped ranks' looks (arena136-look.js): A Targa, B Stemma, C Scala, D Cornice. Each rank's metal comes in as
+   --t1 (light) --t2 (body) --t3 (shadow) --tg (its glow). Every look has the same moves: a reveal when the page opens, the notch a
+   match moved, a division won or lost, the Monday's reward rising; still when the player asks for less motion. ══ */
+@property --rk136p { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --rk136a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+
+.rk136 { display: grid; gap: 10px; padding: 14px 16px 12px; background: radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--tg) 16%, transparent), transparent 62%), rgb(255 255 255 / 0.035); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tg) 30%, transparent); animation: rk136-in 0.5s ease-out both; }
+.rk136-to { margin: 0; font-size: 14px; color: var(--raw-color-ice-200); }
+.rk136-to b { color: #fff; font-weight: 600; }
+/* ten notches: lit ones in the rank's metal, filling one after the other as the page opens */
+.rk136-notch { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px; }
+.rk136-notch i { height: 11px; background: rgb(255 255 255 / 0.09); clip-path: polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%); }
+.rk136-notch i.is-on { background: linear-gradient(180deg, var(--t1), var(--t2) 70%, var(--t3)); box-shadow: 0 0 10px color-mix(in srgb, var(--tg) 55%, transparent); animation: rk136-notch 0.42s calc(var(--i) * 45ms + 0.2s) cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.rk136-pips { display: flex; justify-content: center; gap: 6px; }
+.rk136-pips i { width: 10px; height: 10px; rotate: 45deg; background: rgb(255 255 255 / 0.12); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.2); }
+.rk136-pips i.is-on { background: linear-gradient(135deg, var(--t1), var(--t2)); box-shadow: 0 0 8px var(--tg); }
+/* what the rank gives, the date it is given */
+.rk136-rew { display: grid; gap: 6px; width: 100%; padding: 10px 12px; border: 0; background: rgb(0 0 0 / 0.22); color: inherit; text-align: left; cursor: pointer; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08); }
+.rk136-rew:hover { background: rgb(255 255 255 / 0.06); }
+.rk136-rew:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rk136-rew > span:first-child { display: grid; font: 700 16px/1.1 var(--font-display); text-transform: uppercase; color: #fff; }
+.rk136-rew small { font: 600 11px var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--raw-color-ice-200); }
+.rk136-bots { margin: 0; font-size: 12px; color: var(--raw-color-ice-200); }
+.rk136-bots b { color: #fff; }
+.rk136-prize { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.rk136-pr { display: inline-flex; align-items: center; gap: 5px; font: 700 22px/1 var(--font-display); color: #fff; font-variant-numeric: tabular-nums; }
+.rk136-pr .gm-ic { width: 20px; height: 20px; }
+.rk136-prize.is-small .rk136-pr { font-size: 16px; }
+.rk136-prize.is-small .rk136-pr .gm-ic { width: 15px; height: 15px; }
+.rk136-items { display: flex; flex-wrap: wrap; gap: 4px; }
+.rk136-item { position: relative; display: block; }
+.rk136-item .it { font-size: 10px; }
+.rk136-items.is-small .rk136-item .it { font-size: 6px; }
+.rk136-item > b { position: absolute; right: -2px; bottom: -4px; padding: 1px 4px; font: 700 12px/1 var(--font-display); color: #031018; background: var(--t1, #fff); }
+.rk136-items.is-small .rk136-item > b { font-size: 9px; }
+
+.hubC-row strong.rk136-st { font-size: 26px; letter-spacing: 0.01em; text-transform: uppercase; white-space: nowrap; }
+
+/* ── A · Targa: the rank's name in its metal, its number beside it, a light running over it ── */
+.rkA-mark { display: inline-flex; align-items: baseline; gap: 0.18em; line-height: 0.9; }
+.rkA-mark :is(.rkA-tier, .rkA-n) { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; color: transparent; -webkit-background-clip: text; background-clip: text; background-image: linear-gradient(100deg, transparent 38%, rgb(255 255 255 / 0.95) 50%, transparent 62%), linear-gradient(180deg, var(--t1) 12%, var(--t2) 58%, var(--t3) 100%); background-size: 260% 100%, 100% 100%; background-position: 160% 0, 0 0; background-repeat: no-repeat; filter: drop-shadow(0 2px 0 rgb(0 0 0 / 0.35)); }
+.rkA-mark.is-big { font-size: 66px; }
+.rkA-mark.is-big :is(.rkA-tier, .rkA-n) { animation: rk136-shine 1.6s 0.25s ease-in-out both; }
+.rkA-mark.is-big .rkA-n { font-size: 1.25em; }
+.rkA-mark.is-mid { font-size: 34px; }
+.rkA-mark.is-row { font-size: 15px; min-width: 7.6em; }
+.rkA { gap: 12px; }
+.rkA .rkA-notch i { height: 13px; }
+
+/* ── B · Stemma: the crest, a light running over it, three pips, a ring of ten around it ── */
+.rkB { grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 16px; }
+.rkB > :is(.rk136-rew, .rk136-bots) { grid-column: 1 / -1; }
+.rkB-txt { display: grid; gap: 6px; min-width: 0; }
+.rkB-txt > b { font: 700 32px/1 var(--font-display); text-transform: uppercase; color: var(--t1); }
+.rkB-mark { position: relative; display: grid; justify-items: center; gap: 4px; }
+.rkB-img { position: relative; display: block; width: var(--sz, 84px); aspect-ratio: 1; }
+.rkB-img img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.45)); }
+.rkB-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 38%, rgb(255 255 255 / 0.75) 50%, transparent 62%) 160% 0 / 280% 100% no-repeat; -webkit-mask: var(--img) center / contain no-repeat; mask: var(--img) center / contain no-repeat; pointer-events: none; }
+.rkB-mark.is-big .rkB-img { --sz: 104px; animation: rk136-drop 0.6s cubic-bezier(0.2, 0.9, 0.25, 1.2) both; }
+.rkB-mark.is-big .rkB-img::after { animation: rk136-glint 1.8s 0.55s ease-in-out both; }
+.rkB-mark.is-mid .rkB-img { --sz: 64px; }
+.rkB-mark.is-row .rkB-img { --sz: 30px; }
+.rkB-ring { --p: 0; --rk136p: var(--p); position: relative; display: grid; place-items: center; width: 150px; aspect-ratio: 1; animation: rk136-ring 1.1s 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.rkB-ring::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, var(--tg) calc(var(--rk136p) * 1%), rgb(255 255 255 / 0.1) 0); -webkit-mask: repeating-conic-gradient(#000 0 33deg, transparent 33deg 36deg), radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px)); -webkit-mask-composite: source-in; mask: repeating-conic-gradient(#000 0 33deg, transparent 33deg 36deg) intersect, radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px)); }
+.rkB-ring.is-bar { width: 64px; animation-name: rk136-ring-move; animation-duration: 0.9s; animation-delay: 0.6s; }
+.rkB-ring.is-bar::before { -webkit-mask: repeating-conic-gradient(#000 0 33deg, transparent 33deg 36deg), radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px)); }
+
+/* ── C · Scala: eighteen steps rising, done in their metal, yours lit with a mark over it ── */
+.rkC-name { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin: 0; }
+.rkC-name > b { font: 700 32px/1 var(--font-display); text-transform: uppercase; color: var(--t1); }
+.rkC-climb { display: grid; gap: 8px; }
+.rkC-mark { display: grid; grid-template-columns: repeat(18, minmax(0, 1fr)); align-items: end; gap: 3px; height: var(--hh, 40px); }
+.rkC-mark i { position: relative; height: calc(var(--h) * 100%); background: color-mix(in srgb, var(--t2) 22%, rgb(255 255 255 / 0.05)); transform-origin: 50% 100%; }
+.rkC-mark i.is-done { background: linear-gradient(180deg, var(--t1), var(--t2) 80%); opacity: 0.8; }
+.rkC-mark i.is-now { background: linear-gradient(180deg, #fff, var(--t1) 30%, var(--t2)); box-shadow: 0 0 14px var(--tg); }
+.rkC-mark i.is-now::after { content: ""; position: absolute; left: 50%; bottom: calc(100% + 5px); width: 12px; height: 9px; translate: -50% 0; background: #fff; clip-path: polygon(0 0, 100% 0, 50% 100%); }
+.rkC-mark.is-big { --hh: 86px; }
+.rkC-mark.is-big i { animation: rk136-step 0.5s calc(var(--i) * 35ms + 0.1s) cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.rkC-mark.is-big i.is-now::after { animation: rk136-mark 0.45s 0.85s cubic-bezier(0.2, 0.9, 0.3, 1.3) both; }
+.rkC-mark.is-mid { --hh: 46px; width: 180px; }
+.rkC-mark.is-row { --hh: 20px; width: 74px; gap: 1px; }
+.rkC-mark.is-row i.is-now::after { display: none; }
+.rkC-tiers { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 3px; }
+.rkC-tiers i { font: 700 10px/1 var(--font-sans); font-style: normal; letter-spacing: 0.04em; text-transform: uppercase; text-align: center; color: var(--t1); opacity: 0.85; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── D · Cornice: the rank's metal around your team's cards, studs for the division, a light running round the frame ── */
+.rkD-name { display: flex; align-items: center; gap: 10px; margin: 0; }
+.rkD-name > b { font: 700 34px/1 var(--font-display); text-transform: uppercase; color: transparent; -webkit-background-clip: text; background-clip: text; background-image: linear-gradient(180deg, var(--t1) 15%, var(--t2) 70%, var(--t3)); }
+.rkD-mark { display: inline-grid; }
+.rkD-frame { position: relative; display: block; width: var(--fw, 30px); aspect-ratio: 3 / 4; background: linear-gradient(160deg, rgb(255 255 255 / 0.06), rgb(0 0 0 / 0.3)); box-shadow: inset 0 0 0 2px var(--t2), inset 0 0 0 3px var(--t3), 0 0 14px -4px var(--tg); }
+.rkD-frame::before { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px var(--t1); opacity: 0.55; }
+.rkD-studs { position: absolute; left: 50%; top: -4px; display: flex; gap: 3px; translate: -50% 0; }
+.rkD-studs i { width: 7px; height: 7px; rotate: 45deg; background: rgb(255 255 255 / 0.15); }
+.rkD-studs i.is-on { background: linear-gradient(135deg, var(--t1), var(--t2)); box-shadow: 0 0 6px var(--tg); }
+.rkD-mark.is-mid .rkD-frame { --fw: 48px; }
+.rkD-mark.is-big .rkD-frame { --fw: 84px; }
+.rkD-mark.is-row .rkD-frame { --fw: 20px; }
+.rkD-mark.is-row .rkD-studs i { width: 5px; height: 5px; }
+.rkD-team .hubC-card { position: relative; box-shadow: inset 0 0 0 3px var(--t2), inset 0 0 0 5px var(--t3), inset 0 0 0 6px color-mix(in srgb, var(--t1) 45%, transparent), 0 0 30px -8px var(--tg); }
+.rkD-team .hubC-card::after { content: ""; position: absolute; inset: 0; pointer-events: none; padding: 3px; background: conic-gradient(from var(--rk136a), transparent 0 72%, var(--t1) 86%, transparent 97%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); animation: rk136-frame 1.8s calc(var(--k, 0) * 120ms + 0.2s) ease-in-out both; }
+.rkD-team .rkD-studs { top: -7px; z-index: 2; gap: 5px; }
+.rkD-team .rkD-studs i { width: 13px; height: 13px; box-shadow: 0 0 0 2px rgb(0 0 0 / 0.5); }
+.rkD-end .endB-mvp { box-shadow: inset 0 0 0 3px var(--t2), inset 0 0 0 5px var(--t3), inset 0 0 0 6px color-mix(in srgb, var(--t1) 45%, transparent), 0 0 44px -10px var(--tg); }
+.rkD-end .endB-mvp::after { content: ""; position: absolute; inset: 0; pointer-events: none; padding: 4px; background: conic-gradient(from var(--rk136a), transparent 0 72%, var(--t1) 86%, transparent 97%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); animation: rk136-frame 1.8s 0.9s ease-in-out both; }
+.rkD-end .endB-mvp > .rkD-studs { top: -8px; z-index: 2; gap: 6px; }
+.rkD-end .endB-mvp > .rkD-studs i { width: 15px; height: 15px; box-shadow: 0 0 0 2px rgb(0 0 0 / 0.5); }
+
+/* ── the points a match moved, on the end «Il migliore» ── */
+.rk136-change { display: flex; align-items: center; gap: 16px; margin: 12px 0 0; padding: 12px 14px; background: radial-gradient(110% 120% at 0% 50%, color-mix(in srgb, var(--tg) 22%, transparent), transparent 70%), rgb(255 255 255 / 0.04); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tg) 35%, transparent); animation: rk136-in 0.45s 0.35s ease-out both; }
+.rk136-ch-mark { position: relative; display: grid; flex: none; place-items: center; }
+.rk136-ch-mark > * { grid-area: 1 / 1; }
+.rk136-ch-txt { display: grid; gap: 7px; min-width: 0; flex: 1 1 auto; }
+.rk136-ch-word { font: 700 24px/1 var(--font-display); text-transform: uppercase; color: #fff; }
+.rk136-ch-word b { color: var(--t1); }
+.rk136-change.is-minus .rk136-ch-word { color: var(--rv127, #ff6b6b); }
+.rk136-ch-notch i.is-new { animation: rk136-lit 0.7s 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.4) both; }
+.rk136-ch-notch i.is-gone { animation: rk136-out 0.8s 0.9s ease-in both; }
+.rk136-change.is-up .rk136-ch-old { animation: rk136-old-up 0.6s 0.8s ease-in both; }
+.rk136-change.is-up .rk136-ch-new { animation: rk136-new-up 0.7s 1.25s cubic-bezier(0.2, 0.9, 0.3, 1.3) both; }
+.rk136-change.is-up .rk136-ch-mark::before { content: ""; position: absolute; inset: -30%; z-index: -1; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in srgb, var(--tg) 70%, transparent), transparent); animation: rk136-burst 1s 1.25s ease-out both; }
+.rk136-change.is-down .rk136-ch-old { animation: rk136-old-down 0.7s 0.8s ease-in both; }
+.rk136-change.is-down .rk136-ch-new { animation: rk136-new-down 0.6s 1.3s ease-out both; }
+.rk136-change .rkC-mark.is-mid { width: 150px; }
+
+/* ── the Monday's reward ── */
+.rk136-gift { position: fixed; inset: 0; z-index: 9000; display: grid; place-items: center; padding: 16px; background: rgb(3 6 9 / 0.78); animation: rk136-fade 0.3s ease-out both; container: gift136 / inline-size; }
+.rk136-gift-in { position: relative; display: grid; justify-items: center; gap: 10px; width: min(560px, 100%); max-height: calc(100vh - 32px); overflow: auto; padding: 26px 24px 20px; text-align: center; background: radial-gradient(90% 60% at 50% 0%, color-mix(in srgb, var(--tg) 26%, transparent), transparent 70%), var(--raw-color-ink-900); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tg) 45%, transparent), 0 30px 80px rgb(0 0 0 / 0.6); clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); animation: rk136-rise 0.55s 0.1s cubic-bezier(0.2, 0.85, 0.25, 1.1) both; }
+.rk136-gift-rays { position: absolute; left: 50%; top: 120px; width: 420px; aspect-ratio: 1; translate: -50% -50%; pointer-events: none; background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--tg) 30%, transparent) 0 6deg, transparent 6deg 18deg); -webkit-mask: radial-gradient(closest-side, #000 20%, transparent); mask: radial-gradient(closest-side, #000 20%, transparent); animation: rk136-spin 24s linear infinite, rk136-fade 0.8s 0.4s ease-out both; }
+.rk136-gift-when { position: relative; font: 600 12px var(--font-sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--raw-color-ice-200); }
+.rk136-gift-mark { position: relative; display: grid; place-items: center; min-height: 116px; animation: rk136-new-up 0.7s 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.3) both; }
+.rk136-gift h2 { position: relative; margin: 0; font: 700 44px/1 var(--font-display); text-transform: uppercase; color: var(--t1); }
+.rk136-gift-say { position: relative; margin: 0; font-size: 15px; color: #fff; }
+.rk136-gift .rk136-prize { position: relative; justify-content: center; }
+.rk136-gift .rk136-prize > * { animation: rk136-pop 0.45s calc(0.8s + var(--j, 0) * 90ms) cubic-bezier(0.2, 0.9, 0.3, 1.4) both; }
+.rk136-gift .rk136-items .rk136-item { animation: rk136-pop 0.4s 1s cubic-bezier(0.2, 0.9, 0.3, 1.4) both; }
+.rk136-gift .rk136-items .rk136-item .it { font-size: 8.5px; }
+.rk136-take { position: relative; min-width: 220px; min-height: 52px; margin-top: 6px; font-size: 18px; }
+.rk136-gift-foot { position: relative; margin: 0; font-size: 13px; color: var(--raw-color-ice-200); }
+.rk136-gift--C .rkC-mark.is-big { width: min(360px, 80cqw); }
+.rk136-gift--D .rkD-mark.is-big .rkD-frame { --fw: 96px; }
+
+/* ── every rank and what it gives ── */
+.rk136-table { position: fixed; inset: 0; z-index: 9000; display: grid; place-items: center; padding: 16px; background: rgb(3 6 9 / 0.74); animation: rk136-fade 0.25s ease-out both; container: table136 / inline-size; }
+.rk136-table-in { display: grid; grid-template-rows: auto auto minmax(0, 1fr); gap: 10px; width: min(760px, 100%); max-height: calc(100vh - 32px); padding: 18px 20px; background: var(--raw-color-ink-900); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12); clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); animation: rk136-rise 0.4s ease-out both; }
+.rk136-table header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.rk136-table header b { font: 700 24px/1 var(--font-display); text-transform: uppercase; color: #fff; }
+.rk136-x { width: 44px; height: 44px; border: 0; background: rgb(255 255 255 / 0.06); color: #fff; font-size: 26px; cursor: pointer; }
+.rk136-x:focus-visible { outline: 2px solid var(--accent); }
+.rk136-table-say { margin: 0; font-size: 14px; color: var(--raw-color-ice-200); }
+.rk136-table-say b { color: #fff; }
+.rk136-table ol { display: grid; gap: 10px; margin: 0; padding: 0 4px 0 0; overflow: auto; list-style: none; }
+.rk136-tier { display: grid; gap: 4px; padding: 10px 12px; background: radial-gradient(100% 140% at 0% 0%, color-mix(in srgb, var(--tg) 14%, transparent), transparent 60%), rgb(255 255 255 / 0.03); box-shadow: inset 3px 0 0 var(--t2); animation: rk136-in 0.4s calc(var(--k, 0) * 50ms) ease-out both; }
+.rk136-tier h4 { margin: 0 0 2px; font: 700 15px/1 var(--font-sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--t1); }
+.rk136-row { display: grid; grid-template-columns: auto minmax(7em, auto) auto minmax(0, 1fr); align-items: center; gap: 4px 12px; margin: 0; padding: 4px 0; }
+.rk136-row > b { font: 700 18px/1 var(--font-display); text-transform: uppercase; color: #fff; }
+.rk136-row > em { font: 700 11px/1 var(--font-sans); font-style: normal; letter-spacing: 0.08em; text-transform: uppercase; color: #031018; background: var(--t1); padding: 3px 6px; }
+.rk136-row:not(:has(em)) > .rk136-prize { grid-column: 3 / -1; }
+.rk136-row.is-you { background: linear-gradient(90deg, color-mix(in srgb, var(--tg) 18%, transparent), transparent 80%); }
+
+/* a narrow page (a phone): smaller marks, the crest above its words */
+@container ar127 (max-width: 720px) {
+  .rk136 { padding: 12px; }
+  .hubC-row strong.rk136-st { font-size: 20px; }
+  .rkA-mark.is-big { font-size: 48px; }
+  .rkB { grid-template-columns: auto minmax(0, 1fr); column-gap: 12px; }
+  .rkB-ring { width: 118px; }
+  .rkB-mark.is-big .rkB-img { --sz: 80px; }
+  .rkB-txt > b, .rkC-name > b { font-size: 26px; }
+  .rkC-mark.is-big { --hh: 64px; gap: 2px; }
+  .rkC-tiers i { font-size: 9px; letter-spacing: 0; }
+  .rkD-name > b { font-size: 26px; }
+}
+@container end127 (orientation: portrait) {
+  .rk136-change { gap: 10px; padding: 10px; margin-top: 8px; }
+  .rk136-ch-word { font-size: 5.4cqw; }
+  .rkA-mark.is-mid { font-size: 7.4cqw; }
+  .rkB-mark.is-mid .rkB-img { --sz: 13cqw; }
+  .rk136-change .rkC-mark.is-mid { width: 30cqw; }
+}
+@container table136 (max-width: 560px) {
+  .rk136-row { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .rk136-row > .rk136-prize, .rk136-row:not(:has(em)) > .rk136-prize { grid-column: 1 / -1; }
+}
+@container gift136 (max-width: 420px) {
+  .rk136-gift h2 { font-size: 34px; }
+  .rk136-gift-rays { width: 320px; }
+}
+
+@keyframes rk136-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes rk136-fade { from { opacity: 0; } }
+@keyframes rk136-rise { from { opacity: 0; transform: translateY(26px) scale(0.97); } }
+@keyframes rk136-notch { from { opacity: 0.2; transform: scaleY(0.2); } }
+@keyframes rk136-shine { from { background-position: 160% 0, 0 0; } to { background-position: -60% 0, 0 0; } }
+@keyframes rk136-glint { from { background-position: 160% 0; } to { background-position: -60% 0; } }
+@keyframes rk136-drop { from { opacity: 0; transform: translateY(-16px) scale(0.86); } }
+@keyframes rk136-ring { from { --rk136p: 0; } to { --rk136p: var(--p); } }
+@keyframes rk136-ring-move { from { --rk136p: var(--p0); } to { --rk136p: var(--p); } }
+@keyframes rk136-step { from { opacity: 0; transform: scaleY(0); } }
+@keyframes rk136-mark { from { opacity: 0; transform: translateY(-10px); } }
+@keyframes rk136-frame { from { --rk136a: 0deg; opacity: 1; } 90% { opacity: 1; } to { --rk136a: 360deg; opacity: 0; } }
+@keyframes rk136-lit { 0% { opacity: 0.2; background: rgb(255 255 255 / 0.09); transform: scale(1); } 45% { transform: scale(1.35, 1.6); background: #fff; box-shadow: 0 0 18px #fff; } 100% { opacity: 1; transform: scale(1); } }
+@keyframes rk136-out { 0% { background: linear-gradient(180deg, var(--t1), var(--t2)); box-shadow: 0 0 12px var(--tg); } 60% { background: var(--rv127, #ff6b6b); transform: scaleY(0.6); } 100% { background: rgb(255 255 255 / 0.09); box-shadow: none; } }
+@keyframes rk136-old-up { to { opacity: 0; transform: translateY(-18px) scale(0.8); filter: blur(2px); } }
+@keyframes rk136-new-up { from { opacity: 0; transform: translateY(20px) scale(0.6); } 70% { transform: scale(1.08); } }
+@keyframes rk136-old-down { to { opacity: 0; transform: translateY(18px) scale(0.9); filter: grayscale(1); } }
+@keyframes rk136-new-down { from { opacity: 0; transform: translateY(-14px); } }
+@keyframes rk136-burst { from { opacity: 0; transform: scale(0.3); } 40% { opacity: 1; } to { opacity: 0; transform: scale(1.6); } }
+@keyframes rk136-spin { to { rotate: 360deg; } }
+@keyframes rk136-pop { from { opacity: 0; transform: scale(0.5); } 70% { transform: scale(1.12); } }
+@media (prefers-reduced-motion: reduce) {
+  :is(.rk136, .rk136-change, .rk136-gift, .rk136-table, .rkD-team) *, :is(.rk136, .rk136-change, .rk136-gift, .rk136-table, .rkD-team) *::before, :is(.rk136, .rk136-change, .rk136-gift, .rk136-table, .rkD-team) *::after, .rk136, .rk136-change, .rk136-gift, .rk136-table { animation: none !important; }
+}
 </style>
 </head>
 <body>
@@ -28627,7 +28839,7 @@ void main() {
     autoPaint85();
     const sides = [0, 1].map((s) => ({ name: cfg.names?.[s] ?? (s ? "Rival" : "You"), members: [], reserve: null, fields: null }));
     // the Arena's balance: heroes have hpK times their HP, one blow takes at most cap of a hero's max HP (the user tunes both)
-    DUEL127 = { on: true, sides, active: 0, me: cfg.me ?? 0, turns: 0, cfg, counters: [], done: false, top: new Map(), n: 0, rec: [], replaying: false, fast: !!cfg.fast, hpK: cfg.hpK ?? 1, cap: cfg.cap === undefined ? null : cfg.cap, cardCap: cfg.cardCap ?? null, maxTurns: cfg.maxTurns ?? 12, rng: mulberry127(cfg.seed ?? (Date.now() & 0x7fffffff)) };
+    DUEL127 = { on: true, sides, active: 0, me: cfg.me ?? 0, turns: 0, cfg, counters: [], done: false, top: new Map(), n: 0, rec: [], replaying: false, fast: !!cfg.fast, hpK: cfg.hpK ?? 1, atkK: cfg.atkK ?? 1, defK: cfg.defK ?? 1, cap: cfg.cap === undefined ? null : cfg.cap, cardCap: cfg.cardCap ?? null, maxTurns: cfg.maxTurns ?? 12, rng: mulberry127(cfg.seed ?? (Date.now() & 0x7fffffff)) };
     window.__rng127 = DUEL127.rng;
     clearInterval(DUEL127.answering);
     DUEL127.answering = setInterval(() => { if (DUEL127?.on && !DUEL127.done && F.phase === "act") duelAnswer127(); }, 120);
@@ -28639,7 +28851,7 @@ void main() {
       F.reserve = l.bench ? face127(member(l.bench, T.over?.[l.bench] ?? null), s) : null;
       // the Arena's HP: every hero's (bench too) times hpK, BEFORE the opening passives: they grow it by shares (the same in the end)
       // and some keep the max they saw (Johta's base82, which his Marks then build on: kept unmultiplied, it took his HP below zero)
-      for (const m of [...F.team, F.reserve].filter(Boolean)) { m.max = Math.round(m.max * DUEL127.hpK); m.hp = m.max; }
+      for (const m of [...F.team, F.reserve].filter(Boolean)) { m.max = Math.round(m.max * DUEL127.hpK); m.hp = m.max; m.atk = Math.round(m.atk * DUEL127.atkK); m.def = Math.round(m.def * DUEL127.defK); }
       opening127(l);
       for (const m of [...F.team, F.reserve].filter(Boolean)) m.hp = Math.min(m.hp, m.max);
       // the trackers the regions' rules keep in F (what each hero dealt…): every side has its own, as a battle's start makes them
@@ -50121,7 +50333,7 @@ const ECON126 = (() => {
   }
   // a run replaced (a reset, an account's run coming in) is watched as soon as it is saved
   window.__econ126 = () => watch(PLAYER.player);
-  return { on, pull, reset, as, flush, watch, state: () => ({ queued: q.length, synced, offline }) };
+  return { on, pull, reset, as, flush, watch, state: () => ({ queued: q.length, synced, offline }), resync: () => run(async () => { if (!on || isAdmin()) return; try { await sync(); } catch { /* the next sync */ } }) };
 })();
 window.ECON126 = ECON126; // for the code that runs early (the launch's reset) and the tests
 /* ══ round 127 · the Arena's looks, as the user picked them in lab 127 (20 Nov): the Arena page «C · Tabellone», the rival found «A · La
@@ -50158,7 +50370,7 @@ const LOOK127 = (() => {
     : `<div class="hubC-acts"><button class="gm-btn lk127-go" type="button" data-ar127-go${c.team(c.k).length && !c.busy ? "" : " disabled"}>find a match · ${MODE[c.k][0]}</button><button class="gm-btn gm-btn--ghost lk127-practice" type="button" data-ar127-practice${c.team(c.k).length && !c.busy ? "" : " disabled"}>practice · no rating</button></div>`);
   const hub = (c) => `<div class="lk127 hubC">
       <section class="hubC-board" aria-label="Your Arena record"><h3>${esc(c.name)}</h3>
-        <div class="hubC-rows" role="radiogroup" aria-label="Mode">${[1, 2].map((k) => `<button type="button" class="hubC-row" role="radio" aria-checked="${c.k === k}" data-ar127-mode="${k}"><span><b>${MODE[k][0]}</b><small>${MODE[k][1]}</small><em>${c.wl(k)}</em></span><strong>${c.rating(k)}</strong></button>`).join("")}</div>
+        <div class="hubC-rows" role="radiogroup" aria-label="Mode">${[1, 2].map((k) => `<button type="button" class="hubC-row" role="radio" aria-checked="${c.k === k}" data-ar127-mode="${k}"><span><b>${MODE[k][0]}</b><small>${(k === 1 && c.capNote136) || MODE[k][1]}</small><em>${c.wl(k)}</em></span>${k === 1 && c.rank136 ? `<strong class="rk136-st">${esc(LOOK136.of(c.rank136.lp).name)}</strong>` : `<strong>${c.rating(k)}</strong>`}</button>`).join("")}</div>${c.k === 1 && c.rank136 ? LOOK136.hub(ARENA136.pick, c.rank136) : ""}
         <div class="hubC-last"><small>last matches</small><span>${(c.recent ?? []).map((r) => `<i class="is-${r.toLowerCase()}" title="${r === "W" ? "won" : r === "L" ? "lost" : r === "D" ? "draw" : "set aside"}">${r}</i>`).join("") || "none yet"}</span></div>
         ${acts(c)}
         <p class="ar127-line lk127-line" role="status">${esc(c.line)}</p></section>
@@ -50167,7 +50379,7 @@ const LOOK127 = (() => {
 
   /* ── the rival found · A · La lama: a diagonal cut, your three in your light, theirs in red, VS in the middle; standing upright (a phone)
    *    the rival above and you below, as on the field ── */
-  const side = (cls, p) => `<div class="vsA-side ${cls}"><div class="lk127-figs">${p.team.slice(0, 3).map((x) => box(heroineById(x.id))).join("")}</div><div class="lk127-who"><b>${esc(p.name)}</b><small>${p.rating} rating</small></div></div>`;
+  const side = (cls, p) => `<div class="vsA-side ${cls}"><div class="lk127-figs">${p.team.slice(0, 3).map((x) => box(heroineById(x.id))).join("")}</div><div class="lk127-who"><b>${esc(p.name)}</b><small>${p.lp != null ? esc(LOOK136.of(p.lp).name) : `${p.rating} rating`}</small></div></div>`;
   const vs = (v) => `<div class="lk127-vs vsA" role="img" aria-label="${esc(v.me.name)} against ${esc(v.them.name)}"><div class="vsA-in">${side("is-them", v.them)}${side("is-me", v.me)}<b class="vsA-vs">VS</b><small class="lk127-mode">${MODE[v.mode][0]}</small></div></div>`;
 
   /* ── the end · B · Il migliore: the hero of your team who did most (or your first, before any blow), whole on her light; upright, the
@@ -50181,11 +50393,222 @@ const LOOK127 = (() => {
       ${h ? box(h, "endB-mvp") : ""}
       <div class="endB-txt"><h2>${title(L)}</h2>
         ${h ? `<p class="endB-who"><small>${L.mvp.dmg > 0 ? "best of your team" : "your team"}</small><b>${esc(h.name)}</b>${L.mvp.dmg > 0 ? `<span>${num(L.mvp.dmg)} damage</span>` : ""}</p>` : ""}
-        ${w ? `<p class="lk127-why">${w}</p>` : ""}<p class="lk127-rate">${rate(L)}</p>
+        ${w ? `<p class="lk127-why">${w}</p>` : ""}${L.rank136 ? LOOK136.change(ARENA136.pick, L.rank136) : `<p class="lk127-rate">${rate(L)}</p>`}
         <div class="lk127-end-acts"><button class="gm-btn" type="button" data-ar127-again>again</button><button class="gm-btn gm-btn--ghost" type="button" data-ar127-back>back to the Arena</button></div></div></div></div>`;
   };
   return { hub, vs, end, MODE, esc };
 })();
+/* ══ round 136 · the Capped ranks' looks (lab 136: four to choose from). The user, 24 Nov: «facciamo i ranghi per il capped. Ovvero che
+ *  si parte da bronzo poi argento, oro, platino, diamante e campione. ogni elo ha 3 sotto eli … Ogni 2 lunedì viene visto l'elo che ha
+ *  raggiunto il giocatore, in base a quello si hanno delle ricompense», «Per salire di una mini divisione sono necessarie 10 vittorie,
+ *  ovviamente una sconfitta toglie 1 e una vittoria da 1». A rank is lp (0…179): its division d = ⌊lp/10⌋ (Bronze 1 … Champion 3), its
+ *  points lp − 10d. Four looks, each with its own mark of a rank and the same four places: the Arena page (the Capped record), the
+ *  points a match moved (on the end «Il migliore»), the Monday's reward, the table of every rank.
+ *   A · Targa     the rank's name in its metal, big, the division's number beside it, ten notches under it
+ *   B · Stemma    the rank's crest (Blender renders, art/items/rank-*.webp), three pips for the division, a ring of ten for the points
+ *   C · Scala     the whole climb, eighteen steps rising, you on yours, its ten ticks inside it
+ *   D · Cornice   your team's cards framed in the rank's metal, studs for the division; the board says the rank and its notches
+ *  This file only draws; arena127.js / round 136 give the data. ══ */
+const LOOK136 = (() => {
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  const TIERS = [
+    { key: "bronze", name: "Bronze", c1: "#e2a978", c2: "#8b5631", c3: "#5a3519", g: "#c98a55" },
+    { key: "silver", name: "Silver", c1: "#f1f4f7", c2: "#a4aeb9", c3: "#5f6874", g: "#c9d3dd" },
+    { key: "gold", name: "Gold", c1: "#ffe7a3", c2: "#d9a43a", c3: "#7f5a12", g: "#ebbd55" },
+    { key: "platinum", name: "Platinum", c1: "#dcfaf5", c2: "#7fc6bd", c3: "#3a6f6a", g: "#8fded3" },
+    { key: "diamond", name: "Diamond", c1: "#e3eeff", c2: "#8ea6f2", c3: "#3e4f9a", g: "#a4bcff" },
+    { key: "champion", name: "Champion", c1: "#ffe1a0", c2: "#e0566a", c3: "#6e1324", g: "#ff7486" },
+  ];
+  const TOP = 179;
+  /** A rank: its division (0…17), tier, number (1…3), points (0…9) and name. */
+  const of = (lp) => {
+    const L = Math.max(0, Math.min(TOP, Math.round(+lp || 0))), d = Math.floor(L / 10), t = TIERS[Math.floor(d / 3)];
+    return { lp: L, d, t, n: (d % 3) + 1, pts: L - d * 10, name: `${t.name} ${(d % 3) + 1}`, top: d === 17 };
+  };
+  const nameOf = (d) => `${TIERS[Math.floor(d / 3)].name} ${(d % 3) + 1}`;
+  /** The rank's metal as CSS variables. */
+  const vars = (t) => `--t1:${t.c1};--t2:${t.c2};--t3:${t.c3};--tg:${t.g}`;
+  const num = (n) => Math.round(n).toLocaleString("en-US");
+  const art = (t) => `art/items/rank-${t.key}.webp`;
+  const toNext = (r) => (r.top ? `${r.pts} points · the top rank` : `<b>${r.pts}</b>/10 wins to <b>${nameOf(r.d + 1)}</b>`);
+  /** Ten notches, `pts` lit; `flag` marks the one a match just lit («is-new») or put out («is-gone»). */
+  const notches = (r, cls = "", flag = null) => `<span class="rk136-notch${cls ? ` ${cls}` : ""}" role="img" aria-label="${r.pts} of 10 points">${Array.from({ length: 10 }, (_, i) => `<i class="${i < r.pts ? "is-on" : ""}${flag && flag.i === i ? ` ${flag.cls}` : ""}" style="--i:${i}"></i>`).join("")}</span>`;
+  const pips = (r) => `<span class="rk136-pips" aria-hidden="true">${[1, 2, 3].map((k) => `<i class="${k <= r.n ? "is-on" : ""}"></i>`).join("")}</span>`;
+  /** A reward: gems, gold and its pieces (the game's own tiles). */
+  const gemIc = () => (typeof gameIcon === "function" ? gameIcon("gem", "gm-ic--fill gm-gem") : "◆");
+  const coinIc = () => (typeof gameIcon === "function" ? gameIcon("coin", "gm-coin") : "●");
+  const pieces = (items, small = false) => {
+    const list = Object.entries(items ?? {}).filter(([, n]) => n > 0);
+    if (!list.length) return "";
+    return `<span class="rk136-items${small ? " is-small" : ""}">${list.map(([id, n]) => { const it = typeof ITEM_BY_ID !== "undefined" ? ITEM_BY_ID[id] : null; return it ? `<span class="rk136-item" title="${esc(it.name ?? id)}">${itemTile(it)}${n > 1 ? `<b>×${n}</b>` : ""}</span>` : ""; }).join("")}</span>`;
+  };
+  const prize = (w, small = false) => `<span class="rk136-prize${small ? " is-small" : ""}"><span class="rk136-pr" style="--j:0">${gemIc()}<b>${num(w.gems)}</b></span><span class="rk136-pr" style="--j:1">${coinIc()}<b>${num(w.gold)}</b></span>${pieces(w.items, small)}</span>`;
+  const day = (t) => new Date(t).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" });
+  const inDays = (t) => { const d = Math.max(0, Math.ceil((t - Date.now()) / 864e5)); return d === 0 ? "today" : d === 1 ? "tomorrow" : `in ${d} days`; };
+
+  /* ── each look's mark of a rank (s: "big", "mid", "row") ── */
+  const MARK = {
+    A: (r, s = "mid") => `<span class="rkA-mark is-${s}" style="${vars(r.t)}"><span class="rkA-tier">${r.t.name}</span><span class="rkA-n">${r.n}</span></span>`,
+    B: (r, s = "mid") => `<span class="rkB-mark is-${s}" style="${vars(r.t)};--img:url(${art(r.t)})"><span class="rkB-img"><img src="${art(r.t)}" alt="" draggable="false" decoding="async"></span>${s === "row" ? "" : pips(r)}</span>`,
+    C: (r, s = "mid") => `<span class="rkC-mark is-${s}" style="${vars(r.t)}">${Array.from({ length: 18 }, (_, d) => `<i class="${d < r.d ? "is-done" : d === r.d ? "is-now" : ""}" style="--i:${d};--h:${(0.22 + (0.78 * d) / 17).toFixed(3)};${vars(TIERS[Math.floor(d / 3)])}"></i>`).join("")}</span>`,
+    D: (r, s = "mid") => `<span class="rkD-mark is-${s}" style="${vars(r.t)}"><span class="rkD-frame"><span class="rkD-studs">${[1, 2, 3].map((k) => `<i class="${k <= r.n ? "is-on" : ""}"></i>`).join("")}</span></span></span>`,
+  };
+
+  /* ── the Arena page: the Capped record ── */
+  const hub = (L, c) => {
+    const r = of(c.lp ?? 0), w = c.rewards?.[r.d], next = c.next ?? Date.now() + 864e5 * 13, bots = c.bots;
+    const foot = `<button type="button" class="rk136-rew" data-rk136-table><span><small>${esc(day(next))} · ${inDays(next)}</small>${r.name} gives</span>${w ? prize(w, true) : ""}</button>
+      <p class="rk136-bots">${bots == null ? "" : bots > 0 ? `bot matches that count today: <b>${bots}</b> left` : "bot matches today: they no longer count"}</p>`;
+    if (L === "A") return `<section class="rk136 rkA" style="${vars(r.t)}" aria-label="Your Capped rank: ${r.name}">${MARK.A(r, "big")}${notches(r, "rkA-notch")}<p class="rk136-to">${toNext(r)}</p>${foot}</section>`;
+    if (L === "B") return `<section class="rk136 rkB" style="${vars(r.t)}" aria-label="Your Capped rank: ${r.name}"><span class="rkB-ring" style="--p:${r.pts * 10}">${MARK.B(r, "big")}</span><span class="rkB-txt"><b>${r.name}</b><span class="rk136-to">${toNext(r)}</span></span>${foot}</section>`;
+    if (L === "C") return `<section class="rk136 rkC" style="${vars(r.t)}" aria-label="Your Capped rank: ${r.name}"><p class="rkC-name"><b>${r.name}</b><span class="rk136-to">${toNext(r)}</span></p><span class="rkC-climb">${MARK.C(r, "big")}${notches(r, "rkC-notch")}</span><span class="rkC-tiers" aria-hidden="true">${TIERS.map((t) => `<i style="${vars(t)}">${t.name}</i>`).join("")}</span>${foot}</section>`;
+    return `<section class="rk136 rkD" style="${vars(r.t)}" aria-label="Your Capped rank: ${r.name}"><p class="rkD-name">${MARK.D(r, "row")}<b>${r.name}</b></p>${notches(r, "rkD-notch")}<p class="rk136-to">${toNext(r)}</p>${foot}</section>`;
+  };
+  /** Look D frames the team's cards in the rank's metal (the class and variables go on the team's section). */
+  const teamFrame = (L, lp) => (L === "D" ? { cls: "rkD-team", style: vars(of(lp).t), studs: of(lp).n } : null);
+  const endFrame = (L, lp) => (L === "D" ? { cls: "rkD-end", style: vars(of(lp).t), studs: `<span class="rkD-studs">${[1, 2, 3].map((k) => `<i class="${k <= of(lp).n ? "is-on" : ""}"></i>`).join("")}</span>` } : null);
+
+  /* ── a match's points, on the end «Il migliore»: before and after; up a division, down one ── */
+  const change = (L, m) => {
+    const a = of(m.from), b = of(m.to), up = b.d > a.d, down = b.d < a.d, dir = m.to > m.from ? "plus" : m.to < m.from ? "minus" : "same";
+    const word = up ? `Up to <b>${b.name}</b>` : down ? `Down to <b>${b.name}</b>` : dir === "plus" ? "+1 point" : dir === "minus" ? "−1 point" : "no points moved";
+    const note = m.why ? `<small>${esc(m.why)}</small>` : "";
+    const step = (r) => MARK[L](r, "mid");
+    // the notch the match moved: lit by a win (unless it went up a division: all of them start again), put out by a defeat
+    const flag = dir === "plus" && !up ? { i: b.pts - 1, cls: "is-new" } : dir === "minus" && !down ? { i: b.pts, cls: "is-gone" } : null;
+    const bar = L === "B" ? `<span class="rkB-ring is-bar" style="--p:${b.pts * 10};--p0:${up ? 100 : down ? 0 : a.pts * 10}"></span>` : notches(b, `rk136-ch-notch is-${dir}`, flag);
+    return `<div class="rk136-change rk136-change--${L} is-${dir}${up ? " is-up" : down ? " is-down" : ""}" style="${vars(b.t)}" role="status">
+      <span class="rk136-ch-mark">${up || down ? `<span class="rk136-ch-old" style="${vars(a.t)}">${step(a)}</span>` : ""}<span class="rk136-ch-new">${step(b)}</span></span>
+      <span class="rk136-ch-txt"><b class="rk136-ch-word">${word}</b>${bar}<span class="rk136-to">${toNext(b)}</span>${note}</span></div>`;
+  };
+
+  /* ── the Monday's reward: the rank held when the two weeks ended, what it gives, take it ── */
+  const reward = (L, R) => {
+    const r = of(R.lp), w = R;
+    return `<div class="rk136-gift rk136-gift--${L}" role="dialog" aria-modal="true" aria-label="Your Capped reward: ${r.name}" style="${vars(r.t)}"><div class="rk136-gift-in">
+      <span class="rk136-gift-rays" aria-hidden="true"></span>
+      <small class="rk136-gift-when">${esc(R.when ?? "The two weeks are over")}</small>
+      <span class="rk136-gift-mark">${MARK[L](r, "big")}</span>
+      <h2>${r.name}</h2>
+      <p class="rk136-gift-say">You held ${r.name} when the two weeks ended. Your reward:</p>
+      ${prize(w)}
+      <button class="gm-btn rk136-take" type="button" data-rk136-take>take it</button>
+      <p class="rk136-gift-foot">Every rank starts again from Bronze 1 now.</p></div></div>`;
+  };
+
+  /* ── every rank and what it gives ── */
+  const table = (L, T) => {
+    const r = of(T.lp ?? 0);
+    return `<div class="rk136-table rk136-table--${L}" role="dialog" aria-modal="true" aria-label="Capped ranks and rewards"><div class="rk136-table-in">
+      <header><b>Capped ranks · rewards</b><button type="button" class="rk136-x" data-rk136-close aria-label="Close">×</button></header>
+      <p class="rk136-table-say">10 wins take you up a division: a win is +1, a defeat −1. Every other Monday the rank you hold gives its reward, then everyone starts again from Bronze 1. Next: <b>${esc(day(T.next ?? Date.now()))}</b>.</p>
+      <ol>${TIERS.map((t, k) => `<li class="rk136-tier" style="${vars(t)};--k:${k}"><h4>${t.name}</h4>${[0, 1, 2].map((j) => { const d = k * 3 + j, x = of(d * 10), w = T.rewards?.[d]; return `<p class="rk136-row${d === r.d ? " is-you" : ""}">${MARK[L](x, "row")}<b>${x.name}</b>${d === r.d ? '<em>you</em>' : ""}${w ? prize(w, true) : ""}</p>`; }).join("")}</li>`).join("")}</ol></div></div>`;
+  };
+  return { TIERS, of, nameOf, vars, hub, change, reward, table, teamFrame, endFrame, MARK, art };
+})();
+window.LOOK136 = LOOK136;
+/* ══ round 136 · the Arena's Capped ranks on the device: what the Arena page, a match's end and the Monday's reward show (the look the
+ *  user picked in lab 136: «B · Stemma», arena136-look.js), and the reward taken. The server (server/vault131/arena.js) keeps the rank,
+ *  makes the bots and the rewards; this file reads its «me», asks «claim» and gives the run the reward's gold and pieces (once each:
+ *  PLAYER.player.arena136.got), its gems coming from the server's count (ECON126.resync). The user, 24 Nov: «facciamo i ranghi per il
+ *  capped … Ogni 2 lunedì viene visto l'elo che ha raggiunto il giocatore, in base a quello si hanno delle ricompense». ══ */
+const ARENA136 = (() => {
+  const pick = "B";
+  // the game page's own short note (its toast)
+  const note = (t) => { try { window.GM_TOAST97?.(t); } catch { /* no page yet */ } };
+  const pct = (k) => `${Math.round(k * 100)}%`;
+  /** The Capped record's data for the Arena page (null until the server has answered). */
+  const data = (me) => (me?.rank ? { lp: me.rank.lp ?? 0, rewards: me.ranks ?? [], next: Date.parse(me.rank.next) || Date.now(), bots: me.rank.bots ?? null } : null);
+  /** The Capped row's line: its limits and the test's stats (the server's numbers: «ATK and DEF 10% · HP 45%»). */
+  const capNote = (me) => {
+    const r = me?.rules?.[1] ?? me?.rules?.["1"];
+    if (!r || (r.atkK === 1 && r.defK === 1 && r.hpK === 1)) return "";
+    const s = r.atkK === r.defK ? `ATK and DEF ${pct(r.atkK)}` : `ATK ${pct(r.atkK)} · DEF ${pct(r.defK)}`;
+    return `Lv 100 · ★7 · ${s} · HP ${pct(r.hpK)}`;
+  };
+  /** The balance of a mode as the server last said it (a practice match fights by it too). */
+  const rulesOf = (me, mode) => { const r = me?.rules?.[mode] ?? me?.rules?.[String(mode)]; return r ? { hpK: r.hpK, atkK: r.atkK, defK: r.defK, maxTurns: r.maxTurns } : {}; };
+  /** A Capped match's points on its end: the rank before (the match's own record of it) and after (the server's, asked again). */
+  const endOf = (st, mode) => {
+    if (mode !== 1 || st.lp0 == null || !st.me?.rank) return null;
+    const why = st.botCounts === false ? "A bot match past today's 20: it moves no points." : "";
+    return { from: st.lp0, to: st.me.rank.lp ?? st.lp0, why };
+  };
+
+  /* ── the table of every rank, from the Arena page ── */
+  const host = () => document.querySelector(".gm") ?? document.body;
+  const shut = (sel) => host().querySelectorAll(sel).forEach((x) => x.remove());
+  const table = () => {
+    const me = window.ARENA127?.state?.().me, d = data(me);
+    if (!d) return;
+    shut(".rk136-table");
+    host().insertAdjacentHTML("beforeend", LOOK136.table(pick, d));
+    host().lastElementChild?.querySelector("button")?.focus({ preventScroll: true });
+  };
+
+  /* ── the Monday's reward: shown once the server has made it, taken by the player ── */
+  const got = () => ((PLAYER.player.arena136 ??= {}).got ??= {});
+  /** A reward this run has not had yet: owed (not taken), or taken on the server but never given to this run (its page closed half-way). */
+  const owed = (me) => (me?.rewards ?? []).find((r) => !got()[r.id] && (!r.claimed_at || Date.now() - Date.parse(r.claimed_at) < 14 * 864e5)) ?? null;
+  let showing = null;
+  const fighting = () => ["battle", "raid", "duel"].includes(document.querySelector(".gm")?.dataset.where ?? "");
+  const show = (r) => {
+    if (!r || showing === r.id) return;
+    if (fighting()) { setTimeout(() => show(r), 4000); return; }
+    showing = r.id;
+    shut(".rk136-gift");
+    const when = new Date(r.made_at ?? Date.now()).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" });
+    host().insertAdjacentHTML("beforeend", LOOK136.reward(pick, { lp: r.lp, gems: r.gems, gold: r.gold, items: r.items ?? {}, when: `${when} · the two weeks are over` }));
+    const el = host().lastElementChild;
+    el.dataset.rk136Id = r.id;
+    el.querySelector("[data-rk136-take]")?.focus({ preventScroll: true });
+  };
+  /** The run gets the gold and the pieces (each piece as a code gives it: rolled if its rarity rolls, its tempering kept). */
+  const give = (w) => {
+    const p = PLAYER.player;
+    p.gold = (p.gold ?? 0) + (Number(w.gold) || 0);
+    const bag = (p.bag ??= {});
+    for (const [k, q] of Object.entries(w.items ?? {})) {
+      const it = ITEM_BY_ID[k];
+      if (!it) continue;
+      for (let i = 0; i < q; i += 1) { const one = ITEM_ROLL[it.rarity] && !it.special && !it.story ? ITEM_BY_ID[rolledItem(it.slot, it.rarity).id + (it.temper ? `+${it.temper}` : "")] : it; bag[one.id] = (bag[one.id] ?? 0) + 1; }
+    }
+  };
+  const take = async (id, btn) => {
+    if (!id || got()[id]) { shut(".rk136-gift"); showing = null; return; }
+    if (btn) { btn.disabled = true; btn.textContent = "taking it…"; }
+    try {
+      const r = await window.ARENA127.call("claim", { reward: id });
+      if (!got()[id]) { give(r.reward); got()[id] = new Date().toISOString(); savePlayer(); }
+      window.ECON126?.resync?.();
+      shut(".rk136-gift"); showing = null;
+      note(`Reward taken: +${r.reward.gems} gems, +${Number(r.reward.gold).toLocaleString("en-US")} gold${Object.keys(r.reward.items ?? {}).length ? ", and its pieces in your bag" : ""}.`);
+      window.ARENA127?.render?.();
+      const next = owed(window.ARENA127?.state?.().me);
+      if (next) setTimeout(() => show(next), 600);
+    } catch (e) {
+      if (btn) { btn.disabled = false; btn.textContent = "take it"; }
+      note(e?.message ?? "The reward could not be taken now: try again in a moment.");
+    }
+  };
+  /** After the server's «me» (the Arena page, or once a few seconds after the game opens): a reward owed shows. */
+  const after = (me) => { if (!isAdmin()) show(owed(me)); };
+  const start = async () => {
+    const A = window.ARENA127;
+    if (!A?.on || isAdmin() || window.OREH_GEST_ONLY) return;
+    try { const me = await A.call("me"); if (A.state) A.state().me ??= me; after(me); } catch { /* offline: the Arena page asks again */ }
+  };
+  document.addEventListener("click", (ev) => {
+    const t = ev.target;
+    if (t.closest?.("[data-rk136-table]")) { table(); return; }
+    if (t.closest?.("[data-rk136-close]") || t.classList?.contains("rk136-table")) { t.closest(".rk136-table")?.remove(); return; }
+    const b = t.closest?.("[data-rk136-take]");
+    if (b) take(b.closest(".rk136-gift")?.dataset.rk136Id, b);
+  });
+  document.addEventListener("keydown", (ev) => { if (ev.key === "Escape") shut(".rk136-table"); });
+  return { pick, data, capNote, rulesOf, endOf, table, after, start, take, give };
+})();
+window.ARENA136 = ARENA136;
 /* ══ round 127 · the Arena online (the server function «arena», server/arena127): the queue, the match, the turns sent and received.
  *  The user, 20 Nov: «2 modalità nessuna alla pari» (Capped: at most Lv 100 and ★7, no super awakening; Unlimited: everything), «un
  *  turno del giocatore dura 15 secondi», «se scade il tempo il gioco gioca per me». The fight is the duel of createBattle (duel127.js):
@@ -50360,6 +50783,7 @@ const ARENA127 = (() => {
       wl: (k) => { const p = st.me?.player; return p && (p[`w${k}`] || p[`l${k}`]) ? `${p[`w${k}`]} won · ${p[`l${k}`]} lost` : "no matches yet"; },
       team: (k) => (teams[k] ??= VAULT131.team(k) ?? snapOf(k)), wait: st.queued ? Math.round((Date.now() - (st.waitFrom ?? Date.now())) / 1000) : 0,
       line: st.line || VAULT131.line() || "Your team in use fights: change it on the Team page.",
+      rank136: ARENA136.data(st.me), capNote136: ARENA136.capNote(st.me),
     };
   };
   const render = () => {
@@ -50370,7 +50794,7 @@ const ARENA127 = (() => {
     h.innerHTML = LOOK127.hub(ctx());
   };
   const say = (t) => { st.line = t; const l = host()?.querySelector(".ar127-line[role=status]"); if (l) l.textContent = t; };
-  const refresh = async () => { VAULT131.check(true).then(() => { if (!st.match && !st.busy) render(); }).catch(() => {}); try { st.me = await call("me"); if (st.me.live && !st.match) { play(st.me.live); return; } if (st.me.queue && !st.queued) { st.queued = st.me.queue; wait(); } } catch (e) { st.line = e.message; } render(); };
+  const refresh = async () => { VAULT131.check(true).then(() => { if (!st.match && !st.busy) render(); }).catch(() => {}); try { st.me = await call("me"); ARENA136.after(st.me); if (st.me.live && !st.match) { play(st.me.live); return; } if (st.me.queue && !st.queued) { st.queued = st.me.queue; wait(); } } catch (e) { st.line = e.message; } render(); };
 
   /* ── waiting for a rival ── */
   let stopWait = null;
@@ -50466,7 +50890,7 @@ const ARENA127 = (() => {
   const showVs = (m) => {
     const b = bt();
     if (!b) return;
-    const me = m.side, who = (s) => ({ name: m.names[s]?.name ?? (s === me ? "You" : "Rival"), rating: m.names[s]?.rating ?? 1000, team: (m.teams[s] ?? []).filter((x) => !x.bench) });
+    const me = m.side, who = (s) => ({ name: m.names[s]?.name ?? (s === me ? "You" : "Rival"), rating: m.names[s]?.rating ?? 1000, lp: m.mode === 1 ? m.names[s]?.lp ?? null : null, team: (m.teams[s] ?? []).filter((x) => !x.bench) });
     b.querySelector(".lk127-vs")?.remove();
     b.insertAdjacentHTML("beforeend", LOOK127.vs({ mode: m.mode, me: who(me), them: who(1 - me) }));
     st.vsUntil = Date.now() + 2800;
@@ -50483,6 +50907,7 @@ const ARENA127 = (() => {
     let after = st.r0;
     try { st.me = await call("me"); after = st.me.player?.[`r${m.mode}`] ?? st.r0; } catch { /* the rating shows next time */ }
     st.last = { win: m.winner === m.side, draw: m.winner === -1, rating: after - st.r0, disputed: m.status === "disputed", why: m.why };
+    st.last.rank136 = ARENA136.endOf(st, m.mode);
     st.match = null;
     st.off?.();
     showEnd();
@@ -50519,7 +50944,8 @@ const ARENA127 = (() => {
     st.match = m;
     st.ending = false;
     st.r0 = m.names?.[m.side]?.rating ?? 1000;
-    const known = m.moves.length;
+    st.lp0 = m.mode === 1 ? m.names?.[m.side]?.lp ?? null : null; st.botCounts = m.bot ? !!m.bot.counts : null;
+    const known = m.bot && m.moves.every((x) => x.side !== m.side) ? 0 : m.moves.length;
     // while it is this device's turn the match's channel still counts: the rival gave up (the match ends), or the server played this
     // device's turn for it (its time was up: the device was away) and the fight goes on from the server's copy
     st.off?.();
@@ -50536,7 +50962,7 @@ const ARENA127 = (() => {
     window.__BATTLE127?.duel({
       teams: [teamOf(kitTeam131(m.mode, m.teams[0])), teamOf(kitTeam131(m.mode, m.teams[1]))], names: m.names.map((x) => x.name), title: m.mode === 1 ? "Arena · Capped" : "Arena · Unlimited", seed: m.seed, first: m.first, me: m.side, online: true,
       // the balance the server wrote in the match (arena_rules: HP times hpK, one blow at most cap of a hero's HP, maxTurns each)
-      hpK: m.rules?.hpK, cap: m.rules?.cap, cardCap: m.rules?.cardCap, maxTurns: m.rules?.maxTurns, fast: known > 0 || !!window.__ARENA127_FAST,
+      hpK: m.rules?.hpK, atkK: m.rules?.atkK, defK: m.rules?.defK, cap: m.rules?.cap, cardCap: m.rules?.cardCap, maxTurns: m.rules?.maxTurns, fast: known > 0 || !!window.__ARENA127_FAST,
       onTurn: (side) => {
         const D = window.__BATTLE127?.state();
         if (D && D.fast && D.n >= known && !window.__ARENA127_FAST) window.__BATTLE127.fast(false);
@@ -50583,6 +51009,7 @@ const ARENA127 = (() => {
         let after = st.r0;
         try { st.me = await call("me"); after = st.me.player?.[`r${m.mode}`] ?? st.r0; } catch { /* the rating shows next time */ }
         st.last = { win: r.win === m.side, draw: r.win === -1, rating: after - st.r0, disputed: !!res?.disputed, waiting: !res };
+        st.last.rank136 = ARENA136.endOf(st, m.mode);
         st.match = null;
         st.off?.();
         showEnd();
@@ -50639,7 +51066,7 @@ const ARENA127 = (() => {
     const m = { mode: st.mode, side: 0, names: [{ name: PLAYER.player.avatar?.name || "You", rating: rating(st.mode) }, { name: "Training rival", rating: rating(st.mode) }], teams: [mine, theirs], moves: [], status: "live" };
     st.match = m; st.r0 = rating(st.mode); st.ending = false; st.practice = true;
     window.__BATTLE127?.duel({
-      teams: [teamOf(mine), teamOf(theirs)], names: m.names.map((x) => x.name), title: lab() ? (m.mode === 1 ? "Arena · Capped" : "Arena · Unlimited") : "Arena · Practice", seed: Date.now() & 0x7fffffff, first: 0, me: 0, online: false, auto: [false, true],
+      teams: [teamOf(mine), teamOf(theirs)], names: m.names.map((x) => x.name), title: lab() ? (m.mode === 1 ? "Arena · Capped" : "Arena · Unlimited") : "Arena · Practice", seed: Date.now() & 0x7fffffff, first: 0, me: 0, online: false, auto: [false, true], ...ARENA136.rulesOf(st.me, st.mode),
       onTurn: (side) => clock(side === 0 ? "mine" : "their", side),
       onEnd: (r) => { clock(false); st.last = { win: r.win === 0, draw: r.win === -1, rating: lab() ? (r.win === -1 ? 0 : r.win === 0 ? 16 : -16) : 0, practice: !lab(), disputed: false }; st.match = null; showEnd(); },
     });
@@ -50672,11 +51099,12 @@ const ARENA127 = (() => {
 window.ARENA127 = ARENA127;
 initGame();
 bindAnchors();
+setTimeout(() => window.ARENA136?.start(), 6000);
 /* ── round 59 · a new version: when the Admin asks every game to update (the pack's `app`, from the Gestionale's Lancio
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-23-1645";
+const BUILD = "2026-11-24-0912";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
