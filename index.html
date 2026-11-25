@@ -6760,7 +6760,7 @@ button.s66-log:focus-visible { outline: 2px solid var(--acc); outline-offset: 2p
   .p77-slot-e { width: 86px; height: 93px; }
   .p77-kit { grid-template-columns: minmax(0, 1fr); }
 }
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) {
   .p77-st, .p77-st-fig, .p77-pk, .p77-row, .p77-slot, .p77-item, .p77-xp i { transition: none; }
 }
 
@@ -7272,7 +7272,7 @@ button.s66-log:focus-visible { outline: 2px solid var(--acc); outline-offset: 2p
 .bt-auto.is-on { background: var(--accent); border-color: var(--accent); color: #04181b; }
 .bt-auto.is-on svg { animation: bt-auto85 2.4s linear infinite; }
 @keyframes bt-auto85 { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .bt-auto.is-on svg { animation: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .bt-auto.is-on svg { animation: none; } }
 .bt.is-hz:not(.is-pc) .bt-auto { height: 40px; padding: 0 9px 0 7px; font-size: 12px; }
 
 /* the Archive: the search over the rows */
@@ -7518,7 +7518,7 @@ button.s66-log:focus-visible { outline: 2px solid var(--acc); outline-offset: 2p
 @keyframes fx87-beatglow { 0% { opacity: 0; scale: 0.86; } 10% { opacity: 0.9; scale: 1; } 24% { opacity: 0.2; } 33% { opacity: 0.6; scale: 1.05; } 56%, 100% { opacity: 0; scale: 1.12; } }
 
 /* a still screen keeps every effect, standing still */
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) {
   .sc .fx87, .sc .fx87 > b, .sc .fx87::before, .sc .fx87-aura, .sc .fx87-echo, .sc .fx87-blade > b, .sc[data-fx~="beat"] .sc-img { animation: none !important; }
   .sc .fx87-blade > b { transform: translate3d(120%, 0, 0); }
   .sc .fx87-echo { opacity: calc(var(--fk, 1) * 0.3); scale: 1.06; }
@@ -7543,7 +7543,7 @@ button.s66-log:focus-visible { outline: 2px solid var(--acc); outline-offset: 2p
 .sc.is-jring87:not([data-bd]) .sc-face::before { content: ""; position: absolute; left: 50%; top: 50%; display: block; width: 220%; aspect-ratio: 1; margin: -110% 0 0 -110%; pointer-events: none; background: conic-gradient(#ffe2b8, #ff8a1f 10%, #7a2a06 24%, #0a0503 44%, #0a0503 56%, #7a2a06 76%, #ff8a1f 90%, #ffe2b8); animation: j83-round 3.2s linear infinite; }
 .sc.is-jring87:not([data-bd]) .sc-body { z-index: 1; }
 .is-flame82 .sc.is-jring87:not([data-bd]) .sc-face::before { animation-duration: 1.1s; background: conic-gradient(#fff3d6, #ffb347 8%, #ff5a0a 22%, #2a0a02 44%, #2a0a02 56%, #ff5a0a 78%, #ffb347 92%, #fff3d6); }
-@media (prefers-reduced-motion: reduce) { .sc[data-bd="spin"] .sc-face::before, .card[data-bd="spin"] .card-face--front::before, .sc.is-jring87 .sc-face::before { animation: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .sc[data-bd="spin"] .sc-face::before, .card[data-bd="spin"] .card-face--front::before, .sc.is-jring87 .sc-face::before { animation: none; } }
 
 /* ══ the Database: effects that go together, the border ══ */
 .g87-on { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-height: 36px; padding: 8px 10px; background: var(--g-raise); border: 1px solid var(--g-line); font-size: 13.5px; color: var(--g-muted); }
@@ -7558,7 +7558,7 @@ button.s66-log:focus-visible { outline: 2px solid var(--acc); outline-offset: 2p
 .g87-opt.is-new > small::after { content: " · nuovo"; color: var(--g-acc); }
 .g87-opt.is-bump { animation: g87-bump 0.32s ease-out; }
 @keyframes g87-bump { 30% { transform: translateX(-4px); } 60% { transform: translateX(4px); } }
-@media (prefers-reduced-motion: reduce) { .g87-opt.is-bump { animation: none; } .g87-opt > i { transition: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .g87-opt.is-bump { animation: none; } .g87-opt > i { transition: none; } }
 .g87-cols { display: grid; gap: 10px; }
 
 /* ══════════ Round 89 ══════════ */
@@ -7695,7 +7695,7 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
   .l95-plank { min-height: 48px; }
   .l95-scroll { flex-basis: 0; font-size: 12px; padding: 8px 10px; }
 }
-@media (prefers-reduced-motion: reduce) { .l95-cis i, .l95-plank { transition: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .l95-cis i, .l95-plank { transition: none; } }
 
 /* Round 96: Nerelle's killing blow, in her own big moment (the Stranger's entrance's cut-in, in the deep sea's colours) */
 .is-tide96 .o78-dim { background: radial-gradient(120% 90% at 50% 100%, rgb(4 40 58 / 0.94), rgb(2 8 14 / 0.96) 70%); }
@@ -8127,7 +8127,7 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
   .r107-set { bottom: 18%; width: calc(100% - 24px); padding: 12px; }
   .r107-set-row { grid-template-columns: repeat(3, 1fr); }
 }
-@media (prefers-reduced-motion: reduce) { .r107-mir i, .r107-screen i, .r107-screen { transition: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .r107-mir i, .r107-screen i, .r107-screen { transition: none; } }
 
 /* round 110: the world's button among the map's tools (the tools' buttons are grids: [hidden] needs its own rule) */
 .sm25-tools button[hidden] { display: none; }
@@ -8177,7 +8177,7 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
 .pr112-glow { position: absolute; left: 8%; right: 8%; bottom: -3%; height: 16%; border-radius: 50%; background: radial-gradient(closest-side, rgb(140 225 255 / 0.9), rgb(40 140 255 / 0.3) 60%, transparent); opacity: 0; pointer-events: none; transition: opacity 400ms; }
 .bt-foe.is-echo112 .pr112-glow { opacity: 1; animation: pr112-glow 1.4s ease-in-out infinite alternate; }
 @keyframes pr112-glow { from { opacity: 0.55; transform: scaleX(0.92); } to { opacity: 1; transform: scaleX(1.06); } }
-@media (prefers-reduced-motion: reduce) { .bt-foe.is-echo112 .pr112-glow { animation: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .bt-foe.is-echo112 .pr112-glow { animation: none; } }
 /* his four bars: the HP line cut in quarters */
 .bt-foe.is-pr112 .bt-hp2::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(90deg, transparent calc(25% - 1px), rgb(5 8 12 / 0.95) calc(25% - 1px) calc(25% + 1px), transparent calc(25% + 1px) calc(50% - 1px), rgb(5 8 12 / 0.95) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px) calc(75% - 1px), rgb(5 8 12 / 0.95) calc(75% - 1px) calc(75% + 1px), transparent calc(75% + 1px)); }
 /* a dark card chosen keeps its back in its slot */
@@ -8331,12 +8331,12 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
 .bt-foe.is-statue117 img.card-art-img, .bt-foe.is-statue117 .bt-cardbox .card { filter: grayscale(1) sepia(0.22) hue-rotate(168deg) saturate(2.4) brightness(1.2) contrast(1.12) drop-shadow(0 0 0.45em rgb(150 215 255 / 0.65)); transition: filter 520ms cubic-bezier(0.2, 0, 0, 1); }
 .bt-foe.is-statue117 .bt-steam { display: none; }
 .bt-state--ice { color: #bfe9ff; }
-@media (prefers-reduced-motion: reduce) { .bt-foe.is-statue117 img.card-art-img { transition: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .bt-foe.is-statue117 img.card-art-img { transition: none; } }
 
 /* ══ round 118 · Frostspine: a hero coiled by Skadra, a hero turned to ice (Frozen Gaze, Mother's Embrace) ══ */
 .bt-mem.is-coil118 img.card-art-img { filter: saturate(0.55) brightness(0.92) drop-shadow(0 0 0.5em rgb(210 240 255 / 0.75)); }
 .bt-mem.is-statue118 img.card-art-img { filter: grayscale(1) sepia(0.22) hue-rotate(168deg) saturate(2.4) brightness(1.2) contrast(1.12) drop-shadow(0 0 0.45em rgb(150 215 255 / 0.65)); transition: filter 520ms cubic-bezier(0.2, 0, 0, 1); }
-@media (prefers-reduced-motion: reduce) { .bt-mem.is-statue118 img.card-art-img { transition: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .bt-mem.is-statue118 img.card-art-img { transition: none; } }
 
 /* ── round 119 · Frostspine: Kolheim after the thaw, a night at the Round Shield, the heart's song, the bridge to the jaws ── */
 /* Kolheim after Hrimna: the same picture, a little warmer */
@@ -8372,7 +8372,7 @@ button.gm-pill[data-gm-stam] { cursor: pointer; }
   .r119-vein { width: 52px; height: 52px; }
   .r119-stop.is-safe { width: 22px; height: 22px; }
 }
-@media (prefers-reduced-motion: reduce) { .r119-vein i, .r119-walker { transition: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .r119-vein i, .r119-walker { transition: none; } }
 
 /* ── round 120 · the talents' light on the figures, several teams, the Log In's scroll cue ── */
 
@@ -8422,7 +8422,7 @@ html[data-s66] .gm *, html[data-s66] .gm *::before, html[data-s66] .gm *::after 
 /* the game's arrow turned down, bobbing gently */
 .lg120-down { width: 18px; height: 18px; flex: none; rotate: 90deg; color: #02d2e3; stroke-width: 2; animation: lg120-bob 1.6s ease-in-out infinite; }
 @keyframes lg120-bob { 50% { translate: 0 3px; } }
-@media (prefers-reduced-motion: reduce) { .lg120-down { animation: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .lg120-down { animation: none; } }
 .lg120-cue + .lg113 { margin-top: 14px; }
 /* Kaori's tile, seen only on the day she is claimed (the week then stays until the page is left): lit, she is with you */
 .lg64-end.is-got { opacity: 1; box-shadow: 0 0 0 2px #ffc93c, 0 0 46px rgb(255 201 60 / 0.4); }
@@ -8491,7 +8491,7 @@ html[data-s66] .gm *, html[data-s66] .gm *::before, html[data-s66] .gm *::after 
 .tm120-pick button[data-tm120-pick]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media (hover: hover) { .tm120-pick button[data-tm120-pick]:not(:disabled):hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border-on-dark)); } }
 .tm120-ch { margin: 14px 0 12px; }
-@media (prefers-reduced-motion: reduce) { .tm120-tab, .tm120-pick button[data-tm120-pick] { transition: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .tm120-tab, .tm120-pick button[data-tm120-pick] { transition: none; } }
 
 /* ══ round 121 · the talent's glow on the battle figure (glow121.js; lab 120 «bagliore»'s five ways, each hero's chosen in the
    Database's page Bagliori, else E · shock waves for everyone, the user's pick). Everything sits in the hero's figure
@@ -9280,7 +9280,7 @@ html.ios125 .c7.is-live .c7-ec-rim { animation-name: c7-spin125; }
 .lk127-askbox { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(520px, calc(100% - 32px)); padding: 24px 26px; background: var(--raw-color-ink-900); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.14); clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%); }
 .lk127-askbox h2 { font-size: clamp(40px, 6vw, 64px); }
 
-@media (prefers-reduced-motion: reduce) { .lk127-vs *, .lk127-end, .endB-mvp, .ar127-auto { animation-duration: 0.01s !important; animation-delay: 0s !important; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .lk127-vs *, .lk127-end, .endB-mvp, .ar127-auto { animation-duration: 0.01s !important; animation-delay: 0s !important; } }
 
 /* round 129 · a duel's hand: only the cards of the side whose turn it is, and online never the rival's. Hidden, not removed (a card's
    place still counts for what flies from it); hidden cards are not touched either, the cards under them are. */
@@ -9364,7 +9364,7 @@ html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .ca
   .r130-cocoon { width: 44px; height: 80px; }
   .r130-dream { font-size: 15px; }
 }
-@media (prefers-reduced-motion: reduce) { .r130-thread, .r130-moon, .r130-peg i, .r130-cocoon i { transition: none; } .r130-loom.is-tight .r130-thread { animation: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .r130-thread, .r130-moon, .r130-peg i, .r130-cocoon i { transition: none; } .r130-loom.is-tight .r130-thread { animation: none; } }
 
 /* ── round 132 · The Pale Reflection on the field with the user's wide picture, whole: his coils run off every side of it, so each side
    fades a little (the left and right more, where the picture cuts his body; the bottom least, where he meets the line) ── */
@@ -9586,7 +9586,124 @@ html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .ca
 @keyframes rk136-burst { from { opacity: 0; transform: scale(0.3); } 40% { opacity: 1; } to { opacity: 0; transform: scale(1.6); } }
 @keyframes rk136-spin { to { rotate: 360deg; } }
 @keyframes rk136-pop { from { opacity: 0; transform: scale(0.5); } 70% { transform: scale(1.12); } }
-@media (prefers-reduced-motion: reduce) {
+/* ══ round 145 · the Capped win streak (streak145.js), its four looks (lab 145) beside the rank's crest. A streak's step has its own heat:
+   +1 the ice of the page, +2 amber, +3 orange-red, +5 a blue-white flame. ══ */
+.sk145 { --sk: #cfe6f2; --sk2: #6f8896; }
+.sk145.is-s1, .skC-g.is-s1 { --sk: #ffc061; --sk2: #b86a12; }
+.sk145.is-s2, .skC-g.is-s2 { --sk: #ff7a45; --sk2: #a82c10; }
+.sk145.is-s3, .skC-g.is-s3 { --sk: #9fe9ff; --sk2: #2f7fd8; }
+.skC-g.is-s0 { --sk: #cfe6f2; --sk2: #6f8896; }
+.rk136-ch-new { position: relative; }
+
+/* ── A · Flame: a counter under the rank ── */
+.skA { position: relative; display: inline-grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 2px 8px; justify-self: start; max-width: 100%; margin-top: 2px; padding: 6px 12px 6px 8px; background: linear-gradient(90deg, color-mix(in srgb, var(--sk) 20%, transparent), transparent 85%), rgb(0 0 0 / 0.25); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sk) 42%, transparent); animation: skA-in 0.5s 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+.skA .sk145-fl { width: 26px; height: 26px; fill: color-mix(in srgb, var(--sk) 30%, transparent); stroke: var(--sk); stroke-width: 1.6; stroke-linejoin: round; filter: drop-shadow(0 0 6px color-mix(in srgb, var(--sk) 75%, transparent)); transform-origin: 50% 92%; animation: skA-flick 1.6s ease-in-out infinite; }
+.skA.is-s3 .sk145-fl { animation-duration: 0.9s; }
+.skA-n { font: 700 28px/1 var(--font-display); color: var(--sk); font-variant-numeric: tabular-nums; text-shadow: 0 0 12px color-mix(in srgb, var(--sk) 60%, transparent); }
+.skA-t { display: grid; gap: 1px; min-width: 0; }
+.skA-t > span { font: 700 13px/1.1 var(--font-display); letter-spacing: 0.04em; text-transform: uppercase; color: #fff; }
+.skA-t small { font: 500 12px/1.25 var(--font-sans); color: var(--raw-color-ice-200); }
+.skA:not(.is-off) .skA-t small { white-space: nowrap; }
+.skA-t small b { color: var(--sk); font-weight: 700; }
+.skA.is-off { grid-template-columns: auto minmax(0, 1fr); background: rgb(0 0 0 / 0.18); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08); animation-delay: 0.3s; }
+.skA.is-off .sk145-fl { fill: none; stroke: rgb(255 255 255 / 0.35); filter: none; animation: none; }
+.skA.is-end { animation-delay: 0.6s; }
+.skA.is-end .sk145-fl { animation: skA-light 0.7s 0.75s cubic-bezier(0.2, 0.9, 0.3, 1.4) both, skA-flick 1.6s 1.5s ease-in-out infinite; }
+.skA.is-end::before { content: ""; position: absolute; left: -10px; top: 50%; width: 64px; aspect-ratio: 1; translate: 0 -50%; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in srgb, var(--sk) 75%, transparent), transparent); pointer-events: none; animation: skA-flash 0.9s 0.75s ease-out both; }
+.skA-n.is-roll { animation: skA-roll 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
+.skA.is-out { --sk: #8a98a3; grid-template-columns: auto minmax(0, 1fr); }
+.skA.is-out .sk145-fl { fill: none; stroke: #8a98a3; filter: none; animation: skA-die 0.9s 0.7s ease-in both; }
+.skA-smoke { position: absolute; left: 8px; top: -8px; width: 26px; height: 34px; pointer-events: none; background: radial-gradient(closest-side, rgb(190 190 200 / 0.6), transparent); filter: blur(3px); animation: skA-smoke 1.8s 1s ease-out both; }
+@keyframes skA-in { from { opacity: 0; transform: translateY(6px) scale(0.92); } }
+@keyframes skA-flick { 0%, 100% { transform: scale(1) skewX(0deg); } 30% { transform: scale(1.06, 1.12) skewX(-3deg); } 60% { transform: scale(0.97, 1.03) skewX(2deg); } }
+@keyframes skA-light { from { opacity: 0; transform: scale(0.2); filter: brightness(3); } }
+@keyframes skA-flash { from { opacity: 0; scale: 0.3; } 35% { opacity: 1; } to { opacity: 0; scale: 1.8; } }
+@keyframes skA-roll { from { opacity: 0.2; transform: translateY(-40%) scale(1.3); } }
+@keyframes skA-die { 0% { stroke: #ffb070; filter: drop-shadow(0 0 8px #ff7a45); } 100% { opacity: 0.5; transform: scale(0.78) translateY(3px); } }
+@keyframes skA-smoke { from { opacity: 0.9; transform: translateY(6px) scale(0.6); } to { opacity: 0; transform: translateY(-28px) scale(1.7); } }
+
+/* ── B · Seal: what the next win is worth, on the crest's ring ── */
+.skB { position: absolute; right: -2%; bottom: 1%; z-index: 2; display: grid; place-items: center; width: 48px; aspect-ratio: 1; animation: skB-in 0.6s 0.95s cubic-bezier(0.2, 0.9, 0.3, 1.4) both; }
+.skB::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--sk) 70%, #fff), var(--sk) 48%, var(--sk2)); box-shadow: 0 4px 12px rgb(0 0 0 / 0.55), 0 0 18px color-mix(in srgb, var(--sk) 55%, transparent), inset 0 0 0 2px rgb(255 255 255 / 0.25); }
+.skB::after { content: ""; position: absolute; inset: -5px; border: 2px dashed color-mix(in srgb, var(--sk) 85%, transparent); border-radius: 50%; animation: rk136-spin 9s linear infinite; }
+.skB.is-s3::after { animation-duration: 4s; }
+.skB-in { position: relative; display: grid; justify-items: center; gap: 1px; line-height: 1; color: #1a0d03; }
+.skB.is-s0 .skB-in, .skB.is-s3 .skB-in { color: #06141c; }
+.skB-in b { font: 700 22px/1 var(--font-display); }
+.skB-idle { font: 500 12px/1.3 var(--font-sans); color: var(--raw-color-ice-200); opacity: 0.85; }
+.skB.is-end, .skB.is-broke { right: -10px; bottom: -6px; width: 34px; }
+.skB.is-end { animation: skB-stamp 0.55s 1.05s cubic-bezier(0.3, 0, 0.3, 1) both; }
+.skB.is-end::before { animation: skB-thud 0.6s 1.45s ease-out both; }
+.skB.is-end::after, .skB.is-broke::after { inset: -3px; }
+.skB.is-end .skB-in b, .skB.is-broke .skB-in b { font-size: 15px; }
+.skB.is-broke { animation: skB-fall 1s 1.1s cubic-bezier(0.5, 0, 0.8, 0.4) both; }
+.skB.is-broke::before { filter: grayscale(0.85) brightness(0.65); }
+.skB-say { font: 500 12.5px/1.3 var(--font-sans); color: var(--raw-color-ice-200); animation: rk136-in 0.4s 1.4s ease-out both; }
+.skB-say b { color: var(--sk); }
+.skB-say.is-out b { color: #fff; }
+.skB-say.is-hub { display: grid; gap: 2px; animation-delay: 1.1s; }
+.skB-say.is-hub > b { font-weight: 700; }
+@keyframes skB-in { from { opacity: 0; transform: scale(0.3) rotate(-40deg); } }
+@keyframes skB-stamp { 0% { opacity: 0; transform: scale(2.6) rotate(-18deg); } 70% { opacity: 1; transform: scale(0.92) rotate(2deg); } 100% { transform: scale(1); } }
+@keyframes skB-thud { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--sk) 90%, transparent), 0 4px 12px rgb(0 0 0 / 0.55); } to { box-shadow: 0 0 0 18px transparent, 0 4px 12px rgb(0 0 0 / 0.55); } }
+@keyframes skB-fall { 0% { transform: none; } 25% { transform: rotate(-16deg); } 100% { opacity: 0; transform: translateY(46px) rotate(40deg) scale(0.9); } }
+
+/* ── C · Trail: the steps of a streak, across the record ── */
+.rkB > .skC { grid-column: 1 / -1; }
+.skC { display: grid; gap: 6px; animation: rk136-in 0.5s 0.45s ease-out both; }
+.skC-track { display: flex; gap: 7px; align-items: end; }
+.skC-g { display: grid; gap: 4px; min-width: 0; }
+.skC-g:nth-child(1) { flex: 2 1 0; }
+.skC-g:nth-child(2), .skC-g:nth-child(3) { flex: 4 1 0; }
+.skC-g:nth-child(4) { flex: 1.4 1 0; }
+.skC-g > small { font: 700 12px/1 var(--font-display); letter-spacing: 0.04em; color: var(--sk); opacity: 0.5; }
+.skC-g.is-on > small { opacity: 1; text-shadow: 0 0 8px color-mix(in srgb, var(--sk) 75%, transparent); }
+.skC-g > span { display: flex; gap: 3px; }
+.skC-g i { flex: 1 1 0; height: 12px; background: rgb(255 255 255 / 0.08); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.07); transform: skewX(-18deg); }
+.skC-g i.is-on { background: linear-gradient(180deg, color-mix(in srgb, var(--sk) 80%, #fff), var(--sk2)); box-shadow: 0 0 10px color-mix(in srgb, var(--sk) 60%, transparent); animation: skC-on 0.35s calc(0.55s + var(--k) * 0.06s) ease-out both; }
+.skC-g i.is-next { animation: skC-next 1.4s ease-in-out infinite; }
+.skC-g i.is-new { animation: skC-new 0.7s 1.15s cubic-bezier(0.2, 0.9, 0.3, 1.4) both; }
+.skC.is-lost i.is-on { animation: skC-drain 0.45s calc(0.9s + (12 - var(--k)) * 0.08s) ease-in both; }
+.skC-say { font: 500 12.5px/1.3 var(--font-sans); color: var(--raw-color-ice-200); }
+.skC-say b { color: #fff; }
+.rk136-change .skC { min-width: min(320px, 100%); max-width: 560px; }
+@keyframes skC-on { from { opacity: 0; transform: skewX(-18deg) scaleY(0.2); } }
+@keyframes skC-next { 0%, 100% { box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1); } 50% { box-shadow: inset 0 0 0 1px var(--sk), 0 0 8px color-mix(in srgb, var(--sk) 55%, transparent); } }
+@keyframes skC-new { 0% { opacity: 0; transform: skewX(-18deg) scale(1.8, 2.6); filter: brightness(2.6); } 100% { opacity: 1; transform: skewX(-18deg); } }
+@keyframes skC-drain { 40% { background: #fff; } to { background: rgb(255 255 255 / 0.08); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.07); } }
+
+/* ── D · Embers: the crest's ring burns, its count beside the rank ── */
+.rk136.rkB:has(.skD-fire) { overflow: hidden; }
+.skD-fire { position: absolute; left: -30%; top: -30%; z-index: 1; width: 160%; height: 160%; pointer-events: none; }
+.rk136-ch-new > .skD-fire { left: -60%; top: -60%; width: 220%; height: 220%; }
+.rkB-ring:has(> .skD-fire.is-s1) { filter: drop-shadow(0 0 8px rgb(255 192 97 / 0.35)); }
+.rkB-ring:has(> .skD-fire.is-s2) { filter: drop-shadow(0 0 12px rgb(255 122 69 / 0.45)); }
+.rkB-ring:has(> .skD-fire.is-s3) { filter: drop-shadow(0 0 16px rgb(159 233 255 / 0.55)); }
+.skD-c { display: inline-grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 2px 10px; justify-self: start; animation: rk136-in 0.5s 0.6s ease-out both; }
+.skD-c > b { font: 700 36px/0.9 var(--font-display); color: var(--sk); font-variant-numeric: tabular-nums; text-shadow: 0 0 14px color-mix(in srgb, var(--sk) 70%, transparent), 0 0 2px #fff; animation: skD-glow 2.2s ease-in-out infinite; }
+.skD-c > span { display: grid; gap: 1px; font: 700 13px/1.1 var(--font-display); letter-spacing: 0.04em; text-transform: uppercase; color: #fff; }
+.skD-c small { font: 500 12px/1.25 var(--font-sans); letter-spacing: 0; text-transform: none; color: var(--raw-color-ice-200); }
+.skD-c:not(.is-off) small { white-space: nowrap; }
+.skD-c small b { color: var(--sk); }
+.skD-c.is-off { grid-template-columns: minmax(0, 1fr); }
+.skD-c.is-end > b { animation: skD-hot 0.8s 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.4) both, skD-glow 2.2s 1.6s ease-in-out infinite; }
+.skD-c.is-out { --sk: #8a98a3; }
+.skD-c.is-out > b { animation: skD-cool 1.2s 0.8s ease-in both; }
+@keyframes skD-glow { 50% { text-shadow: 0 0 24px var(--sk), 0 0 2px #fff; } }
+@keyframes skD-hot { from { opacity: 0; transform: scale(1.8); filter: brightness(2.5); } }
+@keyframes skD-cool { from { color: #ffb070; text-shadow: 0 0 18px #ff7a45; } }
+
+/* a narrow page (a phone) */
+@container ar127 (max-width: 720px) {
+  .skB { width: 46px; }
+  .skB-in b { font-size: 19px; }
+  .skA-n { font-size: 24px; }
+  .skD-c > b { font-size: 30px; }
+}
+@container end127 (orientation: portrait) {
+  .rk136-change .skC { min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) {
   :is(.rk136, .rk136-change, .rk136-gift, .rk136-table, .rkD-team) *, :is(.rk136, .rk136-change, .rk136-gift, .rk136-table, .rkD-team) *::before, :is(.rk136, .rk136-change, .rk136-gift, .rk136-table, .rkD-team) *::after, .rk136, .rk136-change, .rk136-gift, .rk136-table { animation: none !important; }
 }
 /* ══ round 138 · the Home on a PC (the user, 24 Nov: «nella grafica PC il tasto del PVP è mezzo coperto dietro altri tasti»): since the
@@ -9749,7 +9866,7 @@ html.ios125 .gm-sub .card:not([data-sm] .card, .arc-d .card, [data-art-full] .ca
   background: radial-gradient(closest-side, rgba(8, 1, 0, .8), rgba(26, 4, 0, .66) 58%, rgba(255, 96, 24, .28) 84%, rgba(255, 96, 24, 0) 100%);
   box-shadow: 0 0 1.2em rgba(255, 110, 30, .35); animation: sun142 1.6s ease-in-out infinite; }
 @keyframes sun142 { 0%, 100% { transform: scale(.95); opacity: .85; } 50% { transform: scale(1.04); opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .bt-foe.is-hot142 .fb142-heat, .bt-foe.is-ult142 .fb142-tag, .fb142-shadow { animation: none; } }
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) { .bt-foe.is-hot142 .fb142-heat, .bt-foe.is-ult142 .fb142-tag, .fb142-shadow { animation: none; } }
 /* the Database's «Fase 2» panel */
 .p2-142 { display: grid; gap: .5rem; }
 /* the change of phase: its layer over the field (fx142.js draws there), her name's band across the field */
@@ -19263,7 +19380,9 @@ const ch112Name = (k) => CH112_DIFF.find((x) => x[0] === k)?.[1] ?? "Normal";
    are in the fight (fire142.js). The user's pictures (PG/Nemici/Challenge Mode, strumenti/arte142.cjs): each card a window around
    the head, the figure on the field whole (fight), its two bands whole. ══ */
 FOE_KINDS.firebird = { name: "The Undying Firebird", tribe: "The Ashen Sky", attr: "fire", fixed: { hp: 6000000, atk: 95000, def: 21500 }, level: 100, boss: true, noItems: true, hits: 3, plain142: true, next142: "phoenix",
-  faces: [{ art: FOE_ART("challenge-firebird"), fight: FOE_ART("challenge-firebird-wide"), focus: [0.5, 0.39], rarity: "UR" }],
+  // round 145 (the user, 25 Nov: «Sulla carta di questo boss puoi mettere l'immagine della fase 2? è piu figa»): its card shows the
+  // Phoenix (her window around the head); on the field, until it falls, it is the Firebird whole (fight)
+  faces: [{ art: FOE_ART("challenge-phoenix"), fight: FOE_ART("challenge-firebird-wide"), focus: [0.5, 0.24], rarity: "UR" }],
   pics142: { 1: { art: FOE_ART("challenge-firebird-skill-1"), focus: [0.64, 0.86] }, 2: { art: FOE_ART("challenge-firebird-skill-2"), focus: [0.26, 0.82] } } };
 // round 144 (the user, 25 Nov: «in fase 2 NON si congela e non puoi schivare nulla»): nothing freezes her (noFreeze) and her blows always
 // land (ign106); the Firebird can be frozen and its blows dodged, as any enemy's
@@ -48578,7 +48697,7 @@ const STORY66 = (() => {
     el._glide120?.cancel();
     el.style.left = left; el.style.top = top;
     const b = el.getBoundingClientRect();
-    if ((a.left === b.left && a.top === b.top) || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (a.left === b.left && a.top === b.top) return;
     const h = parseFloat(getComputedStyle(el).height), k = h > 0 && b.height > 0 ? b.height / h : 1;
     el._glide120 = el.animate([{ transform: `translate(${(a.left - b.left) / k}px, ${(a.top - b.top) / k}px)` }, { transform: "none" }], { duration: 360, easing: "cubic-bezier(0.23, 1, 0.32, 1)" });
   };
@@ -50989,7 +51108,7 @@ const LOOK136 = (() => {
   // the crests, each path written out whole: the build checks every picture the page names is in the folder that goes online
   const ART136 = { bronze: "art/items/rank-bronze.webp", silver: "art/items/rank-silver.webp", gold: "art/items/rank-gold.webp", platinum: "art/items/rank-platinum.webp", diamond: "art/items/rank-diamond.webp", champion: "art/items/rank-champion.webp" };
   const art = (t) => ART136[t.key];
-  const toNext = (r) => (r.top ? `${r.pts} points · the top rank` : `<b>${r.pts}</b>/10 wins to <b>${nameOf(r.d + 1)}</b>`);
+  const toNext = (r) => (r.top ? `${r.pts} points · the top rank` : `<b>${r.pts}</b>/10 points to <b>${nameOf(r.d + 1)}</b>`);
   /** Ten notches, `pts` lit; `flag` marks the one a match just lit («is-new») or put out («is-gone»). */
   const notches = (r, cls = "", flag = null) => `<span class="rk136-notch${cls ? ` ${cls}` : ""}" role="img" aria-label="${r.pts} of 10 points">${Array.from({ length: 10 }, (_, i) => `<i class="${i < r.pts ? "is-on" : ""}${flag && flag.i === i ? ` ${flag.cls}` : ""}" style="--i:${i}"></i>`).join("")}</span>`;
   const pips = (r) => `<span class="rk136-pips" aria-hidden="true">${[1, 2, 3].map((k) => `<i class="${k <= r.n ? "is-on" : ""}"></i>`).join("")}</span>`;
@@ -51030,7 +51149,7 @@ const LOOK136 = (() => {
   /* ── a match's points, on the end «Il migliore»: before and after; up a division, down one ── */
   const change = (L, m) => {
     const a = of(m.from), b = of(m.to), up = b.d > a.d, down = b.d < a.d, dir = m.to > m.from ? "plus" : m.to < m.from ? "minus" : "same";
-    const word = up ? `Up to <b>${b.name}</b>` : down ? `Down to <b>${b.name}</b>` : dir === "plus" ? "+1 point" : dir === "minus" ? "−1 point" : "no points moved";
+    const word = up ? `Up to <b>${b.name}</b>` : down ? `Down to <b>${b.name}</b>` : dir === "plus" ? `+${m.to - m.from} point${m.to - m.from === 1 ? "" : "s"}` : dir === "minus" ? "−1 point" : "no points moved";
     const note = m.why ? `<small>${esc(m.why)}</small>` : "";
     const step = (r) => MARK[L](r, "mid");
     // the notch the match moved: lit by a win (unless it went up a division: all of them start again), put out by a defeat
@@ -51060,7 +51179,7 @@ const LOOK136 = (() => {
     const r = of(T.lp ?? 0);
     return `<div class="rk136-table rk136-table--${L}" role="dialog" aria-modal="true" aria-label="Capped ranks and rewards"><div class="rk136-table-in">
       <header><b>Capped ranks · rewards</b><button type="button" class="rk136-x" data-rk136-close aria-label="Close">×</button></header>
-      <p class="rk136-table-say">10 wins take you up a division: a win is +1, a defeat −1. Every other Monday the rank you hold gives its reward, then everyone starts again from Bronze 1. Next: <b>${esc(day(T.next ?? Date.now()))}</b>.</p>
+      <p class="rk136-table-say">10 points take you up a division: a win is +1, a defeat −1. Wins in a row are worth more: the 3rd to the 6th +2 each, the 7th to the 10th +3, from the 11th +5; a defeat or a draw ends the streak. Every other Monday the rank you hold gives its reward, then everyone starts again from Bronze 1. Next: <b>${esc(day(T.next ?? Date.now()))}</b>.</p>
       <ol>${TIERS.map((t, k) => `<li class="rk136-tier" style="${vars(t)};--k:${k}"><h4>${t.name}</h4>${[0, 1, 2].map((j) => { const d = k * 3 + j, x = of(d * 10), w = T.rewards?.[d]; return `<p class="rk136-row${d === r.d ? " is-you" : ""}">${MARK[L](x, "row")}<b>${x.name}</b>${d === r.d ? '<em>you</em>' : ""}${w ? prize(w, true) : ""}</p>`; }).join("")}</li>`).join("")}</ol></div></div>`;
   };
   return { TIERS, of, nameOf, vars, hub, change, reward, table, teamFrame, endFrame, MARK, art };
@@ -51077,7 +51196,7 @@ const ARENA136 = (() => {
   const note = (t) => { try { window.GM_TOAST97?.(t); } catch { /* no page yet */ } };
   const pct = (k) => `${Math.round(k * 100)}%`;
   /** The Capped record's data for the Arena page (null until the server has answered). */
-  const data = (me) => (me?.rank ? { lp: me.rank.lp ?? 0, rewards: me.ranks ?? [], next: Date.parse(me.rank.next) || Date.now(), bots: me.rank.bots ?? null } : null);
+  const data = (me) => (me?.rank ? { lp: me.rank.lp ?? 0, rewards: me.ranks ?? [], next: Date.parse(me.rank.next) || Date.now(), bots: me.rank.bots ?? null, streak: me.rank.streak ?? null } : null);
   /** The Capped row's line: its limits and the test's stats (the server's numbers: «ATK and DEF 10% · HP 45%»). */
   const capNote = (me) => {
     const r = me?.rules?.[1] ?? me?.rules?.["1"];
@@ -51090,8 +51209,8 @@ const ARENA136 = (() => {
   /** A Capped match's points on its end: the rank before (the match's own record of it) and after (the server's, asked again). */
   const endOf = (st, mode) => {
     if (mode !== 1 || st.lp0 == null || !st.me?.rank) return null;
-    const why = st.botCounts === false ? "A bot match past today's 20: it moves no points." : "";
-    return { from: st.lp0, to: st.me.rank.lp ?? st.lp0, why };
+    const why = st.botCounts === false ? "A bot match past today's 20: it moves no points and leaves your streak as it is." : "";
+    return { from: st.lp0, to: st.me.rank.lp ?? st.lp0, why, streak: st.me.rank.streak ?? null, streak0: st.sk0 ?? null, won: !!st.last?.win, counts: st.botCounts !== false };
   };
 
   /* ── the table of every rank, from the Arena page ── */
@@ -51168,6 +51287,185 @@ const ARENA136 = (() => {
   return { pick, data, capNote, rulesOf, endOf, table, after, start, take, give };
 })();
 window.ARENA136 = ARENA136;
+/* ══ round 145 · the Capped win streak on the device. The server counts it (server/vault131/arena.js, streak1) and gives a ranked win its
+ *  points by it; this file only shows it. The user, 25 Nov: «nel PvP metti le winstreak ovvero che se vinci 3 ranked di fila, la terza win
+ *  da 2 punti...2 punti fino alla win 6 da li diventano 3 punti. dopo la win 10 (ovviamente stiamo parlando di vittorie di fila) sono 5
+ *  punti»; the bot matches that count for the rank count here too. Four looks (lab 145), each in the same two places, beside the rank's
+ *  crest («B · Stemma», arena136-look.js): the Capped rank on the Arena page, and the points a match moved on its end.
+ *   A · Flame   a flame counter under the rank: the wins in a row and what the next one is worth
+ *   B · Seal    a seal on the crest's ring with what the next win is worth (+2, +3, +5), stamped on at a match's end
+ *   C · Trail   the steps of a streak under the rank (2 at +1, 4 at +2, 4 at +3, then +5), lit up to yours
+ *   D · Embers  embers rising off the crest's ring, more and hotter as the streak grows, and the count beside the rank
+ *  ══ */
+const STREAK145 = (() => {
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  /** The points of the ranked win that makes n wins in a row (as the server gives them). */
+  const pts = (n) => (n >= 11 ? 5 : n >= 7 ? 3 : n >= 3 ? 2 : 1);
+  /** The streak's step: 0 (+1), 1 (+2), 2 (+3), 3 (+5). */
+  const step = (n) => (n >= 11 ? 3 : n >= 7 ? 2 : n >= 3 ? 1 : 0);
+  /** The next time a win is worth more than the next one: in how many wins, and its points (null from +5 on). */
+  const ahead = (n) => { const k = [3, 7, 11].find((x) => x > n + 1); return k ? { wins: k - n, pts: pts(k) } : null; };
+  const RULE = "Wins in a row are worth more: the 3rd to the 6th +2 each, the 7th to the 10th +3, from the 11th +5. A defeat or a draw ends the streak.";
+  // the user's pick in lab 145 (25 Nov): «A · Fiamma»
+  let pick = "A";
+  // the game's line icons (24×24, stroke): a flame
+  const FLAME = '<svg class="sk145-fl" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.5C8 21.5 5.2 18.7 5.2 15C5.2 11.4 7.6 9.4 8.8 6.9C9.3 8.6 10.3 9.6 11.4 10C11.2 6.8 12.6 4.1 15.2 2.5C15 5.6 16.2 7.6 17.5 9.5C18.4 10.9 18.8 12.6 18.8 14.6C18.8 18.6 15.9 21.5 12 21.5Z M12 21.5C10.2 21.5 9 20.1 9 18.4C9 16.6 10.4 15.6 11 14.2C11.5 15.2 12.3 15.6 13 15.8C13.6 16.6 15 17.2 15 18.6C15 20.2 13.7 21.5 12 21.5Z"/></svg>';
+  const inRow = (n) => `${n} win${n === 1 ? "" : "s"} in a row`;
+  const nextSay = (n) => { const a = ahead(n); return `next win <b>+${pts(n + 1)}</b>${a ? ` · ${a.wins} more for +${a.pts}` : ""}`; };
+  const idle = "Win 3 in a row: from the 3rd, a win is worth +2.";
+  /** The next win and the next step on two lines, where the column is narrow (A, D). */
+  const twoLines = (n, lead = "") => { const a = ahead(n); return `<small>${lead}next win <b>+${pts(n + 1)}</b></small>${a ? `<small>${a.wins} more for +${a.pts}</small>` : ""}`; };
+
+  /* ── A · Flame: a counter under the rank ── */
+  const hubA = (n) => (n > 0
+    ? `<span class="sk145 skA is-s${step(n)}" role="img" aria-label="${inRow(n)}, next win +${pts(n + 1)}">${FLAME}<b class="skA-n">${n}</b><span class="skA-t"><span>${inRow(n).replace(/^\d+ /, "")}</span>${twoLines(n)}</span></span>`
+    : `<span class="sk145 skA is-off">${FLAME}<span class="skA-t"><small>${idle}</small></span></span>`);
+  const endA = (m) => {
+    if (m.won && m.streak > 0) return `<span class="sk145 skA is-end is-s${step(m.streak)}" role="img" aria-label="${inRow(m.streak)}">${FLAME}<b class="skA-n" data-from="${Math.max(0, m.streak - 1)}">${m.streak}</b><span class="skA-t"><span>${inRow(m.streak).replace(/^\d+ /, "")}</span>${twoLines(m.streak, `this win <b>+${m.got}</b> · `)}</span></span>`;
+    if (m.ended >= 2) return `<span class="sk145 skA is-out"><span class="skA-smoke" aria-hidden="true"></span>${FLAME}<span class="skA-t"><span>Streak of ${m.ended} over</span><small>a win starts a new one</small></span></span>`;
+    return "";
+  };
+
+  /* ── B · Seal: what the next win is worth, on the crest's ring ── */
+  const sealB = (n, end = false, got = 0) => `<span class="sk145 skB is-s${step(end ? n : n + 1)}${end ? " is-end" : ""}" role="img" aria-label="${end ? `this win +${got}, ${inRow(n)}` : `${inRow(n)}, next win +${pts(n + 1)}`}"><span class="skB-in"><b>+${end ? got : pts(n + 1)}</b></span></span>`;
+  const endB = (m) => (m.won && m.streak > 0 ? sealB(m.streak, true, m.got) : m.ended >= 2 ? `<span class="sk145 skB is-broke is-s${step(m.ended)}" aria-label="Streak of ${m.ended} over"><span class="skB-in"><b>×</b></span></span>` : "");
+
+  /* ── C · Trail: the steps of a streak ── */
+  const GROUPS = [[1, 2, 1], [3, 6, 2], [7, 10, 3], [11, 11, 5]];
+  const trail = (n, fresh = 0, lost = 0) => `<span class="sk145 skC${n > 0 ? "" : " is-zero"}${lost ? " is-lost" : ""}" role="img" aria-label="${n > 0 ? `${inRow(n)}, next win +${pts(n + 1)}` : idle}">
+    <span class="skC-track">${GROUPS.map(([a, b, p], g) => `<span class="skC-g is-s${g}${n >= a ? " is-on" : ""}"><small>+${p}</small><span>${Array.from({ length: b - a + 1 }, (_, i) => { const k = a + i, on = lost ? k <= lost : n >= k; return `<i class="${on ? "is-on" : ""}${!lost && fresh && k === Math.min(fresh, 11) ? " is-new" : ""}${!lost && !fresh && k === Math.min(n + 1, 11) && n < 11 ? " is-next" : ""}" style="--k:${k}"></i>`; }).join("")}</span></span>`).join("")}</span>
+    <span class="skC-say">${lost ? `<b>Streak of ${lost} over</b> · a win starts a new one` : n > 0 ? `<b>${inRow(n)}</b>${n > 11 ? ` (×${n})` : ""} · ${fresh ? `this win <b>+${pts(n)}</b> · ` : ""}${nextSay(n)}` : idle}</span></span>`;
+  const endC = (m) => (m.won && m.streak > 0 ? trail(m.streak, m.streak) : m.ended >= 2 ? trail(0, 0, m.ended) : "");
+
+  /* ── D · Embers: the crest's ring burns ── */
+  const countD = (n, end = false, m = null) => (n > 0
+    ? `<span class="sk145 skD-c is-s${step(n)}${end ? " is-end" : ""}"><b>${n}</b><span>${inRow(n).replace(/^\d+ /, "")}${twoLines(n, end && m ? `this win <b>+${m.got}</b> · ` : "")}</span></span>`
+    : `<span class="sk145 skD-c is-off"><small>${idle}</small></span>`);
+  const fireD = (n, mode = "hub") => `<canvas class="skD-fire is-s${step(Math.max(n, 1))}" data-sk145-fire="${n}" data-sk145-mode="${mode}" aria-hidden="true"></canvas>`;
+
+  /* ── into the rank's look ── */
+  /** The Arena page: the Capped rank (look B's section) gets the streak. */
+  const hubHtml = (html, c) => {
+    const n = c?.streak;
+    if (n == null) return html;
+    if (pick === "A") return html.replace(/(<span class="rk136-to">[\s\S]*?<\/span>)(<\/span>)/, (_, a, b) => `${a}${hubA(n)}${b}`);
+    if (pick === "B") return n > 0 ? html.replace(/(<span class="rkB-ring"[^>]*>)/, (x) => `${x}${sealB(n)}`).replace(/(<span class="rk136-to">[\s\S]*?<\/span>)(<\/span>)/, (_, a, b) => `${a}<small class="sk145 skB-say is-hub is-s${step(n + 1)}"><b>${inRow(n)}</b><span>${nextSay(n)}</span></small>${b}`) : html.replace(/(<span class="rk136-to">[\s\S]*?<\/span>)(<\/span>)/, (_, a, b) => `${a}<small class="sk145 skB-idle">${idle}</small>${b}`);
+    if (pick === "C") return html.replace(/(<button type="button" class="rk136-rew")/, (x) => `${trail(n)}${x}`);
+    return html.replace(/(<span class="rkB-ring"[^>]*>)/, (x) => `${x}${n > 0 ? fireD(n) : ""}`).replace(/(<span class="rk136-to">[\s\S]*?<\/span>)(<\/span>)/, (_, a, b) => `${a}${countD(n)}${b}`);
+  };
+  /** A match's end: the points it moved (look B's line) gets the streak it made or ended. */
+  const changeHtml = (html, m) => {
+    // a bot match past the day's 20 moves neither the points nor the streak; a match the two devices disagree on, nothing yet
+    if (m?.streak == null || m.counts === false) return html;
+    const s0 = m.streak0 ?? null, made = !!m.won && m.streak > 0 && (s0 == null || m.streak === s0 + 1);
+    const ended = !m.won && m.streak === 0 && (s0 ?? 0) >= 2 ? s0 : 0;
+    if (!made && !ended) return html;
+    const got = Math.max(0, (m.to ?? 0) - (m.from ?? 0)) || pts(m.streak), x = { ...m, won: made, got, ended };
+    let piece = "";
+    if (pick === "A") piece = endA(x);
+    else if (pick === "B") {
+      // the seal goes on the crest, its words under the points
+      html = html.replace(/(<span class="rk136-ch-new">)/, (y) => `${y}${endB(x)}`);
+      piece = x.won ? `<small class="sk145 skB-say is-s${step(x.streak)}"><b>${inRow(x.streak)}</b> · ${nextSay(x.streak)}</small>` : `<small class="sk145 skB-say is-out"><b>Streak of ${x.ended} over</b> · a win starts a new one</small>`;
+    }
+    else if (pick === "C") piece = endC(x);
+    else {
+      piece = x.won && x.streak > 0 ? countD(x.streak, true, x) : x.ended >= 2 ? `<span class="sk145 skD-c is-out"><b>${x.ended}</b><span>in a row: over<small>a win starts a new one</small></span></span>` : "";
+      if (x.won && x.streak > 0) html = html.replace(/(<span class="rk136-ch-new">)/, (y) => `${y}${fireD(x.streak, "end")}`);
+      else if (x.ended >= 2) html = html.replace(/(<span class="rk136-ch-new">)/, (y) => `${y}${fireD(x.ended, "out")}`);
+    }
+    if (!piece) return html;
+    return html.replace(/(<span class="rk136-to">[\s\S]*?<\/span>)(\s*(?:<small>[\s\S]*?<\/small>)?<\/span><\/div>\s*)$/, (_, a, b) => `${a}${piece}${b}`).replace('class="rk136-change ', 'class="rk136-change sk145-on ');
+  };
+
+  /* ── D's embers: a small canvas each, alive while it is on the page ── */
+  const COL = [[255, 214, 150], [255, 170, 70], [255, 96, 48], [150, 226, 255]];
+  // the game moves in full whatever the system asks (the user: «Non ridurle, tienile sempre al massimo»)
+  const still = () => false;
+  const burn = (cv) => {
+    if (cv.dataset.sk145On) return;
+    cv.dataset.sk145On = "1";
+    const n = +cv.dataset.sk145Fire || 0, mode = cv.dataset.sk145Mode, s = step(Math.max(n, 1)), [r, g, b] = COL[s], ctx = cv.getContext("2d");
+    if (!ctx) return;
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    const fit = () => { const w = cv.clientWidth || 150, h = cv.clientHeight || 150; cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); };
+    fit();
+    // how many embers: the streak's step (a few sparks at 1–2 in a row, a fire at 11); a match's end bursts first
+    const rate = mode === "out" ? 0 : [0.25, 0.55, 0.9, 1.4][s] * (n >= 1 ? 1 : 0);
+    const P = [], t0 = performance.now();
+    const spawn = (burst = false) => {
+      const W = cv.width, H = cv.height, a = Math.random() * Math.PI * 2, R = Math.min(W, H) * 0.31;
+      const x = W / 2 + Math.cos(a) * R * (burst ? 0.6 : 1), y = H / 2 + Math.sin(a) * R * (burst ? 0.6 : 1);
+      P.push({ x, y, vx: (Math.random() - 0.5) * (burst ? 3.2 : 0.5) * dpr, vy: -(burst ? 1.6 + Math.random() * 2.8 : 0.35 + Math.random() * 0.9) * dpr, life: 0, max: 50 + Math.random() * 70, sz: (0.8 + Math.random() * (1.2 + s * 0.5)) * dpr, smoke: false,
+        // at +5 the fire is white-hot: white-gold sparks, some of them blue
+        c: s === 3 && Math.random() < 0.6 ? [255, 226, 160] : [r, g, b] });
+    };
+    const puff = () => { const W = cv.width, H = cv.height; for (let i = 0; i < 26; i++) { const a = Math.random() * Math.PI * 2, R = Math.min(W, H) * 0.31; P.push({ x: W / 2 + Math.cos(a) * R, y: H / 2 + Math.sin(a) * R, vx: (Math.random() - 0.5) * 0.6 * dpr, vy: -(0.3 + Math.random() * 0.8) * dpr, life: 0, max: 70 + Math.random() * 60, sz: (4 + Math.random() * 6) * dpr, smoke: true }); } };
+    if (mode === "end") for (let i = 0; i < 20 + s * 14; i++) spawn(true);
+    if (mode === "out") { for (let i = 0; i < 18; i++) spawn(true); setTimeout(puff, 260); }
+    if (still()) { ctx.clearRect(0, 0, cv.width, cv.height); cv.classList.add("is-still"); return; }
+    let acc = 0;
+    const frame = (now) => {
+      if (!cv.isConnected) return;
+      if (document.hidden) { requestAnimationFrame(frame); return; }
+      const W = cv.width, H = cv.height;
+      if (cv.clientWidth && Math.abs(cv.clientWidth * dpr - W) > 2) fit();
+      acc += rate * (mode === "end" && now - t0 < 900 ? 2.2 : 1);
+      while (acc >= 1) { spawn(); acc -= 1; }
+      ctx.clearRect(0, 0, W, H);
+      ctx.globalCompositeOperation = "lighter";
+      for (let i = P.length - 1; i >= 0; i--) {
+        const p = P[i];
+        p.life += 1; p.x += p.vx + Math.sin((p.life + i) * 0.12) * 0.25 * dpr; p.y += p.vy; p.vy *= p.smoke ? 0.995 : 0.992;
+        const k = p.life / p.max;
+        if (k >= 1) { P.splice(i, 1); continue; }
+        if (p.smoke) {
+          ctx.globalCompositeOperation = "source-over";
+          ctx.fillStyle = `rgba(150,150,160,${(0.22 * (1 - k)).toFixed(3)})`;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.sz * (1 + k * 1.6), 0, Math.PI * 2); ctx.fill();
+          ctx.globalCompositeOperation = "lighter";
+          continue;
+        }
+        const al = (1 - k) * (0.55 + 0.45 * Math.sin(p.life * 0.5 + i)), hot = 1 - k;
+        const gr = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.sz * 3.2);
+        const [cr, cg, cb] = p.c;
+        gr.addColorStop(0, `rgba(255,${Math.round(230 * hot + cg * (1 - hot))},${Math.round(200 * hot + cb * (1 - hot))},${al.toFixed(3)})`);
+        gr.addColorStop(0.35, `rgba(${cr},${cg},${cb},${(al * 0.6).toFixed(3)})`);
+        gr.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+        ctx.fillStyle = gr;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.sz * 3.2, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalCompositeOperation = "source-over";
+      if (mode !== "hub" && !P.length && now - t0 > 1500 && rate === 0) return;
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  };
+  const wake = () => document.querySelectorAll("canvas[data-sk145-fire]:not([data-sk145-on])").forEach(burn);
+
+  /* ── A's count rolls up at a match's end ── */
+  const roll = () => document.querySelectorAll(".skA.is-end .skA-n[data-from]:not([data-rolled])").forEach((el) => {
+    el.dataset.rolled = "1";
+    const to = +el.textContent, from = +el.dataset.from;
+    if (still() || to === from) return;
+    el.textContent = String(from);
+    setTimeout(() => { el.textContent = String(to); el.classList.add("is-roll"); }, 900);
+  });
+  /** Once the page has the streak's words (its caller puts them in at once): D's embers lit, A's count rolled. No watcher on the
+   *  whole page: the fights change it all the time. */
+  const later = () => setTimeout(() => { wake(); roll(); }, 40);
+
+  const hub = (html, c) => { const out = hubHtml(html, c); if (out !== html) later(); return out; };
+  const change = (html, m) => { const out = changeHtml(html, m); if (out !== html) later(); return out; };
+  return { pts, step, ahead, RULE, hub, change, get pick() { return pick; }, set pick(v) { if (/^[ABCD]$/.test(v)) pick = v; } };
+})();
+window.STREAK145 = STREAK145;
+// the rank's look (arena136-look.js) draws the streak where it draws the rank
+{
+  const hub0 = LOOK136.hub, change0 = LOOK136.change;
+  LOOK136.hub = (L, c) => STREAK145.hub(hub0(L, c), c);
+  LOOK136.change = (L, m) => STREAK145.change(change0(L, m), m);
+}
 /* ══ round 127 · the Arena online (the server function «arena», server/arena127): the queue, the match, the turns sent and received.
  *  The user, 20 Nov: «2 modalità nessuna alla pari» (Capped: at most Lv 100 and ★7, no super awakening; Unlimited: everything), «un
  *  turno del giocatore dura 15 secondi», «se scade il tempo il gioco gioca per me». The fight is the duel of createBattle (duel127.js):
@@ -51509,7 +51807,7 @@ const ARENA127 = (() => {
     st.match = m;
     st.ending = false;
     st.r0 = m.names?.[m.side]?.rating ?? 1000;
-    st.lp0 = m.mode === 1 ? m.names?.[m.side]?.lp ?? null : null; st.botCounts = m.bot ? !!m.bot.counts : null;
+    st.lp0 = m.mode === 1 ? m.names?.[m.side]?.lp ?? null : null; st.botCounts = m.bot ? !!m.bot.counts : null; st.sk0 = m.mode === 1 ? m.names?.[m.side]?.streak ?? null : null;
     const known = m.bot && m.moves.every((x) => x.side !== m.side) ? 0 : m.moves.length;
     // while it is this device's turn the match's channel still counts: the rival gave up (the match ends), or the server played this
     // device's turn for it (its time was up: the device was away) and the fight goes on from the server's copy
@@ -52370,7 +52668,7 @@ setTimeout(() => window.ARENA136?.start(), 6000);
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-25-1226";
+const BUILD = "2026-11-25-1455";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
