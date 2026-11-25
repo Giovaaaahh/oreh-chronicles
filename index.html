@@ -1818,6 +1818,20 @@ svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 /* The Queen's Will: a gold thread, and the two taps that set it */
 .bt-thread { z-index: 11; width: 100%; height: 100%; overflow: visible; }
 .bt-thread path { fill: none; stroke: var(--rarity-ssr-light); stroke-width: 2; stroke-dasharray: 6 5; filter: drop-shadow(0 0 4px var(--rarity-ssr)); animation: bt-march 1s linear infinite; }
+/* Round 146 · a duel's rival heroes, in the foes' row, lit as their own side's row lights them (the glow on the figure, under the row's
+   own light: the target's ring stays on the box, the hero's state on her figure inside it) */
+.bt-foe.is-duel146.is-vow .bt-cardbox > .fig83 { filter: drop-shadow(0 0 0.7em #e8173a) drop-shadow(0 0 0.25em #ff9a3d); }
+.bt-foe.is-duel146.is-true .bt-cardbox > .fig83 { filter: drop-shadow(0 0 0.8em var(--rarity-ssr-light)); }
+.bt-foe.is-duel146.is-fury .bt-cardbox > .fig83 { filter: drop-shadow(0 0 0.7em #ff6ad5); }
+.bt-foe.is-duel146[data-tone="violet"] .bt-cardbox > .fig83 { filter: drop-shadow(0 0 0.6em #b57cff); }
+.bt-foe.is-duel146.is-assault78 .bt-cardbox > .fig83 { filter: drop-shadow(0 0.2em 0.9em rgb(255 190 40 / 0.65)); }
+.bt-foe.is-duel146.is-nadir78 .bt-cardbox > .fig83 { filter: drop-shadow(0 0.2em 1em rgb(255 255 255 / 0.55)) drop-shadow(0 0 0.35em rgb(255 255 255 / 0.5)); }
+.bt-foe.is-duel146.is-flame82 .bt-cardbox > .fig83 { filter: drop-shadow(0 0.2em 0.9em rgb(255 138 31 / 0.7)); }
+.bt-foe.is-duel146.is-elfury .bt-cardbox > .fig83 { filter: drop-shadow(0 0 0.8em var(--fury, #b884ff)); }
+/* a talent's own glow (GLOW121) takes the place of the plain one, as on the heroes' row */
+.bt-foe.is-duel146.g121-on .bt-cardbox > .fig83 { filter: none; }
+/* her own effects first among the row's chips; what this device put on her keeps its own look after them */
+.bt-state.is-own146.is-more146 { padding: 0 4px; }
 @keyframes bt-march { to { stroke-dashoffset: -11; } }
 .bt-pick { position: absolute; left: 50%; top: calc(var(--top) + 60px); z-index: 74; width: max-content; max-width: 90%; padding: 9px 14px; transform: translateX(-50%); background: rgb(14 15 20 / 0.96);
   border: 1px solid var(--rarity-ssr); color: var(--rarity-ssr-light); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; text-align: center; }
@@ -21546,7 +21560,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     el.foes.innerHTML = F.foes.map((e, i) => {
       const p = F.pos[i], card = e.art ? figure83(e.art, p.fw, p.h) : vetrina(foeFace(e), e.level, e.glyph);
       return `<button class="bt-foe${e.boss ? " is-boss" : ""}${e.art && aspect83(e.art) !== ART_ASPECT ? " is-wide132" : ""}${e.charge62 ? " is-charge62" : ""}${e.ward62 > 0 ? " has-ward62" : ""}${e.phase62 ? " is-phase62" : ""}" data-mech62="${[e.charge62 && "charging", e.ward62 > 0 && (e.wardHush107 ? `ward ${e.ward62}` : `ward ${e.ward62} · ${STORY62.ELEM[e.wardBy]}`), e.phase62 && "phase 2"].filter(Boolean).join(" · ")}" type="button" data-foe="${e.uid}" style="left:${p.left}px;top:${p.plateTop}px;width:${p.w}px;--attr:${attrColour(e.attr)};--plate:${g.plateH}px;--pgap:${g.plateGap}px;--fw:${p.fw}px;--fh:${p.h}px;--pw:${g.plateW}px;--pb:${g.plateFoe ?? 0}px">
-        ${plate(e.name, true, plateMark83(e.attr, e.rarity), plateLv83(e.level))}<span class="bt-cardbox" style="font-size:${p.fs}px">${card}<span class="bt-states" data-states></span><span class="bt-steam">${"<i></i>".repeat(4)}</span></span>${reflection(card, p.fs)}</button>`;
+        ${plate(e.name, true, plateMark83(e.duel127 != null ? e.h.attr : e.attr, e.rarity), plateLv83(e.level))}<span class="bt-cardbox" style="font-size:${p.fs}px">${card}<span class="bt-states" data-states></span><span class="bt-steam">${"<i></i>".repeat(4)}</span></span>${reflection(card, p.fs)}</button>`;
     }).join("");
     if (enter && !REDUCED) F.foes.forEach((e, i) => foeEl(e).animate([{ opacity: 0, transform: "translateY(-40px) scale(0.85)" }, { opacity: 1, transform: "none" }], { duration: 640, delay: i * 120, easing: "cubic-bezier(0.34, 1.3, 0.64, 1)", fill: "backwards" }));
     paintFoes();
@@ -21601,7 +21615,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     const foe83 = node.classList.contains("bt-foe"), full83 = `${short(hp)} / ${short(max)}`, k83 = (n) => (n >= 10000 ? `${fmt(Math.round(n / 1000))}K` : fmt(n));
     $(".bt-hpn", node).textContent = foe83 && (!g.pc || g.short) ? short(hp) : foe83 && full83.length * 5.75 + 2 > g.plateW - Math.max(107, 43 + 96 * g.u) ? `${k83(hp)} / ${k83(max)}` : full83;
   };
-  const paintFoes = () => (DUEL127?.on ? withSide127(DUEL127.me, paintFoes0) : paintFoes0());
+  const paintFoes = () => (DUEL127?.on ? (withSide127(DUEL127.me, paintFoes0), rival146()) : paintFoes0());
   const paintFoes0 = () => {
     F.foes.forEach((e, i) => {
       const node = foeEl(e);
@@ -21756,6 +21770,8 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     for (const [ic, val, name, fx, when, t, foe] of states118(m)) add(ic, val, name, null, "enemy", fx, when, t, true, foe);
     for (const [ic, val, name, fx, when, t, foe] of states123(m)) add(ic, val, name, null, "enemy", fx, when, t, true, foe);
     if (m.overload) add("spiral", "", "Overloaded", me, "ultimate", "Golden Overdrive failed: she waits for the enemy turn to end.", "this enemy turn", "", true);
+    // round 146: in a duel, what the rival put on her (an enemy's states, the rival's Queen's Will), which her row never drew
+    other146(m, add);
     // round 128: Talon's stacks first among his chips, so the count is never hidden behind «+n»
     const w128 = out.findIndex((x) => /^Wild Stack /.test(x.name));
     if (w128 > 0) out.unshift(out.splice(w128, 1)[0]);
@@ -21844,7 +21860,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
       GLOW121.prepare({ look, src, ...figGeom121(src, bw, bh), bw, bh, fs: p.fs, focus: focus ?? [0.55, 0.25] });
     });
   };
-  const paintTeam = () => (DUEL127?.on ? withSide127(DUEL127.me, paintTeam0) : paintTeam0());
+  const paintTeam = () => (DUEL127?.on ? (withSide127(DUEL127.me, paintTeam0), rival146()) : paintTeam0());
   const paintTeam0 = () => {
     F.team.forEach((m, i) => {
       const node = memEl(i);
@@ -23991,7 +24007,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
     const p = memAt(m), col = f === "null" ? "#ffffff" : "#ffc83d";
     burst(p.cx, p.cy, col);
     ring(p.cx, p.cy, col);
-    const img = $(`[data-slot="${F.team.indexOf(m)}"] .card-art-img`, el.team);
+    const n146 = memEl(F.team.indexOf(m)), img = n146 ? $(".bt-cardbox .card-art-img", n146) : null;
     if (img && !REDUCED) img.animate([{ filter: "brightness(3) saturate(0)", transform: "scale(1.12)" }, { filter: "none", transform: "none" }], { duration: 640, easing: "cubic-bezier(0.23, 1, 0.32, 1)" });
   };
   /** A big moment of his: his real picture over the darkened field, the name, a line, and back to the fight. */
@@ -26314,7 +26330,7 @@ void main() {
     const p = memAt(m), col = f === "buio" ? "var(--attr-dark)" : "var(--attr-light)";
     burst(p.cx, p.cy, col);
     ring(p.cx, p.cy, col);
-    const img = $(`[data-slot="${F.team.indexOf(m)}"] .card-art-img`, el.team);
+    const n146 = memEl(F.team.indexOf(m)), img = n146 ? $(".bt-cardbox .card-art-img", n146) : null;
     if (img && !REDUCED) img.animate([{ filter: "brightness(3) saturate(0)", transform: "scale(1.12)" }, { filter: "none", transform: "none" }], { duration: 640, easing: "cubic-bezier(0.23, 1, 0.32, 1)" });
     logIt("buff", `Reo: ${m.h.label}`, first ? "the form he fights in, until he changes it" : "he changes form · once a turn · his cards turn into their twins");
     if (!first) toast(`Reo takes his ${m.h.label.toLowerCase()}: his cards turn into their twins`);
@@ -26361,10 +26377,10 @@ void main() {
     if (F.picking) { toast(F.picking.step === "ally" ? "Choose an ally first" : "Choose the enemy first"); return; }
     busy = true;
     touch();
-    const cb = $(`[data-slot="${F.team.indexOf(m)}"] .bt-cardbox`, el.team);
+    const nb146 = memEl(F.team.indexOf(m)), cb = nb146 ? $(".bt-cardbox", nb146) : null;
     if (cb && !REDUCED) await cb.animate([{ transform: "perspective(700px) rotateY(0)" }, { transform: "perspective(700px) rotateY(90deg)" }], { duration: 220, easing: "cubic-bezier(0.55, 0, 1, 0.45)", fill: "forwards" }).finished;
     reoSet(m, m.form === "luce" ? "buio" : "luce");
-    const cb2 = $(`[data-slot="${F.team.indexOf(m)}"] .bt-cardbox`, el.team);
+    const nc146 = memEl(F.team.indexOf(m)), cb2 = nc146 ? $(".bt-cardbox", nc146) : null;
     if (cb2 && !REDUCED) cb2.animate([{ transform: "perspective(700px) rotateY(-90deg)" }, { transform: "none" }], { duration: 400, easing: "cubic-bezier(0.34, 1.4, 0.64, 1)" });
     busy = false;
     paintCtrl();
@@ -29491,11 +29507,15 @@ void main() {
   };
   /** The whole field drawn again from this device's side. */
   const placeAll127 = () => {
+    // round 146: each hero's face in the foes' row as she stands now (her form), and the row's picture swaps drawn again on the new row
+    face146();
     withSide127(DUEL127.me, () => {
       placeTeam0();
+      for (const e of F.foes) e.shown = null;
       placeFoes0(false);
       DUEL127.top = new Map(F.foes.map((e, i) => [e.uid, F.pos[i]]));
     });
+    rival146();
   };
   /** The cards of a side's hero who cannot act this turn (stunned, frozen, petrified, time-locked) wait in the hand. */
   const duelHeld127 = () => {
@@ -29793,6 +29813,143 @@ void main() {
     // the match ended on the server (the rival gave up or left): the fight stops where it stands, with no result of its own
     stop: () => { const D = DUEL127; if (!D || D.done) return; D.done = true; window.__rng127 = null; clearInterval(D.answering); F.phase = "over"; F.plan = []; clearTimeout(countdown); stopPicking(); paintCtrl(); busy = false; } };
   if (window.__T) Object.assign(window.__T, { duel127: () => DUEL127, duelStart: (cfg) => guard(duelStart127(cfg)) });
+  /* ══════════ Round 146 · a duel's two sides drawn alike on both devices ══════════
+   * The user, 25 Nov: «stavo testando Oreh e quando si trasforma in Nidir il mio avversario NON vede la trasformazione … spell tipo la
+   * guardia di Tachibana se io la uso, l'avversario NON vede la guardia, è un bug anche questo». Each device draws the rival's heroes in
+   * the foes' row, where only an enemy's face was drawn: the picture they had when the duel began, the states this device's heroes put on
+   * them. Now that row shows each of them as her own side's row does: the form she is in (Oreh's Null form, Reo's forms), the picture a
+   * state swaps in (a talent, Tachibana's True form), her glow, every effect on her (buffs, shields, the team's passives, Royal Guard,
+   * Nadir…), and her side's knight (Royal Guard) and thread (The Queen's Will). The other way round, this device's own heroes show what
+   * the rival put on them (Eternal Flame, Burn, Marks, Stun, Death…, the rival's Queen's Will), which their row never drew. ══════════ */
+  /** The face a hero wears in the foes' row, as she stands now: her form changes her picture (and the mark of her element on the plate). */
+  const face146 = () => {
+    const D = DUEL127;
+    for (const s of [0, 1]) for (const m of [...D.sides[s].members, s === D.active ? F.reserve : D.sides[s].reserve].filter(Boolean)) {
+      m.art = picOf83(m.h);
+      m.name = m.h.name;
+    }
+  };
+  /** An effect as a chip of the foes' row (an icon the chips know, the turns left). */
+  const chip146 = (e) => {
+    const ic = BT_STATE_ICON[e.ic] ? e.ic : "up", n = typeof e.t === "number" && e.t > 0 ? e.t : "";
+    const title = `${e.name}${e.foe ? ` (from ${e.foe})` : ""}: ${e.fx}${e.when ? ` · ${e.when}` : ""}`;
+    return `<span class="bt-state bt-state--${ic} is-own146${e.bad ? " is-bad146" : ""}" title="${esc127(title)}">${btIcon(ic)}${n ? `<b>${n}</b>` : ""}</span>`;
+  };
+  /** The rival's heroes in the foes' row, as their own side's row shows them; then their side's knight and thread. Run after every
+   *  drawing of either row (idempotent: the chips it adds go before the row's own, and are made again each time). */
+  const rival146 = () => {
+    const D = DUEL127;
+    if (!D?.on || !g || !el.foes) return;
+    const s = 1 - D.me;
+    withSide127(s, () => {
+      for (const m of D.sides[s].members) {
+        const node = $(`[data-foe="${m.uid}"]`, el.foes);
+        if (!node) continue;
+        node.classList.add("is-duel146");
+        node.classList.toggle("is-vow", !m.ko && talentOn(m) && !isReo(m) && !isOreh(m));
+        node.classList.toggle("is-assault78", assaultOn(m));
+        node.classList.toggle("is-flame82", !m.ko && flameOn82(m));
+        node.classList.toggle("is-nadir78", m.nadir > 0 && !m.ko);
+        node.classList.toggle("is-elfury", !m.ko && furyOn(m));
+        node.classList.toggle("is-true", !m.ko && isTrue(m));
+        node.classList.toggle("is-fury", m.fury > 0 && !m.ko);
+        if (isReo(m)) node.style.setProperty("--fury", m.form === "luce" ? "#ffd76a" : "#b884ff");
+        swapArt(node, m, m.ko ? null : artFor(m));
+        glow121(node, m);
+        const box = $("[data-states]", node);
+        if (!box) continue;
+        $$(".is-own146", box).forEach((x) => x.remove());
+        const fx = m.ko ? [] : effectsOn(m), MAX = g.pc ? 6 : 4;
+        if (!fx.length) continue;
+        const more = fx.length > MAX ? `<span class="bt-state bt-state--note is-own146 is-more146" title="${esc127(fx.slice(MAX).map((e) => e.name).join(", "))}"><b>+${fx.length - MAX}</b></span>` : "";
+        box.insertAdjacentHTML("afterbegin", fx.slice(0, MAX).map(chip146).join("") + more);
+        node.setAttribute("aria-label", `${node.getAttribute("aria-label") ?? m.h.name} On her: ${fx.map((e) => e.name).join(", ")}.`);
+      }
+      knight146();
+      thread146();
+    });
+  };
+  /** The rival's Royal Guard: its knight beside their Tachibana in the foes' row, the turns on its tag (run in the rival's side). */
+  const knight146 = () => {
+    let k = $("[data-bt-knight146]", host);
+    const t = tach(), p = t ? F.pos?.[F.team.indexOf(t)] : null;
+    if (!F.guard || !t || !p) { if (k) k.hidden = true; return; }
+    if (!k) { k = document.createElement("div"); k.className = "bt-knight is-rival146"; k.dataset.btKnight146 = ""; k.hidden = true; (el.knight ?? el.foes).after(k); }
+    // where it stands in her own side's row: on the PC above her plate and her effect chips, beside her figure, as big as there; else
+    // (a phone, or no room there) low on her figure, at her side, never on the face
+    let w = 0, h = 0, kx = 0, ky = 0, tight = true;
+    const node = $(`[data-foe="${t.uid}"]`, el.foes), pl = node && $(".bt-plate2", node), st = node && $("[data-states]", node);
+    if (g.pc && pl) {
+      const H0 = host.getBoundingClientRect(), pr = pl.getBoundingClientRect(), sr = st?.childElementCount ? st.getBoundingClientRect() : null;
+      const bottom = Math.min(pr.top, sr && sr.left < pr.right && sr.right > pr.left ? sr.top : Infinity) - H0.top - 6, top = p.top + 6;
+      if (bottom - top >= 90) {
+        h = Math.min(bottom - top, 210 * (g.u ?? 1)); w = Math.min(pr.width * 0.8, h / 1.08);
+        kx = pr.left - H0.left + (pr.width - w) / 2; ky = bottom - h; tight = false;
+      }
+    }
+    if (tight) { w = Math.max(46, Math.min(p.fw * 0.42, 150 * (g.u ?? 1))); h = w * 1.08; kx = p.x + p.fw / 2 - w * 0.88; ky = p.top + p.h - h; }
+    w = Math.round(w); h = Math.round(h);
+    kx = Math.max(6, Math.min(kx, g.W - w - 6)); ky = Math.max(6, Math.min(ky, g.H - h - 6));
+    // (on a PC with no room above her plate, her chip says the turns, as on her own side's row)
+    k.classList.toggle("is-tight", tight && !!g.pc);
+    Object.assign(k.style, { left: `${kx}px`, top: `${ky}px`, width: `${w}px`, height: `${h}px` });
+    const card = (t.h.cards ?? []).find((c) => c.name === "Royal Guard") ?? heroineById("tachibana")?.cards.find((c) => c.name === "Royal Guard"), key = `${card?.art}|${w}|${h}`;
+    if (card?.art && k.dataset.key !== key) {
+      const f = scFit(card.focus, w, h, 1.15, 40);
+      k.innerHTML = `<span class="bt-knight-in"><img src="${card.art}" alt="" draggable="false" style="left:${f.x}%;top:${f.y}%;width:${f.w}%"></span><span class="bt-knight-tag"></span>`;
+      k.dataset.key = key;
+    }
+    if (k.hidden) { k.hidden = false; if (!REDUCED) k.animate([{ opacity: 0, transform: "translateY(-30px) scale(0.9)", filter: "brightness(3)" }, { opacity: 1, transform: "none", filter: "none" }], { duration: 520, easing: "cubic-bezier(0.23, 1, 0.32, 1)" }); }
+    const tag = $(".bt-knight-tag", k);
+    if (tag) tag.innerHTML = `royal guard <b>${F.guard.turns}</b> <small>turn${F.guard.turns === 1 ? "" : "s"}</small>`;
+    k.setAttribute("aria-label", `The rival's Royal Guard: ${F.guard.turns} turn${F.guard.turns === 1 ? "" : "s"} left`);
+  };
+  /** The rival's Queen's Will: a gold thread from their chosen hero in the foes' row down to the hero of this device it chose (run in
+   *  the rival's side). */
+  const thread146 = () => {
+    let sv = $("[data-bt-thread146]", host);
+    const q = F.queen, ally = q ? F.team.find((m) => m.id === q.ally && !m.ko) : null, foe = q ? F.foes.find((e) => e.uid === q.foe && !e.dead) : null;
+    const a = ally ? F.pos?.[F.team.indexOf(ally)] : null;
+    if (!a || !foe) { if (sv) sv.innerHTML = ""; return; }
+    if (!sv) { sv = document.createElementNS("http://www.w3.org/2000/svg", "svg"); sv.setAttribute("class", "bt-layer bt-thread is-rival146"); sv.setAttribute("aria-hidden", "true"); sv.dataset.btThread146 = ""; (el.thread ?? el.foes).after(sv); }
+    const D = DUEL127, b = withSide127(D.me, () => memPos0(D.sides[D.me].members.indexOf(foe)));
+    const x1 = a.x, y1 = a.top + a.h, x2 = b.cx, y2 = b.y;
+    sv.setAttribute("viewBox", `0 0 ${g.W} ${g.H}`);
+    sv.innerHTML = `<path d="M${x1} ${y1} C ${x1} ${(y1 + y2) / 2 + 60}, ${x2} ${(y1 + y2) / 2 + 60}, ${x2} ${y2}"/>`;
+  };
+  /** On a hero of this device's side, what the rival put on her, which her row never drew: the states an enemy carries (Eternal Flame,
+   *  Burn, Marks, Stun, Death…) and the rival's Queen's Will (effectsOn adds them to her chips). */
+  const other146 = (m, add) => {
+    const D = DUEL127;
+    if (!D?.on || m.duel127 == null || m.ko || !mineOf127(m)) return;
+    const who = D.sides[1 - D.me].name;
+    for (const [k, n, label] of foeStates(m)) {
+      const name = label.split(/[:×]/)[0].trim();
+      add(k, n || "", name, null, "enemy", label, "", typeof n === "number" && n > 0 ? n : "", true, who);
+    }
+    const q = D.sides[1 - D.active]?.fields?.queen;
+    if (q && q.foe === m.uid) add("crown", `+${q.pct}%`, "The Queen's Will", null, "enemy", `${heroineById(q.ally)?.name ?? "The chosen hero"} deals ${q.pct}% more damage on ${m.h.name}.`, turnsLeft(q.turns), q.turns, true, who);
+  };
+  // the tests' handle (a hidden copy only): a side's states set as its cards would, then both rows drawn again
+  if (window.__T) Object.assign(window.__T, {
+    duelPoke146: (side, what) => {
+      const D = DUEL127;
+      if (!D?.on) return null;
+      const out = withSide127(side, () => {
+        const o = F.team.find((m) => isOreh(m) && !m.ko), t = tach(), q = F.foes.find((e) => !e.dead);
+        if (what === "nadir" && o) { o.nadir = lasts(4); orehSet(o, "null"); return "nadir"; }
+        if (what === "guard" && t) { F.guard = { pct: 150, turns: lasts(2), n: 1 }; return "guard"; }
+        if (what === "true" && t && !F.trueForm) { enterTrueForm(t); return "true"; }
+        if (what === "queen" && t && q) { const al = F.team.find((m) => !m.ko && m !== t) ?? t; F.queen = { ally: al.id, foe: q.uid, pct: 50, turns: lasts(2) }; return "queen"; }
+        if (what === "flame" && q) { q.flame = (q.flame ?? 0) + 2; q.burn = { n: 2, t: 2 }; q.mark = 1; return "flame"; }
+        if (what === "shield") { const m = F.team.find((x) => !x.ko); if (m) { m.shield = Math.round(m.max * 0.2); m.buffs.push({ label: "Bulwark", def: 0.3, turns: 2 }); } return "shield"; }
+        return null;
+      });
+      placeAll127();
+      return out;
+    },
+    duelView146: (me) => { const D = DUEL127; if (!D?.on) return null; D.me = me; placeAll127(); paintHand(); return D.me; },
+  });
   return {
     duel: (cfg) => guard(duelStart127(cfg)),
     duelAuto: () => guard(duelAuto127()),
@@ -52847,7 +53004,7 @@ setTimeout(() => window.ARENA136?.start(), 6000);
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-25-1702";
+const BUILD = "2026-11-25-2323";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
