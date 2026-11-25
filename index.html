@@ -19265,7 +19265,9 @@ const ch112Name = (k) => CH112_DIFF.find((x) => x[0] === k)?.[1] ?? "Normal";
 FOE_KINDS.firebird = { name: "The Undying Firebird", tribe: "The Ashen Sky", attr: "fire", fixed: { hp: 6000000, atk: 95000, def: 21500 }, level: 100, boss: true, noItems: true, hits: 3, plain142: true, next142: "phoenix",
   faces: [{ art: FOE_ART("challenge-firebird"), fight: FOE_ART("challenge-firebird-wide"), focus: [0.5, 0.39], rarity: "UR" }],
   pics142: { 1: { art: FOE_ART("challenge-firebird-skill-1"), focus: [0.64, 0.86] }, 2: { art: FOE_ART("challenge-firebird-skill-2"), focus: [0.26, 0.82] } } };
-FOE_KINDS.phoenix = { name: "The Phoenix Reborn", tribe: "The Ashen Sky", attr: "fire", fixed: { hp: 6000000, atk: 95000, def: 21500 }, level: 100, boss: true, noItems: true, hits: 3, plain142: true,
+// round 144 (the user, 25 Nov: «in fase 2 NON si congela e non puoi schivare nulla»): nothing freezes her (noFreeze) and her blows always
+// land (ign106); the Firebird can be frozen and its blows dodged, as any enemy's
+FOE_KINDS.phoenix = { name: "The Phoenix Reborn", tribe: "The Ashen Sky", attr: "fire", fixed: { hp: 6000000, atk: 95000, def: 21500 }, level: 100, boss: true, noItems: true, hits: 3, plain142: true, noFreeze: true,
   faces: [{ art: FOE_ART("challenge-phoenix"), fight: FOE_ART("challenge-phoenix-wide"), focus: [0.5, 0.24], rarity: "UR" }],
   // 1 Sunfall, 2 Pyre Feast, 3 her Eruption (her own picture, whole: she has no band of her own for it)
   pics142: { 1: { art: FOE_ART("challenge-phoenix-skill-1"), focus: [0.5, 0.7] }, 2: { art: FOE_ART("challenge-phoenix-skill-2"), focus: [0.6, 0.16] }, 3: { art: FOE_ART("challenge-phoenix-wide"), focus: [0.525, 0.24] } } };
@@ -19654,7 +19656,7 @@ const packLate = (P) => {
       if (x.rage != null) K.rage = pnum(x.rage, 0, 100, 0) / 100;
       if (x.ragePower != null) K.ragePower = pnum(x.ragePower, 0, 500, 10) / 100;
       // round 142: a boss in two phases keeps the second's numbers in «p2» (the Phoenix Reborn, after the Firebird); its level is the first's
-      { const K2 = K.next142 && FOE_KINDS[K.next142]; if (K2?.fixed) { K2.level = K.level; if (x.p2 && typeof x.p2 === "object") { K2.fixed = { hp: pnum(x.p2.hp, 1, 1e9, K2.fixed.hp), atk: pnum(x.p2.atk, 0, 1e8, K2.fixed.atk), def: pnum(x.p2.def, 0, 1e8, K2.fixed.def) }; if (x.p2.hits != null) K2.hits = pnum(x.p2.hits, 1, 5, 1); } } }
+      { const K2 = K.next142 && FOE_KINDS[K.next142]; if (K2?.fixed) { K2.level = K.level; if (x.p2 && typeof x.p2 === "object") { K2.fixed = { hp: pnum(x.p2.hp, 1, 1e9, K2.fixed.hp), atk: pnum(x.p2.atk, 0, 1e8, K2.fixed.atk), def: pnum(x.p2.def, 0, 1e8, K2.fixed.def) }; if (x.p2.hits != null) K2.hits = pnum(x.p2.hits, 1, 5, 1); if (x.p2.rage != null) K2.rage = pnum(x.p2.rage, 0, 100, 0) / 100; if (x.p2.ragePower != null) K2.ragePower = pnum(x.p2.ragePower, 0, 500, 10) / 100; } } }
     }
   }
   for (const b of P.bosses ?? []) if (!b.gone) boss(b, b.key);
@@ -23931,7 +23933,7 @@ const createBattle = (host, { onLeave, onWin, onMaze, device }) => {
   const kind106 = (e) => { const k = FOE_KINDS[e?.kind]?.made; return typeof k === "string" ? k : e?.kind ?? null; };
   const is106 = (e, k) => !!e && !e.dead && kind106(e) === k;
   /** Altea and her two guards: their blows go through Evasion. */
-  const ign106 = (e) => !!e && (e.regal || e.royal || ["altea", "guardX", "guardY", "sentry"].includes(kind106(e)) || ign123(e) || (e.kind === "reflection" && !e.dead && e.hp <= e.max * 0.6));
+  const ign106 = (e) => !!e && (e.regal || e.royal || ["altea", "guardX", "guardY", "sentry"].includes(kind106(e)) || ign123(e) || (e.kind === "reflection" && !e.dead && e.hp <= e.max * 0.6) || e.kind === "phoenix");
   const AB106 = {
     squire: { name: "Squire's Duty", say: "While she stands, the strongest enemy beside her takes 40% less from single-target blows." },
     mask: { name: "Behind the Mask", say: "While the mask holds, no blow takes more than 25% of its HP. The third blow breaks it: from then on it attacks twice a turn, but takes 30% more." },
@@ -25941,6 +25943,7 @@ void main(){
     if (k === "guardX") s.push(["clock", e.bell106 ?? 3, `Noon Bell: noon in ${e.bell106 ?? 3} turn${(e.bell106 ?? 3) === 1 ? "" : "s"} · 260% on every hero and their buffs end · a crit turns the hand back`]);
     if (k === "guardY") s.push(["eye", 0, "Weighing of the Heart: a blow over 15% of its HP comes back, a quarter of it"]);
     if (e.kind === "reflection" && ign106(e)) s.push(["eye", 0, "Never misses: under 60% of his HP his blows always land · Evasion and dodges do not stop them"]);
+    else if (e.kind === "phoenix") s.push(["eye", 0, "Never misses: her blows always land, Evasion and dodges do not stop them · nothing freezes her"]);
     else if (ign106(e)) s.push(["crown", 0, "Royal aim: Evasion does not stop its blows"]);
     return s;
   };
@@ -27107,7 +27110,7 @@ void main() {
       // Ana's frost: +150% on a Frozen enemy, +50% for each stack of Frost Brand Arts and of Spirit Surge
       frostBonus: (e, deep = false) => 1 + (e?.frozen > 0 ? (deep ? 2.5 : 1.5) : 0) + 0.5 * ((m.ice?.n ?? 0) + (m.spirit ?? 0)),
       // while Frost Brand Arts lasts, her single-target attack freezes what it hit for 1 turn
-      frostbite: (e) => { if (!e || e.dead || !(m.ice?.t > 0)) return; e.frozen = lasts(1); logIt("state", `${e.name}: Frozen`, "it cannot act · 1 turn"); const p = foeAt(e); number(p.x, p.y - 30, "frozen", "is-resist"); },
+      frostbite: (e) => { if (!e || e.dead || !(m.ice?.t > 0)) return; if (FOE_KINDS[e.kind]?.noFreeze) { const q = foeAt(e); if (q) number(q.x, q.y - 30, "immune", "is-resist"); logIt("state", `${e.name}: not Frozen`, "nothing freezes her"); return; } e.frozen = lasts(1); logIt("state", `${e.name}: Frozen`, "it cannot act · 1 turn"); const p = foeAt(e); number(p.x, p.y - 30, "frozen", "is-resist"); },
       iceBrand: () => { m.ice = { n: Math.min(3, (m.ice?.n ?? 0) + 1), t: lasts(2) }; logIt("buff", "Ana: Frost Brand Arts", `×${m.ice.n} · ATK +${40 * m.ice.n}%, Pierce +${150 * m.ice.n}% · 2 turns`); paintTeam(); },
       // Hela's cut takes away an enemy's buffs: Altea's royal gifts, a feast, a rage
       strip: (e) => {
@@ -27885,7 +27888,8 @@ void main() {
     const i = F.team.indexOf(m);
     if (!m || m.ko || i < 0) return -1;
     const p = memPos(i);
-    if (o.dodge !== false && m.evade > 0) { number(p.cx, p.cy, "miss", "is-resist", "evasion"); logIt("foe", `${e.name} → ${m.h.name}`, `${o.label}: Evasion, it misses`, "miss"); await hold(260); return -1; }
+    // round 144: the Phoenix's blows are never dodged (ign106), the Firebird's are
+    if (o.dodge !== false && m.evade > 0 && !ign106(e)) { number(p.cx, p.cy, "miss", "is-resist", "evasion"); logIt("foe", `${e.name} → ${m.h.name}`, `${o.label}: Evasion, it misses`, "miss"); await hold(260); return -1; }
     let d = o.flat ?? Math.round(foeHitMath(e, m).d * (0.9 + Math.random() * 0.2) * (o.pct / 100));
     const black = Math.min(m.black ?? 0, d); m.black -= black; d -= black;
     const soaked = Math.min(m.shield ?? 0, d); m.shield -= soaked; d -= soaked;
@@ -27999,7 +28003,7 @@ void main() {
   /** Its file: its rules, for the phase it is in. */
   const kit142 = (e) => {
     const P = F.fb142, two = e.kind === "phoenix", diff = P?.diff ?? "normal", hard = diff === "hard";
-    return `<b>Heat</b>: 0 to 10 over its head, +${two || hard ? 3 : 2} each of its turns, +1 for each card a Fire hero plays, −2 for each card a Water hero plays. At 10, the <b>Eruption</b>: ${two ? 45 : 30}% of every hero's max HP and ${FB142.burnsOn[diff]} Burns on each; the heat goes back to 0. <b>Magma Claw</b>: its blows burn, and at the start of its turn each burned hero adds 1 to the heat. ${two ? `<b>Sunfall</b>, every other turn: its shadow spreads over a hero, then it dives: 250% ATK on that hero, 100% on the heroes beside. <b>Pyre Feast</b>, its ultimate every third turn: 500% ATK on the most burned hero, and it heals 5% of its max HP for each Burn${hard ? "; on Hard twice" : ""}.` : `<b>Wildfire</b>, its ultimate every third turn: 300% ATK on the hero with the strongest attack. At 0 HP it is reborn.`} A Burn: ${Math.round(FB142.burnPct * 100)}% of max HP each enemy turn for each, up to ${FB142.burnMax}.`;
+    return `<b>Heat</b>: 0 to 10 over its head, +${two || hard ? 3 : 2} each of its turns, +1 for each card a Fire hero plays, −2 for each card a Water hero plays. At 10, the <b>Eruption</b>: ${two ? 45 : 30}% of every hero's max HP and ${FB142.burnsOn[diff]} Burns on each; the heat goes back to 0. <b>Magma Claw</b>: its blows burn, and at the start of its turn each burned hero adds 1 to the heat. ${two ? `<b>Never misses</b>: her blows always land, and nothing freezes her. <b>Sunfall</b>, every other turn: its shadow spreads over a hero, then it dives: 250% ATK on that hero, 100% on the heroes beside. <b>Pyre Feast</b>, its ultimate every third turn: 500% ATK on the most burned hero, and it heals 5% of its max HP for each Burn${hard ? "; on Hard twice" : ""}.` : `<b>Wildfire</b>, its ultimate every third turn: 300% ATK on the hero with the strongest attack. At 0 HP it is reborn.`} A Burn: ${Math.round(FB142.burnPct * 100)}% of max HP each enemy turn for each, up to ${FB142.burnMax}.`;
   };
   /** At 0 HP the Firebird does not fall: it burns, and the Phoenix rises (after the card that did it, as the Violet Crown's phases). */
   const fall142 = (e) => {
@@ -28022,6 +28026,7 @@ void main() {
     Object.assign(P, { uid: n.uid, phase: 2, heat: P.hard ? 6 : 0, ultIn: FB142.ultEvery - 1, ultNext: false, sun: null, turn: 0, boom: false, change: false });
     logIt("foe", "The Phoenix Reborn", `it rises from the Firebird's ashes · ${fmt(n.max)} HP · heat ${P.heat}/10, +3 each of its turns · Eruption ${Math.round(FB142.pct[1] * 100)}% · Sunfall every other turn · Pyre Feast every third`);
     toast("The Firebird burns out… and The Phoenix Reborn rises");
+    logIt("state", "The Phoenix Reborn: Never misses", "her blows always land: Evasion and dodges do not stop them · nothing freezes her");
     return n;
   };
   /** The change of phase, when one is due: its animation (the one the user picks in lab 142), the swap at its peak. */
@@ -35905,7 +35910,7 @@ const bossesNow = () => {
   });
   for (const b of BOSSES) {
     const [k, rar] = b.token.split(":"), K = FOE_KINDS[k], f = K.faces?.[0], o = ORIG.kinds[k];
-    out.push({ key: `bm-${b.id}`, group: "mode", where: "mode", name: ORIG.bosses.find((x) => x.id === b.id)?.name ?? b.name, rarity: k === "kingRaid" ? "UR" : rar, attr: attrOfKind(K), art: f?.art ?? FOE_ART("goblin-king"), focus: f?.focus, level: o?.level ?? K.level ?? 60, ...(o?.fixed ?? K.fixed), hits: o?.hits ?? 1, rage: Math.round((o?.rage ?? 0) * 100), ragePower: Math.round((o?.ragePower ?? 0.1) * 100), crit: 0, note: "Challenge Mode", fixedPlace: true, fixedLook: true });
+    out.push({ key: `bm-${b.id}`, group: "mode", where: "mode", name: ORIG.bosses.find((x) => x.id === b.id)?.name ?? b.name, rarity: k === "kingRaid" ? "UR" : rar, attr: attrOfKind(K), art: f?.art ?? FOE_ART("goblin-king"), focus: f?.focus, level: o?.level ?? K.level ?? 60, ...(o?.fixed ?? K.fixed), hits: o?.hits ?? K.hits ?? 1, rage: Math.round((o?.rage ?? K.rage ?? 0) * 100), ragePower: Math.round((o?.ragePower ?? K.ragePower ?? 0.1) * 100), crit: 0, note: "Challenge Mode", fixedPlace: true, fixedLook: true });
   }
   return out.map((b) => ({ ...b, ...(D.edits[b.key] ?? {}) })).concat(D.bosses.map((b) => ({ ...b, group: b.where }))).filter((b) => !b.gone);
 };
@@ -36005,19 +36010,28 @@ const ch112Chips = (groups, L) => {
 };
 /* ══ round 142 · la fase 2 nel Database. The Undying Firebird a 0 HP rinasce The Phoenix Reborn: i numeri della fenice (a Normale;
    Facile e Difficile li cambiano come per la fase 1) si scrivono nell'editor del boss, sotto i suoi, e si salvano con lui («Salva»)
-   in D.edits["bm-firebird"].p2; il gioco li legge da lì (packLate). ══ */
+   in D.edits["bm-firebird"].p2; il gioco li legge da lì (packLate).
+   Round 144 (l'utente, 25 nov: «da database mettimi la possibilità di modificare sia le stats di fase 1 che fase 2»): le due fasi
+   hanno ognuna il suo titolo e gli stessi numeri (HP, ATK, DEF, colpi a turno, furia e la sua forza); il livello è uno solo. ══ */
 const P2_142 = { "bm-firebird": "phoenix" };
-/** The «Fase 2» panel: the Phoenix's HP, ATK, DEF and blows a turn; what is not changed stays as in the game. */
+/** The title over the boss's own numbers when it has a second phase: they are its first phase's. */
+const p1Label142 = (b) => {
+  const box = mk("section", "g-field p1-142");
+  box.innerHTML = `<span>Fase 1 · ${esc(b.name)}</span>
+    <p class="g-note">I numeri qui sotto sono quelli della fase 1 a Normale (Facile −25%, Difficile +35%). Quelli della fase 2 sono più in basso, nel riquadro «Fase 2».</p>`;
+  return box;
+};
+/** The «Fase 2» panel: the Phoenix's HP, ATK, DEF, blows a turn, fury and its strength; what is not changed stays as in the game. */
 const p2Panel142 = (b) => {
   const kind = P2_142[b.key], K = FOE_KINDS[kind], o = ORIG.kinds?.[kind];
   if (!K) return mk("span", "");
-  const cur = { ...(o?.fixed ?? K.fixed), hits: o?.hits ?? K.hits ?? 1, ...(b.p2 ?? {}) };
+  const cur = { ...(o?.fixed ?? K.fixed), hits: o?.hits ?? K.hits ?? 1, rage: Math.round((o?.rage ?? K.rage ?? 0) * 100), ragePower: Math.round((o?.ragePower ?? K.ragePower ?? 0.1) * 100), ...(b.p2 ?? {}) };
   const box = mk("section", "g-field p2-142");
   box.innerHTML = `<span>Fase 2 · ${esc(K.name)}</span>
     <p class="g-note">A 0 HP ${esc(b.name)} rinasce: questi sono i numeri della fenice a Normale. Facile ne ha il 25% in meno e Difficile il 35% in più, come la fase 1. Il livello è quello della fase 1.</p>`;
   const nums = mk("div", "g-numgrid");
-  for (const [k, l, max] of [["hp", "HP", 999999999], ["atk", "ATK", 9999999], ["def", "DEF", 9999999], ["hits", "Colpi a turno", 5]]) {
-    nums.append(numField({ label: l, value: cur[k] ?? 0, max, min: k === "hits" ? 1 : 0, unit: "", step: k === "hits" ? 1 : null, onInput: (v) => { b.p2 = { ...cur, ...(b.p2 ?? {}), [k]: v }; } }));
+  for (const [k, l, max, unit] of [["hp", "HP", 999999999, ""], ["atk", "ATK", 9999999, ""], ["def", "DEF", 9999999, ""], ["hits", "Colpi a turno", 5, ""], ["rage", "Furia", 100, "%"], ["ragePower", "Forza in furia", 500, "%"]]) {
+    nums.append(numField({ label: l, value: cur[k] ?? 0, max, min: k === "hits" ? 1 : 0, unit, step: k === "hits" || unit ? 1 : null, onInput: (v) => { b.p2 = { ...cur, ...(b.p2 ?? {}), [k]: v }; } }));
   }
   box.append(nums);
   return box;
@@ -36102,8 +36116,8 @@ const viewBosses = (host) => {
       nums.append(numField({ label: l, value: b[k] ?? 0, max, min: k === "level" || k === "hits" ? 1 : 0, unit, step: k === "hits" || k === "level" || unit ? 1 : null, onInput: (v) => { b[k] = v; if (k === "hp") { hpSay(); wpaint(); } } }));
     }
     hpSay();
-    form.append(where, nums, hpHint);
-    if (P2_142[b.key]) form.append(p2Panel142(b));
+    if (P2_142[b.key]) form.append(where, p1Label142(b), nums, hpHint, p2Panel142(b));
+    else form.append(where, nums, hpHint);
     if (b.where === "mode") form.append(ch112Panel(b));
     for (const n of form.children) n.setAttribute("data-in", "");
     stagger(form, 220, 35);
@@ -52356,7 +52370,7 @@ setTimeout(() => window.ARENA136?.start(), 6000);
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-25-1134";
+const BUILD = "2026-11-25-1226";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
