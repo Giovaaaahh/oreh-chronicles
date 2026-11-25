@@ -24647,7 +24647,12 @@ void main(){
 
   let gl = null, cv = null, prog = null, U = {};
   const TEX = new Map(), IMG = new Map();
-  const load = (src) => {
+  // round 143 (the user: «Sì, sistemala», 25 Nov): its pictures from art/fx123-art.js (strumenti/fx-arte.cjs) when it is there: as data
+  // WebGL may draw them wherever the page was opened from; before it, in the PC program the change of phase had no light
+  let art143 = null;
+  const need143 = () => (window.__FX123_ART ? Promise.resolve() : (art143 ??= new Promise((ok) => { const s = document.createElement("script"); s.src = "art/fx123-art.js"; s.onload = ok; s.onerror = ok; document.head.append(s); })));
+  const load = (src0) => {
+    const src = window.__FX123_ART?.[/([a-z0-9-]+)\.webp(\?.*)?$/.exec(String(src0))?.[1]] ?? src0;
     if (!IMG.has(src)) IMG.set(src, new Promise((ok, no) => { const i = new Image(); i.decoding = "async"; i.onload = () => ok(i); i.onerror = () => no(new Error(`picture ${src.slice(0, 60)}`)); i.src = src; }));
     return IMG.get(src);
   };
@@ -24701,6 +24706,7 @@ void main(){
   //         rough, seed, cam: element moved by the camera keys, speed }
   const play = async (spec) => {
     if (!init()) { for (const [, fn] of spec.events ?? []) fn(); return; }
+    await need143();
     const [ia, ib] = await Promise.all([load(spec.A), load(spec.B ?? spec.A)]);
     stop();
     const host = spec.host;
@@ -24797,7 +24803,7 @@ void main(){
   };
   const stop = () => { if (live) live.end(); };
   const skip = () => { if (live) live.skip(); };
-  return { play, stop, skip, load, drawnBox, busy: () => !!live, EASE };
+  return { play, stop, skip, load, need: need143, drawnBox, busy: () => !!live, EASE };
 })();
   /* ══ round 123 · Violet Vale opens: the Moonhive's own abilities, Noctua, Ilune and Asphodel (a blow, and every other turn one of
    *  their moves in turn, as Skadra and Jarl), and the Violet Crown: The Faceless Nymph falls, wraps herself in The Silk Cocoon, and
@@ -25473,6 +25479,7 @@ void main(){
   };
   /** At the start of a wave: Noctua comes with two Hive Knights. */
   const init123 = () => {
+    if (F.foes.some((x) => k123(x) === "nymph" || k123(x) === "cocoon")) FX123.need?.().catch?.(() => {});
     const q = F.foes.find((x) => k123(x) === "noctua");
     if (!q || F.foes.some((x) => k123(x) === "hiveknight")) return;
     F.foes = [knight123(q.level), q, knight123(q.level)];
@@ -52349,7 +52356,7 @@ setTimeout(() => window.ARENA136?.start(), 6000);
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-25-1104";
+const BUILD = "2026-11-25-1134";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
