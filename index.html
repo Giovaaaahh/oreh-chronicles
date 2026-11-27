@@ -19496,7 +19496,7 @@ FOE_KINDS.naeris = { name: "Naeris of the Moon", tribe: "The Old Grove", attr: "
   // 1 Silver Mist, 2 Midnight Rite
   pics147: { 1: { art: FOE_ART("challenge-naeris-skill-1"), focus: [0.64, 0.29], face: [0.5, 0.17, 0.78, 0.38] }, 2: { art: FOE_ART("challenge-naeris-skill-2"), focus: [0.56, 0.19], face: [0.42, 0.07, 0.7, 0.28] } } };
 BOSSES.push({ id: "stag", name: "The Elder Stag", token: "stag:UR", waves: [["aelin:UR", "stag:UR", "naeris:UR"]], shards: [4, 6], gems: 10, level: 100,
-  note: "Two elf twins guard the sleeping stag. Hit them Fire, then Water, then Grass, one each turn: a wrong element does nothing and their next attack is three times as hard; Light and Dark always land. Fell one and the other raises them in 2 turns. When both are down the stag wakes: kill it in 4 turns, or it puts your whole team to sleep forever." });
+  note: "Two elf twins guard the sleeping stag. Hit them Fire, then Water, then Grass, then Fire again: each right card moves the order on at once, and it stays where it is from one turn to the next. A wrong element does nothing and their next attack is three times as hard; Light and Dark always land. Fell one and the other raises them in 2 turns. When both are down the stag wakes: kill it in 4 turns, or it puts your whole team to sleep forever." });
 /** Its gifts until the Database says otherwise: those of The Pale Reflection, as the fire boss's. */
 CH112_DEF["bm-stag"] = { on: false, until: null, rw: {
   easy: { first: { gems: 30, items: { dust: 3000 } }, every: { items: { dust: 500 } } },
@@ -28540,7 +28540,7 @@ void main() {
     F.tw147 = { stag: s.uid, need: 0, ok: false, awake: false, left: TW147.wake, woke: 0, slept: false, hitBy: null };
     for (const e of [a, n]) Object.assign(e, { t147: 0, ultNext147: false, triple147: false, mist147: false, down147: 0 });
     logIt("state", "The Elder Stag sleeps", "while a twin stands it takes no damage, and it never attacks: its gifts are on its twins");
-    logIt("state", "The element order", "hit the twins with Fire, then Water, then Grass, one a turn · another element does nothing and that twin's next attack is ×3 · Light and Dark always land and the order waits");
+    logIt("state", "The element order", "it starts on Fire: a Fire card on a twin moves it to Water, a Water card to Grass, a Grass card to Fire again, at once · it stays where it is from one turn to the next · another element does nothing and that twin's next attack is ×3 · Light and Dark always land and the order waits");
     logIt("state", "Twin Souls", `a twin who falls is raised by the other after ${TW147.rise} turns with half the HP, unless both are down`);
     logIt("state", "The stag's gifts", `Summer Antlers on Aelin: ${a.hits ?? 1} attacks a turn, ATK +35% every 3rd turn · Winter Antlers on Naeris: 30% less damage, and every 3rd turn he strikes back at each ability that hits a twin`);
     setTimeout(() => { try { paintFoes(); } catch { /* the fight is gone */ } }, 0);
@@ -28599,11 +28599,13 @@ void main() {
       };
     }
   };
-  /** After a card of yours: Winter Antlers' counter, once for the card, on the hero who played it. */
+  /** After a card of yours: the order moves on at once when the card landed its element on a twin (round 150); then Winter Antlers'
+   *  counter, once for the card, on the hero who played it. */
   const card147 = async (m) => {
     const P = F.tw147;
     if (!P) return;
     F.wrong147 = null;
+    step147();
     const by = P.hitBy;
     P.hitBy = null;
     const n = twin147("moon"), h = by ? F.team.find((x) => x.id === by && !x.ko) : null;
@@ -28667,21 +28669,33 @@ void main() {
       await hold(REDUCED ? 0 : 620);
     }
   };
-  /** The end of your turn: the order moves on when its element landed; awake, the stag's count runs down. */
+  /** Round 150 · the order inside your turn, the user, 27 Nov: «Skill richiesta rossa. Io uso rosso, blu, verde. Allora nello stesso
+   *  turno io devo vedere proprio che il cerchio del boss cambia in tempo reale, dopo il primo hit diventa blu, poi verde e poi a fine
+   *  turno torna rossa», and then: «ovviamente se il turno termina ad erba si resta erba eh, non è che in automatico il turno inizia
+   *  fuoco». A card that landed the element asked moves the order on at once (one step a card, however many blows it has: every blow of
+   *  a card is judged by the element asked when it began); after Grass comes Fire again; between turns it stays where it is. */
+  const step147 = () => {
+    const P = F.tw147;
+    if (!P || !P.ok) return;
+    P.ok = false;
+    if (P.awake) return;
+    const was = need147();
+    P.need = (P.need + 1) % TW147.order.length;
+    logIt("state", `The order moves on: ${elName147(need147())}`, `${elName147(was)} landed on a twin`);
+    paintFoes();
+  };
+  /** The end of your cards: the order stays where it is; awake, the stag's count runs down. */
   const end147 = () => {
     const P = F.tw147;
     if (!P) return;
     F.wrong147 = null;
     P.hitBy = null;
-    if (!P.awake) {
-      const was = need147();
-      if (P.ok) { P.need = (P.need + 1) % TW147.order.length; logIt("state", `The order moves on: ${elName147(need147())}`, `${elName147(was)} landed on a twin this turn`); }
-      else logIt("state", `The order waits: ${elName147(was)}`, `no twin took a ${elName147(was)} blow this turn`);
-    } else if (F.turn > P.woke && !stag147()?.dead) {
+    step147();
+    P.ok = false;
+    if (P.awake && F.turn > P.woke && !stag147()?.dead) {
       P.left = Math.max(0, P.left - 1);
       logIt("foe", "The Elder Stag: Eternal Slumber gathers", P.left ? `${P.left} turn${P.left === 1 ? "" : "s"} of yours left` : "its spell is ready: it falls on your team now");
     }
-    P.ok = false;
     paintFoes();
   };
   /** Its bands: the pictures, whole, in the grove's light; false when one cannot play (a banner says it then). */
@@ -28857,7 +28871,7 @@ void main() {
   };
   /** Their files: their rules. */
   const kit147 = (e) => {
-    const K = FOE_KINDS[e.kind], order = "<b>The element order</b>: Fire, then Water, then Grass, one a turn; a blow of another element does nothing and that twin's next attack is ×3; Light and Dark always land and the order waits.";
+    const K = FOE_KINDS[e.kind], order = "<b>The element order</b>: it starts on Fire; a card that lands the element asked moves it on at once, Fire, then Water, then Grass, then Fire again, and it stays where it is from one turn to the next; a blow of another element does nothing and that twin's next attack is ×3; Light and Dark always land and the order waits.";
     if (K?.stag147) return `<b>Asleep</b> between its twins: while one stands it takes no damage, and it never attacks. ${order} <b>Twin Souls</b>: a twin who falls is raised by the other after ${TW147.rise} turns with half the HP, unless both are down. When both are down it wakes: bring it down within ${TW147.wake} turns of yours, or <b>Eternal Slumber</b> puts your whole team to sleep, the bench too.`;
     if (K?.tw147 === "sun") return `${order} <b>Sunlit Blade</b>, every other turn: 2 blows of ${TW147.blade}% ATK on two heroes. <b>Noon Verdict</b>, her ultimate every fourth turn, said the turn before: ${TW147.noon}% ATK on every hero. <b>Summer Antlers</b>, the stag's gift: ${e.hits ?? 2} attacks a turn, and every 3rd turn ATK +35% for that turn. <b>Twin Souls</b>: if she falls, Naeris raises her after ${TW147.rise} turns.`;
     return `${order} <b>Silver Mist</b>, every other turn: his sister dodges the next blow. <b>Midnight Rite</b>, his ultimate every fourth turn, said the turn before: ${TW147.eclipse}% ATK on your strongest attack, no healing for 2 turns. <b>Winter Antlers</b>, the stag's gift: 30% less damage, and every 3rd turn he strikes back at each ability that hits a twin, ${TW147.counter}% ATK. <b>Twin Souls</b>: if he falls, Aelin raises him after ${TW147.rise} turns.`;
@@ -53695,7 +53709,7 @@ setTimeout(() => window.ARENA136?.start(), 6000);
  * page), a game built before that version stops at a full-screen note (B · Sigillo: the OC diamond in light) that says
  * where to get the new one: the PC download on Patreon, or a reload on the web. It cannot be closed: the game waits
  * for the new version. Progress is kept either way (it lives in the browser's storage). ── */
-const BUILD = "2026-11-27-1428";
+const BUILD = "2026-11-27-1535";
 const PATREON_URL = "https://www.patreon.com/c/OrehAi?redirect=true";
 /** Only https links are followed. */
 const safeUrl = (u) => { try { const x = new URL(String(u ?? "")); return x.protocol === "https:" ? x.href : ""; } catch { return ""; } };
